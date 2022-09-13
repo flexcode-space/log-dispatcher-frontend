@@ -8,22 +8,20 @@ import { HorizontalNavItemsType } from 'src/@core/layouts/types'
 
 const navigation = (): HorizontalNavItemsType => [
   {
-    title: 'Home',
+    title: 'Beranda',
     icon: HomeOutline,
     path: '/home'
+  },
+  {
+    title: 'Konfigurasi Sistem',
+    icon: HomeOutline,
+    path: '/configuration-sistem'
   },
   {
     title: 'Second Page',
     icon: EmailOutline,
     path: '/second-page'
   },
-  {
-    title: 'Access Control',
-    icon: ShieldOutline,
-    path: '/acl',
-    action: 'read',
-    subject: 'acl-page'
-  }
 ]
 
 export default navigation
