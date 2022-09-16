@@ -1,65 +1,32 @@
 // ** React Imports
 import { useState } from "react";
-
-// ** MUI Imports
-import Box from "@mui/material/Box";
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
-import Grid from "@mui/material/Grid";
+import {
+  Box,
+  Card,
+  CardContent,
+  Grid,
+  IconButton,
+  Typography,
+  TextField,
+  Button,
+} from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
-import IconButton from "@mui/material/IconButton";
-import Typography from "@mui/material/Typography";
-import TextField from "@mui/material/TextField";
-import Button from "@mui/material/Button";
-
-// ** Icons Imports
-import PencilOutline from "mdi-material-ui/PencilOutline";
-import DeleteOutline from "mdi-material-ui/DeleteOutline";
+import { PencilOutline, DeleteOutline } from "mdi-material-ui";
 
 // ** Custom Components Imports
 import PageHeader from "src/@core/components/page-header";
 
-// ** Types
-import { ThemeColor } from "src/@core/layouts/types";
+import { defaultColumns, DATA } from "./subsistem.constant";
+import { CellType } from "./types";
 
-interface Colors {
-  [key: string]: ThemeColor;
-}
-
-interface CellType {
-  row: any;
-}
-
-const defaultColumns = [
-  {
-    flex: 0.25,
-    field: "name",
-    minWidth: 240,
-    headerName: "Id Subsistem",
-    renderCell: ({ row }: CellType) => <Typography>{row.name}</Typography>,
-  },
-  {
-    flex: 0.35,
-    minWidth: 280,
-    field: "assignedTo",
-    headerName: "Nama Subsistem",
-    renderCell: ({ row }: CellType) => (
-      <Typography>{row.assignedTo}</Typography>
-    ),
-  },
-  {
-    flex: 0.25,
-    minWidth: 215,
-    field: "createdDate",
-    headerName: "Jumlah Gardu Induk",
-    renderCell: ({ row }: CellType) => (
-      <Typography variant="body2">{row.createdDate}</Typography>
-    ),
-  },
-];
+import { ModalAddSubsistem } from "./modal";
+import { WrapperFilter } from "src/components/filter";
 
 const PermissionsTable = () => {
   const [pageSize, setPageSize] = useState<number>(10);
+  const [open, setOpen] = useState<boolean>(false);
+
+  const handleClickOpen = () => setOpen(true);
 
   const columns = [
     ...defaultColumns,
@@ -82,17 +49,9 @@ const PermissionsTable = () => {
     },
   ];
 
-  const DATA = [
-    {
-      id: 1,
-      name: "231423423",
-      assignedTo: "Ungaran",
-      createdDate: "8",
-    },
-  ];
-
   return (
     <>
+      <ModalAddSubsistem open={open} />
       <Grid container spacing={6}>
         <Grid item xs={12}>
           <PageHeader title={<Typography variant="h5">Subsistem</Typography>} />
@@ -100,14 +59,7 @@ const PermissionsTable = () => {
         <Grid item xs={12}>
           <Card>
             <CardContent>
-              <Box
-                sx={{
-                  display: "flex",
-                  flexWrap: "wrap",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                }}
-              >
+              <WrapperFilter>
                 <TextField
                   size="small"
                   value=""
@@ -116,12 +68,16 @@ const PermissionsTable = () => {
                   onChange={(e) => null}
                 />
 
-                <Button sx={{ mb: 2 }} onClick={() => null} variant="contained">
+                <Button
+                  sx={{ mb: 2 }}
+                  onClick={handleClickOpen}
+                  variant="contained"
+                >
                   Tambah Subsistem
                 </Button>
-              </Box>
+              </WrapperFilter>
               <DataGrid
-                checkboxSelection
+                // checkboxSelection
                 autoHeight
                 rows={DATA}
                 columns={columns}
