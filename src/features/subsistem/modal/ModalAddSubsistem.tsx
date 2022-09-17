@@ -30,7 +30,11 @@ const ModalAddSubsistem = ({ open, handleClose }: ModalAddSubsistemProps) => {
         <StyledForm noValidate>
           {fields.map((index) => {
             return (
-              <InputField name="name" label={`Nama Subsistem ${index + 1}`} />
+              <InputField
+                key={`subsistem-${index}`}
+                name="name"
+                label={`Nama Subsistem ${index + 1}`}
+              />
             );
           })}
           <Button

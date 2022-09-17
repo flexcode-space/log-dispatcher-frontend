@@ -22,7 +22,7 @@ import { CellType } from "./types";
 import { ModalAddSubsistem } from "./modal";
 import { WrapperFilter } from "src/components/filter";
 
-const PermissionsTable = () => {
+const Subsistem = () => {
   const [pageSize, setPageSize] = useState<number>(10);
   const [open, setOpen] = useState<boolean>(false);
 
@@ -93,4 +93,4 @@ const PermissionsTable = () => {
   );
 };
 
-export default PermissionsTable;
+export default Subsistem;
