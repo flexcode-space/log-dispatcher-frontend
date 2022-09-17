@@ -1,59 +1,57 @@
 import {
   Button,
-  Switch,
   Dialog,
-  InputLabel,
   DialogTitle,
-  FormControl,
   DialogActions,
   DialogContent,
-  FormControlLabel,
-  DialogContentText,
 } from "@mui/material";
 
+import { useState } from "react";
 import { StyledForm } from "../Subsistem.styled";
+import { InputField } from "src/components/input-field";
 
 type ModalAddSubsistemProps = {
   open: boolean;
+  handleClose: () => void;
 };
 
-const ModalAddSubsistem = ({ open }: ModalAddSubsistemProps) => {
-  const handleClose = () => null;
+const ModalAddSubsistem = ({ open, handleClose }: ModalAddSubsistemProps) => {
+  const [fields, setFields] = useState<Array<number>>([0]);
 
   return (
     <Dialog
       open={open}
       maxWidth="md"
-      // fullScreen={true}
       onClose={handleClose}
       aria-labelledby="max-width-dialog-title"
     >
       <DialogTitle id="max-width-dialog-title">Tambah Subsistem</DialogTitle>
       <DialogContent>
-        <DialogContentText sx={{ mb: 4 }}>
-          You can set my maximum width and whether to adapt or not.
-        </DialogContentText>
-        <DialogContentText sx={{ mb: 4 }}>
-          You can set my maximum width and whether to adapt or not.
-        </DialogContentText>
-        <DialogContentText sx={{ mb: 4 }}>
-          You can set my maximum width and whether to adapt or not.
-        </DialogContentText>
         <StyledForm noValidate>
-          {/* <FormControl sx={{ mt: 2, minWidth: 120 }}>
-            <InputLabel htmlFor="max-width">maxWidth</InputLabel>
-          </FormControl> */}
-          {/* <FormControlLabel
-            label="Full width"
-            sx={{ mt: 2 }}
-            control={
-              <Switch checked={true} onChange={() => null} />
+          {fields.map((index) => {
+            return (
+              <InputField name="name" label={`Nama Subsistem ${index + 1}`} />
+            );
+          })}
+          <Button
+            style={{ width: "250px" }}
+            sx={{ mb: 2 }}
+            onClick={() =>
+              setFields((prevState) => [...prevState, fields.length])
             }
-          /> */}
+            variant="outlined"
+          >
+            Tambah Subsistem
+          </Button>
         </StyledForm>
       </DialogContent>
       <DialogActions className="dialog-actions-dense">
-        <Button onClick={handleClose}>Close</Button>
+        <Button variant="outlined" onClick={handleClose}>
+          Batal
+        </Button>
+        <Button variant="contained" onClick={() => null}>
+          Tambah
+        </Button>
       </DialogActions>
     </Dialog>
   );

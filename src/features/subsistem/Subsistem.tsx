@@ -32,7 +32,6 @@ const PermissionsTable = () => {
     ...defaultColumns,
     {
       flex: 0.15,
-      minWidth: 115,
       sortable: false,
       field: "actions",
       headerName: "Aksi",
@@ -51,7 +50,7 @@ const PermissionsTable = () => {
 
   return (
     <>
-      <ModalAddSubsistem open={open} />
+      <ModalAddSubsistem open={open} handleClose={() => setOpen(!open)} />
       <Grid container spacing={6}>
         <Grid item xs={12}>
           <PageHeader title={<Typography variant="h5">Subsistem</Typography>} />
@@ -77,7 +76,6 @@ const PermissionsTable = () => {
                 </Button>
               </WrapperFilter>
               <DataGrid
-                // checkboxSelection
                 autoHeight
                 rows={DATA}
                 columns={columns}

@@ -13,9 +13,14 @@ const navigation = (): HorizontalNavItemsType => [
     path: '/home'
   },
   {
-    title: 'Konfigurasi Sistem',
+    title: 'Master Data',
     icon: HomeOutline,
-    path: '/configuration-sistem'
+    children: [
+      {
+        title: 'Subsistem',
+        path: '/master-data/subsistem'
+      }
+    ]
   },
   {
     title: 'Second Page',
