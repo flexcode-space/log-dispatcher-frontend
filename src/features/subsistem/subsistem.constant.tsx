@@ -4,41 +4,40 @@ import { CellType } from "./types";
 export const defaultColumns = [
   {
     flex: 0.25,
-    field: "name",
+    field: "nama",
     headerName: "Subsistem",
-    renderCell: ({ row }: CellType) => <Typography>{row.subsistem}</Typography>,
   },
   {
     flex: 0.35,
-    field: "jumlah_ibt",
+    field: "ibt",
     headerName: "Jumlah IBT",
     renderCell: ({ row }: CellType) => (
-      <Typography>{row.jumlah_ibt}</Typography>
+      <Typography>{row.ibt}</Typography>
     ),
   },
   {
     flex: 0.25,
-    field: "jumlah_pembangkit",
+    field: "pembangkit",
     headerName: "Jumlah Pembangkit",
     renderCell: ({ row }: CellType) => (
-      <Typography variant="body2">{row.jumlah_pembangkit}</Typography>
+      <Typography variant="body2">{row.pembangkit}</Typography>
     ),
   },
   {
     flex: 0.25,
     minWidth: 215,
-    field: "jumlah_penghantar",
+    field: "penghantar",
     headerName: "Jumlah Penghantar",
     renderCell: ({ row }: CellType) => (
-      <Typography variant="body2">{row.jumlah_penghantar}</Typography>
+      <Typography variant="body2">{row.penghantar}</Typography>
     ),
   },
   {
     flex: 0.25,
-    field: "jumlah_trafo",
+    field: "trafo",
     headerName: "Jumlah Trafo",
     renderCell: ({ row }: CellType) => (
-      <Typography variant="body2">{row.jumlah_trafo}</Typography>
+      <Typography variant="body2">{row.trafo}</Typography>
     ),
   },
   {
@@ -51,23 +50,23 @@ export const defaultColumns = [
   },
   {
     flex: 0.25,
-    field: "reaktor_kapasitor",
+    field: "reaktor",
     headerName: "Reaktor Kapasitor",
     renderCell: ({ row }: CellType) => (
-      <Typography variant="body2">{row.reaktor_kapasitor}</Typography>
+      <Typography variant="body2">{row.reaktor}</Typography>
     ),
   },
 ];
 
 export const DATA = [
   {
-    id: 1,
-    subsistem: "Ungaran",
-    jumlah_ibt: 1,
-    jumlah_pembangkit: 1,
-    jumlah_penghantar: 1,
-    jumlah_trafo: 1,
-    busbar: 1,
-    reaktor_kapasitor: 1,
+    busbar: 2,
+    ibt: 2,
+    id: "c836c745-e1db-4777-9699-e40fffaa302d",
+    nama: "Tanjung Jati",
+    pembangkit: 2,
+    penghantar: 2,
+    reaktor: 2,
+    trafo: 2,
   },
 ];

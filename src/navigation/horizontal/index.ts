@@ -19,7 +19,31 @@ const navigation = (): HorizontalNavItemsType => [
       {
         title: 'Subsistem',
         path: '/master-data/subsistem'
-      }
+      },
+      {
+        title: 'IBT',
+        path: '/master-data/ibt'
+      },
+      {
+        title: 'Pembangkit',
+        path: '/master-data/pembangkit'
+      },
+      {
+        title: 'Penghantar',
+        path: '/master-data/penghantar'
+      },
+      {
+        title: 'Trafo',
+        path: '/master-data/trafo'
+      },
+      {
+        title: 'Busbar',
+        path: '/master-data/busbar'
+      },
+      {
+        title: 'Reaktor & Kapasitor',
+        path: '/master-data/reaktor'
+      },
     ]
   },
   {
