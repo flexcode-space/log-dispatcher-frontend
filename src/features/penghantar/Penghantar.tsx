@@ -1,5 +1,6 @@
 // ** React Imports
 import { useState } from "react";
+import { useRouter } from "next/router";
 import {
   Box,
   Card,
@@ -23,10 +24,13 @@ import { CellType } from "./types";
 import { WrapperFilter } from "src/components/filter";
 
 const Penghantar = () => {
+  const router = useRouter();
   const [pageSize, setPageSize] = useState<number>(10);
   const [open, setOpen] = useState<boolean>(false);
 
   const handleClickOpen = () => setOpen(true);
+
+  const isSubsistemPath = router.pathname === "/master-data/subsistem/[detail]";
 
   const columns = [
     ...defaultColumns,
@@ -52,9 +56,13 @@ const Penghantar = () => {
     <>
       {/* <ModalAddSubsistem open={open} handleClose={() => setOpen(!open)} /> */}
       <Grid container spacing={6}>
-        <Grid item xs={12}>
-          <PageHeader title={<Typography variant="h5">Penghantar</Typography>} />
-        </Grid>
+        {!isSubsistemPath && (
+          <Grid item xs={12}>
+            <PageHeader
+              title={<Typography variant="h5">Penghantar</Typography>}
+            />
+          </Grid>
+        )}
         <Grid item xs={12}>
           <Card>
             <CardContent>
