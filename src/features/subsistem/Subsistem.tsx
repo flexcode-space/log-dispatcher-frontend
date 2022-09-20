@@ -32,6 +32,7 @@ const Subsistem = () => {
     ...defaultColumns,
     {
       flex: 0.15,
+      minWidth: 100,
       sortable: false,
       field: "actions",
       headerName: "Aksi",
@@ -75,16 +76,9 @@ const Subsistem = () => {
                   Tambah Subsistem
                 </Button>
               </WrapperFilter>
-              <DataGrid
-                autoHeight
-                rows={DATA}
-                columns={columns}
-                pageSize={pageSize}
-                disableSelectionOnClick
-                rowsPerPageOptions={[10, 25, 50]}
-                onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
-                sx={{ "& .MuiDataGrid-columnHeaders": { borderRadius: 0 } }}
-              />
+              <Box sx={{ height: 500 }}>
+                <DataGrid rows={DATA.slice(0, 10)} columns={columns} />
+              </Box>
             </CardContent>
           </Card>
         </Grid>
