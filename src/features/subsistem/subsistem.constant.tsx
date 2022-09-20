@@ -1,4 +1,4 @@
-import Link from "@mui/material/Link";
+import Link from "next/link";
 import Typography from "@mui/material/Typography";
 import { CellType } from "./types";
 
@@ -12,7 +12,11 @@ export const defaultColumns = [
     flex: 0.35,
     field: "ibt",
     headerName: "Jumlah IBT",
-    renderCell: ({ row }: CellType) => <Link href="/master-data/subsistem/detail">{row.ibt}</Link>,
+    renderCell: ({ row }: CellType) => (
+      <Link href="/master-data/subsistem/detail">
+        <a>{row.ibt}</a>
+      </Link>
+    ),
   },
   {
     flex: 0.25,

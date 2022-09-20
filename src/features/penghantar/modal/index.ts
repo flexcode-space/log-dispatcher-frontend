@@ -1,1 +1,1 @@
-export { default as ModalAddSubsistem } from './ModalAddSubsistem'
+export { default as ModalAdd } from './ModalAdd'

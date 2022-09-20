@@ -25,7 +25,7 @@ const InputField = ({ label, name, placeholder }: InputFieldProps) => {
             autoFocus
             label={label}
             placeholder={placeholder}
-            style={{ width: "500px" }}
+            // style={{ width: "500px" }}
           />
         )}
       />
