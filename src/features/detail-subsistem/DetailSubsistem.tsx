@@ -8,6 +8,11 @@ import TabPanel from "@mui/lab/TabPanel";
 import TabContext from "@mui/lab/TabContext";
 
 import { Penghantar } from "src/features/penghantar";
+import { IBT } from "src/features/ibt";
+import { Pembangkit } from "src/features/pembangkit";
+import { Trafo } from "src/features/trafo";
+import { Busbar } from "src/features/busbar";
+import { Reaktor } from "src/features/reaktor";
 
 import { Tab, TabName } from "./DetailSubsistem.styled";
 import { TAB_MENU } from "./DetailSubsistem.constant";
@@ -43,19 +48,22 @@ const SubsistemDetail = () => {
           </TabList>
 
           <TabPanel sx={{ p: 0 }} value="ibt">
-            <h1>test</h1>
+            <IBT />
           </TabPanel>
-          <TabPanel sx={{ p: 0 }} value="security">
-            <h1>test</h1>
+          <TabPanel sx={{ p: 0 }} value="pembangkit">
+            <Pembangkit />
           </TabPanel>
           <TabPanel sx={{ p: 0 }} value="penghantar">
             <Penghantar />
           </TabPanel>
-          <TabPanel sx={{ p: 0 }} value="billing">
-            <h1>test</h1>
+          <TabPanel sx={{ p: 0 }} value="trafo">
+            <Trafo />
           </TabPanel>
-          <TabPanel sx={{ p: 0 }} value="notifications">
-            <h1>test</h1>
+          <TabPanel sx={{ p: 0 }} value="busbar">
+            <Busbar />
+          </TabPanel>
+          <TabPanel sx={{ p: 0 }} value="reaktor">
+            <Reaktor />
           </TabPanel>
         </TabContext>
       </Card>

@@ -30,7 +30,7 @@ export const defaultColumns = [
     flex: 0.25,
     minWidth: 200,
     field: "nama",
-    headerName: "Nama Penghantar",
+    headerName: "Nama Busbar",
   },
   {
     flex: 0.25,
@@ -53,24 +53,6 @@ export const defaultColumns = [
   {
     flex: 0.25,
     minWidth: 200,
-    field: "sub_sistem",
-    headerName: "Subsistem",
-    renderCell: ({ row }: CellType) => {
-      const { sub_sistem } = row;
-      return (
-        <Typography
-          variant="subtitle2"
-          noWrap
-          sx={{ textTransform: "capitalize" }}
-        >
-          {sub_sistem.nama}
-        </Typography>
-      );
-    },
-  },
-  {
-    flex: 0.25,
-    minWidth: 200,
     field: "tegangan",
     headerName: "Tegangan",
     renderCell: ({ row }: CellType) => {
@@ -81,25 +63,7 @@ export const defaultColumns = [
           noWrap
           sx={{ textTransform: "capitalize" }}
         >
-          {`${tegangan.value} KV`}
-        </Typography>
-      );
-    },
-  },
-  {
-    flex: 0.25,
-    minWidth: 200,
-    field: "arus_nominal",
-    headerName: "Arus Nominal (A)",
-    renderCell: ({ row }: CellType) => {
-      const { arus_nominal } = row;
-      return (
-        <Typography
-          variant="subtitle2"
-          noWrap
-          sx={{ textTransform: "capitalize" }}
-        >
-          {`${arus_nominal} MVA`}
+          {`${tegangan.value} A`}
         </Typography>
       );
     },
@@ -117,7 +81,7 @@ export const defaultColumns = [
           noWrap
           sx={{ textTransform: "capitalize" }}
         >
-          {`${arus_mampu} MVA`}
+          {`${arus_mampu} A`}
         </Typography>
       );
     },
@@ -125,15 +89,49 @@ export const defaultColumns = [
   {
     flex: 0.25,
     minWidth: 200,
-    field: "line",
-    headerName: "Jenis Penghantar",
+    field: "arus_nominal",
+    headerName: "Arus Nominal (A)",
+    renderCell: ({ row }: CellType) => {
+      const { arus_nominal } = row;
+      return (
+        <Typography
+          variant="subtitle2"
+          noWrap
+          sx={{ textTransform: "capitalize" }}
+        >
+          {`${arus_nominal} A`}
+        </Typography>
+      );
+    },
+  },
+  {
+    flex: 0.35,
+    minWidth: 100,
+    field: "dmn",
+    headerName: "DMN",
+  },
+  {
+    flex: 0.35,
+    minWidth: 100,
+    field: "tml",
+    headerName: "TML",
+  },
+  {
+    flex: 0.25,
+    minWidth: 200,
+    field: "bahan_bakar",
+    headerName: "Bahan Bakar",
+  },
+  {
+    flex: 0.25,
+    minWidth: 200,
+    field: "kategori",
+    headerName: "kategori",
   },
 ];
 
 export const DATA = [
   {
-    arus_mampu: 180,
-    arus_nominal: 180,
     gardu_induk: {
       id: "c836c745-e1db-4777-9699-e40fffaa302d",
       nama: "Tambak Lorok",
@@ -146,16 +144,17 @@ export const DATA = [
     id_amr: "110011",
     jenis: "Radial",
     line: "Penghantar 2",
-    nama: "TRAFO - 1",
+    nama: "Busbar - 1",
     scada: {
       b1: "3KWHR3",
       b2: "300",
       b3: "JELOK-1",
     },
-    sub_sistem: {
-      id: "c836c745-e1db-4777-9699-e40fffaa302d",
-      nama: "Ungaran",
-    },
+    dmn: "180 MW",
+    tml: "180 MW",
+    bahan_bakar: "Batubara",
+    jenis_pembangkit: "PLTU",
+    kategori: "MRICA",
     tegangan: {
       id: "c836c745-e1db-4777-9699-e40fffaa302d",
       value: 150,

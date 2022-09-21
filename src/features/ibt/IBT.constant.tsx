@@ -30,7 +30,7 @@ export const defaultColumns = [
     flex: 0.25,
     minWidth: 200,
     field: "nama",
-    headerName: "Nama Penghantar",
+    headerName: "Nama IBT",
   },
   {
     flex: 0.25,
@@ -53,35 +53,17 @@ export const defaultColumns = [
   {
     flex: 0.25,
     minWidth: 200,
-    field: "sub_sistem",
-    headerName: "Subsistem",
+    field: "mva",
+    headerName: "MVA",
     renderCell: ({ row }: CellType) => {
-      const { sub_sistem } = row;
+      const { mva } = row;
       return (
         <Typography
           variant="subtitle2"
           noWrap
           sx={{ textTransform: "capitalize" }}
         >
-          {sub_sistem.nama}
-        </Typography>
-      );
-    },
-  },
-  {
-    flex: 0.25,
-    minWidth: 200,
-    field: "tegangan",
-    headerName: "Tegangan",
-    renderCell: ({ row }: CellType) => {
-      const { tegangan } = row;
-      return (
-        <Typography
-          variant="subtitle2"
-          noWrap
-          sx={{ textTransform: "capitalize" }}
-        >
-          {`${tegangan.value} KV`}
+          {mva.value}
         </Typography>
       );
     },
@@ -125,8 +107,20 @@ export const defaultColumns = [
   {
     flex: 0.25,
     minWidth: 200,
-    field: "line",
-    headerName: "Jenis Penghantar",
+    field: "rasio_tegangan",
+    headerName: "Ratio Tegangan",
+    renderCell: ({ row }: CellType) => {
+      const { rasio_tegangan } = row;
+      return (
+        <Typography
+          variant="subtitle2"
+          noWrap
+          sx={{ textTransform: "capitalize" }}
+        >
+          {`${rasio_tegangan?.value} KV`}
+        </Typography>
+      );
+    },
   },
 ];
 
@@ -152,13 +146,13 @@ export const DATA = [
       b2: "300",
       b3: "JELOK-1",
     },
-    sub_sistem: {
-      id: "c836c745-e1db-4777-9699-e40fffaa302d",
-      nama: "Ungaran",
-    },
-    tegangan: {
+    mva: {
       id: "c836c745-e1db-4777-9699-e40fffaa302d",
       value: 150,
+    },
+    rasio_tegangan: {
+      id: "c836c745-e1db-4777-9699-e40fffaa302d",
+      value: "150/20",
     },
   },
 ];

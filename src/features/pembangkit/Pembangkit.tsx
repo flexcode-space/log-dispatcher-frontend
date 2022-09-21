@@ -17,13 +17,13 @@ import { PencilOutline, DeleteOutline } from "mdi-material-ui";
 // ** Custom Components Imports
 import PageHeader from "src/@core/components/page-header";
 
-import { defaultColumns, DATA } from "./Penghantar.constant";
+import { defaultColumns, DATA } from "./Pembangkit.constant";
 import { CellType } from "./types";
 
 import { ModalAdd } from "./modal";
 import { WrapperFilter } from "src/components/filter";
 
-const Penghantar = () => {
+const Pembangkit = () => {
   const router = useRouter();
   const [pageSize, setPageSize] = useState<number>(10);
   const [open, setOpen] = useState<boolean>(false);
@@ -60,7 +60,7 @@ const Penghantar = () => {
         {!isSubsistemPath && (
           <Grid item xs={12}>
             <PageHeader
-              title={<Typography variant="h5">Penghantar</Typography>}
+              title={<Typography variant="h5">Pembangkit</Typography>}
             />
           </Grid>
         )}
@@ -81,7 +81,7 @@ const Penghantar = () => {
                   onClick={handleClickOpen}
                   variant="contained"
                 >
-                  Tambah Penghantar
+                  Tambah Pembangkit
                 </Button>
               </WrapperFilter>
               <DataGrid
@@ -102,4 +102,4 @@ const Penghantar = () => {
   );
 };
 
-export default Penghantar;
+export default Pembangkit;

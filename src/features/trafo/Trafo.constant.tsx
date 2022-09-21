@@ -30,7 +30,7 @@ export const defaultColumns = [
     flex: 0.25,
     minWidth: 200,
     field: "nama",
-    headerName: "Nama Penghantar",
+    headerName: "Nama Trafo",
   },
   {
     flex: 0.25,
@@ -51,40 +51,10 @@ export const defaultColumns = [
     },
   },
   {
-    flex: 0.25,
-    minWidth: 200,
-    field: "sub_sistem",
-    headerName: "Subsistem",
-    renderCell: ({ row }: CellType) => {
-      const { sub_sistem } = row;
-      return (
-        <Typography
-          variant="subtitle2"
-          noWrap
-          sx={{ textTransform: "capitalize" }}
-        >
-          {sub_sistem.nama}
-        </Typography>
-      );
-    },
-  },
-  {
-    flex: 0.25,
-    minWidth: 200,
-    field: "tegangan",
-    headerName: "Tegangan",
-    renderCell: ({ row }: CellType) => {
-      const { tegangan } = row;
-      return (
-        <Typography
-          variant="subtitle2"
-          noWrap
-          sx={{ textTransform: "capitalize" }}
-        >
-          {`${tegangan.value} KV`}
-        </Typography>
-      );
-    },
+    flex: 0.35,
+    minWidth: 100,
+    field: "dmn",
+    headerName: "MVA",
   },
   {
     flex: 0.25,
@@ -99,7 +69,7 @@ export const defaultColumns = [
           noWrap
           sx={{ textTransform: "capitalize" }}
         >
-          {`${arus_nominal} MVA`}
+          {`${arus_nominal} A`}
         </Typography>
       );
     },
@@ -117,7 +87,7 @@ export const defaultColumns = [
           noWrap
           sx={{ textTransform: "capitalize" }}
         >
-          {`${arus_mampu} MVA`}
+          {`${arus_mampu} A`}
         </Typography>
       );
     },
@@ -125,8 +95,20 @@ export const defaultColumns = [
   {
     flex: 0.25,
     minWidth: 200,
-    field: "line",
-    headerName: "Jenis Penghantar",
+    field: "rasio_tegangan",
+    headerName: "Ratio Tegangan",
+    renderCell: ({ row }: CellType) => {
+      const { rasio_tegangan } = row;
+      return (
+        <Typography
+          variant="subtitle2"
+          noWrap
+          sx={{ textTransform: "capitalize" }}
+        >
+          {`${rasio_tegangan?.value} KV`}
+        </Typography>
+      );
+    },
   },
 ];
 
@@ -152,13 +134,14 @@ export const DATA = [
       b2: "300",
       b3: "JELOK-1",
     },
-    sub_sistem: {
+    dmn: "180 MW",
+    tml: "180 MW",
+    bahan_bakar: "Batubara",
+    jenis_pembangkit: "PLTU",
+    kategori: "MRICA",
+    rasio_tegangan: {
       id: "c836c745-e1db-4777-9699-e40fffaa302d",
-      nama: "Ungaran",
-    },
-    tegangan: {
-      id: "c836c745-e1db-4777-9699-e40fffaa302d",
-      value: 150,
+      value: "150/20",
     },
   },
 ];

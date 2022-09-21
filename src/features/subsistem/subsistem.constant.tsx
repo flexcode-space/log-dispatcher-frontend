@@ -81,7 +81,7 @@ export const DATA = [
   {
     busbar: 2,
     ibt: 2,
-    id: "c836c745-e1db-4777-9699-e40fffaa302d",
+    id: "c836c745-e1db-4777-9699-e40fffaa302de",
     nama: "Tanjung Jati",
     pembangkit: 2,
     penghantar: 2,

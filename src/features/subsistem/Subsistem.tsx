@@ -76,8 +76,8 @@ const Subsistem = () => {
                   Tambah Subsistem
                 </Button>
               </WrapperFilter>
-              <Box sx={{ height: 500 }}>
-                <DataGrid rows={DATA.slice(0, 10)} columns={columns} />
+              <Box>
+                <DataGrid autoHeight rows={DATA} columns={columns} />
               </Box>
             </CardContent>
           </Card>

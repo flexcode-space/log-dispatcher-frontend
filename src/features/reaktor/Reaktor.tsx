@@ -17,13 +17,13 @@ import { PencilOutline, DeleteOutline } from "mdi-material-ui";
 // ** Custom Components Imports
 import PageHeader from "src/@core/components/page-header";
 
-import { defaultColumns, DATA } from "./Penghantar.constant";
+import { defaultColumns, DATA } from "./Reaktor.constant";
 import { CellType } from "./types";
 
 import { ModalAdd } from "./modal";
 import { WrapperFilter } from "src/components/filter";
 
-const Penghantar = () => {
+const Reaktor = () => {
   const router = useRouter();
   const [pageSize, setPageSize] = useState<number>(10);
   const [open, setOpen] = useState<boolean>(false);
@@ -59,9 +59,7 @@ const Penghantar = () => {
       <Grid container spacing={6}>
         {!isSubsistemPath && (
           <Grid item xs={12}>
-            <PageHeader
-              title={<Typography variant="h5">Penghantar</Typography>}
-            />
+            <PageHeader title={<Typography variant="h5">Reaktor</Typography>} />
           </Grid>
         )}
         <Grid item xs={12}>
@@ -81,7 +79,7 @@ const Penghantar = () => {
                   onClick={handleClickOpen}
                   variant="contained"
                 >
-                  Tambah Penghantar
+                  Tambah Reaktor
                 </Button>
               </WrapperFilter>
               <DataGrid
@@ -102,4 +100,4 @@ const Penghantar = () => {
   );
 };
 
-export default Penghantar;
+export default Reaktor;
