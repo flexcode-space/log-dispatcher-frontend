@@ -4,6 +4,7 @@ import {
   DialogTitle,
   DialogActions,
   DialogContent,
+  Grid,
 } from "@mui/material";
 
 import { useState } from "react";
@@ -27,16 +28,18 @@ const ModalAddSubsistem = ({ open, handleClose }: ModalAddSubsistemProps) => {
     >
       <DialogTitle id="max-width-dialog-title">Tambah Subsistem</DialogTitle>
       <DialogContent>
-        <StyledForm noValidate>
-          {fields.map((index) => {
-            return (
-              <InputField
-                key={`subsistem-${index}`}
-                name="name"
-                label={`Nama Subsistem ${index + 1}`}
-              />
-            );
-          })}
+        <StyledForm noValidate sx={{ width: "500px" }}>
+          <Grid container spacing={1} mt={1}>
+            {fields.map((index) => {
+              return (
+                <InputField
+                  key={`subsistem-${index}`}
+                  name="name"
+                  label={`Nama Subsistem ${index + 1}`}
+                />
+              );
+            })}
+          </Grid>
           <Button
             style={{ width: "250px" }}
             sx={{ mb: 2 }}

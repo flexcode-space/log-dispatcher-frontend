@@ -63,11 +63,11 @@ const ThemeComponent = (props: Props) => {
 
   return (
     <ThemeProvider theme={theme}>
-      <Direction direction={settings.direction}>
+      {/* <Direction direction={settings.direction}> */}
         <CssBaseline />
         <GlobalStyles styles={() => GlobalStyling(theme, settings) as any} />
         {children}
-      </Direction>
+      {/* </Direction> */}
     </ThemeProvider>
   )
 }

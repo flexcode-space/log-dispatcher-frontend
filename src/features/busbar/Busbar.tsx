@@ -1,5 +1,6 @@
 // ** React Imports
 import { useState } from "react";
+import { useRouter } from "next/router";
 import {
   Box,
   Card,
@@ -16,17 +17,20 @@ import { PencilOutline, DeleteOutline } from "mdi-material-ui";
 // ** Custom Components Imports
 import PageHeader from "src/@core/components/page-header";
 
-import { defaultColumns, DATA } from "./subsistem.constant";
+import { defaultColumns, DATA } from "./Busbar.constant";
 import { CellType } from "./types";
 
-import { ModalAddSubsistem } from "./modal";
+import { ModalAdd } from "./modal";
 import { WrapperFilter } from "src/components/filter";
 
-const Subsistem = () => {
+const Busbar = () => {
+  const router = useRouter();
   const [pageSize, setPageSize] = useState<number>(10);
   const [open, setOpen] = useState<boolean>(false);
 
   const handleClickOpen = () => setOpen(true);
+
+  const isSubsistemPath = router.pathname === "/master-data/subsistem/[detail]";
 
   const columns = [
     ...defaultColumns,
@@ -51,11 +55,15 @@ const Subsistem = () => {
 
   return (
     <>
-      <ModalAddSubsistem open={open} handleClose={() => setOpen(!open)} />
+      <ModalAdd open={open} handleClose={() => setOpen(!open)} />
       <Grid container spacing={6}>
-        <Grid item xs={12}>
-          <PageHeader title={<Typography variant="h5">Subsistem</Typography>} />
-        </Grid>
+        {!isSubsistemPath && (
+          <Grid item xs={12}>
+            <PageHeader
+              title={<Typography variant="h5">Busbar</Typography>}
+            />
+          </Grid>
+        )}
         <Grid item xs={12}>
           <Card>
             <CardContent>
@@ -73,12 +81,19 @@ const Subsistem = () => {
                   onClick={handleClickOpen}
                   variant="contained"
                 >
-                  Tambah Subsistem
+                  Tambah Busbar
                 </Button>
               </WrapperFilter>
-              <Box>
-                <DataGrid autoHeight rows={DATA} columns={columns} />
-              </Box>
+              <DataGrid
+                autoHeight
+                rows={DATA}
+                columns={columns}
+                pageSize={pageSize}
+                disableSelectionOnClick
+                rowsPerPageOptions={[10, 25, 50]}
+                onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+                sx={{ "& .MuiDataGrid-columnHeaders": { borderRadius: 0 } }}
+              />
             </CardContent>
           </Card>
         </Grid>
@@ -87,4 +102,4 @@ const Subsistem = () => {
   );
 };
 
-export default Subsistem;
+export default Busbar;
