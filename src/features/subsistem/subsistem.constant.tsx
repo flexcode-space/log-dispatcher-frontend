@@ -5,7 +5,7 @@ import { CellType } from "./types";
 export const defaultColumns = [
   {
     flex: 0.25,
-    minWidth: 100,
+    minWidth: 150,
     field: "nama",
     headerName: "Subsistem",
   },
@@ -64,28 +64,5 @@ export const defaultColumns = [
     renderCell: ({ row }: CellType) => (
       <Typography variant="body2">{row.reaktor}</Typography>
     ),
-  },
-];
-
-export const DATA = [
-  {
-    busbar: 2,
-    ibt: 2,
-    id: "c836c745-e1db-4777-9699-e40fffaa302d",
-    nama: "Tanjung Jati",
-    pembangkit: 2,
-    penghantar: 2,
-    reaktor: 2,
-    trafo: 2,
-  },
-  {
-    busbar: 2,
-    ibt: 2,
-    id: "c836c745-e1db-4777-9699-e40fffaa302de",
-    nama: "Tanjung Jati",
-    pembangkit: 2,
-    penghantar: 2,
-    reaktor: 2,
-    trafo: 2,
   },
 ];
