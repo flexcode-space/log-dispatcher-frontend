@@ -1,5 +1,5 @@
 // ** React Imports
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import {
   Box,
@@ -17,16 +17,19 @@ import { PencilOutline, DeleteOutline } from "mdi-material-ui";
 // ** Custom Components Imports
 import PageHeader from "src/@core/components/page-header";
 
-import { defaultColumns, DATA } from "./IBT.constant";
+import { defaultColumns } from "./IBT.constant";
 import { CellType } from "./types";
 
 import { ModalAdd } from "./modal";
 import { WrapperFilter } from "src/components/filter";
+import { ibtApi } from "src/api/ibt";
 
 const IBT = () => {
   const router = useRouter();
   const [pageSize, setPageSize] = useState<number>(10);
   const [open, setOpen] = useState<boolean>(false);
+
+  const { getIbtList, ibtList } = ibtApi();
 
   const handleClickOpen = () => setOpen(true);
 
@@ -52,6 +55,10 @@ const IBT = () => {
       ),
     },
   ];
+
+  useEffect(() => {
+    getIbtList();
+  }, []);
 
   return (
     <>
@@ -84,7 +91,7 @@ const IBT = () => {
               </WrapperFilter>
               <DataGrid
                 autoHeight
-                rows={DATA}
+                rows={ibtList}
                 columns={columns}
                 pageSize={pageSize}
                 disableSelectionOnClick

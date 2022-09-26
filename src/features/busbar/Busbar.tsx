@@ -1,5 +1,5 @@
 // ** React Imports
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import {
   Box,
@@ -17,16 +17,20 @@ import { PencilOutline, DeleteOutline } from "mdi-material-ui";
 // ** Custom Components Imports
 import PageHeader from "src/@core/components/page-header";
 
-import { defaultColumns, DATA } from "./Busbar.constant";
+import { defaultColumns } from "./Busbar.constant";
 import { CellType } from "./types";
 
 import { ModalAdd } from "./modal";
 import { WrapperFilter } from "src/components/filter";
 
+import { busbarApi } from "src/api/busbar";
+
 const Busbar = () => {
   const router = useRouter();
   const [pageSize, setPageSize] = useState<number>(10);
   const [open, setOpen] = useState<boolean>(false);
+
+  const { getBusbarList, busbarList } = busbarApi();
 
   const handleClickOpen = () => setOpen(true);
 
@@ -53,15 +57,17 @@ const Busbar = () => {
     },
   ];
 
+  useEffect(() => {
+    getBusbarList();
+  }, []);
+
   return (
     <>
       <ModalAdd open={open} handleClose={() => setOpen(!open)} />
       <Grid container spacing={6}>
         {!isSubsistemPath && (
           <Grid item xs={12}>
-            <PageHeader
-              title={<Typography variant="h5">Busbar</Typography>}
-            />
+            <PageHeader title={<Typography variant="h5">Busbar</Typography>} />
           </Grid>
         )}
         <Grid item xs={12}>
@@ -86,7 +92,7 @@ const Busbar = () => {
               </WrapperFilter>
               <DataGrid
                 autoHeight
-                rows={DATA}
+                rows={busbarList}
                 columns={columns}
                 pageSize={pageSize}
                 disableSelectionOnClick

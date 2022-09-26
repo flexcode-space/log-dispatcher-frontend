@@ -73,43 +73,35 @@ export const defaultColumns = [
     minWidth: 200,
     field: "bahan_bakar",
     headerName: "Bahan Bakar",
+    renderCell: ({ row }: CellType) => {
+      const { bahan_bakar } = row;
+      return (
+        <Typography
+          variant="subtitle2"
+          noWrap
+          sx={{ textTransform: "capitalize" }}
+        >
+          {bahan_bakar.nama}
+        </Typography>
+      );
+    },
   },
   {
     flex: 0.25,
     minWidth: 200,
     field: "kategori",
     headerName: "kategori",
-  },
-];
-
-export const DATA = [
-  {
-    gardu_induk: {
-      id: "c836c745-e1db-4777-9699-e40fffaa302d",
-      nama: "Tambak Lorok",
-    },
-    gardu_induk_tujuan: {
-      id: "c836c745-e1db-4777-9699-e40fffaa302d",
-      nama: "Tambak Lorok",
-    },
-    id: "c836c745-e1db-4777-9699-e40fffaa302d",
-    id_amr: "110011",
-    jenis: "Radial",
-    line: "Penghantar 2",
-    nama: "TRAFO - 1",
-    scada: {
-      b1: "3KWHR3",
-      b2: "300",
-      b3: "JELOK-1",
-    },
-    dmn: "180 MW",
-    tml: "180 MW",
-    bahan_bakar: "Batubara",
-    jenis_pembangkit: "PLTU",
-    kategori: "MRICA",
-    tegangan: {
-      id: "c836c745-e1db-4777-9699-e40fffaa302d",
-      value: 150,
+    renderCell: ({ row }: CellType) => {
+      const { kategori } = row;
+      return (
+        <Typography
+          variant="subtitle2"
+          noWrap
+          sx={{ textTransform: "capitalize" }}
+        >
+          {kategori.nama}
+        </Typography>
+      );
     },
   },
 ];

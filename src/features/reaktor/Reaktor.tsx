@@ -1,5 +1,5 @@
 // ** React Imports
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import {
   Box,
@@ -17,16 +17,20 @@ import { PencilOutline, DeleteOutline } from "mdi-material-ui";
 // ** Custom Components Imports
 import PageHeader from "src/@core/components/page-header";
 
-import { defaultColumns, DATA } from "./Reaktor.constant";
+import { defaultColumns } from "./Reaktor.constant";
 import { CellType } from "./types";
 
 import { ModalAdd } from "./modal";
 import { WrapperFilter } from "src/components/filter";
 
+import { reaktorApi } from "src/api/reaktor";
+
 const Reaktor = () => {
   const router = useRouter();
   const [pageSize, setPageSize] = useState<number>(10);
   const [open, setOpen] = useState<boolean>(false);
+
+  const { getReaktorList, reaktorList } = reaktorApi();
 
   const handleClickOpen = () => setOpen(true);
 
@@ -52,6 +56,10 @@ const Reaktor = () => {
       ),
     },
   ];
+
+  useEffect(() => {
+    getReaktorList();
+  }, []);
 
   return (
     <>
@@ -84,7 +92,7 @@ const Reaktor = () => {
               </WrapperFilter>
               <DataGrid
                 autoHeight
-                rows={DATA}
+                rows={reaktorList}
                 columns={columns}
                 pageSize={pageSize}
                 disableSelectionOnClick

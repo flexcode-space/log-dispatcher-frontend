@@ -1,5 +1,5 @@
 // ** React Imports
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import {
   Box,
@@ -17,16 +17,20 @@ import { PencilOutline, DeleteOutline } from "mdi-material-ui";
 // ** Custom Components Imports
 import PageHeader from "src/@core/components/page-header";
 
-import { defaultColumns, DATA } from "./Penghantar.constant";
+import { defaultColumns } from "./Penghantar.constant";
 import { CellType } from "./types";
 
 import { ModalAdd } from "./modal";
 import { WrapperFilter } from "src/components/filter";
 
+import { penghantarApi } from "src/api/penghantar";
+
 const Penghantar = () => {
   const router = useRouter();
   const [pageSize, setPageSize] = useState<number>(10);
   const [open, setOpen] = useState<boolean>(false);
+
+  const { getPenghantarList, penghantarList } = penghantarApi();
 
   const handleClickOpen = () => setOpen(true);
 
@@ -52,6 +56,10 @@ const Penghantar = () => {
       ),
     },
   ];
+
+  useEffect(() => {
+    getPenghantarList();
+  }, []);
 
   return (
     <>
@@ -86,7 +94,7 @@ const Penghantar = () => {
               </WrapperFilter>
               <DataGrid
                 autoHeight
-                rows={DATA}
+                rows={penghantarList}
                 columns={columns}
                 pageSize={pageSize}
                 disableSelectionOnClick
