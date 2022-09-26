@@ -29,11 +29,12 @@ const Pembangkit = () => {
   const [pageSize, setPageSize] = useState<number>(10);
   const [open, setOpen] = useState<boolean>(false);
 
-  const { pembangkitList, getPembangkitList } = pembangkitApi();
+  const { pembangkitList, getPembangkitList, getPembangkitBySubsistemId } =
+    pembangkitApi();
 
   const handleClickOpen = () => setOpen(true);
 
-  const isSubsistemPath = router.pathname === "/master-data/subsistem/[detail]";
+  const subsistemId = router.query.id as string;
 
   const columns = [
     ...defaultColumns,
@@ -57,14 +58,18 @@ const Pembangkit = () => {
   ];
 
   useEffect(() => {
-    getPembangkitList();
+    if (subsistemId) {
+      getPembangkitBySubsistemId(subsistemId);
+    } else {
+      getPembangkitList();
+    }
   }, []);
 
   return (
     <>
       <ModalAdd open={open} handleClose={() => setOpen(!open)} />
       <Grid container spacing={6}>
-        {!isSubsistemPath && (
+        {!subsistemId && (
           <Grid item xs={12}>
             <PageHeader
               title={<Typography variant="h5">Pembangkit</Typography>}

@@ -19,11 +19,23 @@ const reaktorApi = () => {
     }
   }, [])
 
+  const getReaktorBySubsistemId = useCallback(async (id: string) => {
+    setLoading(true)
+
+    try {
+      const { data: { data } } = await Axios.get(`${endpoint}/sub-sistem/${id}`)
+      setReaktorList(data || [])
+    } finally {
+      setLoading(false)
+    }
+  }, [])
+
 
   return {
     reaktorList,
     loading,
-    getReaktorList
+    getReaktorList,
+    getReaktorBySubsistemId
   }
 }
 

@@ -19,11 +19,23 @@ const busbarApi = () => {
     }
   }, [])
 
+  const getBusbarBySubsistemId = useCallback(async (id: string) => {
+    setLoading(true)
+
+    try {
+      const { data: { data } } = await Axios.get(`${endpoint}/sub-sistem/${id}`)
+      setBusbarList(data || [])
+    } finally {
+      setLoading(false)
+    }
+  }, [])
+
 
   return {
     busbarList,
     loading,
-    getBusbarList
+    getBusbarList,
+    getBusbarBySubsistemId
   }
 }
 

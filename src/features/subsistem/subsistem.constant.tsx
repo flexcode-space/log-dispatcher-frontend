@@ -3,6 +3,8 @@ import Typography from "@mui/material/Typography";
 import { CellType } from "./types";
 import { StyledLink } from "src/components/link";
 
+const url = "/master-data/subsistem";
+
 export const defaultColumns = [
   {
     flex: 0.25,
@@ -16,7 +18,7 @@ export const defaultColumns = [
     minWidth: 80,
     headerName: "Jumlah IBT",
     renderCell: ({ row }: CellType) => (
-      <Link href="/master-data/subsistem/detail">
+      <Link href={`${url}/${row.id}?tab=ibt`}>
         <StyledLink>{row.ibt}</StyledLink>
       </Link>
     ),
@@ -27,7 +29,7 @@ export const defaultColumns = [
     minWidth: 80,
     headerName: "Jumlah Pembangkit",
     renderCell: ({ row }: CellType) => (
-      <Link href="/master-data/subsistem/detail">
+      <Link href={`${url}/${row.id}?tab=pembangkit`}>
         <StyledLink>{row.pembangkit}</StyledLink>
       </Link>
     ),

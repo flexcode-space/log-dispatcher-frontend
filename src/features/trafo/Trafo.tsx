@@ -30,11 +30,11 @@ const Trafo = () => {
   const [pageSize, setPageSize] = useState<number>(10);
   const [open, setOpen] = useState<boolean>(false);
 
-  const { getTrafoList, trafoList } = trafoApi();
+  const { getTrafoList, trafoList, getTrafoBySubsistemId } = trafoApi();
 
   const handleClickOpen = () => setOpen(true);
 
-  const isSubsistemPath = router.pathname === "/master-data/subsistem/[detail]";
+  const subsistemId = router.query.id as string;
 
   const columns = [
     ...defaultColumns,
@@ -58,14 +58,18 @@ const Trafo = () => {
   ];
 
   useEffect(() => {
-    getTrafoList();
+    if (subsistemId) {
+      getTrafoBySubsistemId(subsistemId);
+    } else {
+      getTrafoList();
+    }
   }, []);
 
   return (
     <>
       <ModalAdd open={open} handleClose={() => setOpen(!open)} />
       <Grid container spacing={6}>
-        {!isSubsistemPath && (
+        {!subsistemId && (
           <Grid item xs={12}>
             <PageHeader title={<Typography variant="h5">Trafo</Typography>} />
           </Grid>

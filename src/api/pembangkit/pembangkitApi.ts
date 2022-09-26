@@ -19,11 +19,21 @@ const pembangkitApi = () => {
     }
   }, [])
 
+  const getPembangkitBySubsistemId = useCallback(async (id: string) => {
+    setLoading(true)
+    try {
+      const { data: { data } } = await Axios.get(`${endpoint}/sub-sistem/${id}`)
+      setPembangkitList(data || [])
+    } finally {
+      setLoading(false)
+    }
+  }, [])
 
   return {
     pembangkitList,
     loading,
-    getPembangkitList
+    getPembangkitList,
+    getPembangkitBySubsistemId
   }
 }
 
