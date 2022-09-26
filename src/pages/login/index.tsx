@@ -346,7 +346,7 @@ const LoginPage = () => {
               <Button fullWidth size='large' type='submit' variant='contained' sx={{ mb: 7 }}>
                 Login
               </Button>
-              <Box sx={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', justifyContent: 'center' }}>
+              {/* <Box sx={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', justifyContent: 'center' }}>
                 <Typography sx={{ mr: 2, color: 'text.secondary' }}>New on our platform?</Typography>
                 <Typography>
                   <Link passHref href='/register'>
@@ -355,9 +355,9 @@ const LoginPage = () => {
                     </Typography>
                   </Link>
                 </Typography>
-              </Box>
-              <Divider sx={{ mt: 5, mb: 7.5, '& .MuiDivider-wrapper': { px: 4 } }}>or</Divider>
-              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              </Box> */}
+              {/* <Divider sx={{ mt: 5, mb: 7.5, '& .MuiDivider-wrapper': { px: 4 } }}>or</Divider> */}
+              {/* <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <Link href='/' passHref>
                   <IconButton component='a' onClick={(e: MouseEvent<HTMLElement>) => e.preventDefault()}>
                     <Facebook sx={{ color: '#497ce2' }} />
@@ -380,7 +380,7 @@ const LoginPage = () => {
                     <Google sx={{ color: '#db4437' }} />
                   </IconButton>
                 </Link>
-              </Box>
+              </Box> */}
             </form>
           </BoxWrapper>
         </Box>

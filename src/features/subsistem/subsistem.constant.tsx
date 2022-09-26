@@ -1,11 +1,12 @@
 import Link from "next/link";
 import Typography from "@mui/material/Typography";
 import { CellType } from "./types";
+import { StyledLink } from "src/components/link";
 
 export const defaultColumns = [
   {
     flex: 0.25,
-    minWidth: 100,
+    minWidth: 150,
     field: "nama",
     headerName: "Subsistem",
   },
@@ -16,7 +17,7 @@ export const defaultColumns = [
     headerName: "Jumlah IBT",
     renderCell: ({ row }: CellType) => (
       <Link href="/master-data/subsistem/detail">
-        <a>{row.ibt}</a>
+        <StyledLink>{row.ibt}</StyledLink>
       </Link>
     ),
   },
@@ -26,7 +27,9 @@ export const defaultColumns = [
     minWidth: 80,
     headerName: "Jumlah Pembangkit",
     renderCell: ({ row }: CellType) => (
-      <Typography variant="body2">{row.pembangkit}</Typography>
+      <Link href="/master-data/subsistem/detail">
+        <StyledLink>{row.pembangkit}</StyledLink>
+      </Link>
     ),
   },
   {
@@ -35,7 +38,9 @@ export const defaultColumns = [
     field: "penghantar",
     headerName: "Jumlah Penghantar",
     renderCell: ({ row }: CellType) => (
-      <Typography variant="body2">{row.penghantar}</Typography>
+      <Link href="/master-data/subsistem/detail">
+        <StyledLink>{row.penghantar}</StyledLink>
+      </Link>
     ),
   },
   {
@@ -44,7 +49,9 @@ export const defaultColumns = [
     minWidth: 80,
     headerName: "Jumlah Trafo",
     renderCell: ({ row }: CellType) => (
-      <Typography variant="body2">{row.trafo}</Typography>
+      <Link href="/master-data/subsistem/detail">
+        <StyledLink>{row.trafo}</StyledLink>
+      </Link>
     ),
   },
   {
@@ -53,7 +60,9 @@ export const defaultColumns = [
     minWidth: 80,
     headerName: "Busbar",
     renderCell: ({ row }: CellType) => (
-      <Typography variant="body2">{row.busbar}</Typography>
+      <Link href="/master-data/subsistem/detail">
+        <StyledLink>{row.busbar}</StyledLink>
+      </Link>
     ),
   },
   {
@@ -62,30 +71,9 @@ export const defaultColumns = [
     minWidth: 80,
     headerName: "Reaktor Kapasitor",
     renderCell: ({ row }: CellType) => (
-      <Typography variant="body2">{row.reaktor}</Typography>
+      <Link href="/master-data/subsistem/detail">
+        <StyledLink>{row.reaktor}</StyledLink>
+      </Link>
     ),
-  },
-];
-
-export const DATA = [
-  {
-    busbar: 2,
-    ibt: 2,
-    id: "c836c745-e1db-4777-9699-e40fffaa302d",
-    nama: "Tanjung Jati",
-    pembangkit: 2,
-    penghantar: 2,
-    reaktor: 2,
-    trafo: 2,
-  },
-  {
-    busbar: 2,
-    ibt: 2,
-    id: "c836c745-e1db-4777-9699-e40fffaa302de",
-    nama: "Tanjung Jati",
-    pembangkit: 2,
-    penghantar: 2,
-    reaktor: 2,
-    trafo: 2,
   },
 ];

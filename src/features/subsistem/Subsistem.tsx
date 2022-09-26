@@ -1,5 +1,5 @@
 // ** React Imports
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Box,
   Card,
@@ -16,15 +16,23 @@ import { PencilOutline, DeleteOutline } from "mdi-material-ui";
 // ** Custom Components Imports
 import PageHeader from "src/@core/components/page-header";
 
-import { defaultColumns, DATA } from "./subsistem.constant";
+import { defaultColumns } from "./subsistem.constant";
 import { CellType } from "./types";
 
 import { ModalAddSubsistem } from "./modal";
 import { WrapperFilter } from "src/components/filter";
 
+import { subsistemApi } from "src/api/subsistem";
+import { useDebounce } from "src/hooks/useDebounce";
+
 const Subsistem = () => {
   const [pageSize, setPageSize] = useState<number>(10);
   const [open, setOpen] = useState<boolean>(false);
+  const [search, setSearch] = useState<string>("");
+
+  const debouncedSearch = useDebounce(search, 500);
+
+  const { subsistemList, getSubsistemList, loading } = subsistemApi();
 
   const handleClickOpen = () => setOpen(true);
 
@@ -49,6 +57,14 @@ const Subsistem = () => {
     },
   ];
 
+  useEffect(() => {
+    if (debouncedSearch) {
+      getSubsistemList({ search });
+    } else {
+      getSubsistemList();
+    }
+  }, [debouncedSearch]);
+
   return (
     <>
       <ModalAddSubsistem open={open} handleClose={() => setOpen(!open)} />
@@ -62,10 +78,10 @@ const Subsistem = () => {
               <WrapperFilter>
                 <TextField
                   size="small"
-                  value=""
+                  value={search}
                   sx={{ mr: 6, mb: 2 }}
                   placeholder="Cari"
-                  onChange={(e) => null}
+                  onChange={(e) => setSearch(e.target.value)}
                 />
 
                 <Button
@@ -77,7 +93,12 @@ const Subsistem = () => {
                 </Button>
               </WrapperFilter>
               <Box>
-                <DataGrid autoHeight rows={DATA} columns={columns} />
+                <DataGrid
+                  autoHeight
+                  loading={loading}
+                  rows={subsistemList}
+                  columns={columns}
+                />
               </Box>
             </CardContent>
           </Card>

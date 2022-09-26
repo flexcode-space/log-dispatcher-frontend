@@ -1,5 +1,5 @@
 // ** React Imports
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import {
   Box,
@@ -17,16 +17,20 @@ import { PencilOutline, DeleteOutline } from "mdi-material-ui";
 // ** Custom Components Imports
 import PageHeader from "src/@core/components/page-header";
 
-import { defaultColumns, DATA } from "./Trafo.constant";
+import { defaultColumns } from "./Trafo.constant";
 import { CellType } from "./types";
 
 import { ModalAdd } from "./modal";
 import { WrapperFilter } from "src/components/filter";
 
+import { trafoApi } from "src/api/trafo";
+
 const Trafo = () => {
   const router = useRouter();
   const [pageSize, setPageSize] = useState<number>(10);
   const [open, setOpen] = useState<boolean>(false);
+
+  const { getTrafoList, trafoList } = trafoApi();
 
   const handleClickOpen = () => setOpen(true);
 
@@ -53,15 +57,17 @@ const Trafo = () => {
     },
   ];
 
+  useEffect(() => {
+    getTrafoList();
+  }, []);
+
   return (
     <>
       <ModalAdd open={open} handleClose={() => setOpen(!open)} />
       <Grid container spacing={6}>
         {!isSubsistemPath && (
           <Grid item xs={12}>
-            <PageHeader
-              title={<Typography variant="h5">Trafo</Typography>}
-            />
+            <PageHeader title={<Typography variant="h5">Trafo</Typography>} />
           </Grid>
         )}
         <Grid item xs={12}>
@@ -86,7 +92,7 @@ const Trafo = () => {
               </WrapperFilter>
               <DataGrid
                 autoHeight
-                rows={DATA}
+                rows={trafoList}
                 columns={columns}
                 pageSize={pageSize}
                 disableSelectionOnClick

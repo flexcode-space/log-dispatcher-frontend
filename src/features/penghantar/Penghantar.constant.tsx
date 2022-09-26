@@ -129,36 +129,3 @@ export const defaultColumns = [
     headerName: "Jenis Penghantar",
   },
 ];
-
-export const DATA = [
-  {
-    arus_mampu: 180,
-    arus_nominal: 180,
-    gardu_induk: {
-      id: "c836c745-e1db-4777-9699-e40fffaa302d",
-      nama: "Tambak Lorok",
-    },
-    gardu_induk_tujuan: {
-      id: "c836c745-e1db-4777-9699-e40fffaa302d",
-      nama: "Tambak Lorok",
-    },
-    id: "c836c745-e1db-4777-9699-e40fffaa302d",
-    id_amr: "110011",
-    jenis: "Radial",
-    line: "Penghantar 2",
-    nama: "TRAFO - 1",
-    scada: {
-      b1: "3KWHR3",
-      b2: "300",
-      b3: "JELOK-1",
-    },
-    sub_sistem: {
-      id: "c836c745-e1db-4777-9699-e40fffaa302d",
-      nama: "Ungaran",
-    },
-    tegangan: {
-      id: "c836c745-e1db-4777-9699-e40fffaa302d",
-      value: 150,
-    },
-  },
-];
