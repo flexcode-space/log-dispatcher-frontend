@@ -1,39 +1,45 @@
-import { FormControl, TextField } from "@mui/material";
-import { useForm, Controller } from "react-hook-form";
+import { FormControl, TextField, FormHelperText } from "@mui/material";
+import { useFormContext, Controller } from "react-hook-form";
 
 type InputFieldProps = {
   label: string;
   name: string;
   placeholder?: string;
+  type?: string;
 };
 
-export const InputField = ({ label, name, placeholder }: InputFieldProps) => {
+export const InputField = ({
+  label,
+  name,
+  placeholder,
+  type = "text",
+}: InputFieldProps) => {
   const {
     control,
     formState: { errors },
-  } = useForm();
+  } = useFormContext();
 
   return (
     <FormControl fullWidth sx={{ mb: 4 }}>
       <Controller
         name={name}
         control={control}
-        rules={{ required: true }}
-        render={(field) => (
+        render={({ field: { value, onChange } }) => (
           <TextField
-            {...field}
+            type={type}
+            value={value}
+            onChange={onChange}
             autoFocus
             label={label}
             placeholder={placeholder}
-            // style={{ width: "500px" }}
           />
         )}
       />
-      {/* {errors.email && (
+      {errors?.[name] && (
         <FormHelperText sx={{ color: "error.main" }}>
-          {errors.email.message}
+          {errors?.[name].message}
         </FormHelperText>
-      )} */}
+      )}
     </FormControl>
   );
 };

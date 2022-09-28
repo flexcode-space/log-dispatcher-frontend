@@ -22,6 +22,16 @@ const pembangkitApi = () => {
     }
   }, [])
 
+  const createPembangkit = useCallback(async (payload: any) => {
+    try {
+      await Axios.post(endpoint, payload)
+    } catch (error) {
+      console.log('error')
+    } finally {
+      setLoading(false)
+    }
+  }, [])
+
   const getPembangkitBySubsistemId = useCallback(async (id: string) => {
     setLoading(true)
     try {
@@ -75,7 +85,8 @@ const pembangkitApi = () => {
     getPembangkitBySubsistemId,
     getJenisPembangkit,
     getBahanBakar,
-    getKategoriPembangkit
+    getKategoriPembangkit,
+    createPembangkit
   }
 }
 

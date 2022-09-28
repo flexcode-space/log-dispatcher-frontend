@@ -29,8 +29,20 @@ export const defaultColumns = [
   {
     flex: 0.25,
     minWidth: 200,
-    field: "jenis_pembangkit",
+    field: "jenis",
     headerName: "Jenis Pembangkit",
+    renderCell: ({ row }: CellType) => {
+      const { jenis } = row;
+      return (
+        <Typography
+          variant="subtitle2"
+          noWrap
+          sx={{ textTransform: "capitalize" }}
+        >
+          {jenis.nama}
+        </Typography>
+      );
+    },
   },
   {
     flex: 0.25,

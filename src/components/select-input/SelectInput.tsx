@@ -1,5 +1,11 @@
-import { FormControl, MenuItem, InputLabel, Select } from "@mui/material";
-import { useForm, Controller } from "react-hook-form";
+import {
+  FormControl,
+  MenuItem,
+  InputLabel,
+  Select,
+  FormHelperText,
+} from "@mui/material";
+import { useFormContext, Controller } from "react-hook-form";
 
 type SelectInputProps = {
   label: string;
@@ -17,19 +23,19 @@ const SelectInput = ({
   const {
     control,
     formState: { errors },
-  } = useForm();
+  } = useFormContext();
 
   return (
     <FormControl fullWidth sx={{ mb: 4 }}>
       <Controller
         name={name}
         control={control}
-        rules={{ required: true }}
-        render={(field) => (
+        render={({ field: { value, onChange } }) => (
           <>
             <InputLabel>{label}</InputLabel>
             <Select
-              {...field}
+              value={value}
+              onChange={onChange}
               autoFocus
               label={label}
               placeholder={placeholder}
@@ -43,6 +49,11 @@ const SelectInput = ({
           </>
         )}
       />
+      {errors?.[name] && (
+        <FormHelperText sx={{ color: "error.main" }}>
+          {errors?.[name].message}
+        </FormHelperText>
+      )}
     </FormControl>
   );
 };
