@@ -11,6 +11,7 @@ import { useState } from "react";
 import { StyledForm } from "../Pembangkit.styled";
 import { InputField } from "src/components/input-field";
 import { SelectInput } from "src/components/select-input";
+import { useModal } from "./useModal";
 
 type ModalAddProps = {
   open: boolean;
@@ -19,6 +20,14 @@ type ModalAddProps = {
 
 const ModalAdd = ({ open, handleClose }: ModalAddProps) => {
   const [fields, setFields] = useState<Array<number>>([0]);
+
+  const {
+    subsistemOptions,
+    garduIndukOptions,
+    jenisPembangkitOptions,
+    bahanBakarOptions,
+    kategoriPembangkitOptions,
+  } = useModal();
 
   return (
     <Dialog
@@ -35,29 +44,45 @@ const ModalAdd = ({ open, handleClose }: ModalAddProps) => {
               <SelectInput
                 label="Subsistem"
                 name="subsistem"
-                options={[{ value: "1", label: "Subsistem 1" }]}
+                options={subsistemOptions}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
               <SelectInput
-                label="Gardu Induk Asal"
-                name="gardu-asal"
-                options={[{ value: "1", label: "Gardu Induk Asal 1" }]}
+                label="Gardu Induk"
+                name="gardu_induk_id"
+                options={garduIndukOptions}
+              />
+            </Grid>
+            <Grid item xs={12} sm={12}>
+              <InputField name="nama" label="Nama Pembangkit" />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <SelectInput
+                label="Jenis Pembangkit"
+                name="jenis_pembangkit_id"
+                options={jenisPembangkitOptions}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
               <SelectInput
-                label="Gardu Induk Tujuan"
-                name="gardu-tujuan"
-                options={[{ value: "1", label: "Gardu Induk Tujuan 1" }]}
+                label="Bahan Bakar"
+                name="bahan_bakar_id"
+                options={bahanBakarOptions}
               />
             </Grid>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12} sm={4}>
               <SelectInput
-                label="Line"
-                name="line"
-                options={[{ value: "1", label: "Line 1" }]}
+                label="Kategori"
+                name="kategori_pembangkit_id"
+                options={kategoriPembangkitOptions}
               />
+            </Grid>
+            <Grid item xs={12} sm={4}>
+              <InputField name="dmn" label="DMN" />
+            </Grid>
+            <Grid item xs={12} sm={4}>
+              <InputField name="tml" label="TML" />
             </Grid>
             <Grid item xs={12} sm={4}>
               <InputField name="b1" label="B1" />
@@ -70,29 +95,6 @@ const ModalAdd = ({ open, handleClose }: ModalAddProps) => {
             </Grid>
             <Grid item xs={12} sm={12}>
               <InputField name="id_point" label="ID Point" />
-            </Grid>
-            <Grid item xs={12} sm={12}>
-              <SelectInput
-                label="Tegangan (KV)"
-                name="tegangan"
-                options={[{ value: "1", label: "100 KV" }]}
-              />
-            </Grid>
-            <Grid item xs={12} sm={4}>
-              <InputField name="arus_nominal" label="Arus Nominal (A)" />
-            </Grid>
-            <Grid item xs={12} sm={4}>
-              <InputField name="arus_mampu" label="Arus Mampu (A)" />
-            </Grid>
-            <Grid item xs={12} sm={4}>
-              <SelectInput
-                label="Jenis Penghantar"
-                name="penghantar"
-                options={[{ value: "1", label: "Penghantar 1" }]}
-              />
-            </Grid>
-            <Grid item xs={12} sm={12}>
-              <InputField name="nama_penghantar" label="Nama Penghantar" />
             </Grid>
           </Grid>
         </StyledForm>

@@ -7,7 +7,7 @@ type InputFieldProps = {
   placeholder?: string;
 };
 
-const InputField = ({ label, name, placeholder }: InputFieldProps) => {
+export const InputField = ({ label, name, placeholder }: InputFieldProps) => {
   const {
     control,
     formState: { errors },
@@ -37,5 +37,3 @@ const InputField = ({ label, name, placeholder }: InputFieldProps) => {
     </FormControl>
   );
 };
-
-export default InputField;
