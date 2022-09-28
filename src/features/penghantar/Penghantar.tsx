@@ -30,11 +30,12 @@ const Penghantar = () => {
   const [pageSize, setPageSize] = useState<number>(10);
   const [open, setOpen] = useState<boolean>(false);
 
-  const { getPenghantarList, penghantarList } = penghantarApi();
+  const { getPenghantarList, penghantarList, getPenghantarBySubsistemId } =
+    penghantarApi();
 
   const handleClickOpen = () => setOpen(true);
 
-  const isSubsistemPath = router.pathname === "/master-data/subsistem/[detail]";
+  const subsistemId = router.query.id as string;
 
   const columns = [
     ...defaultColumns,
@@ -58,14 +59,18 @@ const Penghantar = () => {
   ];
 
   useEffect(() => {
-    getPenghantarList();
+    if (subsistemId) {
+      getPenghantarBySubsistemId(subsistemId);
+    } else {
+      getPenghantarList();
+    }
   }, []);
 
   return (
     <>
       <ModalAdd open={open} handleClose={() => setOpen(!open)} />
       <Grid container spacing={6}>
-        {!isSubsistemPath && (
+        {!subsistemId && (
           <Grid item xs={12}>
             <PageHeader
               title={<Typography variant="h5">Penghantar</Typography>}

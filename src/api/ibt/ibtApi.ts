@@ -20,10 +20,23 @@ const ibtApi = () => {
   }, [])
 
 
+  const getIbtBySubsistemId = useCallback(async (id: string) => {
+    setLoading(true)
+    try {
+      const { data: { data } } = await Axios.get(`${endpoint}/sub-sistem/${id}`)
+      setIbtList(data || [])
+    } catch (error) { }
+    finally {
+      setLoading(false)
+    }
+  }, [])
+
+
   return {
     ibtList,
     loading,
-    getIbtList
+    getIbtList,
+    getIbtBySubsistemId,
   }
 }
 

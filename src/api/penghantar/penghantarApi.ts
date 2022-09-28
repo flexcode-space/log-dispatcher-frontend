@@ -19,11 +19,23 @@ const penghantarApi = () => {
     }
   }, [])
 
+  const getPenghantarBySubsistemId = useCallback(async (id: string) => {
+    setLoading(true)
+
+    try {
+      const { data: { data } } = await Axios.get(`${endpoint}/sub-sistem/${id}`)
+      setPenghantarList(data || [])
+    } finally {
+      setLoading(false)
+    }
+  }, [])
+
 
   return {
     penghantarList,
     loading,
-    getPenghantarList
+    getPenghantarList,
+    getPenghantarBySubsistemId,
   }
 }
 

@@ -30,11 +30,11 @@ const Reaktor = () => {
   const [pageSize, setPageSize] = useState<number>(10);
   const [open, setOpen] = useState<boolean>(false);
 
-  const { getReaktorList, reaktorList } = reaktorApi();
+  const { getReaktorList, reaktorList, getReaktorBySubsistemId } = reaktorApi();
 
   const handleClickOpen = () => setOpen(true);
 
-  const isSubsistemPath = router.pathname === "/master-data/subsistem/[detail]";
+  const subsistemId = router.query.id as string;
 
   const columns = [
     ...defaultColumns,
@@ -58,14 +58,18 @@ const Reaktor = () => {
   ];
 
   useEffect(() => {
-    getReaktorList();
+    if (subsistemId) {
+      getReaktorBySubsistemId(subsistemId);
+    } else {
+      getReaktorList();
+    }
   }, []);
 
   return (
     <>
       <ModalAdd open={open} handleClose={() => setOpen(!open)} />
       <Grid container spacing={6}>
-        {!isSubsistemPath && (
+        {!subsistemId && (
           <Grid item xs={12}>
             <PageHeader title={<Typography variant="h5">Reaktor</Typography>} />
           </Grid>

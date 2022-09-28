@@ -29,11 +29,11 @@ const IBT = () => {
   const [pageSize, setPageSize] = useState<number>(10);
   const [open, setOpen] = useState<boolean>(false);
 
-  const { getIbtList, ibtList } = ibtApi();
+  const { getIbtList, ibtList, getIbtBySubsistemId } = ibtApi();
+
+  const subsistemId = router.query.id as string;
 
   const handleClickOpen = () => setOpen(true);
-
-  const isSubsistemPath = router.pathname === "/master-data/subsistem/[detail]";
 
   const columns = [
     ...defaultColumns,
@@ -57,14 +57,18 @@ const IBT = () => {
   ];
 
   useEffect(() => {
-    getIbtList();
+    if (subsistemId) {
+      getIbtBySubsistemId(subsistemId);
+    } else {
+      getIbtList();
+    }
   }, []);
 
   return (
     <>
       <ModalAdd open={open} handleClose={() => setOpen(!open)} />
       <Grid container spacing={6}>
-        {!isSubsistemPath && (
+        {!subsistemId && (
           <Grid item xs={12}>
             <PageHeader title={<Typography variant="h5">IBT</Typography>} />
           </Grid>

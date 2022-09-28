@@ -1,3 +1,5 @@
+import { useState } from "react";
+import { useForm, FormProvider } from "react-hook-form";
 import {
   Button,
   Dialog,
@@ -6,11 +8,15 @@ import {
   DialogContent,
   Grid,
 } from "@mui/material";
-
-import { useState } from "react";
+import { yupResolver } from "@hookform/resolvers/yup";
 import { StyledForm } from "../Pembangkit.styled";
 import { InputField } from "src/components/input-field";
 import { SelectInput } from "src/components/select-input";
+
+import { pembangkitApi } from "src/api/pembangkit";
+
+import { useModal } from "./useModal";
+import { initialValues, validationSchema } from "./ModalAdd.constants";
 
 type ModalAddProps = {
   open: boolean;
@@ -20,6 +26,40 @@ type ModalAddProps = {
 const ModalAdd = ({ open, handleClose }: ModalAddProps) => {
   const [fields, setFields] = useState<Array<number>>([0]);
 
+  const {
+    subsistemOptions,
+    garduIndukOptions,
+    jenisPembangkitOptions,
+    bahanBakarOptions,
+    kategoriPembangkitOptions,
+  } = useModal();
+
+  const { createPembangkit } = pembangkitApi();
+
+  const formMethods = useForm({
+    resolver: yupResolver(validationSchema),
+    defaultValues: initialValues,
+    mode: "onSubmit",
+  });
+
+  const onSubmit = (event?: React.FormEvent<HTMLFormElement>) => {
+    event?.preventDefault();
+
+    formMethods.handleSubmit(async (values) => {
+      const { b1, b2, b3, dmn, tml, ...rest } = values;
+
+      const payload = {
+        ...rest,
+        dmn: Number(values.dmn),
+        tml: Number(values.tml),
+        scada: { b1, b2, b3 },
+      };
+
+      await createPembangkit(payload);
+      handleClose();
+    })();
+  };
+
   return (
     <Dialog
       open={open}
@@ -27,84 +67,81 @@ const ModalAdd = ({ open, handleClose }: ModalAddProps) => {
       onClose={handleClose}
       aria-labelledby="form-dialog-title"
     >
-      <DialogTitle id="max-width-dialog-title">Tambah Pembangkit</DialogTitle>
-      <DialogContent>
-        <StyledForm noValidate sx={{ width: "500px" }}>
-          <Grid container spacing={1} mt={1}>
-            <Grid item xs={12} sm={6}>
-              <SelectInput
-                label="Subsistem"
-                name="subsistem"
-                options={[{ value: "1", label: "Subsistem 1" }]}
-              />
+      <FormProvider {...formMethods}>
+        <StyledForm noValidate sx={{ width: "500px" }} onSubmit={onSubmit}>
+          <DialogTitle id="max-width-dialog-title">
+            Tambah Pembangkit
+          </DialogTitle>
+          <DialogContent>
+            <Grid container spacing={1} mt={1}>
+              <Grid item xs={12} sm={6}>
+                <SelectInput
+                  label="Subsistem"
+                  name="sub_sistem_id"
+                  options={subsistemOptions}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <SelectInput
+                  label="Gardu Induk"
+                  name="gardu_induk_id"
+                  options={garduIndukOptions}
+                />
+              </Grid>
+              <Grid item xs={12} sm={12}>
+                <InputField name="nama" label="Nama Pembangkit" />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <SelectInput
+                  label="Jenis Pembangkit"
+                  name="jenis_pembangkit_id"
+                  options={jenisPembangkitOptions}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <SelectInput
+                  label="Bahan Bakar"
+                  name="bahan_bakar_id"
+                  options={bahanBakarOptions}
+                />
+              </Grid>
+              <Grid item xs={12} sm={4}>
+                <SelectInput
+                  label="Kategori"
+                  name="kategori_pembangkit_id"
+                  options={kategoriPembangkitOptions}
+                />
+              </Grid>
+              <Grid item xs={12} sm={4}>
+                <InputField type="number" name="dmn" label="DMN" />
+              </Grid>
+              <Grid item xs={12} sm={4}>
+                <InputField type="number" name="tml" label="TML" />
+              </Grid>
+              <Grid item xs={12} sm={4}>
+                <InputField name="b1" label="B1" />
+              </Grid>
+              <Grid item xs={12} sm={4}>
+                <InputField name="b2" label="B2" />
+              </Grid>
+              <Grid item xs={12} sm={4}>
+                <InputField name="b3" label="B3" />
+              </Grid>
+              <Grid item xs={12} sm={12}>
+                <InputField name="id_amr" label="ID Point" />
+              </Grid>
             </Grid>
-            <Grid item xs={12} sm={6}>
-              <SelectInput
-                label="Gardu Induk Asal"
-                name="gardu-asal"
-                options={[{ value: "1", label: "Gardu Induk Asal 1" }]}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <SelectInput
-                label="Gardu Induk Tujuan"
-                name="gardu-tujuan"
-                options={[{ value: "1", label: "Gardu Induk Tujuan 1" }]}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <SelectInput
-                label="Line"
-                name="line"
-                options={[{ value: "1", label: "Line 1" }]}
-              />
-            </Grid>
-            <Grid item xs={12} sm={4}>
-              <InputField name="b1" label="B1" />
-            </Grid>
-            <Grid item xs={12} sm={4}>
-              <InputField name="b2" label="B2" />
-            </Grid>
-            <Grid item xs={12} sm={4}>
-              <InputField name="b3" label="B3" />
-            </Grid>
-            <Grid item xs={12} sm={12}>
-              <InputField name="id_point" label="ID Point" />
-            </Grid>
-            <Grid item xs={12} sm={12}>
-              <SelectInput
-                label="Tegangan (KV)"
-                name="tegangan"
-                options={[{ value: "1", label: "100 KV" }]}
-              />
-            </Grid>
-            <Grid item xs={12} sm={4}>
-              <InputField name="arus_nominal" label="Arus Nominal (A)" />
-            </Grid>
-            <Grid item xs={12} sm={4}>
-              <InputField name="arus_mampu" label="Arus Mampu (A)" />
-            </Grid>
-            <Grid item xs={12} sm={4}>
-              <SelectInput
-                label="Jenis Penghantar"
-                name="penghantar"
-                options={[{ value: "1", label: "Penghantar 1" }]}
-              />
-            </Grid>
-            <Grid item xs={12} sm={12}>
-              <InputField name="nama_penghantar" label="Nama Penghantar" />
-            </Grid>
-          </Grid>
+          </DialogContent>
+          <DialogActions className="dialog-actions-dense">
+            <Button variant="outlined" onClick={handleClose}>
+              Batal
+            </Button>
+            <Button variant="contained" type="submit">
+              Tambah
+            </Button>
+          </DialogActions>
         </StyledForm>
-      </DialogContent>
-      <DialogActions className="dialog-actions-dense">
-        <Button variant="outlined" onClick={handleClose}>
-          Batal
-        </Button>
-        <Button variant="contained" onClick={() => null}>
-          Tambah
-        </Button>
-      </DialogActions>
+      </FormProvider>
     </Dialog>
   );
 };

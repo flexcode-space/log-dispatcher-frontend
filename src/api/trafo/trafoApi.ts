@@ -19,11 +19,23 @@ const trafoApi = () => {
     }
   }, [])
 
+  const getTrafoBySubsistemId = useCallback(async (id: string) => {
+    setLoading(true)
+
+    try {
+      const { data: { data } } = await Axios.get(`${endpoint}/sub-sistem/${id}`)
+      setTrafoList(data || [])
+    } finally {
+      setLoading(false)
+    }
+  }, [])
+
 
   return {
     trafoList,
     loading,
-    getTrafoList
+    getTrafoList,
+    getTrafoBySubsistemId
   }
 }
 
