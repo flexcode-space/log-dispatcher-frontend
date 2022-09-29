@@ -11,6 +11,7 @@ import {
 import { StyledForm } from "../Busbar.styled";
 import { InputField } from "src/components/input-field";
 import { SelectInput } from "src/components/select-input";
+import { useModalBusbar } from "./useModalBusbar";
 
 type ModalAddProps = {
   open: boolean;
@@ -18,6 +19,9 @@ type ModalAddProps = {
 };
 
 const ModalAdd = ({ open, handleClose }: ModalAddProps) => {
+  const { subsistemOptions, garduIndukOptions, teganganOptions } =
+    useModalBusbar();
+
   const formMethods = useForm({
     // resolver: yupResolver(validationSchema),
     // defaultValues: initialValues,
@@ -52,14 +56,14 @@ const ModalAdd = ({ open, handleClose }: ModalAddProps) => {
                 <SelectInput
                   label="Subsistem"
                   name="subsistem"
-                  options={[{ value: "1", label: "Subsistem 1" }]}
+                  options={subsistemOptions}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
                 <SelectInput
                   label="Gardu Induk Asal"
                   name="gardu-asal"
-                  options={[{ value: "1", label: "Gardu Induk Asal 1" }]}
+                  options={garduIndukOptions}
                 />
               </Grid>
               <Grid item xs={12} sm={4}>
@@ -74,13 +78,6 @@ const ModalAdd = ({ open, handleClose }: ModalAddProps) => {
               <Grid item xs={12} sm={12}>
                 <InputField name="id_point" label="ID Point" />
               </Grid>
-              <Grid item xs={12} sm={12}>
-                <SelectInput
-                  label="Tegangan (KV)"
-                  name="tegangan"
-                  options={[{ value: "1", label: "100 KV" }]}
-                />
-              </Grid>
               <Grid item xs={12} sm={4}>
                 <InputField name="arus_nominal" label="Arus Nominal (A)" />
               </Grid>
@@ -89,9 +86,9 @@ const ModalAdd = ({ open, handleClose }: ModalAddProps) => {
               </Grid>
               <Grid item xs={12} sm={4}>
                 <SelectInput
-                  label="Tegangan"
+                  label="Tegangan (KV)"
                   name="tegangan"
-                  options={[{ value: "1", label: "150 kv" }]}
+                  options={teganganOptions}
                 />
               </Grid>
               <Grid item xs={12} sm={12}>

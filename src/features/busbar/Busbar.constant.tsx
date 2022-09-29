@@ -104,28 +104,4 @@ export const defaultColumns = [
       );
     },
   },
-  {
-    flex: 0.35,
-    minWidth: 100,
-    field: "dmn",
-    headerName: "DMN",
-  },
-  {
-    flex: 0.35,
-    minWidth: 100,
-    field: "tml",
-    headerName: "TML",
-  },
-  {
-    flex: 0.25,
-    minWidth: 200,
-    field: "bahan_bakar",
-    headerName: "Bahan Bakar",
-  },
-  {
-    flex: 0.25,
-    minWidth: 200,
-    field: "kategori",
-    headerName: "kategori",
-  },
 ];

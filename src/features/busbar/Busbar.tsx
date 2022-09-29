@@ -20,7 +20,7 @@ import PageHeader from "src/@core/components/page-header";
 import { defaultColumns } from "./Busbar.constant";
 import { CellType } from "./types";
 
-import { ModalAdd } from "./modal";
+import { ModalAddBusbar } from "./modal";
 import { WrapperFilter } from "src/components/filter";
 
 import { busbarApi } from "src/api/busbar";
@@ -67,7 +67,7 @@ const Busbar = () => {
 
   return (
     <>
-      <ModalAdd open={open} handleClose={() => setOpen(!open)} />
+      <ModalAddBusbar open={open} handleClose={() => setOpen(!open)} />
       <Grid container spacing={6}>
         {!subsistemId && (
           <Grid item xs={12}>

@@ -2,7 +2,7 @@ import { useCallback, useState } from 'react'
 import { Axios } from '../axios'
 import { Params } from '../types'
 
-const endpoint = '/peralatan/penghantar'
+const endpoint = '/peralatan/busbar'
 
 const busbarApi = () => {
   const [busbarList, setBusbarList] = useState<[]>([])

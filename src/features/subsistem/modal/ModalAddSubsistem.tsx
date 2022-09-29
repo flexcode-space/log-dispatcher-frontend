@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import {
   Button,
@@ -7,8 +8,8 @@ import {
   DialogContent,
   Grid,
 } from "@mui/material";
+import Plus from "mdi-material-ui/Plus";
 
-import { useState } from "react";
 import { StyledForm } from "../Subsistem.styled";
 import { InputField } from "src/components/input-field";
 
@@ -31,7 +32,7 @@ const ModalAddSubsistem = ({ open, handleClose }: ModalAddSubsistemProps) => {
       open={open}
       fullWidth
       onClose={handleClose}
-      maxWidth="xs"
+      maxWidth="sm"
       scroll="body"
     >
       <FormProvider {...formMethods}>
@@ -54,13 +55,14 @@ const ModalAddSubsistem = ({ open, handleClose }: ModalAddSubsistemProps) => {
               })}
               <Grid item xs={12} sm={12}>
                 <Button
-                  style={{ width: "250px" }}
+                  style={{ height: "30px" }}
                   sx={{ mb: 2 }}
                   onClick={() =>
                     setFields((prevState) => [...prevState, fields.length])
                   }
                   variant="outlined"
                 >
+                  <Plus sx={{ mr: 1 }} />
                   Tambah Subsistem
                 </Button>
               </Grid>
