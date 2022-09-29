@@ -1,12 +1,12 @@
-import { useState } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import {
   Button,
   Dialog,
-  DialogTitle,
   DialogActions,
   DialogContent,
   Grid,
+  Typography,
+  Box,
 } from "@mui/material";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { StyledForm } from "../Pembangkit.styled";
@@ -24,8 +24,6 @@ type ModalAddProps = {
 };
 
 const ModalAdd = ({ open, handleClose }: ModalAddProps) => {
-  const [fields, setFields] = useState<Array<number>>([0]);
-
   const {
     subsistemOptions,
     garduIndukOptions,
@@ -65,15 +63,25 @@ const ModalAdd = ({ open, handleClose }: ModalAddProps) => {
       open={open}
       fullWidth
       onClose={handleClose}
-      aria-labelledby="form-dialog-title"
+      maxWidth="sm"
+      scroll="body"
     >
       <FormProvider {...formMethods}>
-        <StyledForm noValidate sx={{ width: "500px" }} onSubmit={onSubmit}>
-          <DialogTitle id="max-width-dialog-title">
-            Tambah Pembangkit
-          </DialogTitle>
-          <DialogContent>
-            <Grid container spacing={1} mt={1}>
+        <StyledForm noValidate onSubmit={onSubmit}>
+          <DialogContent
+            sx={{
+              pb: 6,
+              px: { xs: 8, sm: 15 },
+              pt: 6,
+              position: "relative",
+            }}
+          >
+            <Box sx={{ mb: 8 }}>
+              <Typography variant="h5" sx={{ mb: 3, lineHeight: "2rem" }}>
+                Tambah Pembangkit
+              </Typography>
+            </Box>
+            <Grid container spacing={1}>
               <Grid item xs={12} sm={6}>
                 <SelectInput
                   label="Subsistem"
