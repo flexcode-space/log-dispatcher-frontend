@@ -20,7 +20,7 @@ import PageHeader from "src/@core/components/page-header";
 import { defaultColumns } from "./Penghantar.constant";
 import { CellType } from "./types";
 
-import { ModalAdd } from "./modal";
+import { ModalAddPenghantar } from "./modal";
 import { WrapperFilter } from "src/components/filter";
 
 import { penghantarApi } from "src/api/penghantar";
@@ -68,7 +68,7 @@ const Penghantar = () => {
 
   return (
     <>
-      <ModalAdd open={open} handleClose={() => setOpen(!open)} />
+      <ModalAddPenghantar open={open} handleClose={() => setOpen(!open)} />
       <Grid container spacing={6}>
         {!subsistemId && (
           <Grid item xs={12}>

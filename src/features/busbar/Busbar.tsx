@@ -13,8 +13,7 @@ import {
 } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { PencilOutline, DeleteOutline } from "mdi-material-ui";
-
-// ** Custom Components Imports
+import { useSnapshot } from "valtio";
 import PageHeader from "src/@core/components/page-header";
 
 import { defaultColumns } from "./Busbar.constant";
@@ -24,15 +23,22 @@ import { ModalAddBusbar } from "./modal";
 import { WrapperFilter } from "src/components/filter";
 
 import { busbarApi } from "src/api/busbar";
+import { openModal, closeModal, modal, reloadPage } from "src/state/modal";
 
 const Busbar = () => {
+  const modalSnapshot = useSnapshot(modal);
+
   const router = useRouter();
   const [pageSize, setPageSize] = useState<number>(10);
   const [open, setOpen] = useState<boolean>(false);
 
-  const { getBusbarList, busbarList, getBusbarBySubsistemId } = busbarApi();
+  const { getBusbarList, busbarList, getBusbarBySubsistemId, deleteBusbar } =
+    busbarApi();
 
-  const handleClickOpen = () => setOpen(true);
+  const onClickDelete = async (id: string) => {
+    await deleteBusbar({ id });
+    reloadPage();
+  };
 
   const subsistemId = router.query.id as string;
 
@@ -44,30 +50,47 @@ const Busbar = () => {
       sortable: false,
       field: "actions",
       headerName: "Aksi",
-      renderCell: ({ row }: CellType) => (
-        <Box sx={{ display: "flex", alignItems: "center" }}>
-          <IconButton onClick={() => null}>
-            <PencilOutline />
-          </IconButton>
-          <IconButton>
-            <DeleteOutline />
-          </IconButton>
-        </Box>
-      ),
+      renderCell: ({ row }: CellType) => {
+        const { id } = row;
+        return (
+          <Box sx={{ display: "flex", alignItems: "center" }}>
+            <IconButton onClick={() => openModal(id)}>
+              <PencilOutline />
+            </IconButton>
+            <IconButton>
+              <DeleteOutline onClick={() => onClickDelete(id)} />
+            </IconButton>
+          </Box>
+        );
+      },
     },
   ];
 
-  useEffect(() => {
+  const handleClose = () => {
+    closeModal();
+  };
+
+  const getBusbar = () => {
     if (subsistemId) {
       getBusbarBySubsistemId(subsistemId);
     } else {
       getBusbarList();
     }
+  };
+
+  useEffect(() => {
+    getBusbar();
   }, []);
+
+  useEffect(() => {
+    if (modalSnapshot.isReloadData) {
+      getBusbar();
+    }
+  }, [modalSnapshot.isReloadData]);
 
   return (
     <>
-      <ModalAddBusbar open={open} handleClose={() => setOpen(!open)} />
+      <ModalAddBusbar handleClose={handleClose} />
       <Grid container spacing={6}>
         {!subsistemId && (
           <Grid item xs={12}>
@@ -88,7 +111,7 @@ const Busbar = () => {
 
                 <Button
                   sx={{ mb: 2 }}
-                  onClick={handleClickOpen}
+                  onClick={() => openModal()}
                   variant="contained"
                 >
                   Tambah Busbar

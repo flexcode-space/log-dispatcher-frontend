@@ -19,6 +19,17 @@ const busbarApi = () => {
     }
   }, [])
 
+  const getBusbarDetail = useCallback(async (id: String) => {
+    setLoading(true)
+
+    try {
+      const { data } = await Axios.get(`${endpoint}/${id}`)
+      return data
+    } finally {
+      setLoading(false)
+    }
+  }, [])
+
   const getBusbarBySubsistemId = useCallback(async (id: string) => {
     setLoading(true)
 
@@ -30,12 +41,46 @@ const busbarApi = () => {
     }
   }, [])
 
+  const createBusbar = useCallback(async (payload: any) => {
+    setLoading(true)
+
+    try {
+      await Axios.post(endpoint, payload)
+    } finally {
+      setLoading(false)
+    }
+  }, [])
+
+  const updateBusbar = useCallback(async (payload: any) => {
+    setLoading(true)
+
+    try {
+      await Axios.put(endpoint, payload)
+    } finally {
+      setLoading(false)
+    }
+  }, [])
+
+  const deleteBusbar = useCallback(async (payload: any) => {
+    console.log('payload', payload)
+    setLoading(true)
+    try {
+      await Axios.delete(endpoint, { data: payload })
+    } finally {
+      setLoading(false)
+    }
+  }, [])
+
 
   return {
     busbarList,
     loading,
     getBusbarList,
-    getBusbarBySubsistemId
+    getBusbarBySubsistemId,
+    getBusbarDetail,
+    createBusbar,
+    updateBusbar,
+    deleteBusbar
   }
 }
 

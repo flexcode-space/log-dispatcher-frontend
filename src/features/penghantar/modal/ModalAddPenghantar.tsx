@@ -9,7 +9,7 @@ import {
   Box,
 } from "@mui/material";
 
-import { StyledForm } from "../IBT.styled";
+import { StyledForm } from "../Penghantar.styled";
 import { InputField } from "src/components/input-field";
 import { SelectInput } from "src/components/select-input";
 
@@ -18,7 +18,7 @@ type ModalAddProps = {
   handleClose: () => void;
 };
 
-const ModalAdd = ({ open, handleClose }: ModalAddProps) => {
+const ModalAddPenghantar = ({ open, handleClose }: ModalAddProps) => {
   const formMethods = useForm({
     // resolver: yupResolver(validationSchema),
     // defaultValues: initialValues,
@@ -45,29 +45,36 @@ const ModalAdd = ({ open, handleClose }: ModalAddProps) => {
           >
             <Box sx={{ mb: 8 }}>
               <Typography variant="h5" sx={{ mb: 3, lineHeight: "2rem" }}>
-                Tambah IBT
+                Tambah Penghantar
               </Typography>
             </Box>
             <Grid container spacing={1} mt={1}>
-              <Grid item xs={12} sm={4}>
+              <Grid item xs={12} sm={6}>
                 <SelectInput
                   label="Subsistem"
                   name="subsistem"
                   options={[{ value: "1", label: "Subsistem 1" }]}
                 />
               </Grid>
-              <Grid item xs={12} sm={4}>
+              <Grid item xs={12} sm={6}>
                 <SelectInput
-                  label="Gardu Induk"
-                  name="gardu_induk"
-                  options={[{ value: "1", label: "Gardu Induk 1" }]}
+                  label="Gardu Induk Asal"
+                  name="gardu-asal"
+                  options={[{ value: "1", label: "Gardu Induk Asal 1" }]}
                 />
               </Grid>
-              <Grid item xs={12} sm={4}>
+              <Grid item xs={12} sm={6}>
                 <SelectInput
-                  label="No. IBT"
-                  name="ibt"
-                  options={[{ value: "1", label: "1" }]}
+                  label="Gardu Induk Tujuan"
+                  name="gardu-tujuan"
+                  options={[{ value: "1", label: "Gardu Induk Tujuan 1" }]}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <SelectInput
+                  label="Line"
+                  name="line"
+                  options={[{ value: "1", label: "Line 1" }]}
                 />
               </Grid>
               <Grid item xs={12} sm={4}>
@@ -82,28 +89,28 @@ const ModalAdd = ({ open, handleClose }: ModalAddProps) => {
               <Grid item xs={12} sm={12}>
                 <InputField name="id_point" label="ID Point" />
               </Grid>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12} sm={12}>
                 <SelectInput
-                  label="Ration Tegangan"
-                  name="ratio_tegangan"
+                  label="Tegangan (KV)"
+                  name="tegangan"
                   options={[{ value: "1", label: "100 KV" }]}
                 />
               </Grid>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12} sm={4}>
+                <InputField name="arus_nominal" label="Arus Nominal (A)" />
+              </Grid>
+              <Grid item xs={12} sm={4}>
+                <InputField name="arus_mampu" label="Arus Mampu (A)" />
+              </Grid>
+              <Grid item xs={12} sm={4}>
                 <SelectInput
-                  label="MVA"
-                  name="mva"
-                  options={[{ value: "1", label: "100 MVA" }]}
+                  label="Jenis Penghantar"
+                  name="penghantar"
+                  options={[{ value: "1", label: "Penghantar 1" }]}
                 />
               </Grid>
-              <Grid item xs={12} sm={6}>
-                <InputField name="arus_nominal" label="Arus Nominal" />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <InputField name="arus_mampu" label="Arus Mampu" />
-              </Grid>
               <Grid item xs={12} sm={12}>
-                <InputField name="nama" label="Nama IBT" />
+                <InputField name="nama_penghantar" label="Nama Penghantar" />
               </Grid>
             </Grid>
           </DialogContent>
@@ -121,4 +128,4 @@ const ModalAdd = ({ open, handleClose }: ModalAddProps) => {
   );
 };
 
-export default ModalAdd;
+export default ModalAddPenghantar;

@@ -12,9 +12,6 @@ export const useModalBusbar = () => {
   const garduIndukOptions = garduIndukList.map(({ id, nama }) => ({ value: id, label: nama }))
   const teganganOptions = teganganList.map(({ id, nama }) => ({ value: id, label: `${nama} KV` }))
 
-
-  console.log('teganganOptions', teganganOptions)
-  
   useEffect(() => {
     getSubsistemList()
     getGarduIndukList()

@@ -1,1 +1,1 @@
-export { default as ModalAdd } from './ModalAdd'
+export { default as ModalAddIBT } from './ModalAddIBT'

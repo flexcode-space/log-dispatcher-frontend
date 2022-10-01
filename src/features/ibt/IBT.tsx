@@ -13,18 +13,20 @@ import {
 } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { PencilOutline, DeleteOutline } from "mdi-material-ui";
+import { useSnapshot } from "valtio";
 
-// ** Custom Components Imports
 import PageHeader from "src/@core/components/page-header";
 
 import { defaultColumns } from "./IBT.constant";
 import { CellType } from "./types";
 
-import { ModalAdd } from "./modal";
+import { ModalAddIBT } from "./modal";
 import { WrapperFilter } from "src/components/filter";
 import { ibtApi } from "src/api/ibt";
+import { openModal, closeModal, modal, reloadPage } from "src/state/modal";
 
 const IBT = () => {
+  const modalSnapshot = useSnapshot(modal);
   const router = useRouter();
   const [pageSize, setPageSize] = useState<number>(10);
   const [open, setOpen] = useState<boolean>(false);
@@ -56,17 +58,27 @@ const IBT = () => {
     },
   ];
 
-  useEffect(() => {
+  const getIbt = () => {
     if (subsistemId) {
       getIbtBySubsistemId(subsistemId);
     } else {
       getIbtList();
     }
+  };
+
+  useEffect(() => {
+    getIbt();
   }, []);
+
+  useEffect(() => {
+    if (modalSnapshot.isReloadData) {
+      getIbt();
+    }
+  }, [modalSnapshot.isReloadData]);
 
   return (
     <>
-      <ModalAdd open={open} handleClose={() => setOpen(!open)} />
+      <ModalAddIBT open={open} handleClose={() => setOpen(!open)} />
       <Grid container spacing={6}>
         {!subsistemId && (
           <Grid item xs={12}>

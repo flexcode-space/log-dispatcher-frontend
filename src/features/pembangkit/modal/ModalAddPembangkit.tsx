@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import {
   Button,
@@ -9,21 +10,22 @@ import {
   Box,
 } from "@mui/material";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { useSnapshot } from "valtio";
 import { StyledForm } from "../Pembangkit.styled";
 import { InputField } from "src/components/input-field";
 import { SelectInput } from "src/components/select-input";
 
 import { pembangkitApi } from "src/api/pembangkit";
+import { modal, reloadPage } from "src/state/modal";
 
 import { useModal } from "./useModal";
 import { initialValues, validationSchema } from "./ModalAdd.constants";
 
 type ModalAddProps = {
-  open: boolean;
   handleClose: () => void;
 };
 
-const ModalAdd = ({ open, handleClose }: ModalAddProps) => {
+const ModalAddPembangkit = ({ handleClose }: ModalAddProps) => {
   const {
     subsistemOptions,
     garduIndukOptions,
@@ -32,7 +34,10 @@ const ModalAdd = ({ open, handleClose }: ModalAddProps) => {
     kategoriPembangkitOptions,
   } = useModal();
 
-  const { createPembangkit } = pembangkitApi();
+  const { createPembangkit, getPembangkitDetail, updatePembangkit } =
+    pembangkitApi();
+
+  const modalSnapshot = useSnapshot(modal);
 
   const formMethods = useForm({
     resolver: yupResolver(validationSchema),
@@ -52,17 +57,53 @@ const ModalAdd = ({ open, handleClose }: ModalAddProps) => {
         tml: Number(values.tml),
         scada: { b1, b2, b3 },
       };
-
-      await createPembangkit(payload);
+      if (modalSnapshot.id) {
+        await updatePembangkit(payload);
+      } else {
+        await createPembangkit(payload);
+      }
       handleClose();
+      reloadPage();
     })();
   };
 
+  const onClickCloseModal = () => {
+    handleClose();
+    formMethods.reset({ ...initialValues });
+  };
+
+  useEffect(() => {
+    if (modalSnapshot.id) {
+      getPembangkitDetail(modalSnapshot.id).then((data: any) => {
+        const {
+          gardu_induk,
+          scada,
+          sub_sistem,
+          bahan_bakar,
+          jenis,
+          kategori,
+          ...rest
+        } = data;
+
+        console.log("kategori", kategori);
+        formMethods.reset({
+          ...rest,
+          ...scada,
+          gardu_induk_id: gardu_induk.id,
+          sub_sistem_id: sub_sistem.id,
+          bahan_bakar_id: bahan_bakar.id,
+          jenis_pembangkit_id: jenis.id,
+          kategori_pembangkit_id: kategori.id,
+        });
+      });
+    }
+  }, [modalSnapshot.id]);
+
   return (
     <Dialog
-      open={open}
+      open={modalSnapshot.isOpen}
       fullWidth
-      onClose={handleClose}
+      onClose={onClickCloseModal}
       maxWidth="sm"
       scroll="body"
     >
@@ -141,7 +182,7 @@ const ModalAdd = ({ open, handleClose }: ModalAddProps) => {
             </Grid>
           </DialogContent>
           <DialogActions className="dialog-actions-dense">
-            <Button variant="outlined" onClick={handleClose}>
+            <Button variant="outlined" onClick={onClickCloseModal}>
               Batal
             </Button>
             <Button variant="contained" type="submit">
@@ -154,4 +195,4 @@ const ModalAdd = ({ open, handleClose }: ModalAddProps) => {
   );
 };
 
-export default ModalAdd;
+export default ModalAddPembangkit;
