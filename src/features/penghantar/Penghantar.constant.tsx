@@ -125,7 +125,19 @@ export const defaultColumns = [
   {
     flex: 0.25,
     minWidth: 200,
-    field: "line",
+    field: "jenis",
     headerName: "Jenis Penghantar",
+    renderCell: ({ row }: CellType) => {
+      const { jenis } = row;
+      return (
+        <Typography
+          variant="subtitle2"
+          noWrap
+          sx={{ textTransform: "capitalize" }}
+        >
+          {jenis}
+        </Typography>
+      );
+    },
   },
 ];

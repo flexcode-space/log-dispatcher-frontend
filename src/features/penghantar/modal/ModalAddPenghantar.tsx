@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import {
   Button,
@@ -8,33 +9,101 @@ import {
   Typography,
   Box,
 } from "@mui/material";
-
+import { useSnapshot } from "valtio";
+import { yupResolver } from "@hookform/resolvers/yup";
 import { StyledForm } from "../Penghantar.styled";
+import { modal, reloadPage } from "src/state/modal";
 import { InputField } from "src/components/input-field";
 import { SelectInput } from "src/components/select-input";
+import { penghantarApi } from "src/api/penghantar";
+import {
+  validationSchema,
+  initialValues,
+  jenisPenghantarOptions,
+} from "./ModalAddPenghantar.constant";
+import { useModalPenghantar } from "./useModalPenghantar";
 
 type ModalAddProps = {
-  open: boolean;
   handleClose: () => void;
 };
 
-const ModalAdd = ({ open, handleClose }: ModalAddProps) => {
+const ModalAddPenghantar = ({ handleClose }: ModalAddProps) => {
+  const { subsistemOptions, garduIndukOptions, teganganOptions } =
+    useModalPenghantar();
+
+  const { createPenghantar, updatePenghantar, getPenghantarDetail } =
+    penghantarApi();
+
+  const modalSnapshot = useSnapshot(modal);
+
   const formMethods = useForm({
-    // resolver: yupResolver(validationSchema),
-    // defaultValues: initialValues,
+    resolver: yupResolver(validationSchema),
+    defaultValues: initialValues,
     mode: "onSubmit",
   });
 
+  const onSubmit = (event?: React.FormEvent<HTMLFormElement>) => {
+    event?.preventDefault();
+
+    formMethods.handleSubmit(async (values) => {
+      const { b1, b2, b3, arus_mampu, arus_nominal, ...rest } = values;
+
+      const payload = {
+        ...rest,
+        arus_mampu: Number(values.arus_mampu),
+        arus_nominal: Number(values.arus_nominal),
+        scada: { b1, b2, b3 },
+      };
+
+      if (modalSnapshot.id) {
+        await updatePenghantar(payload);
+      } else {
+        await createPenghantar(payload);
+      }
+
+      handleClose();
+      reloadPage();
+    })();
+  };
+
+  const onClickCloseModal = () => {
+    handleClose();
+    formMethods.reset({ ...initialValues });
+  };
+
+  useEffect(() => {
+    if (modalSnapshot.id) {
+      getPenghantarDetail(modalSnapshot.id).then((data: any) => {
+        const {
+          gardu_induk,
+          gardu_induk_tujuan,
+          scada,
+          sub_sistem,
+          tegangan,
+          ...rest
+        } = data;
+        formMethods.reset({
+          ...rest,
+          ...scada,
+          gardu_induk_id: gardu_induk.id,
+          gardu_induk_tujuan_id: gardu_induk_tujuan.id,
+          sub_sistem_id: sub_sistem.id,
+          tegangan_id: tegangan.id,
+        });
+      });
+    }
+  }, [modalSnapshot.id]);
+
   return (
     <Dialog
-      open={open}
+      open={modalSnapshot.isOpen}
       fullWidth
-      onClose={handleClose}
+      onClose={onClickCloseModal}
       maxWidth="sm"
       scroll="body"
     >
       <FormProvider {...formMethods}>
-        <StyledForm noValidate>
+        <StyledForm noValidate onSubmit={onSubmit}>
           <DialogContent
             sx={{
               pb: 6,
@@ -52,22 +121,22 @@ const ModalAdd = ({ open, handleClose }: ModalAddProps) => {
               <Grid item xs={12} sm={6}>
                 <SelectInput
                   label="Subsistem"
-                  name="subsistem"
-                  options={[{ value: "1", label: "Subsistem 1" }]}
+                  name="sub_sistem_id"
+                  options={subsistemOptions}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
                 <SelectInput
                   label="Gardu Induk Asal"
-                  name="gardu-asal"
-                  options={[{ value: "1", label: "Gardu Induk Asal 1" }]}
+                  name="gardu_induk_id"
+                  options={garduIndukOptions}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
                 <SelectInput
                   label="Gardu Induk Tujuan"
-                  name="gardu-tujuan"
-                  options={[{ value: "1", label: "Gardu Induk Tujuan 1" }]}
+                  name="gardu_induk_tujuan_id"
+                  options={garduIndukOptions}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -87,13 +156,13 @@ const ModalAdd = ({ open, handleClose }: ModalAddProps) => {
                 <InputField name="b3" label="B3" />
               </Grid>
               <Grid item xs={12} sm={12}>
-                <InputField name="id_point" label="ID Point" />
+                <InputField name="id_amr" label="ID Point" />
               </Grid>
               <Grid item xs={12} sm={12}>
                 <SelectInput
                   label="Tegangan (KV)"
-                  name="tegangan"
-                  options={[{ value: "1", label: "100 KV" }]}
+                  name="tegangan_id"
+                  options={teganganOptions}
                 />
               </Grid>
               <Grid item xs={12} sm={4}>
@@ -105,20 +174,20 @@ const ModalAdd = ({ open, handleClose }: ModalAddProps) => {
               <Grid item xs={12} sm={4}>
                 <SelectInput
                   label="Jenis Penghantar"
-                  name="penghantar"
-                  options={[{ value: "1", label: "Penghantar 1" }]}
+                  name="jenis"
+                  options={jenisPenghantarOptions}
                 />
               </Grid>
               <Grid item xs={12} sm={12}>
-                <InputField name="nama_penghantar" label="Nama Penghantar" />
+                <InputField name="nama" label="Nama Penghantar" />
               </Grid>
             </Grid>
           </DialogContent>
           <DialogActions className="dialog-actions-dense">
-            <Button variant="outlined" onClick={handleClose}>
+            <Button variant="outlined" onClick={onClickCloseModal}>
               Batal
             </Button>
-            <Button variant="contained" onClick={() => null}>
+            <Button variant="contained" type="submit">
               Tambah
             </Button>
           </DialogActions>
@@ -128,4 +197,4 @@ const ModalAdd = ({ open, handleClose }: ModalAddProps) => {
   );
 };
 
-export default ModalAdd;
+export default ModalAddPenghantar;

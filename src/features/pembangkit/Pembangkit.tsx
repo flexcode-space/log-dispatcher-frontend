@@ -13,26 +13,38 @@ import {
 } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { PencilOutline, DeleteOutline } from "mdi-material-ui";
+import { useSnapshot } from "valtio";
 
-// ** Custom Components Imports
 import PageHeader from "src/@core/components/page-header";
 
 import { defaultColumns } from "./Pembangkit.constant";
 import { CellType } from "./types";
 
-import { ModalAdd } from "./modal";
+import { ModalAddPembangkit } from "./modal";
 import { WrapperFilter } from "src/components/filter";
 import { pembangkitApi } from "src/api/pembangkit";
+import { openModal, closeModal, modal, reloadPage } from "src/state/modal";
 
 const Pembangkit = () => {
+  const modalSnapshot = useSnapshot(modal);
+
   const router = useRouter();
   const [pageSize, setPageSize] = useState<number>(10);
   const [open, setOpen] = useState<boolean>(false);
 
-  const { pembangkitList, getPembangkitList, getPembangkitBySubsistemId } =
-    pembangkitApi();
+  const {
+    pembangkitList,
+    getPembangkitList,
+    getPembangkitBySubsistemId,
+    deletePembangkit,
+  } = pembangkitApi();
 
   const handleClickOpen = () => setOpen(true);
+
+  const onClickDelete = async (id: string) => {
+    await deletePembangkit({ id });
+    reloadPage();
+  };
 
   const subsistemId = router.query.id as string;
 
@@ -44,30 +56,47 @@ const Pembangkit = () => {
       sortable: false,
       field: "actions",
       headerName: "Aksi",
-      renderCell: ({ row }: CellType) => (
-        <Box sx={{ display: "flex", alignItems: "center" }}>
-          <IconButton onClick={() => null}>
-            <PencilOutline />
-          </IconButton>
-          <IconButton>
-            <DeleteOutline />
-          </IconButton>
-        </Box>
-      ),
+      renderCell: ({ row }: CellType) => {
+        const { id } = row;
+        return (
+          <Box sx={{ display: "flex", alignItems: "center" }}>
+            <IconButton onClick={() => openModal(id)}>
+              <PencilOutline />
+            </IconButton>
+            <IconButton>
+              <DeleteOutline onClick={() => onClickDelete(id)} />
+            </IconButton>
+          </Box>
+        );
+      },
     },
   ];
 
-  useEffect(() => {
+  const handleClose = () => {
+    closeModal();
+  };
+
+  const getPembangkit = () => {
     if (subsistemId) {
       getPembangkitBySubsistemId(subsistemId);
     } else {
       getPembangkitList();
     }
+  };
+
+  useEffect(() => {
+    getPembangkit();
   }, []);
+
+  useEffect(() => {
+    if (modalSnapshot.isReloadData) {
+      getPembangkit();
+    }
+  }, [modalSnapshot.isReloadData]);
 
   return (
     <>
-      <ModalAdd open={open} handleClose={() => setOpen(!open)} />
+      <ModalAddPembangkit handleClose={handleClose} />
       <Grid container spacing={6}>
         {!subsistemId && (
           <Grid item xs={12}>
@@ -90,7 +119,7 @@ const Pembangkit = () => {
 
                 <Button
                   sx={{ mb: 2 }}
-                  onClick={handleClickOpen}
+                  onClick={() => openModal()}
                   variant="contained"
                 >
                   Tambah Pembangkit

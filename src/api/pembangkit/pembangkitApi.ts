@@ -22,11 +22,12 @@ const pembangkitApi = () => {
     }
   }, [])
 
-  const createPembangkit = useCallback(async (payload: any) => {
+  const getPembangkitDetail = useCallback(async (id: String) => {
+    setLoading(true)
+
     try {
-      await Axios.post(endpoint, payload)
-    } catch (error) {
-      console.log('error')
+      const { data } = await Axios.get(`${endpoint}/${id}`)
+      return data
     } finally {
       setLoading(false)
     }
@@ -75,6 +76,36 @@ const pembangkitApi = () => {
     }
   }, [])
 
+  const createPembangkit = useCallback(async (payload: any) => {
+    try {
+      await Axios.post(endpoint, payload)
+    } catch (error) {
+      console.log('error')
+    } finally {
+      setLoading(false)
+    }
+  }, [])
+
+  const updatePembangkit = useCallback(async (payload: any) => {
+    setLoading(true)
+
+    try {
+      await Axios.put(endpoint, payload)
+    } finally {
+      setLoading(false)
+    }
+  }, [])
+
+  const deletePembangkit = useCallback(async (payload: any) => {
+    console.log('payload', payload)
+    setLoading(true)
+    try {
+      await Axios.delete(endpoint, { data: payload })
+    } finally {
+      setLoading(false)
+    }
+  }, [])
+
   return {
     loading,
     pembangkitList,
@@ -86,7 +117,10 @@ const pembangkitApi = () => {
     getJenisPembangkit,
     getBahanBakar,
     getKategoriPembangkit,
-    createPembangkit
+    createPembangkit,
+    updatePembangkit,
+    deletePembangkit,
+    getPembangkitDetail
   }
 }
 

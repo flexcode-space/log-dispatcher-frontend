@@ -13,27 +13,31 @@ import {
 } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { PencilOutline, DeleteOutline } from "mdi-material-ui";
+import { useSnapshot } from "valtio";
 
-// ** Custom Components Imports
 import PageHeader from "src/@core/components/page-header";
 
 import { defaultColumns } from "./IBT.constant";
 import { CellType } from "./types";
 
-import { ModalAdd } from "./modal";
+import { ModalAddIBT } from "./modal";
 import { WrapperFilter } from "src/components/filter";
 import { ibtApi } from "src/api/ibt";
+import { openModal, closeModal, modal, reloadPage } from "src/state/modal";
 
 const IBT = () => {
+  const modalSnapshot = useSnapshot(modal);
   const router = useRouter();
   const [pageSize, setPageSize] = useState<number>(10);
-  const [open, setOpen] = useState<boolean>(false);
 
-  const { getIbtList, ibtList, getIbtBySubsistemId } = ibtApi();
+  const { getIbtList, ibtList, getIbtBySubsistemId, deleteIbt } = ibtApi();
 
   const subsistemId = router.query.id as string;
 
-  const handleClickOpen = () => setOpen(true);
+  const onClickDelete = async (id: string) => {
+    await deleteIbt({ id });
+    reloadPage();
+  };
 
   const columns = [
     ...defaultColumns,
@@ -43,30 +47,47 @@ const IBT = () => {
       sortable: false,
       field: "actions",
       headerName: "Aksi",
-      renderCell: ({ row }: CellType) => (
-        <Box sx={{ display: "flex", alignItems: "center" }}>
-          <IconButton onClick={() => null}>
-            <PencilOutline />
-          </IconButton>
-          <IconButton>
-            <DeleteOutline />
-          </IconButton>
-        </Box>
-      ),
+      renderCell: ({ row }: CellType) => {
+        const { id } = row;
+        return (
+          <Box sx={{ display: "flex", alignItems: "center" }}>
+            <IconButton onClick={() => openModal(id)}>
+              <PencilOutline />
+            </IconButton>
+            <IconButton>
+              <DeleteOutline onClick={() => onClickDelete(id)} />
+            </IconButton>
+          </Box>
+        );
+      },
     },
   ];
 
-  useEffect(() => {
+  const handleClose = () => {
+    closeModal();
+  };
+
+  const getIbt = () => {
     if (subsistemId) {
       getIbtBySubsistemId(subsistemId);
     } else {
       getIbtList();
     }
+  };
+
+  useEffect(() => {
+    getIbt();
   }, []);
+
+  useEffect(() => {
+    if (modalSnapshot.isReloadData) {
+      getIbt();
+    }
+  }, [modalSnapshot.isReloadData]);
 
   return (
     <>
-      <ModalAdd open={open} handleClose={() => setOpen(!open)} />
+      <ModalAddIBT handleClose={handleClose} />
       <Grid container spacing={6}>
         {!subsistemId && (
           <Grid item xs={12}>
@@ -87,7 +108,7 @@ const IBT = () => {
 
                 <Button
                   sx={{ mb: 2 }}
-                  onClick={handleClickOpen}
+                  onClick={() => openModal()}
                   variant="contained"
                 >
                   Tambah IBT
