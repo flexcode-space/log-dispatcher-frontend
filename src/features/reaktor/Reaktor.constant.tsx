@@ -21,12 +21,6 @@ export const defaultColumns = [
     },
   },
   {
-    flex: 0.35,
-    minWidth: 100,
-    field: "id_amr",
-    headerName: "ID AMR",
-  },
-  {
     flex: 0.25,
     minWidth: 200,
     field: "nama",
@@ -59,6 +53,24 @@ export const defaultColumns = [
   {
     flex: 0.25,
     minWidth: 200,
+    field: "sub_sistem",
+    headerName: "Subsistem",
+    renderCell: ({ row }: CellType) => {
+      const { sub_sistem } = row;
+      return (
+        <Typography
+          variant="subtitle2"
+          noWrap
+          sx={{ textTransform: "capitalize" }}
+        >
+          {sub_sistem.nama}
+        </Typography>
+      );
+    },
+  },
+  {
+    flex: 0.25,
+    minWidth: 200,
     field: "tegangan",
     headerName: "Tegangan",
     renderCell: ({ row }: CellType) => {
@@ -77,23 +89,17 @@ export const defaultColumns = [
   {
     flex: 0.25,
     minWidth: 200,
-    field: "setting_ovr",
+    field: "setting",
     headerName: "Setting OVR",
-  },
-  {
-    flex: 0.25,
-    minWidth: 200,
-    field: "arus_mampu",
-    headerName: "Arus Mampu (A)",
     renderCell: ({ row }: CellType) => {
-      const { arus_mampu } = row;
+      const { setting } = row;
       return (
         <Typography
           variant="subtitle2"
           noWrap
           sx={{ textTransform: "capitalize" }}
         >
-          {`${arus_mampu} A`}
+          {`${setting} KV`}
         </Typography>
       );
     },
@@ -103,5 +109,17 @@ export const defaultColumns = [
     minWidth: 200,
     field: "mvar",
     headerName: "MVAR",
+    renderCell: ({ row }: CellType) => {
+      const { mvar } = row;
+      return (
+        <Typography
+          variant="subtitle2"
+          noWrap
+          sx={{ textTransform: "capitalize" }}
+        >
+          {`${mvar} MVAR`}
+        </Typography>
+      );
+    },
   },
 ];

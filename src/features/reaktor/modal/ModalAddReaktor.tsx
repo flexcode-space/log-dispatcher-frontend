@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import {
   Button,
@@ -8,32 +9,91 @@ import {
   Typography,
   Box,
 } from "@mui/material";
+import { useSnapshot } from "valtio";
+import { yupResolver } from "@hookform/resolvers/yup";
 import { StyledForm } from "../Reaktor.styled";
 import { InputField } from "src/components/input-field";
 import { SelectInput } from "src/components/select-input";
+import { modal, reloadPage } from "src/state/modal";
+import { reaktorApi } from "src/api/reaktor";
+import {
+  initialValues,
+  validationSchema,
+  jenisReaktorOptions,
+} from "./ModalAddReaktor.constant";
+import { useModalReaktor } from "./useModalReaktor";
 
 type ModalAddProps = {
-  open: boolean;
   handleClose: () => void;
 };
 
-const ModalAdd = ({ open, handleClose }: ModalAddProps) => {
+const ModalAddReaktor = ({ handleClose }: ModalAddProps) => {
+  const modalSnapshot = useSnapshot(modal);
+
+  const { createReaktor, updateReaktor, getReaktorDetail } = reaktorApi();
+  const { subsistemOptions, garduIndukOptions, teganganOptions } =
+    useModalReaktor();
+
   const formMethods = useForm({
-    // resolver: yupResolver(validationSchema),
-    // defaultValues: initialValues,
+    resolver: yupResolver(validationSchema),
+    defaultValues: initialValues,
     mode: "onSubmit",
   });
 
+  const onSubmit = (event?: React.FormEvent<HTMLFormElement>) => {
+    event?.preventDefault();
+
+    formMethods.handleSubmit(async (values) => {
+      const { b1, b2, b3, mvar, setting, ...rest } = values;
+
+      const payload = {
+        ...rest,
+        mvar: Number(mvar),
+        setting: Number(setting),
+        scada: { b1, b2, b3 },
+      };
+
+      if (modalSnapshot.id) {
+        await updateReaktor(payload);
+      } else {
+        await createReaktor(payload);
+      }
+
+      handleClose();
+      reloadPage();
+    })();
+  };
+
+  const onClickCloseModal = () => {
+    handleClose();
+    formMethods.reset({ ...initialValues });
+  };
+
+  useEffect(() => {
+    if (modalSnapshot.id) {
+      getReaktorDetail(modalSnapshot.id).then((data: any) => {
+        const { gardu_induk, scada, sub_sistem, tegangan, ...rest } = data;
+        formMethods.reset({
+          ...rest,
+          ...scada,
+          gardu_induk_id: gardu_induk.id,
+          sub_sistem_id: sub_sistem.id,
+          tegangan_id: tegangan.id,
+        });
+      });
+    }
+  }, [modalSnapshot.id]);
+
   return (
     <Dialog
-      open={open}
+      open={modalSnapshot.isOpen}
       fullWidth
-      onClose={handleClose}
+      onClose={onClickCloseModal}
       maxWidth="sm"
       scroll="body"
     >
       <FormProvider {...formMethods}>
-        <StyledForm noValidate>
+        <StyledForm noValidate onSubmit={onSubmit}>
           <DialogContent
             sx={{
               pb: 6,
@@ -51,22 +111,22 @@ const ModalAdd = ({ open, handleClose }: ModalAddProps) => {
               <Grid item xs={12} sm={4}>
                 <SelectInput
                   label="Subsistem"
-                  name="subsistem"
-                  options={[{ value: "1", label: "Subsistem 1" }]}
+                  name="sub_sistem_id"
+                  options={subsistemOptions}
                 />
               </Grid>
               <Grid item xs={12} sm={4}>
                 <SelectInput
                   label="Gardu Induk"
-                  name="gardu_induk"
-                  options={[{ value: "1", label: "Gardu Induk Asal 1" }]}
+                  name="gardu_induk_id"
+                  options={garduIndukOptions}
                 />
               </Grid>
               <Grid item xs={12} sm={4}>
                 <SelectInput
                   label="Jenis"
                   name="jenis"
-                  options={[{ value: "1", label: "Kapasitor" }]}
+                  options={jenisReaktorOptions}
                 />
               </Grid>
               <Grid item xs={12} sm={4}>
@@ -78,14 +138,11 @@ const ModalAdd = ({ open, handleClose }: ModalAddProps) => {
               <Grid item xs={12} sm={4}>
                 <InputField name="b3" label="B3" />
               </Grid>
-              <Grid item xs={12} sm={12}>
-                <InputField name="id_point" label="ID Point" />
-              </Grid>
               <Grid item xs={12} sm={4}>
                 <SelectInput
                   label="Tegangan (KV)"
-                  name="tegangan"
-                  options={[{ value: "1", label: "100 KV" }]}
+                  name="tegangan_id"
+                  options={teganganOptions}
                 />
               </Grid>
               <Grid item xs={12} sm={4}>
@@ -95,15 +152,15 @@ const ModalAdd = ({ open, handleClose }: ModalAddProps) => {
                 <InputField name="mvar" label="MVAR" />
               </Grid>
               <Grid item xs={12} sm={12}>
-                <InputField name="nama_peralatan" label="Nama Peralatan" />
+                <InputField name="nama" label="Nama Reaktor" />
               </Grid>
             </Grid>
           </DialogContent>
           <DialogActions className="dialog-actions-dense">
-            <Button variant="outlined" onClick={handleClose}>
+            <Button variant="outlined" onClick={onClickCloseModal}>
               Batal
             </Button>
-            <Button variant="contained" onClick={() => null}>
+            <Button variant="contained" type="submit">
               Tambah Busbar
             </Button>
           </DialogActions>
@@ -113,4 +170,4 @@ const ModalAdd = ({ open, handleClose }: ModalAddProps) => {
   );
 };
 
-export default ModalAdd;
+export default ModalAddReaktor;
