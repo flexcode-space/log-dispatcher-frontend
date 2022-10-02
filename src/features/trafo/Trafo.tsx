@@ -13,6 +13,7 @@ import {
 } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { PencilOutline, DeleteOutline } from "mdi-material-ui";
+import { useSnapshot } from "valtio";
 
 // ** Custom Components Imports
 import PageHeader from "src/@core/components/page-header";
@@ -20,19 +21,26 @@ import PageHeader from "src/@core/components/page-header";
 import { defaultColumns } from "./Trafo.constant";
 import { CellType } from "./types";
 
-import { ModalAdd } from "./modal";
+import { ModalAddTrafo } from "./modal";
 import { WrapperFilter } from "src/components/filter";
 
 import { trafoApi } from "src/api/trafo";
+import { openModal, closeModal, modal, reloadPage } from "src/state/modal";
 
 const Trafo = () => {
+  const modalSnapshot = useSnapshot(modal);
+
   const router = useRouter();
   const [pageSize, setPageSize] = useState<number>(10);
   const [open, setOpen] = useState<boolean>(false);
 
-  const { getTrafoList, trafoList, getTrafoBySubsistemId } = trafoApi();
+  const { getTrafoList, trafoList, getTrafoBySubsistemId, deleteTrafo } =
+    trafoApi();
 
-  const handleClickOpen = () => setOpen(true);
+  const onClickDelete = async (id: string) => {
+    await deleteTrafo({ id });
+    reloadPage();
+  };
 
   const subsistemId = router.query.id as string;
 
@@ -46,28 +54,42 @@ const Trafo = () => {
       headerName: "Aksi",
       renderCell: ({ row }: CellType) => (
         <Box sx={{ display: "flex", alignItems: "center" }}>
-          <IconButton onClick={() => null}>
+          <IconButton onClick={() => openModal(row.id)}>
             <PencilOutline />
           </IconButton>
           <IconButton>
-            <DeleteOutline />
+            <DeleteOutline onClick={() => onClickDelete(row.id)} />
           </IconButton>
         </Box>
       ),
     },
   ];
 
-  useEffect(() => {
+  const handleClose = () => {
+    closeModal();
+  };
+
+  const getTrafo = () => {
     if (subsistemId) {
       getTrafoBySubsistemId(subsistemId);
     } else {
       getTrafoList();
     }
+  };
+
+  useEffect(() => {
+    getTrafo();
   }, []);
+
+  useEffect(() => {
+    if (modalSnapshot.isReloadData) {
+      getTrafo();
+    }
+  }, [modalSnapshot.isReloadData]);
 
   return (
     <>
-      <ModalAdd open={open} handleClose={() => setOpen(!open)} />
+      <ModalAddTrafo handleClose={handleClose} />
       <Grid container spacing={6}>
         {!subsistemId && (
           <Grid item xs={12}>
@@ -88,7 +110,7 @@ const Trafo = () => {
 
                 <Button
                   sx={{ mb: 2 }}
-                  onClick={handleClickOpen}
+                  onClick={() => openModal()}
                   variant="contained"
                 >
                   Tambah Trafo

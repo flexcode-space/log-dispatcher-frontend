@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import {
   Button,
@@ -8,33 +9,84 @@ import {
   Typography,
   Box,
 } from "@mui/material";
-
-import { StyledForm } from "../Trafo.styled";
+import { useSnapshot } from "valtio";
+import { yupResolver } from "@hookform/resolvers/yup";
 import { InputField } from "src/components/input-field";
 import { SelectInput } from "src/components/select-input";
+import { modal, reloadPage } from "src/state/modal";
+import { trafoApi } from "src/api/trafo";
+import { initialValues, validationSchema } from "./ModalAddBusbar.constant";
+import { StyledForm } from "../Trafo.styled";
 
 type ModalAddProps = {
-  open: boolean;
   handleClose: () => void;
 };
 
-const ModalAdd = ({ open, handleClose }: ModalAddProps) => {
+const ModalAddTrafo = ({ handleClose }: ModalAddProps) => {
+  const modalSnapshot = useSnapshot(modal);
+
+  const { createTrafo, getTrafoDetail, updateTrafo } = trafoApi();
+
   const formMethods = useForm({
-    // resolver: yupResolver(validationSchema),
-    // defaultValues: initialValues,
+    resolver: yupResolver(validationSchema),
+    defaultValues: initialValues,
     mode: "onSubmit",
   });
 
+  const onSubmit = (event?: React.FormEvent<HTMLFormElement>) => {
+    event?.preventDefault();
+
+    formMethods.handleSubmit(async (values) => {
+      const { b1, b2, b3, arus_mampu, arus_nominal, ...rest } = values;
+
+      const payload = {
+        ...rest,
+        arus_mampu: Number(values.arus_mampu),
+        arus_nominal: Number(values.arus_nominal),
+        scada: { b1, b2, b3 },
+      };
+
+      if (modalSnapshot.id) {
+        await updateTrafo(payload);
+      } else {
+        await createTrafo(payload);
+      }
+
+      handleClose();
+      reloadPage();
+    })();
+  };
+
+  const onClickCloseModal = () => {
+    handleClose();
+    formMethods.reset({ ...initialValues });
+  };
+
+  useEffect(() => {
+    if (modalSnapshot.id) {
+      getTrafoDetail(modalSnapshot.id).then((data: any) => {
+        const { gardu_induk, scada, sub_sistem, tegangan, ...rest } = data;
+        formMethods.reset({
+          ...rest,
+          ...scada,
+          gardu_induk_id: gardu_induk.id,
+          sub_sistem_id: sub_sistem.id,
+          tegangan_id: tegangan.id,
+        });
+      });
+    }
+  }, [modalSnapshot.id]);
+
   return (
     <Dialog
-      open={open}
+      open={modalSnapshot.isOpen}
       fullWidth
-      onClose={handleClose}
+      onClose={onClickCloseModal}
       maxWidth="sm"
       scroll="body"
     >
       <FormProvider {...formMethods}>
-        <StyledForm noValidate onSubmit={() => null}>
+        <StyledForm noValidate onSubmit={onSubmit}>
           <DialogContent
             sx={{
               pb: 6,
@@ -52,21 +104,21 @@ const ModalAdd = ({ open, handleClose }: ModalAddProps) => {
               <Grid item xs={12} sm={4}>
                 <SelectInput
                   label="Subsistem"
-                  name="subsistem"
+                  name="sub_sistem_id"
                   options={[{ value: "1", label: "Subsistem 1" }]}
                 />
               </Grid>
               <Grid item xs={12} sm={4}>
                 <SelectInput
                   label="Gardu Induk"
-                  name="gardu_induk"
+                  name="gardu_induk_id"
                   options={[{ value: "1", label: "Gardu Induk 1" }]}
                 />
               </Grid>
               <Grid item xs={12} sm={4}>
                 <SelectInput
                   label="No. Trafo"
-                  name="trafo"
+                  name="no"
                   options={[{ value: "1", label: "Trafo 1" }]}
                 />
               </Grid>
@@ -80,19 +132,19 @@ const ModalAdd = ({ open, handleClose }: ModalAddProps) => {
                 <InputField name="b3" label="B3" />
               </Grid>
               <Grid item xs={12} sm={12}>
-                <InputField name="id_point" label="ID Point" />
+                <InputField name="mva_id" label="ID Point" />
               </Grid>
               <Grid item xs={12} sm={6}>
                 <SelectInput
                   label="Ration Tegangan"
-                  name="ratio_tegangan"
+                  name="ratio_tegangan_id"
                   options={[{ value: "1", label: "100 KV" }]}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
                 <SelectInput
                   label="MVA"
-                  name="mva"
+                  name="mva_id"
                   options={[{ value: "1", label: "100 MVA" }]}
                 />
               </Grid>
@@ -111,7 +163,7 @@ const ModalAdd = ({ open, handleClose }: ModalAddProps) => {
             <Button variant="outlined" onClick={handleClose}>
               Batal
             </Button>
-            <Button variant="contained" onClick={() => null}>
+            <Button variant="contained" type="submit">
               Tambah
             </Button>
           </DialogActions>
@@ -121,4 +173,4 @@ const ModalAdd = ({ open, handleClose }: ModalAddProps) => {
   );
 };
 
-export default ModalAdd;
+export default ModalAddTrafo;
