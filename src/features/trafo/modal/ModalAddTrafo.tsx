@@ -15,8 +15,13 @@ import { InputField } from "src/components/input-field";
 import { SelectInput } from "src/components/select-input";
 import { modal, reloadPage } from "src/state/modal";
 import { trafoApi } from "src/api/trafo";
-import { initialValues, validationSchema } from "./ModalAddBusbar.constant";
+import {
+  initialValues,
+  validationSchema,
+  trafoListOptions,
+} from "./ModalAddBusbar.constant";
 import { StyledForm } from "../Trafo.styled";
+import { useModalTrafo } from "./useModalTrafo";
 
 type ModalAddProps = {
   handleClose: () => void;
@@ -24,6 +29,13 @@ type ModalAddProps = {
 
 const ModalAddTrafo = ({ handleClose }: ModalAddProps) => {
   const modalSnapshot = useSnapshot(modal);
+
+  const {
+    subsistemOptions,
+    garduIndukOptions,
+    rasioTeganganOptions,
+    mvaOptions,
+  } = useModalTrafo();
 
   const { createTrafo, getTrafoDetail, updateTrafo } = trafoApi();
 
@@ -65,13 +77,14 @@ const ModalAddTrafo = ({ handleClose }: ModalAddProps) => {
   useEffect(() => {
     if (modalSnapshot.id) {
       getTrafoDetail(modalSnapshot.id).then((data: any) => {
-        const { gardu_induk, scada, sub_sistem, tegangan, ...rest } = data;
+        const { gardu_induk, scada, sub_sistem, rasio_tegangan, ...rest } =
+          data;
         formMethods.reset({
           ...rest,
           ...scada,
           gardu_induk_id: gardu_induk.id,
           sub_sistem_id: sub_sistem.id,
-          tegangan_id: tegangan.id,
+          rasio_tegangan_id: rasio_tegangan.id,
         });
       });
     }
@@ -105,21 +118,21 @@ const ModalAddTrafo = ({ handleClose }: ModalAddProps) => {
                 <SelectInput
                   label="Subsistem"
                   name="sub_sistem_id"
-                  options={[{ value: "1", label: "Subsistem 1" }]}
+                  options={subsistemOptions}
                 />
               </Grid>
               <Grid item xs={12} sm={4}>
                 <SelectInput
                   label="Gardu Induk"
                   name="gardu_induk_id"
-                  options={[{ value: "1", label: "Gardu Induk 1" }]}
+                  options={garduIndukOptions}
                 />
               </Grid>
               <Grid item xs={12} sm={4}>
                 <SelectInput
                   label="No. Trafo"
                   name="no"
-                  options={[{ value: "1", label: "Trafo 1" }]}
+                  options={trafoListOptions}
                 />
               </Grid>
               <Grid item xs={12} sm={4}>
@@ -132,21 +145,17 @@ const ModalAddTrafo = ({ handleClose }: ModalAddProps) => {
                 <InputField name="b3" label="B3" />
               </Grid>
               <Grid item xs={12} sm={12}>
-                <InputField name="mva_id" label="ID Point" />
+                <InputField name="id_amr" label="ID Point" />
               </Grid>
               <Grid item xs={12} sm={6}>
                 <SelectInput
-                  label="Ration Tegangan"
-                  name="ratio_tegangan_id"
-                  options={[{ value: "1", label: "100 KV" }]}
+                  label="Rasio Tegangan"
+                  name="rasio_tegangan_id"
+                  options={rasioTeganganOptions}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
-                <SelectInput
-                  label="MVA"
-                  name="mva_id"
-                  options={[{ value: "1", label: "100 MVA" }]}
-                />
+                <SelectInput label="MVA" name="mva_id" options={mvaOptions} />
               </Grid>
               <Grid item xs={12} sm={6}>
                 <InputField name="arus_nominal" label="Arus Nominal" />
@@ -160,7 +169,7 @@ const ModalAddTrafo = ({ handleClose }: ModalAddProps) => {
             </Grid>
           </DialogContent>
           <DialogActions className="dialog-actions-dense">
-            <Button variant="outlined" onClick={handleClose}>
+            <Button variant="outlined" onClick={onClickCloseModal}>
               Batal
             </Button>
             <Button variant="contained" type="submit">
