@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import {
   Button,
@@ -8,33 +9,99 @@ import {
   Typography,
   Box,
 } from "@mui/material";
-
-import { StyledForm } from "../IBT.styled";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useSnapshot } from "valtio";
+import { ibtApi } from "src/api/ibt";
 import { InputField } from "src/components/input-field";
 import { SelectInput } from "src/components/select-input";
+import {
+  initialValues,
+  validationSchema,
+  numberIbtOptions,
+} from "./ModalBT.constant";
+import { StyledForm } from "../IBT.styled";
+import { modal, reloadPage } from "src/state/modal";
+import { useModalIBt } from "./useModalIBT";
 
 type ModalAddProps = {
-  open: boolean;
   handleClose: () => void;
 };
 
-const ModalAddIBT = ({ open, handleClose }: ModalAddProps) => {
+const ModalAddIBT = ({ handleClose }: ModalAddProps) => {
+  const modalSnapshot = useSnapshot(modal);
+
+  const {
+    subsistemOptions,
+    garduIndukOptions,
+    rasioTeganganOptions,
+    mvaOptions,
+  } = useModalIBt();
+
+  const { createIbt, getIbtDetail, updateIbt } = ibtApi();
+
   const formMethods = useForm({
-    // resolver: yupResolver(validationSchema),
-    // defaultValues: initialValues,
+    resolver: yupResolver(validationSchema),
+    defaultValues: initialValues,
     mode: "onSubmit",
   });
 
+  const onSubmit = (event?: React.FormEvent<HTMLFormElement>) => {
+    event?.preventDefault();
+
+    formMethods.handleSubmit(async (values) => {
+      const { b1, b2, b3, arus_mampu, arus_nominal, ...rest } = values;
+
+      const payload = {
+        ...rest,
+        arus_mampu: Number(values.arus_mampu),
+        arus_nominal: Number(values.arus_nominal),
+        scada: { b1, b2, b3 },
+      };
+
+      if (modalSnapshot.id) {
+        await updateIbt(payload);
+      } else {
+        await createIbt(payload);
+      }
+
+      handleClose();
+      reloadPage();
+    })();
+  };
+
+  const onClickCloseModal = () => {
+    handleClose();
+    formMethods.reset({ ...initialValues });
+  };
+
+  useEffect(() => {
+    if (modalSnapshot.id) {
+      getIbtDetail(modalSnapshot.id).then((data: any) => {
+        const { gardu_induk, scada, sub_sistem, rasio_tegangan, mva, ...rest } =
+          data;
+        console.log('rasio_tegangan', rasio_tegangan)
+        formMethods.reset({
+          ...rest,
+          ...scada,
+          gardu_induk_id: gardu_induk.id,
+          sub_sistem_id: sub_sistem.id,
+          rasio_tegangan_id: rasio_tegangan.id,
+          mva_id: mva.id,
+        });
+      });
+    }
+  }, [modalSnapshot.id]);
+
   return (
     <Dialog
-      open={open}
+      open={modalSnapshot.isOpen}
       fullWidth
-      onClose={handleClose}
+      onClose={onClickCloseModal}
       maxWidth="sm"
       scroll="body"
     >
       <FormProvider {...formMethods}>
-        <StyledForm noValidate>
+        <StyledForm noValidate onSubmit={onSubmit}>
           <DialogContent
             sx={{
               pb: 6,
@@ -52,22 +119,22 @@ const ModalAddIBT = ({ open, handleClose }: ModalAddProps) => {
               <Grid item xs={12} sm={4}>
                 <SelectInput
                   label="Subsistem"
-                  name="subsistem"
-                  options={[{ value: "1", label: "Subsistem 1" }]}
+                  name="sub_sistem_id"
+                  options={subsistemOptions}
                 />
               </Grid>
               <Grid item xs={12} sm={4}>
                 <SelectInput
                   label="Gardu Induk"
-                  name="gardu_induk"
-                  options={[{ value: "1", label: "Gardu Induk 1" }]}
+                  name="gardu_induk_id"
+                  options={garduIndukOptions}
                 />
               </Grid>
               <Grid item xs={12} sm={4}>
                 <SelectInput
                   label="No. IBT"
-                  name="ibt"
-                  options={[{ value: "1", label: "1" }]}
+                  name="no"
+                  options={numberIbtOptions}
                 />
               </Grid>
               <Grid item xs={12} sm={4}>
@@ -80,21 +147,17 @@ const ModalAddIBT = ({ open, handleClose }: ModalAddProps) => {
                 <InputField name="b3" label="B3" />
               </Grid>
               <Grid item xs={12} sm={12}>
-                <InputField name="id_point" label="ID Point" />
+                <InputField name="id_amr" label="ID Point" />
               </Grid>
               <Grid item xs={12} sm={6}>
                 <SelectInput
                   label="Ration Tegangan"
-                  name="ratio_tegangan"
-                  options={[{ value: "1", label: "100 KV" }]}
+                  name="rasio_tegangan_id"
+                  options={rasioTeganganOptions}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
-                <SelectInput
-                  label="MVA"
-                  name="mva"
-                  options={[{ value: "1", label: "100 MVA" }]}
-                />
+                <SelectInput label="MVA" name="mva_id" options={mvaOptions} />
               </Grid>
               <Grid item xs={12} sm={6}>
                 <InputField name="arus_nominal" label="Arus Nominal" />
@@ -108,10 +171,10 @@ const ModalAddIBT = ({ open, handleClose }: ModalAddProps) => {
             </Grid>
           </DialogContent>
           <DialogActions className="dialog-actions-dense">
-            <Button variant="outlined" onClick={handleClose}>
+            <Button variant="outlined" onClick={onClickCloseModal}>
               Batal
             </Button>
-            <Button variant="contained" onClick={() => null}>
+            <Button variant="contained" type="submit">
               Tambah
             </Button>
           </DialogActions>

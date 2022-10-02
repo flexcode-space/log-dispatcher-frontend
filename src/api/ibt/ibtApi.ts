@@ -19,6 +19,17 @@ const ibtApi = () => {
     }
   }, [])
 
+  const getIbtDetail = useCallback(async (id: String) => {
+    setLoading(true)
+
+    try {
+      const { data } = await Axios.get(`${endpoint}/${id}`)
+      return data
+    } finally {
+      setLoading(false)
+    }
+  }, [])
+
 
   const getIbtBySubsistemId = useCallback(async (id: string) => {
     setLoading(true)
@@ -31,12 +42,45 @@ const ibtApi = () => {
     }
   }, [])
 
+  const createIbt = useCallback(async (payload: any) => {
+    setLoading(true)
+
+    try {
+      await Axios.post(endpoint, payload)
+    } finally {
+      setLoading(false)
+    }
+  }, [])
+
+  const updateIbt = useCallback(async (payload: any) => {
+    setLoading(true)
+
+    try {
+      await Axios.put(endpoint, payload)
+    } finally {
+      setLoading(false)
+    }
+  }, [])
+
+  const deleteIbt = useCallback(async (payload: any) => {
+    setLoading(true)
+    try {
+      await Axios.delete(endpoint, { data: payload })
+    } finally {
+      setLoading(false)
+    }
+  }, [])
+
 
   return {
     ibtList,
     loading,
     getIbtList,
     getIbtBySubsistemId,
+    createIbt,
+    updateIbt,
+    deleteIbt,
+    getIbtDetail
   }
 }
 

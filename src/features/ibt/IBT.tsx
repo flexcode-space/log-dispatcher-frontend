@@ -29,13 +29,15 @@ const IBT = () => {
   const modalSnapshot = useSnapshot(modal);
   const router = useRouter();
   const [pageSize, setPageSize] = useState<number>(10);
-  const [open, setOpen] = useState<boolean>(false);
 
-  const { getIbtList, ibtList, getIbtBySubsistemId } = ibtApi();
+  const { getIbtList, ibtList, getIbtBySubsistemId, deleteIbt } = ibtApi();
 
   const subsistemId = router.query.id as string;
 
-  const handleClickOpen = () => setOpen(true);
+  const onClickDelete = async (id: string) => {
+    await deleteIbt({ id });
+    reloadPage();
+  };
 
   const columns = [
     ...defaultColumns,
@@ -45,18 +47,25 @@ const IBT = () => {
       sortable: false,
       field: "actions",
       headerName: "Aksi",
-      renderCell: ({ row }: CellType) => (
-        <Box sx={{ display: "flex", alignItems: "center" }}>
-          <IconButton onClick={() => null}>
-            <PencilOutline />
-          </IconButton>
-          <IconButton>
-            <DeleteOutline />
-          </IconButton>
-        </Box>
-      ),
+      renderCell: ({ row }: CellType) => {
+        const { id } = row;
+        return (
+          <Box sx={{ display: "flex", alignItems: "center" }}>
+            <IconButton onClick={() => openModal(id)}>
+              <PencilOutline />
+            </IconButton>
+            <IconButton>
+              <DeleteOutline onClick={() => onClickDelete(id)} />
+            </IconButton>
+          </Box>
+        );
+      },
     },
   ];
+
+  const handleClose = () => {
+    closeModal();
+  };
 
   const getIbt = () => {
     if (subsistemId) {
@@ -78,7 +87,7 @@ const IBT = () => {
 
   return (
     <>
-      <ModalAddIBT open={open} handleClose={() => setOpen(!open)} />
+      <ModalAddIBT handleClose={handleClose} />
       <Grid container spacing={6}>
         {!subsistemId && (
           <Grid item xs={12}>
@@ -99,7 +108,7 @@ const IBT = () => {
 
                 <Button
                   sx={{ mb: 2 }}
-                  onClick={handleClickOpen}
+                  onClick={() => openModal()}
                   variant="contained"
                 >
                   Tambah IBT

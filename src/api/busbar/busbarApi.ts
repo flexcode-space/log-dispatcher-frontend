@@ -62,7 +62,6 @@ const busbarApi = () => {
   }, [])
 
   const deleteBusbar = useCallback(async (payload: any) => {
-    console.log('payload', payload)
     setLoading(true)
     try {
       await Axios.delete(endpoint, { data: payload })
