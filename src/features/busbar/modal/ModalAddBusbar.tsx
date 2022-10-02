@@ -29,8 +29,6 @@ const ModalAdd = ({ handleClose }: ModalAddProps) => {
 
   const modalSnapshot = useSnapshot(modal);
 
-  // console.log("modalSnapshot", modalSnapshot.id);
-
   const { createBusbar, getBusbarDetail, updateBusbar } = busbarApi();
 
   const formMethods = useForm({

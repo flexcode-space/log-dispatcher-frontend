@@ -12,6 +12,7 @@ import {
   Button,
 } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
+import { useSnapshot } from "valtio";
 import { PencilOutline, DeleteOutline } from "mdi-material-ui";
 
 // ** Custom Components Imports
@@ -22,20 +23,28 @@ import { CellType } from "./types";
 
 import { ModalAddPenghantar } from "./modal";
 import { WrapperFilter } from "src/components/filter";
-
 import { penghantarApi } from "src/api/penghantar";
+import { openModal, closeModal, modal, reloadPage } from "src/state/modal";
 
 const Penghantar = () => {
+  const modalSnapshot = useSnapshot(modal);
   const router = useRouter();
   const [pageSize, setPageSize] = useState<number>(10);
   const [open, setOpen] = useState<boolean>(false);
 
-  const { getPenghantarList, penghantarList, getPenghantarBySubsistemId } =
-    penghantarApi();
-
-  const handleClickOpen = () => setOpen(true);
+  const {
+    getPenghantarList,
+    penghantarList,
+    getPenghantarBySubsistemId,
+    deletePenghantar,
+  } = penghantarApi();
 
   const subsistemId = router.query.id as string;
+
+  const onClickDelete = async (id: string) => {
+    await deletePenghantar({ id });
+    reloadPage();
+  };
 
   const columns = [
     ...defaultColumns,
@@ -45,30 +54,47 @@ const Penghantar = () => {
       sortable: false,
       field: "actions",
       headerName: "Aksi",
-      renderCell: ({ row }: CellType) => (
-        <Box sx={{ display: "flex", alignItems: "center" }}>
-          <IconButton onClick={() => null}>
-            <PencilOutline />
-          </IconButton>
-          <IconButton>
-            <DeleteOutline />
-          </IconButton>
-        </Box>
-      ),
+      renderCell: ({ row }: CellType) => {
+        const { id } = row;
+        return (
+          <Box sx={{ display: "flex", alignItems: "center" }}>
+            <IconButton onClick={() => openModal(id)}>
+              <PencilOutline />
+            </IconButton>
+            <IconButton>
+              <DeleteOutline onClick={() => onClickDelete(id)} />
+            </IconButton>
+          </Box>
+        );
+      },
     },
   ];
 
-  useEffect(() => {
+  const handleClose = () => {
+    closeModal();
+  };
+
+  const getPenghantar = () => {
     if (subsistemId) {
       getPenghantarBySubsistemId(subsistemId);
     } else {
       getPenghantarList();
     }
+  };
+
+  useEffect(() => {
+    getPenghantar();
   }, []);
+
+  useEffect(() => {
+    if (modalSnapshot.isReloadData) {
+      getPenghantar();
+    }
+  }, [modalSnapshot.isReloadData]);
 
   return (
     <>
-      <ModalAddPenghantar open={open} handleClose={() => setOpen(!open)} />
+      <ModalAddPenghantar handleClose={handleClose} />
       <Grid container spacing={6}>
         {!subsistemId && (
           <Grid item xs={12}>
@@ -91,7 +117,7 @@ const Penghantar = () => {
 
                 <Button
                   sx={{ mb: 2 }}
-                  onClick={handleClickOpen}
+                  onClick={() => openModal()}
                   variant="contained"
                 >
                   Tambah Penghantar
