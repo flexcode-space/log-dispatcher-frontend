@@ -53,8 +53,20 @@ export const defaultColumns = [
   {
     flex: 0.35,
     minWidth: 100,
-    field: "dmn",
+    field: "mva",
     headerName: "MVA",
+    renderCell: ({ row }: CellType) => {
+      const { mva } = row;
+      return (
+        <Typography
+          variant="subtitle2"
+          noWrap
+          sx={{ textTransform: "capitalize" }}
+        >
+          {mva.value}
+        </Typography>
+      );
+    },
   },
   {
     flex: 0.25,
