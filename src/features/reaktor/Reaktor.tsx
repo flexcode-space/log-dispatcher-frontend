@@ -31,7 +31,6 @@ const Reaktor = () => {
 
   const router = useRouter();
   const [pageSize, setPageSize] = useState<number>(10);
-  const [open, setOpen] = useState<boolean>(false);
 
   const {
     getReaktorList,

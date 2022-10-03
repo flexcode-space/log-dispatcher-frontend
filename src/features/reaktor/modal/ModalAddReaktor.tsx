@@ -146,7 +146,7 @@ const ModalAddReaktor = ({ handleClose }: ModalAddProps) => {
                 />
               </Grid>
               <Grid item xs={12} sm={4}>
-                <InputField name="setting_ovr" label="Setting OVR" />
+                <InputField name="setting" label="Setting OVR" />
               </Grid>
               <Grid item xs={12} sm={4}>
                 <InputField name="mvar" label="MVAR" />
@@ -161,7 +161,7 @@ const ModalAddReaktor = ({ handleClose }: ModalAddProps) => {
               Batal
             </Button>
             <Button variant="contained" type="submit">
-              Tambah Busbar
+              Tambah Reaktor
             </Button>
           </DialogActions>
         </StyledForm>
