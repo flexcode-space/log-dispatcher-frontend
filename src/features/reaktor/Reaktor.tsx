@@ -13,28 +13,38 @@ import {
 } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { PencilOutline, DeleteOutline } from "mdi-material-ui";
+import { useSnapshot } from "valtio";
 
-// ** Custom Components Imports
 import PageHeader from "src/@core/components/page-header";
 
 import { defaultColumns } from "./Reaktor.constant";
 import { CellType } from "./types";
 
-import { ModalAdd } from "./modal";
+import { ModalAddReaktor } from "./modal";
 import { WrapperFilter } from "src/components/filter";
 
 import { reaktorApi } from "src/api/reaktor";
+import { openModal, closeModal, modal, reloadPage } from "src/state/modal";
 
 const Reaktor = () => {
+  const modalSnapshot = useSnapshot(modal);
+
   const router = useRouter();
   const [pageSize, setPageSize] = useState<number>(10);
-  const [open, setOpen] = useState<boolean>(false);
 
-  const { getReaktorList, reaktorList, getReaktorBySubsistemId } = reaktorApi();
-
-  const handleClickOpen = () => setOpen(true);
+  const {
+    getReaktorList,
+    reaktorList,
+    getReaktorBySubsistemId,
+    deleteReaktor,
+  } = reaktorApi();
 
   const subsistemId = router.query.id as string;
+
+  const onClickDelete = async (id: string) => {
+    await deleteReaktor({ id });
+    reloadPage();
+  };
 
   const columns = [
     ...defaultColumns,
@@ -46,28 +56,42 @@ const Reaktor = () => {
       headerName: "Aksi",
       renderCell: ({ row }: CellType) => (
         <Box sx={{ display: "flex", alignItems: "center" }}>
-          <IconButton onClick={() => null}>
+          <IconButton onClick={() => openModal(row.id)}>
             <PencilOutline />
           </IconButton>
           <IconButton>
-            <DeleteOutline />
+            <DeleteOutline onClick={() => onClickDelete(row.id)} />
           </IconButton>
         </Box>
       ),
     },
   ];
 
-  useEffect(() => {
+  const handleClose = () => {
+    closeModal();
+  };
+
+  const getReaktor = () => {
     if (subsistemId) {
       getReaktorBySubsistemId(subsistemId);
     } else {
       getReaktorList();
     }
+  };
+
+  useEffect(() => {
+    getReaktor();
   }, []);
+
+  useEffect(() => {
+    if (modalSnapshot.isReloadData) {
+      getReaktor();
+    }
+  }, [modalSnapshot.isReloadData]);
 
   return (
     <>
-      <ModalAdd open={open} handleClose={() => setOpen(!open)} />
+      <ModalAddReaktor handleClose={handleClose} />
       <Grid container spacing={6}>
         {!subsistemId && (
           <Grid item xs={12}>
@@ -88,7 +112,7 @@ const Reaktor = () => {
 
                 <Button
                   sx={{ mb: 2 }}
-                  onClick={handleClickOpen}
+                  onClick={() => openModal()}
                   variant="contained"
                 >
                   Tambah Reaktor
