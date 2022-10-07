@@ -1,12 +1,13 @@
 // ** Icon imports
 import HomeOutline from "mdi-material-ui/HomeOutline";
-import EmailOutline from "mdi-material-ui/EmailOutline";
 import MasterDataIcon from "../assets/icons/masterdata-icon.svg";
 import SubsistemIcon from "../assets/icons/subsistem-icon.svg";
 import IBTIcon from "../assets/icons/ibt-icon.svg";
 import PenghantarIcon from "../assets/icons/penghantar-icon.svg";
 import PembangkitIcon from "../assets/icons/pembangkit-icon.svg";
 import TrafoIcon from "../assets/icons/trafo-icon.svg";
+import BebanIcon from "../assets/icons/beban-icon.svg";
+import UnggahIcon from "../assets/icons/unggah-icon.svg";
 
 // ** Type import
 import { HorizontalNavItemsType } from "src/@core/layouts/types";
@@ -16,6 +17,17 @@ export const navigation = (): HorizontalNavItemsType => [
     title: "Beranda",
     icon: HomeOutline,
     path: "/home",
+  },
+  {
+    title: "Beban",
+    icon: BebanIcon,
+    children: [
+      {
+        title: "Unggah Data",
+        icon: UnggahIcon,
+        path: "/beban/unggah-data",
+      },
+    ],
   },
   {
     title: "Master Data",
