@@ -1,5 +1,10 @@
+import { ReactNode } from "react";
 import { FormControl, TextField, FormHelperText } from "@mui/material";
 import { useFormContext, Controller } from "react-hook-form";
+
+import InputLabel from "@mui/material/InputLabel";
+import OutlinedInput from "@mui/material/OutlinedInput";
+import InputAdornment from "@mui/material/InputAdornment";
 
 type InputFieldProps = {
   label: string;
@@ -7,6 +12,10 @@ type InputFieldProps = {
   placeholder?: string;
   type?: string;
 };
+
+interface OutlinedInputFieldProps extends InputFieldProps {
+  Icon?: ReactNode;
+}
 
 export const InputField = ({
   label,
@@ -38,6 +47,48 @@ export const InputField = ({
       {errors?.[name] && (
         <FormHelperText sx={{ color: "error.main" }}>
           {errors?.[name].message}
+        </FormHelperText>
+      )}
+    </FormControl>
+  );
+};
+
+export const OutlinedInputField = ({
+  label,
+  name,
+  placeholder,
+  type = "text",
+  Icon,
+}: OutlinedInputFieldProps) => {
+  const {
+    control,
+    formState: { errors },
+  } = useFormContext();
+
+  return (
+    <FormControl fullWidth sx={{ mb: 4 }}>
+      <InputLabel>{label}</InputLabel>
+      <Controller
+        name={name}
+        control={control}
+        rules={{ required: true }}
+        render={({ field: { value, onChange, onBlur } }) => (
+          <OutlinedInput
+            value={value}
+            onBlur={onBlur}
+            label={label}
+            onChange={onChange}
+            type={type}
+            placeholder={placeholder}
+            endAdornment={
+              <InputAdornment position="end">{Icon}</InputAdornment>
+            }
+          />
+        )}
+      />
+      {errors[name] && (
+        <FormHelperText sx={{ color: "error.main" }}>
+          {errors[name].message}
         </FormHelperText>
       )}
     </FormControl>

@@ -12,6 +12,7 @@ import {
 } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { PencilOutline, DeleteOutline } from "mdi-material-ui";
+import { useSnapshot } from "valtio";
 
 // ** Custom Components Imports
 import PageHeader from "src/@core/components/page-header";
@@ -24,17 +25,23 @@ import { WrapperFilter } from "src/components/filter";
 
 import { subsistemApi } from "src/api/subsistem";
 import { useDebounce } from "src/hooks/useDebounce";
+import { openModal, closeModal, modal, reloadPage } from "src/state/modal";
 
 const Subsistem = () => {
+  const modalSnapshot = useSnapshot(modal);
   const [pageSize, setPageSize] = useState<number>(10);
   const [open, setOpen] = useState<boolean>(false);
   const [search, setSearch] = useState<string>("");
 
   const debouncedSearch = useDebounce(search, 500);
 
-  const { subsistemList, getSubsistemList, loading } = subsistemApi();
+  const { subsistemList, getSubsistemList, loading, deleteSubsistem } =
+    subsistemApi();
 
-  const handleClickOpen = () => setOpen(true);
+  const onClickDelete = async (id: string) => {
+    await deleteSubsistem({ id });
+    reloadPage();
+  };
 
   const columns = [
     ...defaultColumns,
@@ -46,16 +53,20 @@ const Subsistem = () => {
       headerName: "Aksi",
       renderCell: ({ row }: CellType) => (
         <Box sx={{ display: "flex", alignItems: "center" }}>
-          <IconButton onClick={() => null}>
+          <IconButton onClick={() => openModal(row.id)}>
             <PencilOutline />
           </IconButton>
           <IconButton>
-            <DeleteOutline />
+            <DeleteOutline onClick={() => onClickDelete(row.id)} />
           </IconButton>
         </Box>
       ),
     },
   ];
+
+  const handleClose = () => {
+    closeModal();
+  };
 
   useEffect(() => {
     if (debouncedSearch) {
@@ -65,9 +76,19 @@ const Subsistem = () => {
     }
   }, [debouncedSearch]);
 
+  useEffect(() => {
+    if (modalSnapshot.isReloadData) {
+      if (debouncedSearch) {
+        getSubsistemList({ search });
+      } else {
+        getSubsistemList();
+      }
+    }
+  }, [modalSnapshot.isReloadData]);
+
   return (
     <>
-      <ModalAddSubsistem open={open} handleClose={() => setOpen(!open)} />
+      <ModalAddSubsistem handleClose={handleClose} />
       <Grid container spacing={6}>
         <Grid item xs={12}>
           <PageHeader title={<Typography variant="h5">Subsistem</Typography>} />
@@ -86,7 +107,7 @@ const Subsistem = () => {
 
                 <Button
                   sx={{ mb: 2 }}
-                  onClick={handleClickOpen}
+                  onClick={() => openModal()}
                   variant="contained"
                 >
                   Tambah Subsistem

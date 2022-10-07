@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import {
   Button,
@@ -9,70 +9,151 @@ import {
   Grid,
 } from "@mui/material";
 import Plus from "mdi-material-ui/Plus";
-
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useSnapshot } from "valtio";
 import { StyledForm } from "../Subsistem.styled";
-import { InputField } from "src/components/input-field";
+import { OutlinedInputField } from "src/components/input-field";
+import { modal, reloadPage } from "src/state/modal";
+import { subsistemApi } from "src/api/subsistem";
+
+import IconButton from "@mui/material/IconButton";
+import Close from "mdi-material-ui/Close";
+import { validationSchema, initialValues } from "./ModalAddSubsistem.constant";
 
 type ModalAddSubsistemProps = {
-  open: boolean;
   handleClose: () => void;
 };
 
-const ModalAddSubsistem = ({ open, handleClose }: ModalAddSubsistemProps) => {
-  const [fields, setFields] = useState<Array<number>>([0]);
+const defaultValue = {
+  nama: "",
+};
+
+type DefaultValueProps = {
+  nama: string;
+}[];
+
+const ModalAddSubsistem = ({ handleClose }: ModalAddSubsistemProps) => {
+  const modalSnapshot = useSnapshot(modal);
+
+  const { createSubsistem, getSubsistemDetail } = subsistemApi();
+
+  const [fields, setFields] = useState<DefaultValueProps>([defaultValue]);
 
   const formMethods = useForm({
-    // resolver: yupResolver(validationSchema),
-    // defaultValues: initialValues,
-    mode: "onSubmit",
+    resolver: yupResolver(validationSchema),
+    defaultValues: initialValues,
+    mode: "onChange",
+    reValidateMode: "onChange",
   });
+
+  const onClickCloseModal = () => {
+    handleClose();
+    setFields([defaultValue]);
+    formMethods.reset({ ...initialValues });
+  };
+
+  const onClickRemove = (index: number) => {
+    let newState = [...fields];
+    newState.splice(index, 1);
+    setFields(newState);
+  };
+
+  const onSubmit = (event?: React.FormEvent<HTMLFormElement>) => {
+    event?.preventDefault();
+
+    formMethods.handleSubmit(async (values) => {
+      console.log("value", values);
+
+      const data: Array<string> = [];
+      values.subsistem.forEach((value) => {
+        if (value.nama) {
+          data.push(value.nama);
+        }
+      });
+
+      await createSubsistem({
+        nama: data,
+      });
+      handleClose();
+      reloadPage();
+    })();
+  };
+
+  useEffect(() => {
+    if (modalSnapshot.id) {
+      getSubsistemDetail(modalSnapshot.id).then((data: any) => {
+        console.log(data);
+        const { nama } = data;
+        formMethods.reset({
+          subsistem: [
+            {
+              nama,
+            },
+          ],
+        });
+      });
+    }
+  }, [modalSnapshot.id]);
 
   return (
     <Dialog
-      open={open}
+      open={modalSnapshot.isOpen}
       fullWidth
-      onClose={handleClose}
+      onClose={onClickCloseModal}
       maxWidth="sm"
       scroll="body"
     >
       <FormProvider {...formMethods}>
-        <StyledForm noValidate>
+        <StyledForm noValidate onSubmit={onSubmit}>
           <DialogTitle id="max-width-dialog-title">
             Tambah Subsistem
           </DialogTitle>
           <DialogContent>
             <Grid container spacing={1} mt={1}>
-              {fields.map((index) => {
+              {fields.map((value, index) => {
                 return (
-                  <Grid item xs={12} sm={12}>
-                    <InputField
-                      key={`subsistem-${index}`}
-                      name="name"
+                  <Grid key={`subsistem_${index}`} item xs={12} sm={12}>
+                    <OutlinedInputField
+                      name={`subsistem[${index}].nama`}
                       label={`Nama Subsistem ${index + 1}`}
+                      Icon={
+                        !modalSnapshot.id &&
+                        fields.length > 1 && (
+                          <IconButton
+                            edge="end"
+                            onMouseDown={(e) => e.preventDefault()}
+                            onClick={() => onClickRemove(index)}
+                          >
+                            <Close />
+                          </IconButton>
+                        )
+                      }
                     />
                   </Grid>
                 );
               })}
               <Grid item xs={12} sm={12}>
-                <Button
-                  style={{ height: "30px" }}
-                  sx={{ mb: 2 }}
-                  onClick={() =>
-                    setFields((prevState) => [...prevState, fields.length])
-                  }
-                  variant="outlined"
-                >
-                  <Plus sx={{ mr: 1 }} />
-                  Tambah Subsistem
-                </Button>
+                {!modalSnapshot.id && (
+                  <Button
+                    style={{ height: "30px" }}
+                    sx={{ mb: 2 }}
+                    onClick={() =>
+                      setFields((prevState) => [...prevState, defaultValue])
+                    }
+                    variant="outlined"
+                  >
+                    <Plus sx={{ mr: 1 }} />
+                    Tambah Subsistem
+                  </Button>
+                )}
               </Grid>
             </Grid>
           </DialogContent>
           <DialogActions className="dialog-actions-dense">
-            <Button variant="outlined" onClick={handleClose}>
+            <Button variant="outlined" onClick={onClickCloseModal}>
               Batal
             </Button>
-            <Button variant="contained" onClick={() => null}>
+            <Button variant="contained" type="submit">
               Tambah
             </Button>
           </DialogActions>
