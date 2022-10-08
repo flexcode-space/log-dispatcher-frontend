@@ -1,19 +1,22 @@
 import { useCallback, useState } from 'react'
 import { Axios } from '../axios'
 import { Params } from '../types'
+import { toast } from 'src/components/toast'
 
 const endpoint = '/sub-sistem'
 
 const subsistemApi = () => {
   const [subsistemList, setSubsistemList] = useState<[]>([])
+  const [total, setTotal] = useState<number>(0)
   const [loading, setLoading] = useState<boolean>(false);
 
   const getSubsistemList = useCallback(async (params: Params = {}) => {
     setLoading(true)
 
     try {
-      const { data: { data } } = await Axios.get(endpoint, { params })
+      const { data: { data, total } } = await Axios.get(endpoint, { params })
       setSubsistemList(data || [])
+      setTotal(total)
     } finally {
       setLoading(false)
     }
@@ -35,6 +38,9 @@ const subsistemApi = () => {
 
     try {
       await Axios.post(endpoint, payload)
+      toast.success('Berhasil menambahkan subsistem')
+    } catch (error) {
+      toast.error('Gagal menambahkan subsistem')
     } finally {
       setLoading(false)
     }
@@ -45,6 +51,9 @@ const subsistemApi = () => {
 
     try {
       await Axios.put(endpoint, payload)
+      toast.success('Berhasil mengubah subsistem')
+    } catch (error) {
+      toast.error('Gagal mengubah subsistem')
     } finally {
       setLoading(false)
     }
@@ -54,6 +63,9 @@ const subsistemApi = () => {
     setLoading(true)
     try {
       await Axios.delete(endpoint, { data: payload })
+      toast.success('Berhasil menghapus subsistem')
+    } catch (error) {
+      toast.error('Gagal menghapus subsistem')
     } finally {
       setLoading(false)
     }
@@ -62,6 +74,7 @@ const subsistemApi = () => {
 
   return {
     subsistemList,
+    total,
     loading,
     getSubsistemList,
     getSubsistemDetail,
