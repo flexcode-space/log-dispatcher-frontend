@@ -1,4 +1,5 @@
 import { useCallback, useState } from 'react'
+import { toast } from 'src/components/toast'
 import { Axios } from '../axios'
 import { Params } from '../types'
 
@@ -47,6 +48,9 @@ const ibtApi = () => {
 
     try {
       await Axios.post(endpoint, payload)
+      toast.success('Berhasil menambahkan IBT')
+    } catch (error) {
+      toast.error('Gagal menambahkan IBT')
     } finally {
       setLoading(false)
     }
@@ -57,6 +61,9 @@ const ibtApi = () => {
 
     try {
       await Axios.put(endpoint, payload)
+      toast.success('Berhasil mengubah IBT')
+    } catch (error) {
+      toast.error('Gagal mengubah IBT')
     } finally {
       setLoading(false)
     }
@@ -66,6 +73,9 @@ const ibtApi = () => {
     setLoading(true)
     try {
       await Axios.delete(endpoint, { data: payload })
+      toast.success('Berhasil menghapus IBT')
+    } catch (error) {
+      toast.error('Gagal mengubah IBT')
     } finally {
       setLoading(false)
     }

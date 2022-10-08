@@ -1,4 +1,5 @@
 import { useCallback, useState } from 'react'
+import { toast } from 'src/components/toast'
 import { Axios } from '../axios'
 import { Params } from '../types'
 
@@ -46,6 +47,9 @@ const reaktorApi = () => {
 
     try {
       await Axios.post(endpoint, payload)
+      toast.success('Berhasil menambahkan reaktor')
+    } catch (error) {
+      toast.error('Gagal menambahkan reaktor')
     } finally {
       setLoading(false)
     }
@@ -56,6 +60,9 @@ const reaktorApi = () => {
 
     try {
       await Axios.put(endpoint, payload)
+      toast.success('Berhasil mengubah reaktor')
+    } catch (error) {
+      toast.error('Gagal mengubah reaktor')
     } finally {
       setLoading(false)
     }
@@ -65,6 +72,9 @@ const reaktorApi = () => {
     setLoading(true)
     try {
       await Axios.delete(endpoint, { data: payload })
+      toast.success('Berhasil menghapus reaktor')
+    } catch (error) {
+      toast.error('Gagal menghapus reaktor')
     } finally {
       setLoading(false)
     }

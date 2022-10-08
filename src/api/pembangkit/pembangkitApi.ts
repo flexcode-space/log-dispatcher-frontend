@@ -1,4 +1,5 @@
 import { useCallback, useState } from 'react'
+import { toast } from 'src/components/toast'
 import { Axios } from '../axios'
 import { Params } from '../types'
 
@@ -79,8 +80,9 @@ const pembangkitApi = () => {
   const createPembangkit = useCallback(async (payload: any) => {
     try {
       await Axios.post(endpoint, payload)
+      toast.success('Berhasil menambahkan pembangkit')
     } catch (error) {
-      console.log('error')
+      toast.error('Gagal menambahkan pembangkit')
     } finally {
       setLoading(false)
     }
@@ -91,16 +93,21 @@ const pembangkitApi = () => {
 
     try {
       await Axios.put(endpoint, payload)
+      toast.success('Berhasil mengubah pembangkit')
+    } catch (error) {
+      toast.error('Gagal mengubah pembangkit')
     } finally {
       setLoading(false)
     }
   }, [])
 
   const deletePembangkit = useCallback(async (payload: any) => {
-    console.log('payload', payload)
     setLoading(true)
     try {
       await Axios.delete(endpoint, { data: payload })
+      toast.success('Berhasil menghapus pembangkit')
+    } catch (error) {
+      toast.error('Gagal menghapus pembangkit')
     } finally {
       setLoading(false)
     }

@@ -1,4 +1,5 @@
 import { useCallback, useState } from 'react'
+import { toast } from 'src/components/toast'
 import { Axios } from '../axios'
 import { Params } from '../types'
 
@@ -46,6 +47,9 @@ const busbarApi = () => {
 
     try {
       await Axios.post(endpoint, payload)
+      toast.success('Berhasil menambahkan busbar')
+    } catch (error) {
+      toast.error('Gagal menambahkan busbar')
     } finally {
       setLoading(false)
     }
@@ -56,6 +60,9 @@ const busbarApi = () => {
 
     try {
       await Axios.put(endpoint, payload)
+      toast.success('Berhasil mengubah busbar')
+    } catch (error) {
+      toast.error('Gagal mengubah busbar')
     } finally {
       setLoading(false)
     }
@@ -65,6 +72,9 @@ const busbarApi = () => {
     setLoading(true)
     try {
       await Axios.delete(endpoint, { data: payload })
+      toast.success('Berhasil menghapus busbar')
+    } catch (error) {
+      toast.error('Gagal menghapus busbar')
     } finally {
       setLoading(false)
     }
