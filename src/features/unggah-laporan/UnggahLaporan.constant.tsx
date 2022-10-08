@@ -21,3 +21,11 @@ export const defaultColumns = [
     headerName: "Tanggal DIUNGGAH",
   },
 ];
+
+export const tipeLaporanOptions = [
+  {
+    value: "amr",
+    label: "AMR",
+  },
+  { value: "scada", label: "Scada" },
+];

@@ -12,6 +12,7 @@ type SelectInputProps = {
   name: string;
   placeholder?: string;
   options?: { value: string | number; label: string }[];
+  size?: string;
 };
 
 const SelectInput = ({
@@ -19,6 +20,7 @@ const SelectInput = ({
   name,
   placeholder,
   options,
+  size,
 }: SelectInputProps) => {
   const {
     control,
@@ -34,6 +36,7 @@ const SelectInput = ({
           <>
             <InputLabel>{label}</InputLabel>
             <Select
+              size={size}
               value={value}
               onChange={onChange}
               autoFocus
