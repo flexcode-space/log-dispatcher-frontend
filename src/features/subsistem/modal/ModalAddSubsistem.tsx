@@ -82,7 +82,6 @@ const ModalAddSubsistem = ({ handleClose }: ModalAddSubsistemProps) => {
   useEffect(() => {
     if (modalSnapshot.id) {
       getSubsistemDetail(modalSnapshot.id).then((data: any) => {
-        console.log(data);
         const { nama } = data;
         formMethods.reset({
           subsistem: [
