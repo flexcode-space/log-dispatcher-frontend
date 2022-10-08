@@ -12,7 +12,7 @@ type SelectInputProps = {
   name: string;
   placeholder?: string;
   options?: { value: string | number; label: string }[];
-  size?: string;
+  size?: "small" | "medium";
 };
 
 const SelectInput = ({

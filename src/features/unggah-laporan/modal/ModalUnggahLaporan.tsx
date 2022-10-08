@@ -37,8 +37,6 @@ const ModalUnggahLaporan = ({ handleClose }: ModalAddProps) => {
 
   const tipe = formMethods.watch("tipe");
 
-  console.log("formMethods", tipe);
-
   const onSubmit = (event?: React.FormEvent<HTMLFormElement>) => {
     event?.preventDefault();
 
