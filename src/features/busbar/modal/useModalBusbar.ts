@@ -1,9 +1,12 @@
 import { useEffect } from 'react';
+import { useSnapshot } from 'valtio'
 import { subsistemApi } from 'src/api/subsistem'
 import { garduIndukApi } from 'src/api/gardu-induk'
 import { teganganApi } from 'src/api/master'
+import { modal } from 'src/state/modal'
 
 export const useModalBusbar = () => {
+  const modalSnap = useSnapshot(modal)
   const { getSubsistemList, subsistemList } = subsistemApi()
   const { getGarduIndukList, garduIndukList } = garduIndukApi()
   const { getTeganganList, teganganList } = teganganApi()
@@ -13,10 +16,12 @@ export const useModalBusbar = () => {
   const teganganOptions = teganganList.map(({ id, nama }) => ({ value: id, label: `${nama} KV` }))
 
   useEffect(() => {
-    getSubsistemList()
-    getGarduIndukList()
-    getTeganganList()
-  }, [])
+    if (modalSnap.isOpen) {
+      getSubsistemList()
+      getGarduIndukList()
+      getTeganganList()
+    }
+  }, [modalSnap.isOpen])
 
   return {
     subsistemOptions,

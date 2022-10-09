@@ -1,11 +1,11 @@
-import Head from "next/head";
+import { SyntheticEvent, useEffect, useState } from "react";
+import { useRouter } from "next/router";
+import { TabList, TabPanel, TabContext } from "@mui/lab";
 
-// ** React Imports
-import { SyntheticEvent, useState } from "react";
-import Card from "@mui/material/Card";
-import TabList from "@mui/lab/TabList";
-import TabPanel from "@mui/lab/TabPanel";
-import TabContext from "@mui/lab/TabContext";
+import { Card, Grid, Typography, Breadcrumbs, Link } from "@mui/material";
+import PageHeader from "src/@core/components/page-header";
+
+import { subsistemApi } from "src/api/subsistem";
 
 import { Penghantar } from "src/features/penghantar";
 import { IBT } from "src/features/ibt";
@@ -18,56 +18,80 @@ import { Tab, TabName } from "./DetailSubsistem.styled";
 import { TAB_MENU } from "./DetailSubsistem.constant";
 
 const SubsistemDetail = () => {
-  const [value, setValue] = useState<string>("ibt");
+  const router = useRouter();
+  const [subsistem, setSubsistem] = useState<string>("");
+
+  const id = router.query.id as string;
+  const tab = (router.query.tab as string) || "ibt";
+
+  const { getSubsistemDetail } = subsistemApi();
 
   const handleChange = (event: SyntheticEvent, newValue: string) => {
-    setValue(newValue);
+    router.replace(
+      { pathname: `/master-data/subsistem/${id}`, query: { tab: newValue } },
+      undefined,
+      { shallow: true }
+    );
   };
 
-  return (
-    <>
-      <Head>
-        <title>Master Data - Subsistem</title>
-      </Head>
-      <Card>
-        <TabContext value={value}>
-          <TabList
-            onChange={handleChange}
-            aria-label="account-settings tabs"
-            sx={{
-              borderBottom: (theme) => `1px solid ${theme.palette.divider}`,
-            }}
-          >
-            {TAB_MENU.map(({ value, label }) => (
-              <Tab
-                key={value}
-                value={value}
-                label={<TabName>{label}</TabName>}
-              />
-            ))}
-          </TabList>
+  useEffect(() => {
+    if (id) {
+      getSubsistemDetail(id).then((value: any) => setSubsistem(value.nama));
+    }
+  }, [id]);
 
-          <TabPanel sx={{ p: 0 }} value="ibt">
-            <IBT />
-          </TabPanel>
-          <TabPanel sx={{ p: 0 }} value="pembangkit">
-            <Pembangkit />
-          </TabPanel>
-          <TabPanel sx={{ p: 0 }} value="penghantar">
-            <Penghantar />
-          </TabPanel>
-          <TabPanel sx={{ p: 0 }} value="trafo">
-            <Trafo />
-          </TabPanel>
-          <TabPanel sx={{ p: 0 }} value="busbar">
-            <Busbar />
-          </TabPanel>
-          <TabPanel sx={{ p: 0 }} value="reaktor">
-            <Reaktor />
-          </TabPanel>
-        </TabContext>
-      </Card>
-    </>
+  return (
+    <Grid container spacing={6}>
+      <Grid item xs={12}>
+        <Breadcrumbs aria-label="breadcrumb" sx={{ mb: "20px" }}>
+          <Link underline="hover" color="inherit" href="/master-data/subsistem">
+            Subsistem
+          </Link>
+          <Typography color="text.primary">{subsistem}</Typography>
+        </Breadcrumbs>
+        <PageHeader title={<Typography variant="h5">{subsistem}</Typography>} />
+      </Grid>
+      <Grid item xs={12}>
+        <Card>
+          <TabContext value={tab}>
+            <TabList
+              onChange={handleChange}
+              aria-label="account-settings tabs"
+              sx={{
+                borderBottom: (theme) => `1px solid ${theme.palette.divider}`,
+              }}
+            >
+              {TAB_MENU.map(({ value, label }) => (
+                <Tab
+                  key={value}
+                  value={value}
+                  label={<TabName>{label}</TabName>}
+                />
+              ))}
+            </TabList>
+
+            <TabPanel sx={{ p: 0 }} value="ibt">
+              <IBT />
+            </TabPanel>
+            <TabPanel sx={{ p: 0 }} value="pembangkit">
+              <Pembangkit />
+            </TabPanel>
+            <TabPanel sx={{ p: 0 }} value="penghantar">
+              <Penghantar />
+            </TabPanel>
+            <TabPanel sx={{ p: 0 }} value="trafo">
+              <Trafo />
+            </TabPanel>
+            <TabPanel sx={{ p: 0 }} value="busbar">
+              <Busbar />
+            </TabPanel>
+            <TabPanel sx={{ p: 0 }} value="reaktor">
+              <Reaktor />
+            </TabPanel>
+          </TabContext>
+        </Card>
+      </Grid>
+    </Grid>
   );
 };
 

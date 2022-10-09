@@ -7,14 +7,17 @@ const endpoint = '/peralatan/busbar'
 
 const busbarApi = () => {
   const [busbarList, setBusbarList] = useState<[]>([])
+  const [totalData, setTotalData] = useState<number>(0)
   const [loading, setLoading] = useState<boolean>(false);
 
-  const getBusbarList = useCallback(async (params: Params = {}) => {
+  const getBusbarList = useCallback(async (id?: string, params: Params = {}) => {
     setLoading(true)
 
     try {
-      const { data: { data } } = await Axios.get(endpoint, { params })
+      const url = !!id ? `${endpoint}/sub-sistem/${id}` : endpoint
+      const { data: { data, total } } = await Axios.get(url, { params })
       setBusbarList(data || [])
+      setTotalData(total)
     } finally {
       setLoading(false)
     }
@@ -26,17 +29,6 @@ const busbarApi = () => {
     try {
       const { data } = await Axios.get(`${endpoint}/${id}`)
       return data
-    } finally {
-      setLoading(false)
-    }
-  }, [])
-
-  const getBusbarBySubsistemId = useCallback(async (id: string) => {
-    setLoading(true)
-
-    try {
-      const { data: { data } } = await Axios.get(`${endpoint}/sub-sistem/${id}`)
-      setBusbarList(data || [])
     } finally {
       setLoading(false)
     }
@@ -84,8 +76,8 @@ const busbarApi = () => {
   return {
     busbarList,
     loading,
+    totalData,
     getBusbarList,
-    getBusbarBySubsistemId,
     getBusbarDetail,
     createBusbar,
     updateBusbar,

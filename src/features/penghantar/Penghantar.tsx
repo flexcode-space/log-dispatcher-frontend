@@ -1,4 +1,3 @@
-// ** React Imports
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import {
@@ -15,7 +14,6 @@ import { DataGrid } from "@mui/x-data-grid";
 import { useSnapshot } from "valtio";
 import { PencilOutline, DeleteOutline } from "mdi-material-ui";
 
-// ** Custom Components Imports
 import PageHeader from "src/@core/components/page-header";
 
 import { defaultColumns } from "./Penghantar.constant";
@@ -25,18 +23,23 @@ import { ModalAddPenghantar } from "./modal";
 import { WrapperFilter } from "src/components/filter";
 import { penghantarApi } from "src/api/penghantar";
 import { openModal, closeModal, modal, reloadPage } from "src/state/modal";
+import { useDebounce } from "src/hooks/useDebounce";
 
 const Penghantar = () => {
   const modalSnapshot = useSnapshot(modal);
   const router = useRouter();
-  const [pageSize, setPageSize] = useState<number>(10);
-  const [open, setOpen] = useState<boolean>(false);
+  const [limit, setLimit] = useState<number>(10);
+  const [page, setPage] = useState<number>(1);
+  const [search, setSearch] = useState<string>("");
+
+  const debouncedSearch = useDebounce(search, 500);
 
   const {
     getPenghantarList,
     penghantarList,
-    getPenghantarBySubsistemId,
     deletePenghantar,
+    totalData,
+    loading,
   } = penghantarApi();
 
   const subsistemId = router.query.id as string;
@@ -75,16 +78,16 @@ const Penghantar = () => {
   };
 
   const getPenghantar = () => {
-    if (subsistemId) {
-      getPenghantarBySubsistemId(subsistemId);
+    if (debouncedSearch) {
+      getPenghantarList(subsistemId, { search, limit, page });
     } else {
-      getPenghantarList();
+      getPenghantarList(subsistemId, { limit, page });
     }
   };
 
   useEffect(() => {
     getPenghantar();
-  }, []);
+  }, [debouncedSearch, subsistemId, limit, page]);
 
   useEffect(() => {
     if (modalSnapshot.isReloadData) {
@@ -109,10 +112,10 @@ const Penghantar = () => {
               <WrapperFilter>
                 <TextField
                   size="small"
-                  value=""
+                  value={search}
                   sx={{ mr: 6, mb: 2 }}
                   placeholder="Cari"
-                  onChange={(e) => null}
+                  onChange={(e) => setSearch(e.target.value)}
                 />
 
                 <Button
@@ -125,13 +128,15 @@ const Penghantar = () => {
               </WrapperFilter>
               <DataGrid
                 autoHeight
+                rowsPerPageOptions={[10, 20, 25, 50]}
                 rows={penghantarList}
                 columns={columns}
-                pageSize={pageSize}
-                disableSelectionOnClick
-                rowsPerPageOptions={[10, 25, 50]}
-                onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
-                sx={{ "& .MuiDataGrid-columnHeaders": { borderRadius: 0 } }}
+                pageSize={limit}
+                loading={loading}
+                rowCount={totalData}
+                onPageSizeChange={(newPageSize) => setLimit(newPageSize)}
+                onPageChange={(currentPage) => setPage(currentPage + 1)}
+                paginationMode="server"
               />
             </CardContent>
           </Card>

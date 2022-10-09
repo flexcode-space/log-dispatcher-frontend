@@ -40,7 +40,7 @@ export const defaultColumns = [
     field: "penghantar",
     headerName: "Jumlah Penghantar",
     renderCell: ({ row }: CellType) => (
-      <Link href="/master-data/subsistem/detail">
+      <Link href={`${url}/${row.id}?tab=penghantar`}>
         <StyledLink>{row.penghantar}</StyledLink>
       </Link>
     ),
@@ -51,7 +51,7 @@ export const defaultColumns = [
     minWidth: 80,
     headerName: "Jumlah Trafo",
     renderCell: ({ row }: CellType) => (
-      <Link href="/master-data/subsistem/detail">
+      <Link href={`${url}/${row.id}?tab=trafo`}>
         <StyledLink>{row.trafo}</StyledLink>
       </Link>
     ),
@@ -62,7 +62,7 @@ export const defaultColumns = [
     minWidth: 80,
     headerName: "Busbar",
     renderCell: ({ row }: CellType) => (
-      <Link href="/master-data/subsistem/detail">
+      <Link href={`${url}/${row.id}?tab=busbar`}>
         <StyledLink>{row.busbar}</StyledLink>
       </Link>
     ),
@@ -73,7 +73,7 @@ export const defaultColumns = [
     minWidth: 80,
     headerName: "Reaktor Kapasitor",
     renderCell: ({ row }: CellType) => (
-      <Link href="/master-data/subsistem/detail">
+      <Link href={`${url}/${row.id}?tab=reaktor`}>
         <StyledLink>{row.reaktor}</StyledLink>
       </Link>
     ),

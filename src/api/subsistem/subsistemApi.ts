@@ -1,13 +1,13 @@
 import { useCallback, useState } from 'react'
+import { toast } from 'src/components/toast'
 import { Axios } from '../axios'
 import { Params } from '../types'
-import { toast } from 'src/components/toast'
 
 const endpoint = '/sub-sistem'
 
 const subsistemApi = () => {
   const [subsistemList, setSubsistemList] = useState<[]>([])
-  const [total, setTotal] = useState<number>(0)
+  const [totalData, setTotalData] = useState<number>(0)
   const [loading, setLoading] = useState<boolean>(false);
 
   const getSubsistemList = useCallback(async (params: Params = {}) => {
@@ -16,7 +16,7 @@ const subsistemApi = () => {
     try {
       const { data: { data, total } } = await Axios.get(endpoint, { params })
       setSubsistemList(data || [])
-      setTotal(total)
+      setTotalData(total)
     } finally {
       setLoading(false)
     }
@@ -74,7 +74,7 @@ const subsistemApi = () => {
 
   return {
     subsistemList,
-    total,
+    totalData,
     loading,
     getSubsistemList,
     getSubsistemDetail,

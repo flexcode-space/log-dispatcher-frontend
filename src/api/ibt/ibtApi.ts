@@ -7,15 +7,20 @@ const endpoint = '/peralatan/ibt'
 
 const ibtApi = () => {
   const [ibtList, setIbtList] = useState<[]>([])
+  const [totalData, setTotalData] = useState<number>(0)
   const [loading, setLoading] = useState<boolean>(false);
 
-  const getIbtList = useCallback(async (params: Params = {}) => {
+
+  const getIbtList = useCallback(async (id?: string, params: Params = {}) => {
     setLoading(true)
 
     try {
-      const { data: { data } } = await Axios.get(endpoint, { params })
+      const url = !!id ? `${endpoint}/sub-sistem/${id}` : endpoint
+      const { data: { data, total } } = await Axios.get(url, { params })
       setIbtList(data || [])
-    } finally {
+      setTotalData(total)
+    } catch (error) { }
+    finally {
       setLoading(false)
     }
   }, [])
@@ -31,17 +36,6 @@ const ibtApi = () => {
     }
   }, [])
 
-
-  const getIbtBySubsistemId = useCallback(async (id: string) => {
-    setLoading(true)
-    try {
-      const { data: { data } } = await Axios.get(`${endpoint}/sub-sistem/${id}`)
-      setIbtList(data || [])
-    } catch (error) { }
-    finally {
-      setLoading(false)
-    }
-  }, [])
 
   const createIbt = useCallback(async (payload: any) => {
     setLoading(true)
@@ -84,9 +78,9 @@ const ibtApi = () => {
 
   return {
     ibtList,
+    totalData,
     loading,
     getIbtList,
-    getIbtBySubsistemId,
     createIbt,
     updateIbt,
     deleteIbt,

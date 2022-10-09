@@ -7,14 +7,17 @@ const endpoint = '/peralatan/trafo'
 
 const trafoApi = () => {
   const [trafoList, setTrafoList] = useState<[]>([])
+  const [totalData, setTotalData] = useState<number>(0)
   const [loading, setLoading] = useState<boolean>(false);
 
-  const getTrafoList = useCallback(async (params: Params = {}) => {
+  const getTrafoList = useCallback(async (id?: string, params: Params = {}) => {
     setLoading(true)
 
     try {
-      const { data: { data } } = await Axios.get(endpoint, { params })
+      const url = !!id ? `${endpoint}/sub-sistem/${id}` : endpoint
+      const { data: { data, total } } = await Axios.get(url, { params })
       setTrafoList(data || [])
+      setTotalData(total)
     } finally {
       setLoading(false)
     }
@@ -26,17 +29,6 @@ const trafoApi = () => {
     try {
       const { data } = await Axios.get(`${endpoint}/${id}`)
       return data
-    } finally {
-      setLoading(false)
-    }
-  }, [])
-
-  const getTrafoBySubsistemId = useCallback(async (id: string) => {
-    setLoading(true)
-
-    try {
-      const { data: { data } } = await Axios.get(`${endpoint}/sub-sistem/${id}`)
-      setTrafoList(data || [])
     } finally {
       setLoading(false)
     }
@@ -84,8 +76,8 @@ const trafoApi = () => {
   return {
     trafoList,
     loading,
+    totalData,
     getTrafoList,
-    getTrafoBySubsistemId,
     getTrafoDetail,
     createTrafo,
     updateTrafo,

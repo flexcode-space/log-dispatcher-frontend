@@ -34,7 +34,7 @@ const Subsistem = () => {
 
   const debouncedSearch = useDebounce(search, 500);
 
-  const { subsistemList, getSubsistemList, loading, deleteSubsistem, total } =
+  const { subsistemList, getSubsistemList, loading, deleteSubsistem, totalData } =
     subsistemApi();
 
   const onClickDelete = async (id: string) => {
@@ -120,7 +120,7 @@ const Subsistem = () => {
                   loading={loading}
                   rows={subsistemList}
                   columns={columns}
-                  rowCount={total}
+                  rowCount={totalData}
                   onPageSizeChange={(newPageSize) => setLimit(newPageSize)}
                   onPageChange={(currentPage) => setPage(currentPage + 1)}
                   paginationMode="server"

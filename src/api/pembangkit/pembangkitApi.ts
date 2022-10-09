@@ -7,17 +7,20 @@ const endpoint = '/peralatan/pembangkit'
 
 const pembangkitApi = () => {
   const [pembangkitList, setPembangkitList] = useState<[]>([])
+  const [totalData, setTotalData] = useState<number>(0)
   const [jenisPembangkit, setJenisPembangkit] = useState<[]>([])
   const [bahanBakar, setBahanBakar] = useState<[]>([])
   const [kategoriPembangkit, setKategoriPembangkit] = useState<[]>([])
   const [loading, setLoading] = useState<boolean>(false);
 
-  const getPembangkitList = useCallback(async (params: Params = {}) => {
+  const getPembangkitList = useCallback(async (id?: string, params: Params = {}) => {
     setLoading(true)
 
     try {
-      const { data: { data } } = await Axios.get(endpoint, { params })
+      const url = !!id ? `${endpoint}/sub-sistem/${id}` : endpoint
+      const { data: { data, total } } = await Axios.get(url, { params })
       setPembangkitList(data || [])
+      setTotalData(total)
     } finally {
       setLoading(false)
     }
@@ -29,16 +32,6 @@ const pembangkitApi = () => {
     try {
       const { data } = await Axios.get(`${endpoint}/${id}`)
       return data
-    } finally {
-      setLoading(false)
-    }
-  }, [])
-
-  const getPembangkitBySubsistemId = useCallback(async (id: string) => {
-    setLoading(true)
-    try {
-      const { data: { data } } = await Axios.get(`${endpoint}/sub-sistem/${id}`)
-      setPembangkitList(data || [])
     } finally {
       setLoading(false)
     }
@@ -119,8 +112,8 @@ const pembangkitApi = () => {
     jenisPembangkit,
     bahanBakar,
     kategoriPembangkit,
+    totalData,
     getPembangkitList,
-    getPembangkitBySubsistemId,
     getJenisPembangkit,
     getBahanBakar,
     getKategoriPembangkit,
