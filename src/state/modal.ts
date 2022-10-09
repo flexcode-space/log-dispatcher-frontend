@@ -26,4 +26,7 @@ export const closeModal = (): void => {
 
 export const reloadPage = (): void => {
   modal.isReloadData = true
+  setTimeout(() => {
+    modal.isReloadData = false
+  }, 200)
 }

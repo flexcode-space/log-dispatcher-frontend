@@ -1,4 +1,5 @@
 import { useCallback, useState } from 'react'
+import { toast } from 'src/components/toast'
 import { Axios } from '../axios'
 import { Params } from '../types'
 
@@ -6,14 +7,17 @@ const endpoint = '/peralatan/busbar'
 
 const busbarApi = () => {
   const [busbarList, setBusbarList] = useState<[]>([])
+  const [totalData, setTotalData] = useState<number>(0)
   const [loading, setLoading] = useState<boolean>(false);
 
-  const getBusbarList = useCallback(async (params: Params = {}) => {
+  const getBusbarList = useCallback(async (id?: string, params: Params = {}) => {
     setLoading(true)
 
     try {
-      const { data: { data } } = await Axios.get(endpoint, { params })
+      const url = !!id ? `${endpoint}/sub-sistem/${id}` : endpoint
+      const { data: { data, total } } = await Axios.get(url, { params })
       setBusbarList(data || [])
+      setTotalData(total)
     } finally {
       setLoading(false)
     }
@@ -30,22 +34,14 @@ const busbarApi = () => {
     }
   }, [])
 
-  const getBusbarBySubsistemId = useCallback(async (id: string) => {
-    setLoading(true)
-
-    try {
-      const { data: { data } } = await Axios.get(`${endpoint}/sub-sistem/${id}`)
-      setBusbarList(data || [])
-    } finally {
-      setLoading(false)
-    }
-  }, [])
-
   const createBusbar = useCallback(async (payload: any) => {
     setLoading(true)
 
     try {
       await Axios.post(endpoint, payload)
+      toast.success('Berhasil menambahkan busbar')
+    } catch (error) {
+      toast.error('Gagal menambahkan busbar')
     } finally {
       setLoading(false)
     }
@@ -56,6 +52,9 @@ const busbarApi = () => {
 
     try {
       await Axios.put(endpoint, payload)
+      toast.success('Berhasil mengubah busbar')
+    } catch (error) {
+      toast.error('Gagal mengubah busbar')
     } finally {
       setLoading(false)
     }
@@ -65,6 +64,9 @@ const busbarApi = () => {
     setLoading(true)
     try {
       await Axios.delete(endpoint, { data: payload })
+      toast.success('Berhasil menghapus busbar')
+    } catch (error) {
+      toast.error('Gagal menghapus busbar')
     } finally {
       setLoading(false)
     }
@@ -74,8 +76,8 @@ const busbarApi = () => {
   return {
     busbarList,
     loading,
+    totalData,
     getBusbarList,
-    getBusbarBySubsistemId,
     getBusbarDetail,
     createBusbar,
     updateBusbar,

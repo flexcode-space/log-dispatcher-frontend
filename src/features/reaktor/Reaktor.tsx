@@ -1,4 +1,3 @@
-// ** React Imports
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import {
@@ -25,19 +24,20 @@ import { WrapperFilter } from "src/components/filter";
 
 import { reaktorApi } from "src/api/reaktor";
 import { openModal, closeModal, modal, reloadPage } from "src/state/modal";
+import { useDebounce } from "src/hooks/useDebounce";
 
 const Reaktor = () => {
   const modalSnapshot = useSnapshot(modal);
 
   const router = useRouter();
-  const [pageSize, setPageSize] = useState<number>(10);
+  const [limit, setLimit] = useState<number>(10);
+  const [page, setPage] = useState<number>(1);
+  const [search, setSearch] = useState<string>("");
 
-  const {
-    getReaktorList,
-    reaktorList,
-    getReaktorBySubsistemId,
-    deleteReaktor,
-  } = reaktorApi();
+  const debouncedSearch = useDebounce(search, 500);
+
+  const { getReaktorList, reaktorList, totalData, loading, deleteReaktor } =
+    reaktorApi();
 
   const subsistemId = router.query.id as string;
 
@@ -72,16 +72,16 @@ const Reaktor = () => {
   };
 
   const getReaktor = () => {
-    if (subsistemId) {
-      getReaktorBySubsistemId(subsistemId);
+    if (debouncedSearch) {
+      getReaktorList(subsistemId, { search, limit, page });
     } else {
-      getReaktorList();
+      getReaktorList(subsistemId, { limit, page });
     }
   };
 
   useEffect(() => {
     getReaktor();
-  }, []);
+  }, [debouncedSearch, subsistemId, limit, page]);
 
   useEffect(() => {
     if (modalSnapshot.isReloadData) {
@@ -104,10 +104,10 @@ const Reaktor = () => {
               <WrapperFilter>
                 <TextField
                   size="small"
-                  value=""
+                  value={search}
                   sx={{ mr: 6, mb: 2 }}
                   placeholder="Cari"
-                  onChange={(e) => null}
+                  onChange={(e) => setSearch(e.target.value)}
                 />
 
                 <Button
@@ -120,13 +120,15 @@ const Reaktor = () => {
               </WrapperFilter>
               <DataGrid
                 autoHeight
+                rowsPerPageOptions={[10, 20, 25, 50]}
                 rows={reaktorList}
                 columns={columns}
-                pageSize={pageSize}
-                disableSelectionOnClick
-                rowsPerPageOptions={[10, 25, 50]}
-                onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
-                sx={{ "& .MuiDataGrid-columnHeaders": { borderRadius: 0 } }}
+                pageSize={limit}
+                loading={loading}
+                rowCount={totalData}
+                onPageSizeChange={(newPageSize) => setLimit(newPageSize)}
+                onPageChange={(currentPage) => setPage(currentPage + 1)}
+                paginationMode="server"
               />
             </CardContent>
           </Card>

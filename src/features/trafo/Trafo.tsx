@@ -26,14 +26,19 @@ import { WrapperFilter } from "src/components/filter";
 
 import { trafoApi } from "src/api/trafo";
 import { openModal, closeModal, modal, reloadPage } from "src/state/modal";
+import { useDebounce } from "src/hooks/useDebounce";
 
 const Trafo = () => {
   const modalSnapshot = useSnapshot(modal);
 
   const router = useRouter();
-  const [pageSize, setPageSize] = useState<number>(10);
+  const [limit, setLimit] = useState<number>(10);
+  const [page, setPage] = useState<number>(1);
+  const [search, setSearch] = useState<string>("");
 
-  const { getTrafoList, trafoList, getTrafoBySubsistemId, deleteTrafo } =
+  const debouncedSearch = useDebounce(search, 500);
+
+  const { getTrafoList, trafoList, totalData, loading, deleteTrafo } =
     trafoApi();
 
   const onClickDelete = async (id: string) => {
@@ -69,16 +74,16 @@ const Trafo = () => {
   };
 
   const getTrafo = () => {
-    if (subsistemId) {
-      getTrafoBySubsistemId(subsistemId);
+    if (debouncedSearch) {
+      getTrafoList(subsistemId, { search, limit, page });
     } else {
-      getTrafoList();
+      getTrafoList(subsistemId, { limit, page });
     }
   };
 
   useEffect(() => {
     getTrafo();
-  }, []);
+  }, [debouncedSearch, subsistemId, limit, page]);
 
   useEffect(() => {
     if (modalSnapshot.isReloadData) {
@@ -101,10 +106,10 @@ const Trafo = () => {
               <WrapperFilter>
                 <TextField
                   size="small"
-                  value=""
+                  value={search}
                   sx={{ mr: 6, mb: 2 }}
                   placeholder="Cari"
-                  onChange={(e) => null}
+                  onChange={(e) => setSearch(e.target.value)}
                 />
 
                 <Button
@@ -117,13 +122,14 @@ const Trafo = () => {
               </WrapperFilter>
               <DataGrid
                 autoHeight
+                rowsPerPageOptions={[10, 20, 25, 50]}
                 rows={trafoList}
                 columns={columns}
-                pageSize={pageSize}
-                disableSelectionOnClick
-                rowsPerPageOptions={[10, 25, 50]}
-                onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
-                sx={{ "& .MuiDataGrid-columnHeaders": { borderRadius: 0 } }}
+                pageSize={limit}
+                rowCount={totalData}
+                onPageSizeChange={(newPageSize) => setLimit(newPageSize)}
+                onPageChange={(currentPage) => setPage(currentPage + 1)}
+                paginationMode="server"
               />
             </CardContent>
           </Card>

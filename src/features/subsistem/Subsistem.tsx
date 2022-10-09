@@ -1,4 +1,3 @@
-// ** React Imports
 import { useEffect, useState } from "react";
 import {
   Box,
@@ -29,13 +28,13 @@ import { openModal, closeModal, modal, reloadPage } from "src/state/modal";
 
 const Subsistem = () => {
   const modalSnapshot = useSnapshot(modal);
-  const [pageSize, setPageSize] = useState<number>(10);
-  const [open, setOpen] = useState<boolean>(false);
+  const [limit, setLimit] = useState<number>(10);
+  const [page, setPage] = useState<number>(1);
   const [search, setSearch] = useState<string>("");
 
   const debouncedSearch = useDebounce(search, 500);
 
-  const { subsistemList, getSubsistemList, loading, deleteSubsistem } =
+  const { subsistemList, getSubsistemList, loading, deleteSubsistem, totalData } =
     subsistemApi();
 
   const onClickDelete = async (id: string) => {
@@ -68,21 +67,21 @@ const Subsistem = () => {
     closeModal();
   };
 
-  useEffect(() => {
+  const getSubsistem = () => {
     if (debouncedSearch) {
-      getSubsistemList({ search });
+      getSubsistemList({ search, limit, page });
     } else {
-      getSubsistemList();
+      getSubsistemList({ limit, page });
     }
-  }, [debouncedSearch]);
+  };
+
+  useEffect(() => {
+    getSubsistem();
+  }, [debouncedSearch, limit, page]);
 
   useEffect(() => {
     if (modalSnapshot.isReloadData) {
-      if (debouncedSearch) {
-        getSubsistemList({ search });
-      } else {
-        getSubsistemList();
-      }
+      getSubsistem();
     }
   }, [modalSnapshot.isReloadData]);
 
@@ -116,9 +115,15 @@ const Subsistem = () => {
               <Box>
                 <DataGrid
                   autoHeight
+                  rowsPerPageOptions={[10, 20, 25, 50]}
+                  pageSize={limit}
                   loading={loading}
                   rows={subsistemList}
                   columns={columns}
+                  rowCount={totalData}
+                  onPageSizeChange={(newPageSize) => setLimit(newPageSize)}
+                  onPageChange={(currentPage) => setPage(currentPage + 1)}
+                  paginationMode="server"
                 />
               </Box>
             </CardContent>

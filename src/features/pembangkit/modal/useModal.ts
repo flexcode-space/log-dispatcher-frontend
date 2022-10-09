@@ -1,9 +1,12 @@
 import { useEffect } from 'react';
+import { useSnapshot } from 'valtio'
 import { subsistemApi } from 'src/api/subsistem'
 import { garduIndukApi } from 'src/api/gardu-induk'
 import { pembangkitApi } from 'src/api/pembangkit'
+import { modal } from 'src/state/modal'
 
 export const useModal = () => {
+  const modalSnap = useSnapshot(modal)
   const { getSubsistemList, subsistemList } = subsistemApi()
   const { getGarduIndukList, garduIndukList } = garduIndukApi()
   const {
@@ -23,12 +26,14 @@ export const useModal = () => {
 
 
   useEffect(() => {
-    getSubsistemList()
-    getGarduIndukList()
-    getJenisPembangkit()
-    getBahanBakar()
-    getKategoriPembangkit()
-  }, [])
+    if (modalSnap.isOpen) {
+      getSubsistemList()
+      getGarduIndukList()
+      getJenisPembangkit()
+      getBahanBakar()
+      getKategoriPembangkit()
+    }
+  }, [modalSnap.isOpen])
 
   return {
     subsistemOptions,

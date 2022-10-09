@@ -24,22 +24,25 @@ import { ModalAddPembangkit } from "./modal";
 import { WrapperFilter } from "src/components/filter";
 import { pembangkitApi } from "src/api/pembangkit";
 import { openModal, closeModal, modal, reloadPage } from "src/state/modal";
+import { useDebounce } from "src/hooks/useDebounce";
 
 const Pembangkit = () => {
   const modalSnapshot = useSnapshot(modal);
 
   const router = useRouter();
-  const [pageSize, setPageSize] = useState<number>(10);
-  const [open, setOpen] = useState<boolean>(false);
+  const [limit, setLimit] = useState<number>(10);
+  const [page, setPage] = useState<number>(1);
+  const [search, setSearch] = useState<string>("");
+
+  const debouncedSearch = useDebounce(search, 500);
 
   const {
     pembangkitList,
+    loading,
+    totalData,
     getPembangkitList,
-    getPembangkitBySubsistemId,
     deletePembangkit,
   } = pembangkitApi();
-
-  const handleClickOpen = () => setOpen(true);
 
   const onClickDelete = async (id: string) => {
     await deletePembangkit({ id });
@@ -77,16 +80,16 @@ const Pembangkit = () => {
   };
 
   const getPembangkit = () => {
-    if (subsistemId) {
-      getPembangkitBySubsistemId(subsistemId);
+    if (debouncedSearch) {
+      getPembangkitList(subsistemId, { search, limit, page });
     } else {
-      getPembangkitList();
+      getPembangkitList(subsistemId, { limit, page });
     }
   };
 
   useEffect(() => {
     getPembangkit();
-  }, []);
+  }, [debouncedSearch, subsistemId, limit, page]);
 
   useEffect(() => {
     if (modalSnapshot.isReloadData) {
@@ -111,10 +114,10 @@ const Pembangkit = () => {
               <WrapperFilter>
                 <TextField
                   size="small"
-                  value=""
+                  value={search}
                   sx={{ mr: 6, mb: 2 }}
                   placeholder="Cari"
-                  onChange={(e) => null}
+                  onChange={(e) => setSearch(e.target.value)}
                 />
 
                 <Button
@@ -127,13 +130,15 @@ const Pembangkit = () => {
               </WrapperFilter>
               <DataGrid
                 autoHeight
+                rowsPerPageOptions={[10, 20, 25, 50]}
                 rows={pembangkitList}
                 columns={columns}
-                pageSize={pageSize}
-                disableSelectionOnClick
-                rowsPerPageOptions={[10, 25, 50]}
-                onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
-                sx={{ "& .MuiDataGrid-columnHeaders": { borderRadius: 0 } }}
+                pageSize={limit}
+                loading={loading}
+                rowCount={totalData}
+                onPageSizeChange={(newPageSize) => setLimit(newPageSize)}
+                onPageChange={(currentPage) => setPage(currentPage + 1)}
+                paginationMode="server"
               />
             </CardContent>
           </Card>

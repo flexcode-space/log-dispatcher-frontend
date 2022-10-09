@@ -24,14 +24,19 @@ import { WrapperFilter } from "src/components/filter";
 
 import { busbarApi } from "src/api/busbar";
 import { openModal, closeModal, modal, reloadPage } from "src/state/modal";
+import { useDebounce } from "src/hooks/useDebounce";
 
 const Busbar = () => {
   const modalSnapshot = useSnapshot(modal);
 
   const router = useRouter();
-  const [pageSize, setPageSize] = useState<number>(10);
+  const [limit, setLimit] = useState<number>(10);
+  const [page, setPage] = useState<number>(1);
+  const [search, setSearch] = useState<string>("");
 
-  const { getBusbarList, busbarList, getBusbarBySubsistemId, deleteBusbar } =
+  const debouncedSearch = useDebounce(search, 500);
+
+  const { getBusbarList, busbarList, loading, totalData, deleteBusbar } =
     busbarApi();
 
   const onClickDelete = async (id: string) => {
@@ -70,16 +75,16 @@ const Busbar = () => {
   };
 
   const getBusbar = () => {
-    if (subsistemId) {
-      getBusbarBySubsistemId(subsistemId);
+    if (debouncedSearch) {
+      getBusbarList(subsistemId, { search, limit, page });
     } else {
-      getBusbarList();
+      getBusbarList(subsistemId, { limit, page });
     }
   };
 
   useEffect(() => {
     getBusbar();
-  }, []);
+  }, [debouncedSearch, subsistemId, limit, page]);
 
   useEffect(() => {
     if (modalSnapshot.isReloadData) {
@@ -102,10 +107,10 @@ const Busbar = () => {
               <WrapperFilter>
                 <TextField
                   size="small"
-                  value=""
+                  value={search}
                   sx={{ mr: 6, mb: 2 }}
                   placeholder="Cari"
-                  onChange={(e) => null}
+                  onChange={(e) => setSearch(e.target.value)}
                 />
 
                 <Button
@@ -118,13 +123,15 @@ const Busbar = () => {
               </WrapperFilter>
               <DataGrid
                 autoHeight
+                rowsPerPageOptions={[10, 20, 25, 50]}
                 rows={busbarList}
                 columns={columns}
-                pageSize={pageSize}
-                disableSelectionOnClick
-                rowsPerPageOptions={[10, 25, 50]}
-                onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
-                sx={{ "& .MuiDataGrid-columnHeaders": { borderRadius: 0 } }}
+                pageSize={limit}
+                loading={loading}
+                rowCount={totalData}
+                onPageSizeChange={(newPageSize) => setLimit(newPageSize)}
+                onPageChange={(currentPage) => setPage(currentPage + 1)}
+                paginationMode="server"
               />
             </CardContent>
           </Card>

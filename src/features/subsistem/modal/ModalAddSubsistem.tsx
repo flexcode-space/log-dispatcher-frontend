@@ -19,6 +19,8 @@ import { subsistemApi } from "src/api/subsistem";
 import IconButton from "@mui/material/IconButton";
 import Close from "mdi-material-ui/Close";
 import { validationSchema, initialValues } from "./ModalAddSubsistem.constant";
+import toast from "react-hot-toast";
+import Alert from "@mui/material/Alert";
 
 type ModalAddSubsistemProps = {
   handleClose: () => void;
@@ -35,7 +37,8 @@ type DefaultValueProps = {
 const ModalAddSubsistem = ({ handleClose }: ModalAddSubsistemProps) => {
   const modalSnapshot = useSnapshot(modal);
 
-  const { createSubsistem, getSubsistemDetail } = subsistemApi();
+  const { createSubsistem, updateSubsistem, getSubsistemDetail } =
+    subsistemApi();
 
   const [fields, setFields] = useState<DefaultValueProps>([defaultValue]);
 
@@ -46,10 +49,14 @@ const ModalAddSubsistem = ({ handleClose }: ModalAddSubsistemProps) => {
     reValidateMode: "onChange",
   });
 
-  const onClickCloseModal = () => {
+  const onResetModal = () => {
     handleClose();
     setFields([defaultValue]);
     formMethods.reset({ ...initialValues });
+  };
+
+  const onClickCloseModal = () => {
+    onResetModal();
   };
 
   const onClickRemove = (index: number) => {
@@ -71,11 +78,14 @@ const ModalAddSubsistem = ({ handleClose }: ModalAddSubsistemProps) => {
         }
       });
 
-      await createSubsistem({
-        nama: data,
-      });
-      handleClose();
+      if (modalSnapshot.id) {
+        await updateSubsistem({ nama: data[0], id: modalSnapshot.id });
+      } else {
+        await createSubsistem({ nama: data });
+      }
+
       reloadPage();
+      onResetModal();
     })();
   };
 

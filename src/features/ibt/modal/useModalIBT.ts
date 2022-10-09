@@ -1,9 +1,12 @@
 import { useEffect } from 'react';
+import { useSnapshot } from 'valtio'
 import { subsistemApi } from 'src/api/subsistem'
 import { garduIndukApi } from 'src/api/gardu-induk'
 import { rasioTeganganApi, mvaApi } from 'src/api/master'
+import { modal } from 'src/state/modal'
 
 export const useModalIBt = () => {
+  const modalSnap = useSnapshot(modal)
   const { getSubsistemList, subsistemList } = subsistemApi()
   const { getGarduIndukList, garduIndukList } = garduIndukApi()
   const { getRasioTeganganList, rasioTeganganList } = rasioTeganganApi()
@@ -15,11 +18,13 @@ export const useModalIBt = () => {
   const mvaOptions = mvaList.map(({ id, nama }) => ({ value: id, label: `${nama} KV` }))
 
   useEffect(() => {
-    getSubsistemList()
-    getGarduIndukList()
-    getRasioTeganganList()
-    getMvaList()
-  }, [])
+    if (modalSnap.isOpen) {
+      getSubsistemList()
+      getGarduIndukList()
+      getRasioTeganganList()
+      getMvaList()
+    }
+  }, [modalSnap.isOpen])
 
   return {
     subsistemOptions,
