@@ -151,10 +151,10 @@ const BebanHarian = () => {
                                           return (
                                             <>
                                               <TableCell>
-                                                {pembangkit?.data[mw]!}
+                                                {(pembangkit?.data as any)[mw]!}
                                               </TableCell>
                                               <TableCell>
-                                                {pembangkit?.data[mx]!}
+                                                {(pembangkit?.data as any)[mx]!}
                                               </TableCell>
                                             </>
                                           );
