@@ -1,133 +1,172 @@
-import { useEffect, useState } from "react";
-import {
-  Box,
-  Card,
-  CardContent,
-  Grid,
-  IconButton,
-  Typography,
-  TextField,
-  Button,
-} from "@mui/material";
-import { DataGrid } from "@mui/x-data-grid";
-import { PencilOutline, DeleteOutline } from "mdi-material-ui";
-import { useSnapshot } from "valtio";
+// ** React Imports
+import { useState, ChangeEvent, useEffect } from "react";
 
-// ** Custom Components Imports
+// ** MUI Imports
+import { Card, CardContent, Button } from "@mui/material";
+import { Typography, TextField } from "@mui/material";
+import Grid from "@mui/material/Grid";
+import Table from "@mui/material/Table";
+import TableRow from "@mui/material/TableRow";
+import TableHead from "@mui/material/TableHead";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TablePagination from "@mui/material/TablePagination";
 import PageHeader from "src/@core/components/page-header";
+import DownloadIcon from "src/assets/icons/download-icon.svg";
+import EditIcon from "src/assets/icons/edit-icon.svg";
+import { openModal } from "src/state/modal";
 
-import { defaultColumns } from "./BebanTrafoHarian.constant";
-import { CellType } from "./types";
-
-// import { ModalAddSubsistem } from "./modal";
 import { WrapperFilter } from "src/components/filter";
+import { ModalSetBebanHarian } from "./modal";
 
-import { subsistemApi } from "src/api/subsistem";
-import { useDebounce } from "src/hooks/useDebounce";
-import { openModal, closeModal, modal, reloadPage } from "src/state/modal";
+const BebanHarian = () => {
+  // ** States
+  const [page, setPage] = useState<number>(0);
+  const [rowsPerPage, setRowsPerPage] = useState<number>(10);
 
-const BebanTrafoHarian = () => {
-  const modalSnapshot = useSnapshot(modal);
-  const [limit, setLimit] = useState<number>(10);
-  const [page, setPage] = useState<number>(1);
-  const [search, setSearch] = useState<string>("");
-
-  const debouncedSearch = useDebounce(search, 500);
-
-  // const { subsistemList, getSubsistemList, loading, deleteSubsistem, totalData } =
-  //   subsistemApi();
-
-  const onClickDelete = async (id: string) => {
-    // await deleteSubsistem({ id });
-    reloadPage();
+  const handleChangePage = (event: unknown, newPage: number) => {
+    setPage(newPage);
   };
 
-  const columns = [
-    ...defaultColumns,
-    {
-      flex: 0.15,
-      minWidth: 100,
-      sortable: false,
-      field: "actions",
-      headerName: "Aksi",
-      renderCell: ({ row }: CellType) => (
-        <Box sx={{ display: "flex", alignItems: "center" }}>
-          <IconButton onClick={() => openModal(row.id)}>
-            <PencilOutline />
-          </IconButton>
-          <IconButton>
-            <DeleteOutline onClick={() => onClickDelete(row.id)} />
-          </IconButton>
-        </Box>
-      ),
-    },
-  ];
-
-  const handleClose = () => {
-    closeModal();
+  const handleChangeRowsPerPage = (event: ChangeEvent<HTMLInputElement>) => {
+    setRowsPerPage(+event.target.value);
+    setPage(0);
   };
-
-  const getSubsistem = () => {
-    // if (debouncedSearch) {
-    //   getSubsistemList({ search, limit, page });
-    // } else {
-    //   getSubsistemList({ limit, page });
-    // }
-  };
-
-  useEffect(() => {
-    getSubsistem();
-  }, [debouncedSearch, limit, page]);
-
-  useEffect(() => {
-    if (modalSnapshot.isReloadData) {
-      getSubsistem();
-    }
-  }, [modalSnapshot.isReloadData]);
 
   return (
     <>
-      {/* <ModalAddSubsistem handleClose={handleClose} /> */}
+      <ModalSetBebanHarian />
+
       <Grid container spacing={6}>
         <Grid item xs={12}>
           <PageHeader
-            title={<Typography variant="h5">Beban Trafo Harian</Typography>}
+            title={<Typography variant="h5">Beban Harian</Typography>}
           />
         </Grid>
         <Grid item xs={12}>
           <Card>
             <CardContent>
-              <WrapperFilter>
+              <WrapperFilter sx={{ alignItems: "baseline" }}>
                 <TextField
                   size="small"
-                  value={search}
+                  value=""
                   sx={{ mr: 6, mb: 2 }}
                   placeholder="Cari"
-                  onChange={(e) => setSearch(e.target.value)}
+                  // onChange={(e) => setSearch(e.target.value)}
                 />
 
-                <Button
-                  sx={{ mb: 2 }}
-                  onClick={() => openModal()}
-                  variant="contained"
-                >
-                  Tambah Subsistem
-                </Button>
+                <div style={{ display: "flex", gap: "10px" }}>
+                  <Button sx={{ mb: 2 }} variant="outlined">
+                    <EditIcon />
+                    Ubah Arus Mampu
+                  </Button>
+                  <Button
+                    sx={{ mb: 2 }}
+                    variant="outlined"
+                    onClick={() => openModal()}
+                  >
+                    Set
+                  </Button>
+                  <Button sx={{ mb: 2 }} variant="contained">
+                    <DownloadIcon />
+                    Download laporan
+                  </Button>
+                </div>
               </WrapperFilter>
-              <Box>
-                <DataGrid
-                  autoHeight
-                  rowsPerPageOptions={[10, 20, 25, 50]}
-                  pageSize={limit}
-                  // loading={loading}
-                  rows={[]}
-                  columns={columns}
-                  // rowCount={totalData}
-                  onPageSizeChange={(newPageSize) => setLimit(newPageSize)}
-                  onPageChange={(currentPage) => setPage(currentPage + 1)}
-                  paginationMode="server"
-                />
-              </Box>
+              <TableContainer>
+                <Table>
+                  <TableHead sx={{ height: "30px", background: "#F5F5F7" }}>
+                    <TableRow>
+                      <TableCell size="small" rowSpan={2}>
+                        No
+                      </TableCell>
+                      <TableCell size="small" rowSpan={2}>
+                        UPT
+                      </TableCell>
+                      <TableCell size="small" rowSpan={2}>
+                        Subsistem
+                      </TableCell>
+                      <TableCell size="small" rowSpan={2}>
+                        Gardu Induk
+                      </TableCell>
+                      <TableCell size="small" rowSpan={2}>
+                        Trafo
+                      </TableCell>
+                      <TableCell size="small" rowSpan={2}>
+                        Daya (MVA)
+                      </TableCell>
+                      <TableCell size="small" rowSpan={2}>
+                        Ratio
+                      </TableCell>
+                      <TableCell size="small" rowSpan={2}>
+                        Arus Nominal (A)
+                      </TableCell>
+                      <TableCell size="small" rowSpan={2}>
+                        Arus Mampu (A)
+                      </TableCell>
+                      <TableCell size="small" rowSpan={2}>
+                        Setting OCR
+                      </TableCell>
+                      <TableCell size="small" align="center" colSpan={6}>
+                        08.00
+                      </TableCell>
+                      <TableCell size="small" align="center" colSpan={6}>
+                        04.00
+                      </TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell width={100}>Arus (A)</TableCell>
+                      <TableCell>MW</TableCell>
+                      <TableCell>MVAR</TableCell>
+                      <TableCell>KWH</TableCell>
+                      <TableCell width={100}>% I NOM</TableCell>
+                      <TableCell width={120}>% I MAMPU</TableCell>
+                      <TableCell width={100}>Arus (A)</TableCell>
+                      <TableCell>MW</TableCell>
+                      <TableCell>MVAR</TableCell>
+                      <TableCell>KWH</TableCell>
+                      <TableCell width={100}>% I NOM</TableCell>
+                      <TableCell width={120}>% I MAMPU</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    <TableRow>
+                      <TableCell>1</TableCell>
+                      <TableCell>Semarang</TableCell>
+                      <TableCell>Tanjung Jati</TableCell>
+                      <TableCell>Trafo - 1</TableCell>
+                      <TableCell>60</TableCell>
+                      <TableCell>150/20</TableCell>
+                      <TableCell>231</TableCell>
+                      <TableCell>231</TableCell>
+                      <TableCell>277,2</TableCell>
+                      <TableCell>12</TableCell>
+                      <TableCell>10</TableCell>
+                      <TableCell>0</TableCell>
+                      <TableCell>12</TableCell>
+                      <TableCell>10</TableCell>
+                      <TableCell>0</TableCell>
+                      <TableCell>67</TableCell>
+                      <TableCell>67</TableCell>
+                      <TableCell>67</TableCell>
+                      <TableCell>67</TableCell>
+                      <TableCell>67</TableCell>
+                      <TableCell>67</TableCell>
+                      <TableCell>67</TableCell>
+                    </TableRow>
+                  </TableBody>
+                </Table>
+              </TableContainer>
+              <TablePagination
+                rowsPerPageOptions={[10, 25, 100]}
+                component="div"
+                count={12}
+                rowsPerPage={rowsPerPage}
+                page={page}
+                onPageChange={handleChangePage}
+                onRowsPerPageChange={handleChangeRowsPerPage}
+              />
             </CardContent>
           </Card>
         </Grid>
@@ -136,4 +175,4 @@ const BebanTrafoHarian = () => {
   );
 };
 
-export default BebanTrafoHarian;
+export default BebanHarian;
