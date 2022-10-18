@@ -40,7 +40,7 @@ export const navigation = (): HorizontalNavItemsType => [
       {
         title: "Rencana Harian",
         icon: RencanaHarianIcon,
-        path: "/beban/beban-rencana-harian",
+        path: "/beban/rencana-harian",
       },
       {
         title: "Beban Trafo Harian",
