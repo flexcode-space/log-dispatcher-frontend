@@ -41,7 +41,7 @@ const BebanHarian = () => {
       <Grid container spacing={6}>
         <Grid item xs={12}>
           <PageHeader
-            title={<Typography variant="h5">Beban Harian</Typography>}
+            title={<Typography variant="h5">Beban Trafo Harian</Typography>}
           />
         </Grid>
         <Grid item xs={12}>
