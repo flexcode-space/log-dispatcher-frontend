@@ -13,6 +13,7 @@ import RencanaHarianIcon from "../assets/icons/rencana-harian-icon.svg";
 import BebanTrafoIcon from "../assets/icons/beban-trafo-icon.svg";
 import BebanPenghantarIcon from "../assets/icons/beban-penghantar-icon.svg";
 import PembebananIbtIcon from "../assets/icons/pembebanan-ibt-icon.svg";
+import GrafikIcon from "../assets/icons/grafik-icon.svg";
 
 // ** Type import
 import { HorizontalNavItemsType } from "src/@core/layouts/types";
@@ -68,6 +69,11 @@ export const navigation = (): HorizontalNavItemsType => [
         path: "/beban/analisa-beban",
       },
     ],
+  },
+  {
+    title: "Grafik",
+    icon: GrafikIcon,
+    path: "/grafik",
   },
   {
     title: "Master Data",
