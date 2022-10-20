@@ -1,7 +1,5 @@
-// ** React Imports
-import { useState, ChangeEvent, useEffect } from "react";
+import { useState, ChangeEvent } from "react";
 
-// ** MUI Imports
 import { Card, CardContent, Button } from "@mui/material";
 import { Typography, TextField } from "@mui/material";
 import Grid from "@mui/material/Grid";
