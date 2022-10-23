@@ -1,10 +1,4 @@
-import Link from "next/link";
-import Typography from "@mui/material/Typography";
 import { GridColDef } from "@mui/x-data-grid";
-import { CellType } from "./types";
-import { StyledLink } from "src/components/link";
-
-const url = "/master-data/subsistem";
 
 export const defaultColumns: GridColDef[] = [
   {
@@ -72,5 +66,20 @@ export const defaultColumns: GridColDef[] = [
     field: "ocr",
     minWidth: 80,
     headerName: "Setting OCR",
+  },
+];
+
+export const ENERGI_PRIMER = [
+  {
+    value: "1",
+    label: "Air",
+  },
+  {
+    value: "2",
+    label: "Batu Bara",
+  },
+  {
+    value: "3",
+    label: "Uap",
   },
 ];

@@ -1,41 +1,33 @@
 import { useState, ChangeEvent } from "react";
-import { useForm, FormProvider } from "react-hook-form";
-
-import { Card, CardContent, Button, Box } from "@mui/material";
-import AdapterDateFns from "@mui/lab/AdapterDateFns";
-import LocalizationProvider from "@mui/lab/LocalizationProvider";
-import { Typography, TextField } from "@mui/material";
-import Grid from "@mui/material/Grid";
-import Table from "@mui/material/Table";
-import TableRow from "@mui/material/TableRow";
-import TableHead from "@mui/material/TableHead";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TablePagination from "@mui/material/TablePagination";
+import {
+  Box,
+  Card,
+  CardContent,
+  Grid,
+  Table,
+  TableRow,
+  TableHead,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TablePagination,
+  Typography,
+  TextField,
+  Button,
+  IconButton,
+} from "@mui/material";
+import { PencilOutline } from "mdi-material-ui";
 import PageHeader from "src/@core/components/page-header";
-import { SelectInput } from "src/components/select-input";
-import { InputField } from "src/components/input-field";
-import { DatePicker } from "src/components/date-picker";
 import DownloadIcon from "src/assets/icons/download-icon.svg";
 import FilterIcon from "src/assets/icons/filter-icon.svg";
-import { openModal } from "src/state/modal";
-
-import { StyledForm } from "src/components/form";
 
 import { WrapperFilter } from "src/components/filter";
-import { ModalSetBebanHarian } from "./modal";
+import { AddLaporan } from "./add-laporan";
 
 const SwitchingPembangkit = () => {
   // ** States
   const [page, setPage] = useState<number>(0);
   const [rowsPerPage, setRowsPerPage] = useState<number>(10);
-
-  const formMethods = useForm({
-    // resolver: yupResolver(validationSchema),
-    // defaultValues: initialValues,
-    mode: "onChange",
-  });
 
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
@@ -48,8 +40,6 @@ const SwitchingPembangkit = () => {
 
   return (
     <>
-      <ModalSetBebanHarian />
-
       <Grid container spacing={6}>
         <Grid item xs={12}>
           <PageHeader
@@ -57,79 +47,7 @@ const SwitchingPembangkit = () => {
           />
         </Grid>
         <Grid item xs={12}>
-          <Card>
-            <CardContent>
-              <Box sx={{ mb: 8 }}>
-                <Typography variant="h5" sx={{ mb: 3, lineHeight: "2rem" }}>
-                  Tambah Laporan
-                </Typography>
-              </Box>
-              <FormProvider {...formMethods}>
-                <StyledForm
-                  noValidate
-                  onSubmit={() => null}
-                  sx={{ width: "100%" }}
-                >
-                  <Grid container spacing={2} mt={1}>
-                    <Grid item xs={2.4}>
-                      <SelectInput label="Lokasi" name="lokasi" options={[]} />
-                    </Grid>
-                    <Grid item xs={2.4}>
-                      <LocalizationProvider dateAdapter={AdapterDateFns}>
-                        <DatePicker label="Tanggal" name="tanggal" />
-                      </LocalizationProvider>
-                    </Grid>
-                    <Grid item xs={2.4}>
-                      <LocalizationProvider dateAdapter={AdapterDateFns}>
-                        <DatePicker label="Tanggal" name="tanggal" />
-                      </LocalizationProvider>
-                    </Grid>
-                    <Grid item xs={2.4}>
-                      <LocalizationProvider dateAdapter={AdapterDateFns}>
-                        <DatePicker label="Tanggal" name="tanggal" />
-                      </LocalizationProvider>
-                    </Grid>
-                    <Grid item xs={2.4}>
-                      <SelectInput
-                        label="Engergi Primer"
-                        name="energi_primer"
-                        options={[]}
-                      />
-                    </Grid>
-
-                    <Grid item xs={4}>
-                      <SelectInput label="BOPS" name="bops" options={[]} />
-                    </Grid>
-
-                    <Grid item xs={4}>
-                      <SelectInput label="ACC" name="acc" options={[]} />
-                    </Grid>
-
-                    <Grid item xs={4}>
-                      <SelectInput
-                        label="Pembangkit"
-                        name="pembangkit"
-                        options={[]}
-                      />
-                    </Grid>
-
-                    <Grid item xs={4}>
-                      <InputField name="beban" label="Beban" />
-                    </Grid>
-
-                    <Grid item xs={4}>
-                      <InputField name="keterangan" label="Keterangan" />
-                    </Grid>
-                    <Grid item xs={12}>
-                      <Button variant="contained" type="submit">
-                        Tambah
-                      </Button>
-                    </Grid>
-                  </Grid>
-                </StyledForm>
-              </FormProvider>
-            </CardContent>
-          </Card>
+          <AddLaporan />
         </Grid>
         <Grid item xs={12}>
           <Card>
@@ -170,70 +88,58 @@ const SwitchingPembangkit = () => {
                       <TableCell size="small" rowSpan={2}>
                         TML
                       </TableCell>
-                      <TableCell size="small" rowSpan={2}>
-                        Trafo
+                      <TableCell size="small" align="center" colSpan={2}>
+                        Waktu
                       </TableCell>
-                      <TableCell size="small" rowSpan={2}>
-                        Daya (MVA)
+                      <TableCell size="small" align="center" colSpan={3}>
+                        Operator
                       </TableCell>
-                      <TableCell size="small" rowSpan={2}>
-                        Ratio
+                      <TableCell align="center" rowSpan={2}>
+                        Energi Primer
                       </TableCell>
-                      <TableCell size="small" rowSpan={2}>
-                        Arus Nominal (A)
+                      <TableCell align="center" rowSpan={2}>
+                        Beban
                       </TableCell>
-                      <TableCell size="small" rowSpan={2}>
-                        Arus Mampu (A)
+                      <TableCell align="center" rowSpan={2}>
+                        Status
                       </TableCell>
-                      <TableCell size="small" rowSpan={2}>
-                        Setting OCR
+                      <TableCell align="center" rowSpan={2}>
+                        Keterangan
                       </TableCell>
-                      <TableCell size="small" align="center" colSpan={6}>
-                        08.00
-                      </TableCell>
-                      <TableCell size="small" align="center" colSpan={6}>
-                        04.00
+                      <TableCell align="center" rowSpan={2}>
+                        Aksi
                       </TableCell>
                     </TableRow>
                     <TableRow>
-                      <TableCell width={100}>Arus (A)</TableCell>
-                      <TableCell>MW</TableCell>
-                      <TableCell>MVAR</TableCell>
-                      <TableCell>KWH</TableCell>
-                      <TableCell width={100}>% I NOM</TableCell>
-                      <TableCell width={120}>% I MAMPU</TableCell>
-                      <TableCell width={100}>Arus (A)</TableCell>
-                      <TableCell>MW</TableCell>
-                      <TableCell>MVAR</TableCell>
-                      <TableCell>KWH</TableCell>
-                      <TableCell width={100}>% I NOM</TableCell>
-                      <TableCell width={120}>% I MAMPU</TableCell>
+                      <TableCell>Perintah</TableCell>
+                      <TableCell>Real</TableCell>
+                      <TableCell>BOPS</TableCell>
+                      <TableCell>ACC</TableCell>
+                      <TableCell>Pembangkit</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
                     <TableRow>
                       <TableCell>1</TableCell>
-                      <TableCell>Semarang</TableCell>
-                      <TableCell>Tanjung Jati</TableCell>
-                      <TableCell>Trafo - 1</TableCell>
-                      <TableCell>60</TableCell>
-                      <TableCell>150/20</TableCell>
-                      <TableCell>231</TableCell>
-                      <TableCell>231</TableCell>
-                      <TableCell>277,2</TableCell>
-                      <TableCell>12</TableCell>
-                      <TableCell>10</TableCell>
-                      <TableCell>0</TableCell>
-                      <TableCell>12</TableCell>
-                      <TableCell>10</TableCell>
-                      <TableCell>0</TableCell>
-                      <TableCell>67</TableCell>
-                      <TableCell>67</TableCell>
-                      <TableCell>67</TableCell>
-                      <TableCell>67</TableCell>
-                      <TableCell>67</TableCell>
-                      <TableCell>67</TableCell>
-                      <TableCell>67</TableCell>
+                      <TableCell>PLTU RBANG</TableCell>
+                      <TableCell>280 MW</TableCell>
+                      <TableCell>180 MW</TableCell>
+                      <TableCell>07:02</TableCell>
+                      <TableCell>07:22</TableCell>
+                      <TableCell>Dika</TableCell>
+                      <TableCell>Bagus</TableCell>
+                      <TableCell>Henis</TableCell>
+                      <TableCell>Air</TableCell>
+                      <TableCell>200 MW</TableCell>
+                      <TableCell>PD</TableCell>
+                      <TableCell>Pengaturan Sistem</TableCell>
+                      <TableCell>
+                        <Box sx={{ display: "flex", alignItems: "center" }}>
+                          <IconButton onClick={() => null}>
+                            <PencilOutline />
+                          </IconButton>
+                        </Box>
+                      </TableCell>
                     </TableRow>
                   </TableBody>
                 </Table>
