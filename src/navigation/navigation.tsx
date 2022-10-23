@@ -14,6 +14,7 @@ import BebanTrafoIcon from "../assets/icons/beban-trafo-icon.svg";
 import BebanPenghantarIcon from "../assets/icons/beban-penghantar-icon.svg";
 import PembebananIbtIcon from "../assets/icons/pembebanan-ibt-icon.svg";
 import GrafikIcon from "../assets/icons/grafik-icon.svg";
+import LainnyaIcon from "../assets/icons/lainnya-icon.svg";
 
 // ** Type import
 import { HorizontalNavItemsType } from "src/@core/layouts/types";
@@ -113,6 +114,16 @@ export const navigation = (): HorizontalNavItemsType => [
         title: "Reaktor & Kapasitor",
         icon: TrafoIcon,
         path: "/master-data/reaktor",
+      },
+    ],
+  },
+  {
+    title: "Lainnya",
+    icon: LainnyaIcon,
+    children: [
+      {
+        title: "Switching Pembangkit",
+        path: "/switching-pembangkit",
       },
     ],
   },
