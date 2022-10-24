@@ -24,6 +24,8 @@ import {
   KategoriPembangkit,
   Pembangkit,
   Data,
+  TipeJenisPembangkit,
+  DataKategoriPembangkit,
 } from "src/api/beban/types";
 import { time } from "./BebanHarian.constant";
 import { ModalSetBebanHarian } from "./modal";
@@ -128,7 +130,64 @@ const BebanHarian = () => {
                               {value?.sub_sistem}
                             </TableCell>
                           </TableRow>
-                          {value?.kategori_pembangkit.map(
+
+                          {value?.pembangkit.tipe_jenis_pembangkit.map(
+                            (tipe_jenis_pembangkit: TipeJenisPembangkit) => (
+                              <>
+                                {tipe_jenis_pembangkit?.kategori_pembangkit.map(
+                                  (kategori_pembangkit: KategoriPembangkit) => (
+                                    <>
+                                      {kategori_pembangkit.data.map(
+                                        (data: DataKategoriPembangkit) => {
+                                          return (
+                                            <TableRow>
+                                              <TableCell>
+                                                {data.jenis}
+                                              </TableCell>
+                                              <TableCell>{data.nama}</TableCell>
+                                              {Object.values(time).map(
+                                                (value) => {
+                                                  const mw =
+                                                    "mw_" +
+                                                    value.replace(".", "");
+                                                  const mx =
+                                                    "mx_" +
+                                                    value.replace(".", "");
+                                                  return (
+                                                    <>
+                                                      <TableCell>
+                                                        {
+                                                          (data?.data as any)[
+                                                            mw
+                                                          ]!
+                                                        }
+                                                      </TableCell>
+                                                      <TableCell>
+                                                        {
+                                                          (data?.data as any)[
+                                                            mx
+                                                          ]!
+                                                        }
+                                                      </TableCell>
+                                                    </>
+                                                  );
+                                                }
+                                              )}
+                                            </TableRow>
+                                          );
+                                        }
+                                      )}
+                                    </>
+                                  )
+                                )}
+                              </>
+                            )
+                          )}
+                          <TableRow>
+                            <TableCell>Total</TableCell>
+                          </TableRow>
+
+                          {/* {value?.kategori_pembangkit.map(
                             (kategori_pembangkit: KategoriPembangkit) => (
                               <>
                                 {kategori_pembangkit.pembangkit.map(
@@ -165,7 +224,7 @@ const BebanHarian = () => {
                                 )}
                               </>
                             )
-                          )}
+                          )} */}
                         </>
                       );
                     })}
