@@ -9,6 +9,9 @@ import {
   Typography,
   TextField,
   Button,
+  Select,
+  MenuItem,
+  InputLabel,
 } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { useSnapshot } from "valtio";
@@ -20,29 +23,41 @@ import { WrapperFilter } from "src/components/filter";
 
 import { unggahLaporanApi } from "src/api/unggah-laporan";
 import { openModal, closeModal, modal, reloadPage } from "src/state/modal";
+import { useDebounce } from "src/hooks/useDebounce";
 import { ModalUnggahLaporan } from "./modal";
 
 const UnggahLaporan = () => {
   const modalSnapshot = useSnapshot(modal);
 
-  const formMethods = useForm({
-    // resolver: yupResolver(validationSchema),
-    // defaultValues: initialValues,
-    mode: "onChange",
-  });
+  const formMethods = useForm({});
 
   const router = useRouter();
-  const [pageSize, setPageSize] = useState<number>(10);
+  const [limit, setLimit] = useState<number>(10);
+  const [page, setPage] = useState<number>(1);
+  const [search, setSearch] = useState<string>("");
 
-  const { getUnggahLaporanList, unggahLaporanList } = unggahLaporanApi();
+  const debouncedSearch = useDebounce(search, 500);
+
+  const tipe = formMethods.watch("tipe");
+
+  const { getUnggahLaporanList, unggahLaporanList, loading, totalData } =
+    unggahLaporanApi();
 
   const handleClose = () => {
     closeModal();
   };
 
+  const getUnggahLaporan = () => {
+    if (debouncedSearch) {
+      getUnggahLaporanList({ search, tipe, limit, page });
+    } else {
+      getUnggahLaporanList({ limit, tipe, page });
+    }
+  };
+
   useEffect(() => {
-    getUnggahLaporanList();
-  }, []);
+    getUnggahLaporan();
+  }, [debouncedSearch, limit, page, tipe]);
 
   return (
     <>
@@ -61,17 +76,15 @@ const UnggahLaporan = () => {
               <WrapperFilter>
                 <div style={{ display: "flex" }}>
                   <TextField
-                    size="small"
-                    value=""
+                    value={search}
                     sx={{ mr: 6, mb: 2 }}
                     placeholder="Cari File"
-                    onChange={(e) => null}
+                    onChange={(e) => setSearch(e.target.value)}
                   />
 
                   <FormProvider {...formMethods}>
                     <StyledForm noValidate>
                       <SelectInput
-                        size="small"
                         label="Tipe laporan"
                         name="tipe"
                         options={tipeLaporanOptions}
@@ -90,13 +103,15 @@ const UnggahLaporan = () => {
               </WrapperFilter>
               <DataGrid
                 autoHeight
+                rowsPerPageOptions={[10, 20, 25, 50]}
+                pageSize={limit}
+                loading={loading}
                 rows={unggahLaporanList}
                 columns={defaultColumns}
-                pageSize={pageSize}
-                disableSelectionOnClick
-                rowsPerPageOptions={[10, 25, 50]}
-                onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
-                sx={{ "& .MuiDataGrid-columnHeaders": { borderRadius: 0 } }}
+                rowCount={totalData}
+                onPageSizeChange={(newPageSize) => setLimit(newPageSize)}
+                onPageChange={(currentPage) => setPage(currentPage + 1)}
+                paginationMode="server"
               />
             </CardContent>
           </Card>
