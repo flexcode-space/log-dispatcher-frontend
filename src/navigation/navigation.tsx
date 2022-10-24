@@ -125,6 +125,10 @@ export const navigation = (): HorizontalNavItemsType => [
         title: "Switching Pembangkit",
         path: "/switching-pembangkit",
       },
+      {
+        title: "Dispacther",
+        path: "/dispacther",
+      },
     ],
   },
 ];
