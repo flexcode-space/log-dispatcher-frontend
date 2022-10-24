@@ -65,11 +65,11 @@ const ModalUnggahLaporan = ({ handleClose }: ModalAddProps) => {
       open={modalSnapshot.isOpen}
       fullWidth
       onClose={onClickCloseModal}
-      maxWidth="md"
+      maxWidth="sm"
       scroll="body"
     >
       <FormProvider {...formMethods}>
-        <StyledForm noValidate onSubmit={onSubmit}>
+        <StyledForm noValidate onSubmit={onSubmit} sx={{ width: "100%" }}>
           <DialogContent
             sx={{
               pb: 6,

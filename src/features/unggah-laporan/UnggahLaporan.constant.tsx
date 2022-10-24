@@ -1,6 +1,3 @@
-import Typography from "@mui/material/Typography";
-import { CellType } from "./types";
-
 export const defaultColumns = [
   {
     flex: 0.35,
@@ -23,6 +20,10 @@ export const defaultColumns = [
 ];
 
 export const tipeLaporanOptions = [
+  {
+    value: "",
+    label: "",
+  },
   {
     value: "amr",
     label: "AMR",
