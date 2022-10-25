@@ -9,6 +9,7 @@ import {
   Typography,
   Box,
 } from "@mui/material";
+import { format } from "date-fns";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import { useSnapshot } from "valtio";
@@ -19,8 +20,10 @@ import { DatePicker } from "src/components/date-picker";
 import { SelectInput } from "src/components/select-input";
 import { initialValues, validationSchema } from "./ModalUnggahLaporan.constant";
 import { tipeLaporanOptions } from "../UnggahLaporan.constant";
-import { modal, reloadPage } from "src/state/modal";
+import { modal, closeModal } from "src/state/modal";
 import UploadFile from "./components/UploadFile";
+import { Axios } from "../../../api/axios";
+import { unggahLaporanApi } from "src/api/unggah-laporan";
 
 type ModalAddProps = {
   handleClose: () => void;
@@ -28,6 +31,8 @@ type ModalAddProps = {
 
 const ModalUnggahLaporan = ({ handleClose }: ModalAddProps) => {
   const modalSnapshot = useSnapshot(modal);
+
+  const { unggahLaporan } = unggahLaporanApi();
 
   const formMethods = useForm({
     resolver: yupResolver(validationSchema),
@@ -41,7 +46,13 @@ const ModalUnggahLaporan = ({ handleClose }: ModalAddProps) => {
     event?.preventDefault();
 
     formMethods.handleSubmit(async (values) => {
-      // TODO
+      const { tanggal, ...rest } = values;
+      console.log("tanggal", tanggal);
+      // await unggahLaporan({
+      //   ...rest,
+      //   tanggal: format(tanggal, "yyyy-mm-dd"),
+      // });
+      // handleClose();
     })();
   };
 
@@ -57,7 +68,12 @@ const ModalUnggahLaporan = ({ handleClose }: ModalAddProps) => {
 
     const file = e.target.files[0];
 
-    console.log("file", file);
+    const formData = new FormData();
+    formData.append("file", file);
+
+    Axios.post("/laporan/upload", formData).then(({ data }) => {
+      formMethods.setValue("scada", data.nama);
+    });
   };
 
   return (
@@ -92,7 +108,10 @@ const ModalUnggahLaporan = ({ handleClose }: ModalAddProps) => {
                 />
               </Grid>
               <Grid item xs={12} sm={12}>
-                <LocalizationProvider dateAdapter={AdapterDateFns}>
+                <LocalizationProvider
+                  dateAdapter={AdapterDateFns}
+                  dateFormats={{ fullDate: "yyyy-mm-dd" }}
+                >
                   <DatePicker label="Tanggal" name="tanggal" />
                 </LocalizationProvider>
               </Grid>
@@ -101,6 +120,7 @@ const ModalUnggahLaporan = ({ handleClose }: ModalAddProps) => {
                   <OutlinedInputField
                     name="scada"
                     label="Upload File"
+                    disabled={true}
                     Icon={
                       <Button
                         variant="outlined"

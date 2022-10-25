@@ -25,12 +25,17 @@ const unggahLaporanApi = () => {
     }
   }, [])
 
+  const unggahLaporan = useCallback(async (payload = {}) => {
+    await Axios.post(endpoint, payload)
+  }, [])
+
 
   return {
     unggahLaporanList,
     totalData,
     loading,
     getUnggahLaporanList,
+    unggahLaporan,
   }
 }
 
