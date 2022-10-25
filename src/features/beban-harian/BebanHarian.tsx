@@ -15,19 +15,19 @@ import TablePagination from "@mui/material/TablePagination";
 import PageHeader from "src/@core/components/page-header";
 import DownloadIcon from "src/assets/icons/download-icon.svg";
 import EditIcon from "src/assets/icons/edit-icon.svg";
-import { modal, reloadPage, openModal } from "src/state/modal";
+import { openModal } from "src/state/modal";
 
 import { WrapperFilter } from "src/components/filter";
 import { bebanApi } from "src/api/beban";
 import {
   Beban,
   KategoriPembangkit,
-  Pembangkit,
-  Data,
   TipeJenisPembangkit,
   DataKategoriPembangkit,
+  DataIBT,
+  IBT,
 } from "src/api/beban/types";
-import { time } from "./BebanHarian.constant";
+import { time, showValueBeban } from "./BebanHarian.constant";
 import { ModalSetBebanHarian } from "./modal";
 
 const BebanHarian = () => {
@@ -115,6 +115,8 @@ const BebanHarian = () => {
                   </TableHead>
                   <TableBody>
                     {bebanList.map((value: Beban) => {
+                      const totalPembangkit = value?.pembangkit.total;
+
                       return (
                         <>
                           <TableRow>
@@ -135,103 +137,70 @@ const BebanHarian = () => {
                             (tipe_jenis_pembangkit: TipeJenisPembangkit) => (
                               <>
                                 {tipe_jenis_pembangkit?.kategori_pembangkit.map(
-                                  (kategori_pembangkit: KategoriPembangkit) => (
-                                    <>
-                                      {kategori_pembangkit.data.map(
-                                        (data: DataKategoriPembangkit) => {
-                                          return (
-                                            <TableRow>
-                                              <TableCell>
-                                                {data.jenis}
-                                              </TableCell>
-                                              <TableCell>{data.nama}</TableCell>
-                                              {Object.values(time).map(
-                                                (value) => {
-                                                  const mw =
-                                                    "mw_" +
-                                                    value.replace(".", "");
-                                                  const mx =
-                                                    "mx_" +
-                                                    value.replace(".", "");
-                                                  return (
-                                                    <>
-                                                      <TableCell>
-                                                        {
-                                                          (data?.data as any)[
-                                                            mw
-                                                          ]!
-                                                        }
-                                                      </TableCell>
-                                                      <TableCell>
-                                                        {
-                                                          (data?.data as any)[
-                                                            mx
-                                                          ]!
-                                                        }
-                                                      </TableCell>
-                                                    </>
-                                                  );
-                                                }
-                                              )}
-                                            </TableRow>
-                                          );
-                                        }
-                                      )}
-                                    </>
-                                  )
-                                )}
-                              </>
-                            )
-                          )}
-                          <TableRow>
-                            <TableCell>Total</TableCell>
-                          </TableRow>
-
-                          {/* {value?.kategori_pembangkit.map(
-                            (kategori_pembangkit: KategoriPembangkit) => (
-                              <>
-                                {kategori_pembangkit.pembangkit.map(
-                                  (pembangkit: Pembangkit) => {
-                                    console.log(
-                                      kategori_pembangkit.nama,
-                                      pembangkit
-                                    );
+                                  (kategori_pembangkit: KategoriPembangkit) => {
+                                    const { total } = kategori_pembangkit;
                                     return (
-                                      <TableRow>
-                                        <TableCell>
-                                          {kategori_pembangkit.nama}
-                                        </TableCell>
-                                        <TableCell>{pembangkit.nama}</TableCell>
-                                        {Object.values(time).map((value) => {
-                                          const mw =
-                                            "mw_" + value.replace(".", "");
-                                          const mx =
-                                            "mx_" + value.replace(".", "");
-                                          return (
-                                            <>
-                                              <TableCell>
-                                                {(pembangkit?.data as any)[mw]!}
-                                              </TableCell>
-                                              <TableCell>
-                                                {(pembangkit?.data as any)[mx]!}
-                                              </TableCell>
-                                            </>
-                                          );
-                                        })}
-                                      </TableRow>
+                                      <>
+                                        {kategori_pembangkit.data.map(
+                                          (data: DataKategoriPembangkit) => {
+                                            return (
+                                              <TableRow>
+                                                <TableCell>
+                                                  {data.jenis}
+                                                </TableCell>
+                                                <TableCell>
+                                                  {data.nama}
+                                                </TableCell>
+                                                {showValueBeban(data.data)}
+                                              </TableRow>
+                                            );
+                                          }
+                                        )}
+                                        <TableRow
+                                          sx={{
+                                            background: total.color,
+                                          }}
+                                        >
+                                          <TableCell colSpan={2}>
+                                            {total.nama}
+                                          </TableCell>
+                                          {showValueBeban(total?.data)}
+                                        </TableRow>
+                                      </>
                                     );
                                   }
                                 )}
                               </>
                             )
-                          )} */}
+                          )}
+
+                          {value?.ibt.map((ibt: IBT) => (
+                            <>
+                              {ibt.data.map((data: DataIBT) => (
+                                <TableRow>
+                                  <TableCell>{data.jenis}</TableCell>
+                                  <TableCell>{data.nama}</TableCell>
+                                  {showValueBeban(data?.data)}
+                                </TableRow>
+                              ))}
+                              <TableRow sx={{ background: ibt.total.color }}>
+                                <TableCell colSpan={2}>
+                                  {ibt.total.nama}
+                                </TableCell>
+                                {showValueBeban(ibt.total?.data)}
+                              </TableRow>
+                            </>
+                          ))}
+
+                          <TableRow sx={{ background: totalPembangkit.color }}>
+                            <TableCell colSpan={2}>
+                              {totalPembangkit.nama}
+                            </TableCell>
+                            {showValueBeban(totalPembangkit?.data)}
+                          </TableRow>
                         </>
                       );
                     })}
-                    {/* <TestTable />
-                  <TestTable />
-                  <TestTable />
-                  <TestTable /> */}
                   </TableBody>
                 </Table>
               </TableContainer>

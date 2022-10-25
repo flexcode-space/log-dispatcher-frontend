@@ -2,17 +2,22 @@ export type Beban = {
   sub_sistem: string
   color: string
   pembangkit: Pembangkit
-  ibt: any
+  ibt: IBT[]
+}
+
+export type IBT = {
+  data: DataIBT[]
+  total: Total
 }
 
 export type KategoriPembangkit = {
   data: DataKategoriPembangkit[]
-  total: any
+  total: Total
 }
 
 export type Pembangkit = {
   tipe_jenis_pembangkit: TipeJenisPembangkit[]
-  total: string
+  total: Total
 }
 
 export type TipeJenisPembangkit = {
@@ -24,6 +29,14 @@ export type DataKategoriPembangkit = {
   jenis: string
   nama: string
   data: Data
+}
+
+export type DataIBT = DataKategoriPembangkit
+
+export type Total = {
+  nama: string
+  data: Data
+  color: string
 }
 
 export type Data = {
