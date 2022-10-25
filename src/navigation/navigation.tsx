@@ -52,7 +52,7 @@ export const navigation = (): HorizontalNavItemsType => [
       {
         title: "Beban Penghantar Harian",
         icon: BebanPenghantarIcon,
-        path: "/beban/beban-penghantar",
+        path: "/beban/beban-penghantar-harian",
       },
       {
         title: "Pembebanan IBT",
