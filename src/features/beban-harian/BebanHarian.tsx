@@ -16,6 +16,7 @@ import PageHeader from "src/@core/components/page-header";
 import DownloadIcon from "src/assets/icons/download-icon.svg";
 import EditIcon from "src/assets/icons/edit-icon.svg";
 import { openModal } from "src/state/modal";
+import CustomChip from "src/@core/components/mui/chip";
 
 import { WrapperFilter } from "src/components/filter";
 import { bebanApi } from "src/api/beban";
@@ -146,7 +147,11 @@ const BebanHarian = () => {
                                             return (
                                               <TableRow>
                                                 <TableCell>
-                                                  {data.jenis}
+                                                  <CustomChip
+                                                    label={data.jenis}
+                                                    skin="light"
+                                                    color="primary"
+                                                  />
                                                 </TableCell>
                                                 <TableCell>
                                                   {data.nama}
@@ -178,7 +183,13 @@ const BebanHarian = () => {
                             <>
                               {ibt.data.map((data: DataIBT) => (
                                 <TableRow>
-                                  <TableCell>{data.jenis}</TableCell>
+                                  <TableCell>
+                                    <CustomChip
+                                      label={data.jenis}
+                                      skin="light"
+                                      color="primary"
+                                    />
+                                  </TableCell>
                                   <TableCell>{data.nama}</TableCell>
                                   {showValueBeban(data?.data)}
                                 </TableRow>
