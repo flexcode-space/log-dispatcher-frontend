@@ -1,4 +1,4 @@
-import { useState, ChangeEvent } from "react";
+import { useState, ChangeEvent, useEffect } from "react";
 
 import { Card, CardContent, Button } from "@mui/material";
 import { Typography, TextField } from "@mui/material";
@@ -14,6 +14,9 @@ import PageHeader from "src/@core/components/page-header";
 import DownloadIcon from "src/assets/icons/download-icon.svg";
 import EditIcon from "src/assets/icons/edit-icon.svg";
 import { openModal } from "src/state/modal";
+import { bebanApi } from "src/api/beban";
+import { BebanTrafo } from "./types";
+import { showValueBeban, time } from "./BebanTrafoHarian.constant";
 
 import { WrapperFilter } from "src/components/filter";
 import { ModalSetBebanHarian } from "./modal";
@@ -23,6 +26,8 @@ const BebanHarian = () => {
   const [page, setPage] = useState<number>(0);
   const [rowsPerPage, setRowsPerPage] = useState<number>(10);
 
+  const { getBebanTrafoList, bebanTrafoList } = bebanApi();
+
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
   };
@@ -31,6 +36,10 @@ const BebanHarian = () => {
     setRowsPerPage(+event.target.value);
     setPage(0);
   };
+
+  useEffect(() => {
+    getBebanTrafoList({ tanggal: "2022-10-13" });
+  }, []);
 
   return (
     <>
@@ -79,19 +88,31 @@ const BebanHarian = () => {
                       <TableCell size="small" rowSpan={2}>
                         No
                       </TableCell>
-                      <TableCell size="small" rowSpan={2}>
+                      <TableCell
+                        size="small"
+                        rowSpan={2}
+                        style={{ minWidth: "100px" }}
+                      >
                         UPT
                       </TableCell>
-                      <TableCell size="small" rowSpan={2}>
+                      <TableCell
+                        size="small"
+                        rowSpan={2}
+                        style={{ minWidth: "250px" }}
+                      >
                         Subsistem
                       </TableCell>
-                      <TableCell size="small" rowSpan={2}>
+                      <TableCell
+                        size="small"
+                        rowSpan={2}
+                        style={{ minWidth: "200px" }}
+                      >
                         Gardu Induk
                       </TableCell>
-                      <TableCell size="small" rowSpan={2}>
+                      <TableCell size="small" rowSpan={2} style={{ minWidth: "200px" }}>
                         Trafo
                       </TableCell>
-                      <TableCell size="small" rowSpan={2}>
+                      <TableCell size="small" rowSpan={2} style={{ minWidth: "100px" }}>
                         Daya (MVA)
                       </TableCell>
                       <TableCell size="small" rowSpan={2}>
@@ -106,53 +127,43 @@ const BebanHarian = () => {
                       <TableCell size="small" rowSpan={2}>
                         Setting OCR
                       </TableCell>
-                      <TableCell size="small" align="center" colSpan={6}>
-                        08.00
-                      </TableCell>
-                      <TableCell size="small" align="center" colSpan={6}>
-                        04.00
-                      </TableCell>
+                      {time.map((value) => (
+                        <TableCell size="small" align="center" colSpan={6}>
+                          {value}
+                        </TableCell>
+                      ))}
                     </TableRow>
                     <TableRow>
-                      <TableCell width={100}>Arus (A)</TableCell>
-                      <TableCell>MW</TableCell>
-                      <TableCell>MVAR</TableCell>
-                      <TableCell>KWH</TableCell>
-                      <TableCell width={100}>% I NOM</TableCell>
-                      <TableCell width={120}>% I MAMPU</TableCell>
-                      <TableCell width={100}>Arus (A)</TableCell>
-                      <TableCell>MW</TableCell>
-                      <TableCell>MVAR</TableCell>
-                      <TableCell>KWH</TableCell>
-                      <TableCell width={100}>% I NOM</TableCell>
-                      <TableCell width={120}>% I MAMPU</TableCell>
+                      {time.map(() => (
+                        <>
+                          <TableCell size="small">arus (a)</TableCell>
+                          <TableCell size="small">mw</TableCell>
+                          <TableCell size="small">mvar</TableCell>
+                          <TableCell size="small">KWH</TableCell>
+                          <TableCell size="small">% i nom</TableCell>
+                          <TableCell size="small">% i mampu</TableCell>
+                        </>
+                      ))}
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    <TableRow>
-                      <TableCell>1</TableCell>
-                      <TableCell>Semarang</TableCell>
-                      <TableCell>Tanjung Jati</TableCell>
-                      <TableCell>Trafo - 1</TableCell>
-                      <TableCell>60</TableCell>
-                      <TableCell>150/20</TableCell>
-                      <TableCell>231</TableCell>
-                      <TableCell>231</TableCell>
-                      <TableCell>277,2</TableCell>
-                      <TableCell>12</TableCell>
-                      <TableCell>10</TableCell>
-                      <TableCell>0</TableCell>
-                      <TableCell>12</TableCell>
-                      <TableCell>10</TableCell>
-                      <TableCell>0</TableCell>
-                      <TableCell>67</TableCell>
-                      <TableCell>67</TableCell>
-                      <TableCell>67</TableCell>
-                      <TableCell>67</TableCell>
-                      <TableCell>67</TableCell>
-                      <TableCell>67</TableCell>
-                      <TableCell>67</TableCell>
-                    </TableRow>
+                    {bebanTrafoList?.map((value: BebanTrafo, index) => {
+                      return (
+                        <TableRow>
+                          <TableCell>{index + 1}</TableCell>
+                          <TableCell>{value.upt}</TableCell>
+                          <TableCell>{value.sub_sistem}</TableCell>
+                          <TableCell>{value.gardu_induk}</TableCell>
+                          <TableCell>{value.trafo}</TableCell>
+                          <TableCell>{`${value.daya} MVA`}</TableCell>
+                          <TableCell>{value.rasio}</TableCell>
+                          <TableCell>{value.arus_nominal}</TableCell>
+                          <TableCell>{value.arus_mampu}</TableCell>
+                          <TableCell>{value.setting_ocr}</TableCell>
+                          {showValueBeban(value.data)}
+                        </TableRow>
+                      );
+                    })}
                   </TableBody>
                 </Table>
               </TableContainer>

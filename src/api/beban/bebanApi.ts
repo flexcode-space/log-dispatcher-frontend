@@ -12,6 +12,7 @@ const endpoint = '/beban'
 const bebanApi = () => {
   const [bebanList, setBebanList] = useState<[]>([])
   const [bebanIBTList, setbebanIBTList] = useState<[]>([])
+  const [bebanTrafoList, setBebanTrafoList] = useState<[]>([])
   const [totalData, setTotalData] = useState<number>(0)
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -39,14 +40,28 @@ const bebanApi = () => {
     }
   }, [])
 
+  const getBebanTrafoList = useCallback(async (params: ParamsBebanList = {}) => {
+    setLoading(true)
+
+    try {
+      const { data: { data, total } } = await Axios.get(`${endpoint}/trafo`, { params })
+      setBebanTrafoList(data || [])
+      setTotalData(total)
+    } finally {
+      setLoading(false)
+    }
+  }, [])
+
 
   return {
     bebanList,
     bebanIBTList,
+    bebanTrafoList,
     loading,
     totalData,
     getBebanList,
     getBebanIBTList,
+    getBebanTrafoList
   }
 }
 
