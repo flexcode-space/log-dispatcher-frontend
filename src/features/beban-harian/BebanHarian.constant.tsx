@@ -127,8 +127,8 @@ export const showValueBeban = (data: Data) => {
     const mx = "mx_" + value.replace(".", "");
     return (
       <>
-        <TableCell>{(data as any)[mw]!}</TableCell>
-        <TableCell>{(data as any)[mx]!}</TableCell>
+        <TableCell size="small">{(data as any)[mw]!}</TableCell>
+        <TableCell size="small">{(data as any)[mx]!}</TableCell>
       </>
     );
   });

@@ -86,17 +86,21 @@ const BebanHarian = () => {
                 </div>
               </WrapperFilter>
               <TableContainer>
-                <Table>
+                <Table style={{ width: "auto", tableLayout: "auto" }}>
                   <TableHead sx={{ height: "30px", background: "#F5F5F7" }}>
                     <TableRow>
                       <TableCell
-                        sx={{ backgroundColoe: "red" }}
+                        sx={{ backgroundColoe: "red", minWidth: "200px" }}
                         size="small"
                         rowSpan={2}
                       >
                         Jenis Pembangkit
                       </TableCell>
-                      <TableCell size="small" rowSpan={2}>
+                      <TableCell
+                        size="small"
+                        rowSpan={2}
+                        style={{ minWidth: "200px" }}
+                      >
                         Pembangkit
                       </TableCell>
                       {time.map((value) => (
@@ -108,8 +112,8 @@ const BebanHarian = () => {
                     <TableRow>
                       {time.map(() => (
                         <>
-                          <TableCell>MW</TableCell>
-                          <TableCell>MX</TableCell>
+                          <TableCell size="small">MW</TableCell>
+                          <TableCell size="small">MX</TableCell>
                         </>
                       ))}
                     </TableRow>
@@ -122,6 +126,7 @@ const BebanHarian = () => {
                         <>
                           <TableRow>
                             <TableCell
+                              size="small"
                               sx={{
                                 background: value?.color,
                                 color: "#FFFFFF",
@@ -146,14 +151,15 @@ const BebanHarian = () => {
                                           (data: DataKategoriPembangkit) => {
                                             return (
                                               <TableRow>
-                                                <TableCell>
+                                                <TableCell size="small">
                                                   <CustomChip
                                                     label={data.jenis}
                                                     skin="light"
                                                     color="primary"
+                                                    size="small"
                                                   />
                                                 </TableCell>
-                                                <TableCell>
+                                                <TableCell size="small">
                                                   {data.nama}
                                                 </TableCell>
                                                 {showValueBeban(data.data)}
@@ -166,7 +172,7 @@ const BebanHarian = () => {
                                             background: total.color,
                                           }}
                                         >
-                                          <TableCell colSpan={2}>
+                                          <TableCell colSpan={2} size="small">
                                             {total.nama}
                                           </TableCell>
                                           {showValueBeban(total?.data)}
@@ -183,19 +189,22 @@ const BebanHarian = () => {
                             <>
                               {ibt.data.map((data: DataIBT) => (
                                 <TableRow>
-                                  <TableCell>
+                                  <TableCell size="small">
                                     <CustomChip
                                       label={data.jenis}
                                       skin="light"
                                       color="primary"
+                                      size="small"
                                     />
                                   </TableCell>
-                                  <TableCell>{data.nama}</TableCell>
+                                  <TableCell size="small">
+                                    {data.nama}
+                                  </TableCell>
                                   {showValueBeban(data?.data)}
                                 </TableRow>
                               ))}
                               <TableRow sx={{ background: ibt.total.color }}>
-                                <TableCell colSpan={2}>
+                                <TableCell size="small" colSpan={2}>
                                   {ibt.total.nama}
                                 </TableCell>
                                 {showValueBeban(ibt.total?.data)}
@@ -204,7 +213,7 @@ const BebanHarian = () => {
                           ))}
 
                           <TableRow sx={{ background: totalPembangkit.color }}>
-                            <TableCell colSpan={2}>
+                            <TableCell colSpan={2} size="small">
                               {totalPembangkit.nama}
                             </TableCell>
                             {showValueBeban(totalPembangkit?.data)}
