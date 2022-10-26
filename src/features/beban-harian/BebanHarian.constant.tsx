@@ -1,5 +1,4 @@
 import { GridColDef } from "@mui/x-data-grid";
-import TableRow from "@mui/material/TableRow";
 import TableCell from "@mui/material/TableCell";
 import { Data } from "src/api/beban/types";
 
