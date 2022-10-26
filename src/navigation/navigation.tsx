@@ -55,9 +55,9 @@ export const navigation = (): HorizontalNavItemsType => [
         path: "/beban/beban-penghantar-harian",
       },
       {
-        title: "Pembebanan IBT",
+        title: "Beban IBT Harian",
         icon: PembebananIbtIcon,
-        path: "/beban/pembebanan-ibt",
+        path: "/beban/beban-ibt-harian",
       },
       {
         title: "Tegangan Busbar",
