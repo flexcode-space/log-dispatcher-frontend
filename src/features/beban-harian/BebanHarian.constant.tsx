@@ -1,8 +1,7 @@
-import Link from "next/link";
-import Typography from "@mui/material/Typography";
 import { GridColDef } from "@mui/x-data-grid";
-import { CellType } from "./types";
-import { StyledLink } from "src/components/link";
+import TableRow from "@mui/material/TableRow";
+import TableCell from "@mui/material/TableCell";
+import { Data } from "src/api/beban/types";
 
 const url = "/master-data/subsistem";
 
@@ -119,3 +118,18 @@ export const time = [
   "23.30",
   "24.00",
 ];
+
+export const showValueBeban = (data: Data) => {
+  if (!data) return <></>;
+
+  return Object.values(time).map((value) => {
+    const mw = "mw_" + value.replace(".", "");
+    const mx = "mx_" + value.replace(".", "");
+    return (
+      <>
+        <TableCell size="small">{(data as any)[mw]!}</TableCell>
+        <TableCell size="small">{(data as any)[mx]!}</TableCell>
+      </>
+    );
+  });
+};

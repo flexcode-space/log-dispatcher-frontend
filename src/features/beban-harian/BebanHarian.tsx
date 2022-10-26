@@ -15,17 +15,20 @@ import TablePagination from "@mui/material/TablePagination";
 import PageHeader from "src/@core/components/page-header";
 import DownloadIcon from "src/assets/icons/download-icon.svg";
 import EditIcon from "src/assets/icons/edit-icon.svg";
-import { modal, reloadPage, openModal } from "src/state/modal";
+import { openModal } from "src/state/modal";
+import CustomChip from "src/@core/components/mui/chip";
 
 import { WrapperFilter } from "src/components/filter";
 import { bebanApi } from "src/api/beban";
 import {
   Beban,
   KategoriPembangkit,
-  Pembangkit,
-  Data,
+  TipeJenisPembangkit,
+  DataKategoriPembangkit,
+  DataIBT,
+  IBT,
 } from "src/api/beban/types";
-import { time } from "./BebanHarian.constant";
+import { time, showValueBeban } from "./BebanHarian.constant";
 import { ModalSetBebanHarian } from "./modal";
 
 const BebanHarian = () => {
@@ -83,17 +86,21 @@ const BebanHarian = () => {
                 </div>
               </WrapperFilter>
               <TableContainer>
-                <Table>
+                <Table style={{ width: "auto", tableLayout: "auto" }}>
                   <TableHead sx={{ height: "30px", background: "#F5F5F7" }}>
                     <TableRow>
                       <TableCell
-                        sx={{ backgroundColoe: "red" }}
+                        sx={{ backgroundColoe: "red", minWidth: "200px" }}
                         size="small"
                         rowSpan={2}
                       >
                         Jenis Pembangkit
                       </TableCell>
-                      <TableCell size="small" rowSpan={2}>
+                      <TableCell
+                        size="small"
+                        rowSpan={2}
+                        style={{ minWidth: "200px" }}
+                      >
                         Pembangkit
                       </TableCell>
                       {time.map((value) => (
@@ -105,18 +112,21 @@ const BebanHarian = () => {
                     <TableRow>
                       {time.map(() => (
                         <>
-                          <TableCell>MW</TableCell>
-                          <TableCell>MX</TableCell>
+                          <TableCell size="small">MW</TableCell>
+                          <TableCell size="small">MX</TableCell>
                         </>
                       ))}
                     </TableRow>
                   </TableHead>
                   <TableBody>
                     {bebanList.map((value: Beban) => {
+                      const totalPembangkit = value?.pembangkit.total;
+
                       return (
                         <>
                           <TableRow>
                             <TableCell
+                              size="small"
                               sx={{
                                 background: value?.color,
                                 color: "#FFFFFF",
@@ -128,51 +138,89 @@ const BebanHarian = () => {
                               {value?.sub_sistem}
                             </TableCell>
                           </TableRow>
-                          {value?.kategori_pembangkit.map(
-                            (kategori_pembangkit: KategoriPembangkit) => (
+
+                          {value?.pembangkit.tipe_jenis_pembangkit.map(
+                            (tipe_jenis_pembangkit: TipeJenisPembangkit) => (
                               <>
-                                {kategori_pembangkit.pembangkit.map(
-                                  (pembangkit: Pembangkit) => {
-                                    console.log(
-                                      kategori_pembangkit.nama,
-                                      pembangkit
-                                    );
+                                {tipe_jenis_pembangkit?.kategori_pembangkit.map(
+                                  (kategori_pembangkit: KategoriPembangkit) => {
+                                    const { total } = kategori_pembangkit;
                                     return (
-                                      <TableRow>
-                                        <TableCell>
-                                          {kategori_pembangkit.nama}
-                                        </TableCell>
-                                        <TableCell>{pembangkit.nama}</TableCell>
-                                        {Object.values(time).map((value) => {
-                                          const mw =
-                                            "mw_" + value.replace(".", "");
-                                          const mx =
-                                            "mx_" + value.replace(".", "");
-                                          return (
-                                            <>
-                                              <TableCell>
-                                                {(pembangkit?.data as any)[mw]!}
-                                              </TableCell>
-                                              <TableCell>
-                                                {(pembangkit?.data as any)[mx]!}
-                                              </TableCell>
-                                            </>
-                                          );
-                                        })}
-                                      </TableRow>
+                                      <>
+                                        {kategori_pembangkit.data.map(
+                                          (data: DataKategoriPembangkit) => {
+                                            return (
+                                              <TableRow>
+                                                <TableCell size="small">
+                                                  <CustomChip
+                                                    label={data.jenis}
+                                                    skin="light"
+                                                    color="primary"
+                                                    size="small"
+                                                  />
+                                                </TableCell>
+                                                <TableCell size="small">
+                                                  {data.nama}
+                                                </TableCell>
+                                                {showValueBeban(data.data)}
+                                              </TableRow>
+                                            );
+                                          }
+                                        )}
+                                        <TableRow
+                                          sx={{
+                                            background: total.color,
+                                          }}
+                                        >
+                                          <TableCell colSpan={2} size="small">
+                                            {total.nama}
+                                          </TableCell>
+                                          {showValueBeban(total?.data)}
+                                        </TableRow>
+                                      </>
                                     );
                                   }
                                 )}
                               </>
                             )
                           )}
+
+                          {value?.ibt.map((ibt: IBT) => (
+                            <>
+                              {ibt.data.map((data: DataIBT) => (
+                                <TableRow>
+                                  <TableCell size="small">
+                                    <CustomChip
+                                      label={data.jenis}
+                                      skin="light"
+                                      color="primary"
+                                      size="small"
+                                    />
+                                  </TableCell>
+                                  <TableCell size="small">
+                                    {data.nama}
+                                  </TableCell>
+                                  {showValueBeban(data?.data)}
+                                </TableRow>
+                              ))}
+                              <TableRow sx={{ background: ibt.total.color }}>
+                                <TableCell size="small" colSpan={2}>
+                                  {ibt.total.nama}
+                                </TableCell>
+                                {showValueBeban(ibt.total?.data)}
+                              </TableRow>
+                            </>
+                          ))}
+
+                          <TableRow sx={{ background: totalPembangkit.color }}>
+                            <TableCell colSpan={2} size="small">
+                              {totalPembangkit.nama}
+                            </TableCell>
+                            {showValueBeban(totalPembangkit?.data)}
+                          </TableRow>
                         </>
                       );
                     })}
-                    {/* <TestTable />
-                  <TestTable />
-                  <TestTable />
-                  <TestTable /> */}
                   </TableBody>
                 </Table>
               </TableContainer>
