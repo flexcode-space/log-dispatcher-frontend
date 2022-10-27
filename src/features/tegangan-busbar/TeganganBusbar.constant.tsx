@@ -56,20 +56,12 @@ export const showValueBeban = (data: Data) => {
   if (!data) return <></>;
 
   return Object.values(time).map((value) => {
-    const arus = "arus_" + value.replace(".", "");
     const mw = "mw_" + value.replace(".", "");
-    const mvar = "mvar_" + value.replace(".", "");
-    const kwh = "kwh_" + value.replace(".", "");
-    const inom = "inom_" + value.replace(".", "");
-    const imampu = "imampu_" + value.replace(".", "");
+    const mx = "mx_" + value.replace(".", "");
     return (
       <>
-        <TableCell size="small">{(data as any)[arus]!}</TableCell>
         <TableCell size="small">{(data as any)[mw]!}</TableCell>
-        <TableCell size="small">{(data as any)[mvar]!}</TableCell>
-        <TableCell size="small">{(data as any)[kwh]!}</TableCell>
-        <TableCell size="small">{(data as any)[inom]!}</TableCell>
-        <TableCell size="small">{(data as any)[imampu]!}</TableCell>
+        <TableCell size="small">{(data as any)[mx]!}</TableCell>
       </>
     );
   });
