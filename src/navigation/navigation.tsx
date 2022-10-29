@@ -83,7 +83,12 @@ export const navigation = (): HorizontalNavItemsType => [
       {
         title: "Subsistem",
         icon: SubsistemIcon,
-        path: "/master-data/subsistem",
+        path: "/master-data/sub-sistem",
+      },
+      {
+        title: "Gardu Induk",
+        icon: SubsistemIcon,
+        path: "/master-data/gardu-induk",
       },
       {
         title: "IBT",

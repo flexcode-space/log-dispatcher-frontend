@@ -14,8 +14,10 @@ const busbarApi = () => {
     setLoading(true)
 
     try {
-      const url = !!id ? `${endpoint}/sub-sistem/${id}` : endpoint
-      const { data: { data, total } } = await Axios.get(url, { params })
+      const { path = 'sub-sistem', ...restParams } = params
+
+      const url = !!id ? `${endpoint}/${path}/${id}` : endpoint
+      const { data: { data, total } } = await Axios.get(url, { params: restParams })
       setBusbarList(data || [])
       setTotalData(total)
     } finally {

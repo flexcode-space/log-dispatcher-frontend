@@ -39,7 +39,8 @@ const Reaktor = () => {
   const { getReaktorList, reaktorList, totalData, loading, deleteReaktor } =
     reaktorApi();
 
-  const subsistemId = router.query.id as string;
+  const id = router.query.id as string;
+  const path = router.pathname.split("/")[2];
 
   const onClickDelete = async (id: string) => {
     await deleteReaktor({ id });
@@ -73,15 +74,15 @@ const Reaktor = () => {
 
   const getReaktor = () => {
     if (debouncedSearch) {
-      getReaktorList(subsistemId, { search, limit, page });
+      getReaktorList(id, { search, limit, page, path });
     } else {
-      getReaktorList(subsistemId, { limit, page });
+      getReaktorList(id, { limit, page, path });
     }
   };
 
   useEffect(() => {
     getReaktor();
-  }, [debouncedSearch, subsistemId, limit, page]);
+  }, [debouncedSearch, id, limit, page]);
 
   useEffect(() => {
     if (modalSnapshot.isReloadData) {
@@ -93,7 +94,7 @@ const Reaktor = () => {
     <>
       <ModalAddReaktor handleClose={handleClose} />
       <Grid container spacing={6}>
-        {!subsistemId && (
+        {!id && (
           <Grid item xs={12}>
             <PageHeader title={<Typography variant="h5">Reaktor</Typography>} />
           </Grid>
