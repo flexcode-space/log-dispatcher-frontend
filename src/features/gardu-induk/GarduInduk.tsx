@@ -1,6 +1,4 @@
-// ** React Imports
 import { useEffect, useState } from "react";
-import { useRouter } from "next/router";
 import {
   Box,
   Card,
@@ -15,33 +13,37 @@ import { DataGrid } from "@mui/x-data-grid";
 import { PencilOutline, DeleteOutline } from "mdi-material-ui";
 import { useSnapshot } from "valtio";
 
+// ** Custom Components Imports
 import PageHeader from "src/@core/components/page-header";
 
-import { defaultColumns } from "./IBT.constant";
+import { defaultColumns } from "./GarduInduk.constant";
 import { CellType } from "./types";
 
-import { ModalAddIBT } from "./modal";
+import { ModalAddGarduInduk } from "./modal";
 import { WrapperFilter } from "src/components/filter";
-import { ibtApi } from "src/api/ibt";
-import { openModal, closeModal, modal, reloadPage } from "src/state/modal";
-import { useDebounce } from "src/hooks/useDebounce";
 
-const IBT = () => {
+import { garduIndukApi } from "src/api/gardu-induk";
+import { useDebounce } from "src/hooks/useDebounce";
+import { openModal, closeModal, modal, reloadPage } from "src/state/modal";
+
+const GarduInduk = () => {
   const modalSnapshot = useSnapshot(modal);
-  const router = useRouter();
   const [limit, setLimit] = useState<number>(10);
   const [page, setPage] = useState<number>(1);
   const [search, setSearch] = useState<string>("");
 
   const debouncedSearch = useDebounce(search, 500);
 
-  const { getIbtList, ibtList, deleteIbt, totalData, loading } = ibtApi();
-
-  const id = router.query.id as string;
-  const path = router.pathname.split("/")[2];
+  const {
+    garduIndukList,
+    getGarduIndukList,
+    loading,
+    deleteGarduInduk,
+    totalData,
+  } = garduIndukApi();
 
   const onClickDelete = async (id: string) => {
-    await deleteIbt({ id });
+    await deleteGarduInduk({ id });
     reloadPage();
   };
 
@@ -53,19 +55,16 @@ const IBT = () => {
       sortable: false,
       field: "actions",
       headerName: "Aksi",
-      renderCell: ({ row }: CellType) => {
-        const { id } = row;
-        return (
-          <Box sx={{ display: "flex", alignItems: "center" }}>
-            <IconButton onClick={() => openModal(id)}>
-              <PencilOutline />
-            </IconButton>
-            <IconButton>
-              <DeleteOutline onClick={() => onClickDelete(id)} />
-            </IconButton>
-          </Box>
-        );
-      },
+      renderCell: ({ row }: CellType) => (
+        <Box sx={{ display: "flex", alignItems: "center" }}>
+          <IconButton onClick={() => openModal(row.id)}>
+            <PencilOutline />
+          </IconButton>
+          <IconButton>
+            <DeleteOutline onClick={() => onClickDelete(row.id)} />
+          </IconButton>
+        </Box>
+      ),
     },
   ];
 
@@ -73,33 +72,33 @@ const IBT = () => {
     closeModal();
   };
 
-  const getIbt = () => {
+  const getSubsistem = () => {
     if (debouncedSearch) {
-      getIbtList(id, { search, limit, page, path });
+      getGarduIndukList({ search, limit, page });
     } else {
-      getIbtList(id, { limit, page, path });
+      getGarduIndukList({ limit, page });
     }
   };
 
   useEffect(() => {
-    getIbt();
-  }, [debouncedSearch, id, limit, page]);
+    getSubsistem();
+  }, [debouncedSearch, limit, page]);
 
   useEffect(() => {
     if (modalSnapshot.isReloadData) {
-      getIbt();
+      getSubsistem();
     }
   }, [modalSnapshot.isReloadData]);
 
   return (
     <>
-      <ModalAddIBT handleClose={handleClose} />
+      <ModalAddGarduInduk handleClose={handleClose} />
       <Grid container spacing={6}>
-        {!id && (
-          <Grid item xs={12}>
-            <PageHeader title={<Typography variant="h5">IBT</Typography>} />
-          </Grid>
-        )}
+        <Grid item xs={12}>
+          <PageHeader
+            title={<Typography variant="h5">Gardu Induk</Typography>}
+          />
+        </Grid>
         <Grid item xs={12}>
           <Card>
             <CardContent>
@@ -117,21 +116,23 @@ const IBT = () => {
                   onClick={() => openModal()}
                   variant="contained"
                 >
-                  Tambah IBT
+                  Tambah Gardu Induk
                 </Button>
               </WrapperFilter>
-              <DataGrid
-                autoHeight
-                rowsPerPageOptions={[10, 20, 25, 50]}
-                pageSize={limit}
-                loading={loading}
-                rows={ibtList}
-                columns={columns}
-                rowCount={totalData}
-                onPageSizeChange={(newPageSize) => setLimit(newPageSize)}
-                onPageChange={(currentPage) => setPage(currentPage + 1)}
-                paginationMode="server"
-              />
+              <Box>
+                <DataGrid
+                  autoHeight
+                  rowsPerPageOptions={[10, 20, 25, 50]}
+                  pageSize={limit}
+                  loading={loading}
+                  rows={garduIndukList}
+                  columns={columns}
+                  rowCount={totalData}
+                  onPageSizeChange={(newPageSize) => setLimit(newPageSize)}
+                  onPageChange={(currentPage) => setPage(currentPage + 1)}
+                  paginationMode="server"
+                />
+              </Box>
             </CardContent>
           </Card>
         </Grid>
@@ -140,4 +141,4 @@ const IBT = () => {
   );
 };
 
-export default IBT;
+export default GarduInduk;

@@ -1,9 +1,8 @@
 import Link from "next/link";
-import Typography from "@mui/material/Typography";
 import { CellType } from "./types";
 import { StyledLink } from "src/components/link";
 
-const url = "/master-data/sub-sistem";
+const url = "/master-data/gardu-induk";
 
 export const defaultColumns = [
   {
@@ -13,10 +12,16 @@ export const defaultColumns = [
     headerName: "Subsistem",
   },
   {
+    flex: 0.25,
+    minWidth: 200,
+    field: "nama_upt",
+    headerName: "UPT",
+  },
+  {
     flex: 0.35,
     field: "ibt",
     minWidth: 80,
-    headerName: "Jumlah IBT",
+    headerName: "IBT",
     renderCell: ({ row }: CellType) => (
       <Link href={`${url}/${row.id}?tab=ibt`}>
         <StyledLink>{row.ibt}</StyledLink>
@@ -27,7 +32,7 @@ export const defaultColumns = [
     flex: 0.25,
     field: "pembangkit",
     minWidth: 80,
-    headerName: "Jumlah Pembangkit",
+    headerName: "Pembangkit",
     renderCell: ({ row }: CellType) => (
       <Link href={`${url}/${row.id}?tab=pembangkit`}>
         <StyledLink>{row.pembangkit}</StyledLink>
@@ -38,7 +43,7 @@ export const defaultColumns = [
     flex: 0.25,
     minWidth: 215,
     field: "penghantar",
-    headerName: "Jumlah Penghantar",
+    headerName: "Penghantar",
     renderCell: ({ row }: CellType) => (
       <Link href={`${url}/${row.id}?tab=penghantar`}>
         <StyledLink>{row.penghantar}</StyledLink>
@@ -49,7 +54,7 @@ export const defaultColumns = [
     flex: 0.25,
     field: "trafo",
     minWidth: 80,
-    headerName: "Jumlah Trafo",
+    headerName: "Trafo",
     renderCell: ({ row }: CellType) => (
       <Link href={`${url}/${row.id}?tab=trafo`}>
         <StyledLink>{row.trafo}</StyledLink>

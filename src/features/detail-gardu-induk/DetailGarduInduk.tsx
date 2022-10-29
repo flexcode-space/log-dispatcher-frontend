@@ -5,7 +5,7 @@ import { TabList, TabPanel, TabContext } from "@mui/lab";
 import { Card, Grid, Typography, Breadcrumbs, Link } from "@mui/material";
 import PageHeader from "src/@core/components/page-header";
 
-import { subsistemApi } from "src/api/subsistem";
+import { garduIndukApi } from "src/api/gardu-induk";
 
 import { Penghantar } from "src/features/penghantar";
 import { IBT } from "src/features/ibt";
@@ -14,21 +14,21 @@ import { Trafo } from "src/features/trafo";
 import { Busbar } from "src/features/busbar";
 import { Reaktor } from "src/features/reaktor";
 
-import { Tab, TabName } from "./DetailSubsistem.styled";
-import { TAB_MENU } from "./DetailSubsistem.constant";
+import { Tab, TabName } from "./DetailGarduInduk.styled";
+import { TAB_MENU } from "./DetailGarduInduk.constant";
 
-const SubsistemDetail = () => {
+const GarduIndukDetail = () => {
   const router = useRouter();
-  const [subsistem, setSubsistem] = useState<string>("");
+  const [garduInduk, setGarduInduk] = useState<string>("");
 
   const id = router.query.id as string;
   const tab = (router.query.tab as string) || "ibt";
 
-  const { getSubsistemDetail } = subsistemApi();
+  const { getGarduIndukDetail } = garduIndukApi();
 
   const handleChange = (event: SyntheticEvent, newValue: string) => {
     router.replace(
-      { pathname: `/master-data/sub-sistem/${id}`, query: { tab: newValue } },
+      { pathname: `/master-data/gardu-induk/${id}`, query: { tab: newValue } },
       undefined,
       { shallow: true }
     );
@@ -36,7 +36,7 @@ const SubsistemDetail = () => {
 
   useEffect(() => {
     if (id) {
-      getSubsistemDetail(id).then((value: any) => setSubsistem(value.nama));
+      getGarduIndukDetail(id).then((value: any) => setGarduInduk(value.nama));
     }
   }, [id]);
 
@@ -44,12 +44,12 @@ const SubsistemDetail = () => {
     <Grid container spacing={6}>
       <Grid item xs={12}>
         <Breadcrumbs aria-label="breadcrumb" sx={{ mb: "20px" }}>
-          <Link underline="hover" color="inherit" href="/master-data/sub-sistem">
-            Subsistem
+          <Link underline="hover" color="inherit" href="/master-data/gardu-induk">
+            Gardu Induk
           </Link>
-          <Typography color="text.primary">{subsistem}</Typography>
+          <Typography color="text.primary">{garduInduk}</Typography>
         </Breadcrumbs>
-        <PageHeader title={<Typography variant="h5">{subsistem}</Typography>} />
+        <PageHeader title={<Typography variant="h5">{garduInduk}</Typography>} />
       </Grid>
       <Grid item xs={12}>
         <Card>
@@ -95,4 +95,4 @@ const SubsistemDetail = () => {
   );
 };
 
-export default SubsistemDetail;
+export default GarduIndukDetail;
