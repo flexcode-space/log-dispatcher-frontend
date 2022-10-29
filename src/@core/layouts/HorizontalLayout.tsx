@@ -108,7 +108,7 @@ const HorizontalLayout = (props: LayoutProps) => {
             className='navbar-content-container'
             sx={{
               mx: 'auto',
-              ...(contentWidth === 'boxed' && { '@media (min-width:1440px)': { maxWidth: 1440 } }),
+              // ...(contentWidth === 'boxed' && { '@media (min-width:1440px)': { maxWidth: 1440 } }),
               minHeight: theme => `${(theme.mixins.toolbar.minHeight as number) - 1}px !important`
             }}
           >
@@ -123,7 +123,7 @@ const HorizontalLayout = (props: LayoutProps) => {
               className='horizontal-nav-content-container'
               sx={{
                 mx: 'auto',
-                ...(contentWidth === 'boxed' && { '@media (min-width:1440px)': { maxWidth: 1440 } }),
+                // ...(contentWidth === 'boxed' && { '@media (min-width:1440px)': { maxWidth: 1440 } }),
                 minHeight: theme =>
                   `${(theme.mixins.toolbar.minHeight as number) - (skin === 'bordered' ? 1 : 0)}px !important`
               }}
@@ -140,7 +140,7 @@ const HorizontalLayout = (props: LayoutProps) => {
         sx={{
           ...(contentWidth === 'boxed' && {
             mx: 'auto',
-            '@media (min-width:1440px)': { maxWidth: 1440 },
+            // '@media (min-width:1440px)': { maxWidth: 1440 },
             '@media (min-width:1200px)': { maxWidth: '100%' }
           })
         }}

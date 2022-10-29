@@ -47,12 +47,12 @@ const Footer = (props: Props) => {
           width: '100%',
           borderTopLeftRadius: 14,
           borderTopRightRadius: 14,
-          ...(contentWidth === 'boxed' && { '@media (min-width:1440px)': { maxWidth: 1440 } }),
+          // ...(contentWidth === 'boxed' && { '@media (min-width:1440px)': { maxWidth: 1440 } }),
           ...(footer === 'fixed' && {
             backgroundColor: theme => theme.palette.background.paper,
             boxShadow: theme => theme.shadows[skin === 'bordered' ? 0 : 4],
             ...(contentWidth === 'boxed' && {
-              '@media (min-width:1440px)': { maxWidth: theme => `calc(1440px - ${theme.spacing(6)} * 2)` }
+              // '@media (min-width:1440px)': { maxWidth: theme => `calc(1440px - ${theme.spacing(6)} * 2)` }
             }),
             ...(skin === 'bordered'
               ? { border: theme => `1px solid ${theme.palette.divider}`, borderBottomWidth: 0 }
