@@ -127,8 +127,8 @@ export const navigation = (): HorizontalNavItemsType => [
     icon: LainnyaIcon,
     children: [
       {
-        title: "Switching Pembangkit",
-        path: "/switching-pembangkit",
+        title: "Kapasitor Reaktor",
+        path: "/kapasitor-reaktor",
       },
       {
         title: "Dispacther",

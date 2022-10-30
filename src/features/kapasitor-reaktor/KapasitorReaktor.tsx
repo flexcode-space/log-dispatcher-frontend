@@ -24,7 +24,7 @@ import FilterIcon from "src/assets/icons/filter-icon.svg";
 import { WrapperFilter } from "src/components/filter";
 import { AddLaporan } from "./add-laporan";
 
-const SwitchingPembangkit = () => {
+const KapasitorReaktor = () => {
   // ** States
   const [page, setPage] = useState<number>(0);
   const [rowsPerPage, setRowsPerPage] = useState<number>(10);
@@ -43,7 +43,7 @@ const SwitchingPembangkit = () => {
       <Grid container spacing={6}>
         <Grid item xs={12}>
           <PageHeader
-            title={<Typography variant="h5">Switching Pembangkit</Typography>}
+            title={<Typography variant="h5">Kapasitor Reaktor</Typography>}
           />
         </Grid>
         <Grid item xs={12}>
@@ -82,57 +82,35 @@ const SwitchingPembangkit = () => {
                       <TableCell size="small" rowSpan={2}>
                         Lokasi
                       </TableCell>
-                      <TableCell size="small" rowSpan={2}>
-                        DMN
-                      </TableCell>
-                      <TableCell size="small" rowSpan={2}>
-                        TML
+                      <TableCell size="small" align="center" colSpan={2}>
+                        Jam
                       </TableCell>
                       <TableCell size="small" align="center" colSpan={2}>
-                        Waktu
+                        Tegangan
                       </TableCell>
-                      <TableCell size="small" align="center" colSpan={3}>
-                        Operator
-                      </TableCell>
-                      <TableCell align="center" rowSpan={2}>
-                        Energi Primer
-                      </TableCell>
-                      <TableCell align="center" rowSpan={2}>
-                        Beban
-                      </TableCell>
-                      <TableCell align="center" rowSpan={2}>
-                        Status
-                      </TableCell>
-                      <TableCell align="center" rowSpan={2}>
+                      <TableCell size="small" rowSpan={2}>
                         Keterangan
                       </TableCell>
-                      <TableCell align="center" rowSpan={2}>
+                      <TableCell size="small" align="center" rowSpan={2}>
                         Aksi
                       </TableCell>
                     </TableRow>
                     <TableRow>
-                      <TableCell>Perintah</TableCell>
-                      <TableCell>Real</TableCell>
-                      <TableCell>BOPS</TableCell>
-                      <TableCell>ACC</TableCell>
-                      <TableCell>Pembangkit</TableCell>
+                      <TableCell>Buka</TableCell>
+                      <TableCell>Tutup</TableCell>
+                      <TableCell>Sebelum</TableCell>
+                      <TableCell>Sesudah</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
                     <TableRow>
                       <TableCell>1</TableCell>
                       <TableCell>PLTU RBANG</TableCell>
-                      <TableCell>280 MW</TableCell>
-                      <TableCell>180 MW</TableCell>
                       <TableCell>07:02</TableCell>
                       <TableCell>07:22</TableCell>
                       <TableCell>Dika</TableCell>
                       <TableCell>Bagus</TableCell>
-                      <TableCell>Henis</TableCell>
-                      <TableCell>Air</TableCell>
                       <TableCell>200 MW</TableCell>
-                      <TableCell>PD</TableCell>
-                      <TableCell>Pengaturan Sistem</TableCell>
                       <TableCell>
                         <Box sx={{ display: "flex", alignItems: "center" }}>
                           <IconButton onClick={() => null}>
@@ -161,4 +139,4 @@ const SwitchingPembangkit = () => {
   );
 };
 
-export default SwitchingPembangkit;
+export default KapasitorReaktor;
