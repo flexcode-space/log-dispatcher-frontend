@@ -30,3 +30,14 @@ export const DATA = [
     tanggal_2: 80,
   },
 ];
+
+export const pengaturanSubsistem = [
+  "Subsistem",
+  "Gardu Induk",
+  "Pembangkit",
+  "IBT",
+  "Trafo",
+  "Busbar",
+  "Penghantar",
+  "Reaktor",
+];

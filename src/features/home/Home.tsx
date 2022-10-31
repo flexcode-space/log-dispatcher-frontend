@@ -13,17 +13,9 @@ import Grid from "@mui/material/Grid";
 import { Chart } from "./components/Chart";
 import { Shortcut } from "./components/Shortcut";
 import Grafik from "./components/Grafik";
-
-const pengaturanSubsistem = [
-  "Subsistem",
-  "Gardu Induk",
-  "Pembangkit",
-  "IBT",
-  "Trafo",
-  "Busbar",
-  "Penghantar",
-  "Reaktor",
-];
+import { NeracaDaya } from "./components/neraca-daya";
+import { StatusPembangkit } from "./components/StatusPembangkit";
+import { pengaturanSubsistem } from "./Home.constant";
 
 const Home = () => {
   return (
@@ -52,6 +44,12 @@ const Home = () => {
         </Grid>
         <Grid item xs={6}>
           <Grafik title="Beban Subsistem" />
+        </Grid>
+        <Grid item xs={7}>
+          <NeracaDaya />
+        </Grid>
+        <Grid item xs={5}>
+          <StatusPembangkit />
         </Grid>
       </Grid>
     </>
