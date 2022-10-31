@@ -15,7 +15,7 @@ import { DatePicker, TimePicker } from "src/components/date-picker";
 
 import { StyledForm } from "src/components/form";
 
-import { ENERGI_PRIMER } from "../SwitchingPembangkit.constant";
+import { ENERGI_PRIMER } from "../KapasitorReaktor.constant";
 
 const AddLaporan = () => {
   const formMethods = useForm({
@@ -35,52 +35,27 @@ const AddLaporan = () => {
         <FormProvider {...formMethods}>
           <StyledForm noValidate onSubmit={() => null} sx={{ width: "100%" }}>
             <Grid container spacing={2} mt={1}>
-              <Grid item xs={2.4}>
+              <Grid item xs={4}>
                 <SelectInput label="Lokasi" name="lokasi" options={[]} />
               </Grid>
-              <Grid item xs={2.4}>
+              <Grid item xs={4}>
                 <LocalizationProvider dateAdapter={AdapterDateFns}>
-                  <DatePicker label="Tanggal" name="tanggal" />
+                  <TimePicker label="Jam Buka" name="jam_buka" />
                 </LocalizationProvider>
               </Grid>
-              <Grid item xs={2.4}>
+              <Grid item xs={4}>
                 <LocalizationProvider dateAdapter={AdapterDateFns}>
-                  <TimePicker label="Perintah" name="perintah" />
+                  <TimePicker label="Jam Tutup" name="jam_tutup" />
                 </LocalizationProvider>
               </Grid>
-              <Grid item xs={2.4}>
-                <LocalizationProvider dateAdapter={AdapterDateFns}>
-                  <TimePicker label="Real" name="real" />
-                </LocalizationProvider>
-              </Grid>
-              <Grid item xs={2.4}>
-                <SelectInput
-                  label="Engergi Primer"
-                  name="energi_primer"
-                  options={ENERGI_PRIMER}
-                />
+
+              <Grid item xs={4}>
+                <InputField name="tegangan_sebelum" label="Tegangan Sebelum" />
               </Grid>
 
               <Grid item xs={4}>
-                <SelectInput label="BOPS" name="bops" options={[]} />
+                <InputField name="tegangan_sesudah" label="Tegangan Sesudah" />
               </Grid>
-
-              <Grid item xs={4}>
-                <SelectInput label="ACC" name="acc" options={[]} />
-              </Grid>
-
-              <Grid item xs={4}>
-                <SelectInput
-                  label="Pembangkit"
-                  name="pembangkit"
-                  options={[]}
-                />
-              </Grid>
-
-              <Grid item xs={4}>
-                <InputField name="beban" label="Beban" />
-              </Grid>
-
               <Grid item xs={4}>
                 <InputField name="keterangan" label="Keterangan" />
               </Grid>
