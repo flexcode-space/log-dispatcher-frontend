@@ -18,6 +18,8 @@ import EditIcon from "src/assets/icons/edit-icon.svg";
 import { openModal } from "src/state/modal";
 import CustomChip from "src/@core/components/mui/chip";
 
+import { formatDecimalNumber } from "src/utils/number";
+
 import { WrapperFilter } from "src/components/filter";
 import { bebanApi } from "src/api/beban";
 import {
@@ -90,7 +92,10 @@ const BebanHarian = () => {
                   <TableHead sx={{ height: "30px", background: "#F5F5F7" }}>
                     <TableRow>
                       <TableCell
-                        sx={{ backgroundColoe: "red", minWidth: "200px" }}
+                        variant="head"
+                        sx={{
+                          minWidth: "200px",
+                        }}
                         size="small"
                         rowSpan={2}
                       >
@@ -112,8 +117,12 @@ const BebanHarian = () => {
                     <TableRow>
                       {time.map(() => (
                         <>
-                          <TableCell size="small">MW</TableCell>
-                          <TableCell size="small">MX</TableCell>
+                          <TableCell size="small" align="center">
+                            MW
+                          </TableCell>
+                          <TableCell size="small" align="center">
+                            MX
+                          </TableCell>
                         </>
                       ))}
                     </TableRow>
@@ -151,7 +160,13 @@ const BebanHarian = () => {
                                           (data: DataKategoriPembangkit) => {
                                             return (
                                               <TableRow>
-                                                <TableCell size="small">
+                                                <TableCell
+                                                  size="small"
+                                                  sx={{
+                                                    borderRight:
+                                                      "1px solid #4c4e641f",
+                                                  }}
+                                                >
                                                   <CustomChip
                                                     label={data.jenis}
                                                     skin="light"
@@ -159,7 +174,13 @@ const BebanHarian = () => {
                                                     size="small"
                                                   />
                                                 </TableCell>
-                                                <TableCell size="small">
+                                                <TableCell
+                                                  size="small"
+                                                  sx={{
+                                                    borderRight:
+                                                      "1px solid #4c4e641f",
+                                                  }}
+                                                >
                                                   {data.nama}
                                                 </TableCell>
                                                 {showValueBeban(data.data)}
@@ -189,7 +210,10 @@ const BebanHarian = () => {
                             <>
                               {ibt.data.map((data: DataIBT) => (
                                 <TableRow>
-                                  <TableCell size="small">
+                                  <TableCell
+                                    size="small"
+                                    sx={{ borderRight: "1px solid #4c4e641f" }}
+                                  >
                                     <CustomChip
                                       label={data.jenis}
                                       skin="light"
@@ -197,7 +221,10 @@ const BebanHarian = () => {
                                       size="small"
                                     />
                                   </TableCell>
-                                  <TableCell size="small">
+                                  <TableCell
+                                    size="small"
+                                    sx={{ borderRight: "1px solid #4c4e641f" }}
+                                  >
                                     {data.nama}
                                   </TableCell>
                                   {showValueBeban(data?.data)}
