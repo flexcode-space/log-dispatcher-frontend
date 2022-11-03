@@ -55,7 +55,7 @@ export const MonitoringPenghantar = () => {
   return (
     <Card sx={{}}>
       <CardHeader
-        title="Monitoring IBT"
+        title="Monitoring Penghantar"
         titleTypographyProps={{ variant: "h6" }}
         subheaderTypographyProps={{
           variant: "caption",

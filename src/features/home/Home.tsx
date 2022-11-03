@@ -37,11 +37,8 @@ const Home = () => {
             </CardContent>
           </Card>
         </Grid>
-        <Grid item xs={3}>
-          <Chart title="Komposisi Pembebanan" />
-        </Grid>
-        <Grid item xs={3}>
-          <Chart title="Beban Subsistem" />
+        <Grid item xs={6}>
+          <Chart />
         </Grid>
         <Grid item xs={6}>
           <Grafik title="Pembebanan Sistem Jateng & DIY" />
@@ -56,16 +53,24 @@ const Home = () => {
           <StatusPembangkit />
         </Grid>
         <Grid item xs={7}>
-          <JadwalShift />
+          <Grid container spacing={6}>
+            <Grid item xs={12}>
+              <JadwalShift />
+            </Grid>
+            <Grid item xs={12}>
+              <TeganganSubsistem />
+            </Grid>
+          </Grid>
         </Grid>
         <Grid item xs={5}>
-          <MonitoringIBT />
-        </Grid>
-        <Grid item xs={7}>
-          <TeganganSubsistem />
-        </Grid>
-        <Grid item xs={5}>
-          <MonitoringPenghantar />
+          <Grid container spacing={6}>
+            <Grid item xs={12}>
+              <MonitoringIBT />
+            </Grid>
+            <Grid item xs={12}>
+              <MonitoringPenghantar />
+            </Grid>
+          </Grid>
         </Grid>
       </Grid>
     </>

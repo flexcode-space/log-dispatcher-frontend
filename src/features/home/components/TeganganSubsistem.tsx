@@ -67,6 +67,14 @@ export const dataMock = [
     tertinggi: "155KV",
     terendah: "140KV",
   },
+  {
+    id: 5,
+    subsistem: "SS Ungaran",
+    gardu_induk: "GI CLCAP ",
+    busbar: "Busbar 1",
+    tertinggi: "155KV",
+    terendah: "140KV",
+  },
 ];
 
 export const TeganganSubsistem = () => {
