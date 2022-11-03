@@ -136,7 +136,15 @@ const ModalAddGarduInduk = ({ handleClose }: ModalAddGarduIndukProps) => {
           <DialogContent>
             <Grid container spacing={1} mt={1}>
               <Grid item xs={12} sm={12}>
-                <SelectInput label="UPT" name="upt_id" options={uptOptions} />
+                <SelectInput
+                  label="UPT"
+                  name="upt_id"
+                  options={[
+                    ...uptOptions,
+                    { value: "2", label: "UPT 2" },
+                    { value: "3", label: "UPT 3" },
+                  ]}
+                />
               </Grid>
               {fields.map((value, index: number) => {
                 return (

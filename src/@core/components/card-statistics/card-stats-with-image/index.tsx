@@ -24,7 +24,7 @@ const CardStatsCharacter = ({ data }: Props) => {
       <CardContent sx={{ pb: '0 !important' }}>
         <Grid container>
           <Grid item xs={6}>
-            <Typography sx={{ mb: 1.5, fontWeight: 600, whiteSpace: 'nowrap' }}>{title}</Typography>
+            <Typography variant='subtitle2' sx={{ mb: 1.5, fontWeight: 600, whiteSpace: 'nowrap' }}>{title}</Typography>
             <CustomChip
               skin='light'
               size='small'
@@ -32,17 +32,17 @@ const CardStatsCharacter = ({ data }: Props) => {
               color={chipColor}
               sx={{ mb: 5.5, height: 20, fontWeight: 500, fontSize: '0.75rem' }}
             />
-            <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center' }}>
+            {/* <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center' }}>
               <Typography variant='h5' sx={{ mr: 1.5 }}>
                 {stats}
               </Typography>
               <Typography variant='caption' sx={{ color: trend === 'negative' ? 'error.main' : 'success.main' }}>
                 {trendNumber}
               </Typography>
-            </Box>
+            </Box> */}
           </Grid>
           <Grid item xs={6} sx={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'flex-end' }}>
-            <img src={src} alt={title} height={134} />
+            <img src={src} alt={title} height={95} />
           </Grid>
         </Grid>
       </CardContent>
