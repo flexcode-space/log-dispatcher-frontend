@@ -1,5 +1,10 @@
 import { Card, CardContent, CardHeader } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
+import CustomChip from "src/@core/components/mui/chip";
+
+export interface CellType {
+  row: any;
+}
 
 export const columns = [
   {
@@ -12,6 +17,14 @@ export const columns = [
     field: "status",
     maxWidth: 100,
     headerName: "status",
+    renderCell: ({ row }: CellType) => (
+      <CustomChip
+        label={row.status}
+        skin="light"
+        size="small"
+        color="primary"
+      />
+    ),
   },
   {
     flex: 0.25,
@@ -61,7 +74,7 @@ export const dataMock = [
 
 export const StatusPembangkit = () => {
   return (
-    <Card sx={{ height: '500px'}}>
+    <Card sx={{ height: "500px" }}>
       <CardHeader
         title="Status Pembangkitan"
         titleTypographyProps={{ variant: "h6" }}
