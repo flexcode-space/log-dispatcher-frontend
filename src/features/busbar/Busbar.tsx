@@ -44,7 +44,8 @@ const Busbar = () => {
     reloadPage();
   };
 
-  const subsistemId = router.query.id as string;
+  const id = router.query.id as string;
+  const path = router.pathname.split("/")[2];
 
   const columns = [
     ...defaultColumns,
@@ -76,15 +77,15 @@ const Busbar = () => {
 
   const getBusbar = () => {
     if (debouncedSearch) {
-      getBusbarList(subsistemId, { search, limit, page });
+      getBusbarList(id, { search, limit, page, path });
     } else {
-      getBusbarList(subsistemId, { limit, page });
+      getBusbarList(id, { limit, page, path });
     }
   };
 
   useEffect(() => {
     getBusbar();
-  }, [debouncedSearch, subsistemId, limit, page]);
+  }, [debouncedSearch, id, limit, page]);
 
   useEffect(() => {
     if (modalSnapshot.isReloadData) {
@@ -96,7 +97,7 @@ const Busbar = () => {
     <>
       <ModalAddBusbar handleClose={handleClose} />
       <Grid container spacing={6}>
-        {!subsistemId && (
+        {!id && (
           <Grid item xs={12}>
             <PageHeader title={<Typography variant="h5">Busbar</Typography>} />
           </Grid>

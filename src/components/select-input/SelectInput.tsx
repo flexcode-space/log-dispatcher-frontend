@@ -1,11 +1,17 @@
+import { useState } from "react";
 import {
   FormControl,
   MenuItem,
   InputLabel,
   Select,
   FormHelperText,
+  TextField,
+  Divider,
+  Typography,
+  Box,
 } from "@mui/material";
 import { useFormContext, Controller } from "react-hook-form";
+import Plus from "mdi-material-ui/Plus";
 
 type SelectInputProps = {
   label: string;
@@ -26,6 +32,8 @@ const SelectInput = ({
     control,
     formState: { errors },
   } = useFormContext();
+
+  const [isAddNewField, setAddNewField] = useState(false);
 
   return (
     <FormControl fullWidth sx={{ mb: 4 }}>
@@ -48,6 +56,23 @@ const SelectInput = ({
                   {label}
                 </MenuItem>
               ))}
+              <Divider />
+              <MenuItem>
+              {isAddNewField ? (
+                <Box width="100%">
+                  <TextField fullWidth size="small" />
+                </Box>
+              ) : (
+                <Box
+                  display="flex"
+                  alignItems="center"
+                  onClick={() => setAddNewField(true)}
+                >
+                  <Plus sx={{ mr: 1 }} />
+                  <Typography variant="subtitle1">Masukkan UPT Baru</Typography>
+                </Box>
+              )}
+              </MenuItem>
             </Select>
           </>
         )}

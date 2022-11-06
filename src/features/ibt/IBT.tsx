@@ -37,7 +37,8 @@ const IBT = () => {
 
   const { getIbtList, ibtList, deleteIbt, totalData, loading } = ibtApi();
 
-  const subsistemId = router.query.id as string;
+  const id = router.query.id as string;
+  const path = router.pathname.split("/")[2];
 
   const onClickDelete = async (id: string) => {
     await deleteIbt({ id });
@@ -74,15 +75,15 @@ const IBT = () => {
 
   const getIbt = () => {
     if (debouncedSearch) {
-      getIbtList(subsistemId, { search, limit, page });
+      getIbtList(id, { search, limit, page, path });
     } else {
-      getIbtList(subsistemId, { limit, page });
+      getIbtList(id, { limit, page, path });
     }
   };
 
   useEffect(() => {
     getIbt();
-  }, [debouncedSearch, subsistemId, limit, page]);
+  }, [debouncedSearch, id, limit, page]);
 
   useEffect(() => {
     if (modalSnapshot.isReloadData) {
@@ -94,7 +95,7 @@ const IBT = () => {
     <>
       <ModalAddIBT handleClose={handleClose} />
       <Grid container spacing={6}>
-        {!subsistemId && (
+        {!id && (
           <Grid item xs={12}>
             <PageHeader title={<Typography variant="h5">IBT</Typography>} />
           </Grid>

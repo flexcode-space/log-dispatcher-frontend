@@ -1,22 +1,48 @@
 export type Beban = {
   sub_sistem: string
   color: string
-  kategori_pembangkit: KategoriPembangkit[]
+  pembangkit: Pembangkit
+  ibt: IBT[]
+}
+
+export type IBT = {
+  data: DataIBT[]
+  total: Total
 }
 
 export type KategoriPembangkit = {
-  nama: string
-  total?: number
-  pembangkit: Pembangkit[]
+  data: DataKategoriPembangkit[]
+  total: Total
 }
 
 export type Pembangkit = {
-  nama: string
+  tipe_jenis_pembangkit: TipeJenisPembangkit[]
+  total: Total
+}
+
+export type TipeJenisPembangkit = {
+  kategori_pembangkit: KategoriPembangkit[]
+}
+
+export type DataKategoriPembangkit = {
   id_beban: string
+  jenis: string
+  nama: string
   data: Data
 }
 
+export type DataIBT = DataKategoriPembangkit
+
+export type Total = {
+  nama: string
+  data: Data
+  color: string
+}
+
 export type Data = {
+  id: string
+  jenis_peralatan: string
+  mva_value: string
   mw_0030: string
   mw_0100: string
   mw_0130: string

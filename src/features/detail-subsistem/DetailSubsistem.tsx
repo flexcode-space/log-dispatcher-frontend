@@ -28,7 +28,7 @@ const SubsistemDetail = () => {
 
   const handleChange = (event: SyntheticEvent, newValue: string) => {
     router.replace(
-      { pathname: `/master-data/subsistem/${id}`, query: { tab: newValue } },
+      { pathname: `/master-data/sub-sistem/${id}`, query: { tab: newValue } },
       undefined,
       { shallow: true }
     );
@@ -44,7 +44,7 @@ const SubsistemDetail = () => {
     <Grid container spacing={6}>
       <Grid item xs={12}>
         <Breadcrumbs aria-label="breadcrumb" sx={{ mb: "20px" }}>
-          <Link underline="hover" color="inherit" href="/master-data/subsistem">
+          <Link underline="hover" color="inherit" href="/master-data/sub-sistem">
             Subsistem
           </Link>
           <Typography color="text.primary">{subsistem}</Typography>

@@ -3,7 +3,7 @@ import Typography from "@mui/material/Typography";
 import { CellType } from "./types";
 import { StyledLink } from "src/components/link";
 
-const url = "/master-data/subsistem";
+const url = "/master-data/sub-sistem";
 
 export const defaultColumns = [
   {

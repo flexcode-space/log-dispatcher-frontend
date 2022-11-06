@@ -52,12 +52,12 @@ export const navigation = (): HorizontalNavItemsType => [
       {
         title: "Beban Penghantar Harian",
         icon: BebanPenghantarIcon,
-        path: "/beban/beban-penghantar",
+        path: "/beban/beban-penghantar-harian",
       },
       {
-        title: "Pembebanan IBT",
+        title: "Beban IBT Harian",
         icon: PembebananIbtIcon,
-        path: "/beban/pembebanan-ibt",
+        path: "/beban/beban-ibt-harian",
       },
       {
         title: "Tegangan Busbar",
@@ -83,7 +83,12 @@ export const navigation = (): HorizontalNavItemsType => [
       {
         title: "Subsistem",
         icon: SubsistemIcon,
-        path: "/master-data/subsistem",
+        path: "/master-data/sub-sistem",
+      },
+      {
+        title: "Gardu Induk",
+        icon: SubsistemIcon,
+        path: "/master-data/gardu-induk",
       },
       {
         title: "IBT",
@@ -122,8 +127,8 @@ export const navigation = (): HorizontalNavItemsType => [
     icon: LainnyaIcon,
     children: [
       {
-        title: "Switching Pembangkit",
-        path: "/switching-pembangkit",
+        title: "Kapasitor Reaktor",
+        path: "/kapasitor-reaktor",
       },
       {
         title: "Dispacther",

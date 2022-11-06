@@ -49,7 +49,8 @@ const Pembangkit = () => {
     reloadPage();
   };
 
-  const subsistemId = router.query.id as string;
+  const id = router.query.id as string;
+  const path = router.pathname.split("/")[2];
 
   const columns = [
     ...defaultColumns,
@@ -81,15 +82,15 @@ const Pembangkit = () => {
 
   const getPembangkit = () => {
     if (debouncedSearch) {
-      getPembangkitList(subsistemId, { search, limit, page });
+      getPembangkitList(id, { search, limit, page, path });
     } else {
-      getPembangkitList(subsistemId, { limit, page });
+      getPembangkitList(id, { limit, page, path });
     }
   };
 
   useEffect(() => {
     getPembangkit();
-  }, [debouncedSearch, subsistemId, limit, page]);
+  }, [debouncedSearch, id, limit, page]);
 
   useEffect(() => {
     if (modalSnapshot.isReloadData) {
@@ -101,7 +102,7 @@ const Pembangkit = () => {
     <>
       <ModalAddPembangkit handleClose={handleClose} />
       <Grid container spacing={6}>
-        {!subsistemId && (
+        {!id && (
           <Grid item xs={12}>
             <PageHeader
               title={<Typography variant="h5">Pembangkit</Typography>}
