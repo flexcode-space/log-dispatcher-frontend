@@ -9,7 +9,7 @@ type ParamsUnggahLaporan = Params & {
 }
 
 const unggahLaporanApi = () => {
-  const [unggahLaporanList, setUnggahLaporanList] = useState<[]>([])
+  const [unggahLaporanList, setUnggahLaporanList] = useState([])
   const [totalData, setTotalData] = useState<number>(0)
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -25,12 +25,17 @@ const unggahLaporanApi = () => {
     }
   }, [])
 
+  const unggahLaporan = useCallback(async (payload = {}) => {
+    await Axios.post(endpoint, payload)
+  }, [])
+
 
   return {
     unggahLaporanList,
     totalData,
     loading,
     getUnggahLaporanList,
+    unggahLaporan,
   }
 }
 

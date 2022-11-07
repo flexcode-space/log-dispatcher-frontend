@@ -33,8 +33,6 @@ const SelectInput = ({
     formState: { errors },
   } = useFormContext();
 
-  const [isAddNewField, setAddNewField] = useState(false);
-
   return (
     <FormControl fullWidth sx={{ mb: 4 }}>
       <Controller
@@ -56,23 +54,6 @@ const SelectInput = ({
                   {label}
                 </MenuItem>
               ))}
-              <Divider />
-              <MenuItem>
-              {isAddNewField ? (
-                <Box width="100%">
-                  <TextField fullWidth size="small" />
-                </Box>
-              ) : (
-                <Box
-                  display="flex"
-                  alignItems="center"
-                  onClick={() => setAddNewField(true)}
-                >
-                  <Plus sx={{ mr: 1 }} />
-                  <Typography variant="subtitle1">Masukkan UPT Baru</Typography>
-                </Box>
-              )}
-              </MenuItem>
             </Select>
           </>
         )}

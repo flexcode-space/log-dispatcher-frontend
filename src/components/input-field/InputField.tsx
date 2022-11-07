@@ -14,6 +14,7 @@ type InputFieldProps = {
 };
 
 interface OutlinedInputFieldProps extends InputFieldProps {
+  disabled?: boolean;
   Icon?: ReactNode;
 }
 
@@ -59,6 +60,7 @@ export const OutlinedInputField = ({
   placeholder,
   type = "text",
   Icon,
+  disabled,
 }: OutlinedInputFieldProps) => {
   const {
     control,
@@ -80,6 +82,7 @@ export const OutlinedInputField = ({
             onChange={onChange}
             type={type}
             placeholder={placeholder}
+            disabled={disabled}
             endAdornment={
               <InputAdornment position="end">{Icon}</InputAdornment>
             }

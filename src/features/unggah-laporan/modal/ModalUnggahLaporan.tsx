@@ -1,5 +1,5 @@
 import { ChangeEvent } from "react";
-import { useForm, FormProvider } from "react-hook-form";
+import { useForm, FormProvider, FieldPath } from "react-hook-form";
 import {
   Button,
   Dialog,
@@ -9,8 +9,6 @@ import {
   Typography,
   Box,
 } from "@mui/material";
-import AdapterDateFns from "@mui/lab/AdapterDateFns";
-import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import { useSnapshot } from "valtio";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { StyledForm } from "src/components/form";
@@ -19,8 +17,12 @@ import { DatePicker } from "src/components/date-picker";
 import { SelectInput } from "src/components/select-input";
 import { initialValues, validationSchema } from "./ModalUnggahLaporan.constant";
 import { tipeLaporanOptions } from "../UnggahLaporan.constant";
-import { modal, reloadPage } from "src/state/modal";
+import { modal, closeModal } from "src/state/modal";
 import UploadFile from "./components/UploadFile";
+import { Axios } from "../../../api/axios";
+import { unggahLaporanApi } from "src/api/unggah-laporan";
+import { convertDate } from "src/utils/date";
+import { FieldValues } from "../types";
 
 type ModalAddProps = {
   handleClose: () => void;
@@ -28,6 +30,8 @@ type ModalAddProps = {
 
 const ModalUnggahLaporan = ({ handleClose }: ModalAddProps) => {
   const modalSnapshot = useSnapshot(modal);
+
+  const { unggahLaporan } = unggahLaporanApi();
 
   const formMethods = useForm({
     resolver: yupResolver(validationSchema),
@@ -41,7 +45,22 @@ const ModalUnggahLaporan = ({ handleClose }: ModalAddProps) => {
     event?.preventDefault();
 
     formMethods.handleSubmit(async (values) => {
-      // TODO
+      const { tanggal, tipe, ...rest } = values;
+
+      const jenis =
+        tipe === "amr"
+          ? {
+              jenis: "mw-mvar",
+            }
+          : {};
+
+      await unggahLaporan({
+        ...rest,
+        tipe,
+        tanggal: convertDate(tanggal),
+        ...jenis,
+      });
+      handleClose();
     })();
   };
 
@@ -50,14 +69,22 @@ const ModalUnggahLaporan = ({ handleClose }: ModalAddProps) => {
     formMethods.reset({ ...initialValues });
   };
 
-  const handleFileUpload = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleFileUpload = (
+    e: ChangeEvent<HTMLInputElement>,
+    name: FieldPath<FieldValues>
+  ) => {
     if (!e.target.files) {
       return;
     }
 
     const file = e.target.files[0];
 
-    console.log("file", file);
+    const formData = new FormData();
+    formData.append("file", file);
+
+    Axios.post("/laporan/upload", formData).then(({ data }) => {
+      formMethods.setValue(name, data.nama);
+    });
   };
 
   return (
@@ -92,15 +119,14 @@ const ModalUnggahLaporan = ({ handleClose }: ModalAddProps) => {
                 />
               </Grid>
               <Grid item xs={12} sm={12}>
-                <LocalizationProvider dateAdapter={AdapterDateFns}>
-                  <DatePicker label="Tanggal" name="tanggal" />
-                </LocalizationProvider>
+                <DatePicker label="Tanggal" name="tanggal" />
               </Grid>
               {tipe === "scada" && (
                 <Grid item xs={12} sm={12}>
                   <OutlinedInputField
                     name="scada"
                     label="Upload File"
+                    disabled={true}
                     Icon={
                       <Button
                         variant="outlined"
@@ -108,7 +134,11 @@ const ModalUnggahLaporan = ({ handleClose }: ModalAddProps) => {
                         style={{ maxHeight: 30 }}
                       >
                         Pilih File
-                        <input type="file" hidden onChange={handleFileUpload} />
+                        <input
+                          type="file"
+                          hidden
+                          onChange={(e) => handleFileUpload(e, "scada")}
+                        />
                       </Button>
                     }
                   />
@@ -116,9 +146,21 @@ const ModalUnggahLaporan = ({ handleClose }: ModalAddProps) => {
               )}
               {tipe === "amr" && (
                 <>
-                  <UploadFile title="Pembangkit" />
-                  <UploadFile title="Trafo" />
-                  <UploadFile title="IBT" />
+                  <UploadFile
+                    onChange={handleFileUpload}
+                    name="pembangkit"
+                    title="Pembangkit"
+                  />
+                  <UploadFile
+                    onChange={handleFileUpload}
+                    name="trafo"
+                    title="Trafo"
+                  />
+                  <UploadFile
+                    onChange={handleFileUpload}
+                    name="ibt"
+                    title="IBT"
+                  />
                 </>
               )}
             </Grid>
