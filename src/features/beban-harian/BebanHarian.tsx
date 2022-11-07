@@ -2,9 +2,9 @@
 import { useState, ChangeEvent, useEffect } from "react";
 
 // ** MUI Imports
+import DatePicketMui from "@mui/lab/DatePicker";
 import { Card, CardContent, Button } from "@mui/material";
-import Typography from "@mui/material/Typography";
-import Grid from "@mui/material/Grid";
+import { Typography, TextField, Grid } from "@mui/material";
 import Table from "@mui/material/Table";
 import TableRow from "@mui/material/TableRow";
 import TableHead from "@mui/material/TableHead";
@@ -12,13 +12,12 @@ import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TablePagination from "@mui/material/TablePagination";
-import PageHeader from "src/@core/components/page-header";
+import AdapterDateFns from "@mui/lab/AdapterDateFns";
+import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import DownloadIcon from "src/assets/icons/download-icon.svg";
 import EditIcon from "src/assets/icons/edit-icon.svg";
 import { openModal } from "src/state/modal";
 import CustomChip from "src/@core/components/mui/chip";
-
-import { formatDecimalNumber } from "src/utils/number";
 
 import { WrapperFilter } from "src/components/filter";
 import { bebanApi } from "src/api/beban";
@@ -32,11 +31,13 @@ import {
 } from "src/api/beban/types";
 import { time, showValueBeban } from "./BebanHarian.constant";
 import { ModalSetBebanHarian } from "./modal";
+import { convertDate } from "src/utils/date";
 
 const BebanHarian = () => {
   // ** States
   const [page, setPage] = useState<number>(0);
   const [rowsPerPage, setRowsPerPage] = useState<number>(10);
+  const [date, setDate] = useState<any>(new Date());
 
   const { getBebanList, bebanList } = bebanApi();
 
@@ -50,8 +51,8 @@ const BebanHarian = () => {
   };
 
   useEffect(() => {
-    getBebanList({ tanggal: "2022-10-13" });
-  }, []);
+    getBebanList({ tanggal: convertDate(date) });
+  }, [date]);
 
   return (
     <>
@@ -59,9 +60,23 @@ const BebanHarian = () => {
 
       <Grid container spacing={6}>
         <Grid item xs={12}>
-          <PageHeader
-            title={<Typography variant="h5">Beban Harian</Typography>}
-          />
+          <WrapperFilter sx={{ alignItems: "center" }}>
+            <Grid item>
+              <Typography variant="h5">Beban Harian</Typography>
+            </Grid>
+            <Grid item xs={2}>
+              <LocalizationProvider dateAdapter={AdapterDateFns}>
+                <DatePicketMui
+                  value={date}
+                  inputFormat="dd/M/yyyy"
+                  onChange={(e) => setDate(e)}
+                  renderInput={(params) => (
+                    <TextField size="small" {...params} fullWidth />
+                  )}
+                />
+              </LocalizationProvider>
+            </Grid>
+          </WrapperFilter>
         </Grid>
         <Grid item xs={12}>
           <Card>
@@ -148,7 +163,7 @@ const BebanHarian = () => {
                             </TableCell>
                           </TableRow>
 
-                          {value?.pembangkit.tipe_jenis_pembangkit.map(
+                          {value?.pembangkit?.tipe_jenis_pembangkit?.map(
                             (tipe_jenis_pembangkit: TipeJenisPembangkit) => (
                               <>
                                 {tipe_jenis_pembangkit?.kategori_pembangkit.map(

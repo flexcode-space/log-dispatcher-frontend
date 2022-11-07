@@ -9,9 +9,14 @@ import { TimePicker as TimePicketMui } from "@mui/x-date-pickers/TimePicker";
 type DatePickerProps = {
   label: string;
   name: string;
+  size?: "small" | "medium";
 };
 
-export const DatePicker = ({ label, name }: DatePickerProps) => {
+export const DatePicker = ({
+  label,
+  name,
+  size = "small",
+}: DatePickerProps) => {
   const {
     control,
     formState: { errors },
@@ -23,15 +28,14 @@ export const DatePicker = ({ label, name }: DatePickerProps) => {
         name={name}
         control={control}
         render={({ field: { value, onChange } }) => (
-          <LocalizationProvider
-            dateAdapter={AdapterDateFns}
-            // dateFormats={{ fullDate: "yyyy-mm-dd" }}
-          >
+          <LocalizationProvider dateAdapter={AdapterDateFns}>
             <DatePicketMui
               value={value}
               label={label}
               onChange={onChange}
-              renderInput={(params) => <TextField {...params} fullWidth />}
+              renderInput={(params) => (
+                <TextField size={size} {...params} fullWidth />
+              )}
             />
           </LocalizationProvider>
         )}
