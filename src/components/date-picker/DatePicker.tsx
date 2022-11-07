@@ -23,7 +23,10 @@ export const DatePicker = ({ label, name }: DatePickerProps) => {
         name={name}
         control={control}
         render={({ field: { value, onChange } }) => (
-          <LocalizationProvider dateAdapter={AdapterDateFns}>
+          <LocalizationProvider
+            dateAdapter={AdapterDateFns}
+            // dateFormats={{ fullDate: "yyyy-mm-dd" }}
+          >
             <DatePicketMui
               value={value}
               label={label}

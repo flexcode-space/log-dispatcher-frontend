@@ -1,17 +1,27 @@
 import { Button, Grid, Typography } from "@mui/material";
-
+import { FieldPath } from "react-hook-form";
 import { OutlinedInputField } from "src/components/input-field";
+import { FieldValues } from "../../types";
 
 type UploadFileProps = {
   title?: string;
+  name: string;
+  onChange: (
+    e: React.ChangeEvent<HTMLInputElement>,
+    name: FieldPath<FieldValues>
+  ) => void;
 };
 
 type UploadComponentProps = {
   label: string;
   name: string;
+  onChange: (
+    e: React.ChangeEvent<HTMLInputElement>,
+    name: FieldPath<FieldValues>
+  ) => void;
 };
 
-const UploadComponent = ({ label, name }: UploadComponentProps) => {
+const UploadComponent = ({ label, name, onChange }: UploadComponentProps) => {
   return (
     <Grid item xs={6} sm={6}>
       <OutlinedInputField
@@ -24,7 +34,12 @@ const UploadComponent = ({ label, name }: UploadComponentProps) => {
             style={{ maxHeight: 30 }}
           >
             Pilih File
-            <input type="file" hidden onChange={() => null} />
+            <input
+              type="file"
+              hidden
+              // @ts-ignore
+              onChange={(e) => onChange(e, name)}
+            />
           </Button>
         }
       />
@@ -32,7 +47,7 @@ const UploadComponent = ({ label, name }: UploadComponentProps) => {
   );
 };
 
-const UploadFile = ({ title }: UploadFileProps) => {
+const UploadFile = ({ title, name, onChange }: UploadFileProps) => {
   return (
     <>
       <Grid item xs={12} sm={12}>
@@ -43,8 +58,8 @@ const UploadFile = ({ title }: UploadFileProps) => {
           {title}
         </Typography>
       </Grid>
-      <UploadComponent name="w" label="MW" />
-      <UploadComponent name="var" label="MVAR" />
+      <UploadComponent onChange={onChange} name={`${name}.w`} label="MW" />
+      <UploadComponent onChange={onChange} name={`${name}.var`} label="MVAR" />
     </>
   );
 };

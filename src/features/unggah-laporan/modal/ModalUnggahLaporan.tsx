@@ -1,5 +1,5 @@
 import { ChangeEvent } from "react";
-import { useForm, FormProvider } from "react-hook-form";
+import { useForm, FormProvider, FieldPath } from "react-hook-form";
 import {
   Button,
   Dialog,
@@ -9,9 +9,6 @@ import {
   Typography,
   Box,
 } from "@mui/material";
-import { format } from "date-fns";
-import AdapterDateFns from "@mui/lab/AdapterDateFns";
-import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import { useSnapshot } from "valtio";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { StyledForm } from "src/components/form";
@@ -24,6 +21,8 @@ import { modal, closeModal } from "src/state/modal";
 import UploadFile from "./components/UploadFile";
 import { Axios } from "../../../api/axios";
 import { unggahLaporanApi } from "src/api/unggah-laporan";
+import { convertDate } from "src/utils/date";
+import { FieldValues } from "../types";
 
 type ModalAddProps = {
   handleClose: () => void;
@@ -46,13 +45,22 @@ const ModalUnggahLaporan = ({ handleClose }: ModalAddProps) => {
     event?.preventDefault();
 
     formMethods.handleSubmit(async (values) => {
-      const { tanggal, ...rest } = values;
-      console.log("tanggal", tanggal);
-      // await unggahLaporan({
-      //   ...rest,
-      //   tanggal: format(tanggal, "yyyy-mm-dd"),
-      // });
-      // handleClose();
+      const { tanggal, tipe, ...rest } = values;
+
+      const jenis =
+        tipe === "amr"
+          ? {
+              jenis: "mw-mvar",
+            }
+          : {};
+
+      await unggahLaporan({
+        ...rest,
+        tipe,
+        tanggal: convertDate(tanggal),
+        ...jenis,
+      });
+      handleClose();
     })();
   };
 
@@ -61,7 +69,10 @@ const ModalUnggahLaporan = ({ handleClose }: ModalAddProps) => {
     formMethods.reset({ ...initialValues });
   };
 
-  const handleFileUpload = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleFileUpload = (
+    e: ChangeEvent<HTMLInputElement>,
+    name: FieldPath<FieldValues>
+  ) => {
     if (!e.target.files) {
       return;
     }
@@ -72,7 +83,7 @@ const ModalUnggahLaporan = ({ handleClose }: ModalAddProps) => {
     formData.append("file", file);
 
     Axios.post("/laporan/upload", formData).then(({ data }) => {
-      formMethods.setValue("scada", data.nama);
+      formMethods.setValue(name, data.nama);
     });
   };
 
@@ -108,12 +119,7 @@ const ModalUnggahLaporan = ({ handleClose }: ModalAddProps) => {
                 />
               </Grid>
               <Grid item xs={12} sm={12}>
-                <LocalizationProvider
-                  dateAdapter={AdapterDateFns}
-                  dateFormats={{ fullDate: "yyyy-mm-dd" }}
-                >
-                  <DatePicker label="Tanggal" name="tanggal" />
-                </LocalizationProvider>
+                <DatePicker label="Tanggal" name="tanggal" />
               </Grid>
               {tipe === "scada" && (
                 <Grid item xs={12} sm={12}>
@@ -128,7 +134,11 @@ const ModalUnggahLaporan = ({ handleClose }: ModalAddProps) => {
                         style={{ maxHeight: 30 }}
                       >
                         Pilih File
-                        <input type="file" hidden onChange={handleFileUpload} />
+                        <input
+                          type="file"
+                          hidden
+                          onChange={(e) => handleFileUpload(e, "scada")}
+                        />
                       </Button>
                     }
                   />
@@ -136,9 +146,21 @@ const ModalUnggahLaporan = ({ handleClose }: ModalAddProps) => {
               )}
               {tipe === "amr" && (
                 <>
-                  <UploadFile title="Pembangkit" />
-                  <UploadFile title="Trafo" />
-                  <UploadFile title="IBT" />
+                  <UploadFile
+                    onChange={handleFileUpload}
+                    name="pembangkit"
+                    title="Pembangkit"
+                  />
+                  <UploadFile
+                    onChange={handleFileUpload}
+                    name="trafo"
+                    title="Trafo"
+                  />
+                  <UploadFile
+                    onChange={handleFileUpload}
+                    name="ibt"
+                    title="IBT"
+                  />
                 </>
               )}
             </Grid>
