@@ -15,7 +15,7 @@ import { DatePicker, TimePicker } from "src/components/date-picker";
 
 import { StyledForm } from "src/components/form";
 
-import { ENERGI_PRIMER } from "../Dispacther.constant";
+import { ENERGI_PRIMER } from "../SwitchingDiluarRencana.constant";
 
 const AddLaporan = () => {
   const formMethods = useForm({
