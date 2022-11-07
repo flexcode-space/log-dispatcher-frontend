@@ -24,7 +24,9 @@ const AnalisaBeban = () => {
                   value={new Date()}
                   label="Tanggal"
                   onChange={() => null}
-                  renderInput={(params) => <TextField {...params} fullWidth />}
+                  renderInput={(params) => (
+                    <TextField size="small" {...params} fullWidth />
+                  )}
                 />
               </LocalizationProvider>
             </Grid>

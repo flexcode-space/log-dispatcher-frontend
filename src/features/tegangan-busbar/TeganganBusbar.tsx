@@ -1,5 +1,7 @@
 import { useState, ChangeEvent, useEffect } from "react";
-
+import DatePicketMui from "@mui/lab/DatePicker";
+import AdapterDateFns from "@mui/lab/AdapterDateFns";
+import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import { Card, CardContent, Button } from "@mui/material";
 import { Typography, TextField } from "@mui/material";
 import Grid from "@mui/material/Grid";
@@ -12,6 +14,7 @@ import TableContainer from "@mui/material/TableContainer";
 import TablePagination from "@mui/material/TablePagination";
 import PageHeader from "src/@core/components/page-header";
 import DownloadIcon from "src/assets/icons/download-icon.svg";
+import FilterIcon from "src/assets/icons/filter-icon.svg";
 import EditIcon from "src/assets/icons/edit-icon.svg";
 import { openModal } from "src/state/modal";
 import { bebanApi } from "src/api/beban";
@@ -20,11 +23,13 @@ import { time, showValueBeban } from "./TeganganBusbar.constant";
 
 import { WrapperFilter } from "src/components/filter";
 import { ModalSetBebanHarian } from "./modal";
+import { convertDate } from "src/utils/date";
 
 const TeganganBusbar = () => {
   // ** States
   const [page, setPage] = useState<number>(0);
   const [rowsPerPage, setRowsPerPage] = useState<number>(10);
+  const [date, setDate] = useState<any>(new Date());
 
   const { getTeganganBusbarList, teganganBusbarList } = bebanApi();
 
@@ -38,8 +43,8 @@ const TeganganBusbar = () => {
   };
 
   useEffect(() => {
-    getTeganganBusbarList({ tanggal: "2022-10-13" });
-  }, []);
+    getTeganganBusbarList({ tanggal: convertDate(date) });
+  }, [date]);
 
   return (
     <>
@@ -64,6 +69,24 @@ const TeganganBusbar = () => {
                 />
 
                 <div style={{ display: "flex", gap: "10px" }}>
+                  <LocalizationProvider dateAdapter={AdapterDateFns}>
+                    <DatePicketMui
+                      value={date}
+                      inputFormat="dd/M/yyyy"
+                      onChange={(e) => setDate(e)}
+                      renderInput={(params) => (
+                        <TextField
+                          size="small"
+                          {...params}
+                          sx={{ width: "250px" }}
+                        />
+                      )}
+                    />
+                  </LocalizationProvider>
+                  <Button sx={{ mb: 2 }} variant="outlined">
+                    <FilterIcon />
+                    Filter
+                  </Button>
                   <Button sx={{ mb: 2 }} variant="outlined">
                     <EditIcon />
                     Ubah Arus Mampu

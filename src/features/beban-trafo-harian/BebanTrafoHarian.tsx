@@ -1,5 +1,8 @@
 import { useState, ChangeEvent, useEffect } from "react";
 
+import DatePicketMui from "@mui/lab/DatePicker";
+import AdapterDateFns from "@mui/lab/AdapterDateFns";
+import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import { Card, CardContent, Button } from "@mui/material";
 import { Typography, TextField } from "@mui/material";
 import Grid from "@mui/material/Grid";
@@ -12,6 +15,7 @@ import TableContainer from "@mui/material/TableContainer";
 import TablePagination from "@mui/material/TablePagination";
 import PageHeader from "src/@core/components/page-header";
 import DownloadIcon from "src/assets/icons/download-icon.svg";
+import FilterIcon from "src/assets/icons/filter-icon.svg";
 import EditIcon from "src/assets/icons/edit-icon.svg";
 import { openModal } from "src/state/modal";
 import { bebanApi } from "src/api/beban";
@@ -20,11 +24,13 @@ import { showValueBeban, time } from "./BebanTrafoHarian.constant";
 
 import { WrapperFilter } from "src/components/filter";
 import { ModalSetBebanHarian } from "./modal";
+import { convertDate } from "src/utils/date";
 
 const BebanHarian = () => {
   // ** States
   const [page, setPage] = useState<number>(0);
   const [rowsPerPage, setRowsPerPage] = useState<number>(10);
+  const [date, setDate] = useState<any>(new Date());
 
   const { getBebanTrafoList, bebanTrafoList } = bebanApi();
 
@@ -38,8 +44,8 @@ const BebanHarian = () => {
   };
 
   useEffect(() => {
-    getBebanTrafoList({ tanggal: "2022-10-13" });
-  }, []);
+    getBebanTrafoList({ tanggal: convertDate(date) });
+  }, [date]);
 
   return (
     <>
@@ -64,6 +70,24 @@ const BebanHarian = () => {
                 />
 
                 <div style={{ display: "flex", gap: "10px" }}>
+                  <LocalizationProvider dateAdapter={AdapterDateFns}>
+                    <DatePicketMui
+                      value={date}
+                      inputFormat="dd/M/yyyy"
+                      onChange={(e) => setDate(e)}
+                      renderInput={(params) => (
+                        <TextField
+                          size="small"
+                          {...params}
+                          sx={{ width: "250px" }}
+                        />
+                      )}
+                    />
+                  </LocalizationProvider>
+                  <Button sx={{ mb: 2 }} variant="outlined">
+                    <FilterIcon />
+                    Filter
+                  </Button>
                   <Button sx={{ mb: 2 }} variant="outlined">
                     <EditIcon />
                     Ubah Arus Mampu
@@ -109,10 +133,18 @@ const BebanHarian = () => {
                       >
                         Gardu Induk
                       </TableCell>
-                      <TableCell size="small" rowSpan={2} style={{ minWidth: "200px" }}>
+                      <TableCell
+                        size="small"
+                        rowSpan={2}
+                        style={{ minWidth: "200px" }}
+                      >
                         Trafo
                       </TableCell>
-                      <TableCell size="small" rowSpan={2} style={{ minWidth: "100px" }}>
+                      <TableCell
+                        size="small"
+                        rowSpan={2}
+                        style={{ minWidth: "100px" }}
+                      >
                         Daya (MVA)
                       </TableCell>
                       <TableCell size="small" rowSpan={2}>

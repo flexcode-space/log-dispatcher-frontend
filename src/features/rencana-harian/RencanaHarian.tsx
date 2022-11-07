@@ -49,6 +49,7 @@ const RencanaHarian = () => {
                 <div style={{ display: "flex" }}>
                   <TextField
                     value=""
+                    size="small"
                     sx={{ mr: 6, mb: 2, width: "300px" }}
                     placeholder="Cari File"
                     onChange={(e) => null}
