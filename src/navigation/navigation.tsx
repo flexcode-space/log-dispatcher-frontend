@@ -15,6 +15,10 @@ import BebanPenghantarIcon from "../assets/icons/beban-penghantar-icon.svg";
 import PembebananIbtIcon from "../assets/icons/pembebanan-ibt-icon.svg";
 import GrafikIcon from "../assets/icons/grafik-icon.svg";
 import LainnyaIcon from "../assets/icons/lainnya-icon.svg";
+import KitlurIcon from "../assets/icons/kitlur-icon.svg";
+import CatatanPembangkitanIcon from "../assets/icons/catatan-pembangkitan-icon.svg";
+import CatatanPenyaluranIcon from "../assets/icons/catatan-penyaluran-icon.svg";
+import EnergizePeralatanIcon from "../assets/icons/energize-peralatan-icon.svg";
 
 // ** Type import
 import { HorizontalNavItemsType } from "src/@core/layouts/types";
@@ -68,6 +72,27 @@ export const navigation = (): HorizontalNavItemsType => [
         title: "Analisa Beban",
         icon: TrafoIcon,
         path: "/beban/analisa-beban",
+      },
+    ],
+  },
+  {
+    title: "KIT & LUR",
+    icon: KitlurIcon,
+    children: [
+      {
+        title: "Catatan Pembangkitan",
+        icon: CatatanPembangkitanIcon,
+        path: "/catatan-penyaluran",
+      },
+      {
+        title: "Catatan Penyaluran",
+        icon: CatatanPenyaluranIcon,
+        path: "/catatan-penyaluran",
+      },
+      {
+        title: "Energize Peralatan",
+        icon: EnergizePeralatanIcon,
+        path: "/energize-peralatan",
       },
     ],
   },
