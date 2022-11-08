@@ -15,7 +15,7 @@ type DatePickerProps = {
 export const DatePicker = ({
   label,
   name,
-  size = "small",
+  size = "medium",
 }: DatePickerProps) => {
   const {
     control,

@@ -134,6 +134,14 @@ export const navigation = (): HorizontalNavItemsType => [
         title: "Switching Diluar Rencana",
         path: "/switching-diluar-rencana",
       },
+      {
+        title: "Switching Pembangkit",
+        path: "/switching-pembangkit",
+      },
+      {
+        title: "Pengaturan Tegangan",
+        path: "/pengaturan-tegangan",
+      },
     ],
   },
 ];
