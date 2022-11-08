@@ -24,7 +24,7 @@ import FilterIcon from "src/assets/icons/filter-icon.svg";
 import { WrapperFilter } from "src/components/filter";
 import { AddLaporan } from "./add-laporan";
 
-const Dispacther = () => {
+const SwitchingDiluarRencana = () => {
   // ** States
   const [page, setPage] = useState<number>(0);
   const [rowsPerPage, setRowsPerPage] = useState<number>(10);
@@ -43,11 +43,10 @@ const Dispacther = () => {
       <Grid container spacing={6}>
         <Grid item xs={12}>
           <PageHeader
-            title={<Typography variant="h5">Dispacther</Typography>}
+            title={
+              <Typography variant="h5">Switching Diluar Rencana</Typography>
+            }
           />
-        </Grid>
-        <Grid item xs={12}>
-          <AddLaporan />
         </Grid>
         <Grid item xs={12}>
           <Card>
@@ -66,9 +65,12 @@ const Dispacther = () => {
                     <FilterIcon />
                     Filter
                   </Button>
-                  <Button sx={{ mb: 2 }} variant="contained">
+                  <Button sx={{ mb: 2 }} variant="outlined">
                     <DownloadIcon />
                     Download laporan
+                  </Button>
+                  <Button sx={{ mb: 2 }} variant="contained">
+                    Tambah Switching
                   </Button>
                 </div>
               </WrapperFilter>
@@ -80,55 +82,32 @@ const Dispacther = () => {
                         No
                       </TableCell>
                       <TableCell size="small" rowSpan={2}>
-                        Pembangkit
+                        Lokasi
                       </TableCell>
                       <TableCell size="small" rowSpan={2}>
-                        Tanggal
+                        Jurusan
                       </TableCell>
                       <TableCell size="small" align="center" colSpan={2}>
-                        Waktu
+                        Jam
                       </TableCell>
-                      <TableCell size="small" align="center" colSpan={3}>
-                        Operator
-                      </TableCell>
-                      <TableCell align="center" rowSpan={2}>
-                        Energi Primer
-                      </TableCell>
-                      <TableCell align="center" rowSpan={2}>
-                        Keterangan
-                      </TableCell>
-                      <TableCell align="center" rowSpan={2}>
-                        Status
-                      </TableCell>
-                      <TableCell align="center" rowSpan={2}>
-                        Start/Stop
-                      </TableCell>
+                      <TableCell rowSpan={2}>Keterangan</TableCell>
                       <TableCell align="center" rowSpan={2}>
                         Aksi
                       </TableCell>
                     </TableRow>
                     <TableRow>
-                      <TableCell>Perintah</TableCell>
-                      <TableCell>Real</TableCell>
-                      <TableCell>BOPS</TableCell>
-                      <TableCell>ACC</TableCell>
-                      <TableCell>Pembangkit</TableCell>
+                      <TableCell>Buka</TableCell>
+                      <TableCell>Tutup</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
                     <TableRow>
                       <TableCell>1</TableCell>
                       <TableCell>PLTU RBANG</TableCell>
-                      <TableCell>23 Agustus 2022</TableCell>
+                      <TableCell>PLTU RBANG</TableCell>
                       <TableCell>07:02</TableCell>
                       <TableCell>07:22</TableCell>
-                      <TableCell>Dika</TableCell>
-                      <TableCell>Bagus</TableCell>
-                      <TableCell>Henis</TableCell>
-                      <TableCell>Air</TableCell>
-                      <TableCell>PD</TableCell>
-                      <TableCell>-</TableCell>
-                      <TableCell>Start</TableCell>
+                      <TableCell>200 MW</TableCell>
                       <TableCell>
                         <Box sx={{ display: "flex", alignItems: "center" }}>
                           <IconButton onClick={() => null}>
@@ -157,4 +136,4 @@ const Dispacther = () => {
   );
 };
 
-export default Dispacther;
+export default SwitchingDiluarRencana;

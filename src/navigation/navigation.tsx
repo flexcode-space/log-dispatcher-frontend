@@ -131,8 +131,16 @@ export const navigation = (): HorizontalNavItemsType => [
         path: "/kapasitor-reaktor",
       },
       {
-        title: "Dispacther",
-        path: "/dispacther",
+        title: "Switching Diluar Rencana",
+        path: "/switching-diluar-rencana",
+      },
+      {
+        title: "Switching Pembangkit",
+        path: "/switching-pembangkit",
+      },
+      {
+        title: "Pengaturan Tegangan",
+        path: "/pengaturan-tegangan",
       },
     ],
   },
