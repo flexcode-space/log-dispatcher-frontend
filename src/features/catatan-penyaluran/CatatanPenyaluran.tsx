@@ -21,7 +21,7 @@ import { CardHeader } from "src/components/card";
 import { AddData } from "./add-data";
 import { openModal, closeModal } from "src/state/modal";
 import { ModalEdit } from "./modal";
-import { defaultColumns, mockData } from "./CatatanPembangkitan.constant";
+import { defaultColumns, mockData } from "./CatatanPenyaluran.constant";
 
 const CatatanPembangkitan = () => {
   // ** States
@@ -65,79 +65,51 @@ const CatatanPembangkitan = () => {
       <Grid container spacing={6}>
         <Grid item xs={12}>
           <PageHeader
-            title={<Typography variant="h5">Catatan Pembangkitan</Typography>}
+            title={<Typography variant="h5">Catatan Penyaluran</Typography>}
           />
         </Grid>
         <Grid item xs={12}>
           <AddData />
         </Grid>
         <Grid item xs={12}>
-          <WrapperFilter sx={{ alignItems: "baseline" }}>
-            <TextField
-              size="small"
-              value=""
-              sx={{ mr: 6, mb: 2, bgcolor: "#ffffff" }}
-              placeholder="Cari"
-              // onChange={(e) => setSearch(e.target.value)}
-            />
-
-            <div style={{ display: "flex", gap: "10px" }}>
-              <Button
-                sx={{ mb: 2 }}
-                variant="outlined"
-                // onClick={() => openModal()}
-              >
-                <FilterIcon />
-                Filter
-              </Button>
-              <LocalizationProvider dateAdapter={AdapterDateFns}>
-                <DatePicketMui
-                  value={new Date()}
-                  label="Pilih Tanggal"
-                  onChange={() => null}
-                  renderInput={(params) => (
-                    <TextField
-                      size="small"
-                      {...params}
-                      fullWidth
-                      sx={{ bgcolor: "#ffffff" }}
-                    />
-                  )}
+          <Card>
+            {/* <CardHeader title="Pembangkit Derating" /> */}
+            <CardContent>
+              <WrapperFilter sx={{ alignItems: "baseline" }}>
+                <TextField
+                  size="small"
+                  value=""
+                  sx={{ mr: 6, mb: 2, bgcolor: "#ffffff" }}
+                  placeholder="Cari"
+                  // onChange={(e) => setSearch(e.target.value)}
                 />
-              </LocalizationProvider>
-            </div>
-          </WrapperFilter>
-        </Grid>
-        <Grid item xs={12}>
-          <Card>
-            <CardHeader title="Pembangkit Derating" />
-            <CardContent>
-              <DataGrid
-                autoHeight
-                rows={mockData()}
-                columns={columns}
-                hideFooter
-              />
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid item xs={12}>
-          <Card>
-            <CardHeader title="Pembangkit Outage" />
-            <CardContent>
-              <DataGrid
-                autoHeight
-                rows={mockData()}
-                columns={columns}
-                hideFooter
-              />
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid item xs={12}>
-          <Card>
-            <CardHeader title="Pembangkit RS, NC, Dll" />
-            <CardContent>
+
+                <div style={{ display: "flex", gap: "10px" }}>
+                  <Button
+                    sx={{ mb: 2 }}
+                    variant="outlined"
+                    // onClick={() => openModal()}
+                  >
+                    <FilterIcon />
+                    Filter
+                  </Button>
+                  <LocalizationProvider dateAdapter={AdapterDateFns}>
+                    <DatePicketMui
+                      value={new Date()}
+                      label="Pilih Tanggal"
+                      onChange={() => null}
+                      renderInput={(params) => (
+                        <TextField
+                          size="small"
+                          {...params}
+                          fullWidth
+                          sx={{ bgcolor: "#ffffff" }}
+                        />
+                      )}
+                    />
+                  </LocalizationProvider>
+                </div>
+              </WrapperFilter>
               <DataGrid
                 autoHeight
                 rows={mockData()}

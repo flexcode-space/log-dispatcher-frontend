@@ -60,8 +60,8 @@ const ModalFilter = ({ handleClose }: ModalFilter) => {
             <Grid container spacing={1} mt={1}>
               <Grid item xs={12}>
                 <SelectInput
-                  label="Pembangkit"
-                  name="pembangkit_id"
+                  label="Gardu Induk"
+                  name="gardu_induk_id"
                   options={[]}
                 />
               </Grid>
