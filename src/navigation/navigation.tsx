@@ -82,7 +82,7 @@ export const navigation = (): HorizontalNavItemsType => [
       {
         title: "Catatan Pembangkitan",
         icon: CatatanPembangkitanIcon,
-        path: "/catatan-penyaluran",
+        path: "/catatan-pembangkitan",
       },
       {
         title: "Catatan Penyaluran",

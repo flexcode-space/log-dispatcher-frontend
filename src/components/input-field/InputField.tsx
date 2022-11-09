@@ -97,3 +97,41 @@ export const OutlinedInputField = ({
     </FormControl>
   );
 };
+
+export const TextArea = ({
+  label,
+  name,
+  placeholder,
+  type = "text",
+}: InputFieldProps) => {
+  const {
+    control,
+    formState: { errors },
+  } = useFormContext();
+
+  return (
+    <FormControl fullWidth sx={{ mb: 4 }}>
+      <Controller
+        name={name}
+        control={control}
+        render={({ field: { value, onChange } }) => (
+          <TextField
+            multiline
+            minRows={3}
+            type={type}
+            value={value}
+            onChange={onChange}
+            autoFocus
+            label={label}
+            placeholder={placeholder}
+          />
+        )}
+      />
+      {errors?.[name] && (
+        <FormHelperText sx={{ color: "error.main" }}>
+          {errors?.[name].message}
+        </FormHelperText>
+      )}
+    </FormControl>
+  );
+};

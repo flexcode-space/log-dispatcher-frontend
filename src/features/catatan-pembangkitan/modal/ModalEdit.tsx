@@ -4,6 +4,7 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
+  DialogTitle,
   Grid,
   Typography,
   Box,
@@ -11,8 +12,10 @@ import {
 // import { yupResolver } from "@hookform/resolvers/yup";
 import { useSnapshot } from "valtio";
 import { SelectInput } from "src/components/select-input";
+import { InputField, TextArea } from "src/components/input-field";
 import { StyledForm } from "src/components/form";
 import { modal, reloadPage } from "src/state/modal";
+import { DatePicker, TimePicker } from "src/components/date-picker";
 
 type ModalFilter = {
   handleClose: () => void;
@@ -52,36 +55,33 @@ const ModalFilter = ({ handleClose }: ModalFilter) => {
     >
       <FormProvider {...formMethods}>
         <StyledForm noValidate onSubmit={onSubmit}>
-          <DialogContent
-            sx={{
-              pb: 6,
-              px: { xs: 8, sm: 15 },
-              pt: 6,
-              position: "relative",
-            }}
-          >
-            <Box sx={{ mb: 8 }}>
-              <Typography variant="h5" sx={{ mb: 3, lineHeight: "2rem" }}>
-                Filter
-              </Typography>
-            </Box>
+          <DialogTitle id="max-width-dialog-title">Ubah Data</DialogTitle>
+          <DialogContent>
             <Grid container spacing={1} mt={1}>
               <Grid item xs={12}>
                 <SelectInput
-                  label="Pembangkit"
-                  name="pembangkit_id"
+                  label="Gardu Induk"
+                  name="gardu_induk_id"
                   options={[]}
                 />
               </Grid>
               <Grid item xs={12}>
-                <SelectInput label="Status" name="status" options={[]} />
+                <InputField label="Jurusan" name="jurusan" />
+              </Grid>
+              <Grid item xs={6}>
+                <DatePicker label="Tanggal Mulai" name="tanggal" />
+              </Grid>
+              <Grid item xs={6}>
+                <TimePicker label="Watu Mulai" name="tanggal" />
+              </Grid>
+              <Grid item xs={6}>
+                <DatePicker label="Tanggal Akhir" name="tanggal" />
+              </Grid>
+              <Grid item xs={6}>
+                <TimePicker label="Watu Akhir" name="tanggal" />
               </Grid>
               <Grid item xs={12}>
-                <SelectInput
-                  label="Jenis Switching"
-                  name="jenis"
-                  options={[]}
-                />
+                <TextArea label="Keterangan" name="keterangan" />
               </Grid>
             </Grid>
           </DialogContent>
@@ -90,7 +90,7 @@ const ModalFilter = ({ handleClose }: ModalFilter) => {
               Batal
             </Button>
             <Button variant="contained" type="submit">
-              Terapkan
+              Simpan
             </Button>
           </DialogActions>
         </StyledForm>

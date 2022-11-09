@@ -7,13 +7,13 @@ export const defaultColumns = [
   },
   {
     flex: 0.25,
-    minWidth: 200,
+    minWidth: 70,
     field: "mampu",
     headerName: "Mampu",
   },
   {
     flex: 0.25,
-    minWidth: 200,
+    minWidth: 80,
     field: "status",
     headerName: "Status",
   },

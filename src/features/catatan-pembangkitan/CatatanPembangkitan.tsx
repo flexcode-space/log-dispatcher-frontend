@@ -2,7 +2,6 @@ import { useState, ChangeEvent } from "react";
 import {
   Card,
   CardContent,
-  CardHeader,
   Grid,
   Typography,
   TextField,
@@ -15,12 +14,13 @@ import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import DatePicketMui from "@mui/lab/DatePicker";
 import PageHeader from "src/@core/components/page-header";
-import FilterIcon from "src/assets/icons/filter-icon.svg";
+import FilterIcon from "src/assets/icons/filter-green-icon.svg";
 
 import { WrapperFilter } from "src/components/filter";
+import { CardHeader } from "src/components/card";
 import { AddLaporan } from "./add-laporan";
 import { openModal, closeModal } from "src/state/modal";
-import { ModalFilter } from "./modal";
+import { ModalEdit } from "./modal";
 import { defaultColumns, mockData } from "./CatatanPembangkitan.constant";
 
 const CatatanPembangkitan = () => {
@@ -38,7 +38,7 @@ const CatatanPembangkitan = () => {
       headerName: "Aksi",
       renderCell: () => {
         return (
-          <IconButton onClick={() => null}>
+          <IconButton onClick={() => openModal()}>
             <PencilOutline />
           </IconButton>
         );
@@ -61,7 +61,7 @@ const CatatanPembangkitan = () => {
 
   return (
     <>
-      <ModalFilter handleClose={handleClose} />
+      <ModalEdit handleClose={handleClose} />
       <Grid container spacing={6}>
         <Grid item xs={12}>
           <PageHeader
@@ -85,7 +85,7 @@ const CatatanPembangkitan = () => {
               <Button
                 sx={{ mb: 2 }}
                 variant="outlined"
-                onClick={() => openModal()}
+                // onClick={() => openModal()}
               >
                 <FilterIcon />
                 Filter
@@ -110,20 +110,7 @@ const CatatanPembangkitan = () => {
         </Grid>
         <Grid item xs={12}>
           <Card>
-            <CardHeader
-              title="Pembangkit Derating"
-              titleTypographyProps={{ variant: "h6" }}
-              subheaderTypographyProps={{
-                variant: "caption",
-                sx: { color: "text.disabled" },
-              }}
-              sx={{
-                flexDirection: ["column", "row"],
-                alignItems: ["flex-start", "center"],
-                "& .MuiCardHeader-action": { mb: 0 },
-                "& .MuiCardHeader-content": { mb: [2, 0] },
-              }}
-            />
+            <CardHeader title="Pembangkit Derating" />
             <CardContent>
               <DataGrid
                 autoHeight
@@ -136,20 +123,7 @@ const CatatanPembangkitan = () => {
         </Grid>
         <Grid item xs={12}>
           <Card>
-            <CardHeader
-              title="Pembangkit Outage"
-              titleTypographyProps={{ variant: "h6" }}
-              subheaderTypographyProps={{
-                variant: "caption",
-                sx: { color: "text.disabled" },
-              }}
-              sx={{
-                flexDirection: ["column", "row"],
-                alignItems: ["flex-start", "center"],
-                "& .MuiCardHeader-action": { mb: 0 },
-                "& .MuiCardHeader-content": { mb: [2, 0] },
-              }}
-            />
+            <CardHeader title="Pembangkit Outage" />
             <CardContent>
               <DataGrid
                 autoHeight
@@ -162,20 +136,7 @@ const CatatanPembangkitan = () => {
         </Grid>
         <Grid item xs={12}>
           <Card>
-            <CardHeader
-              title="Pembangkit RS, NC, Dll"
-              titleTypographyProps={{ variant: "h6" }}
-              subheaderTypographyProps={{
-                variant: "caption",
-                sx: { color: "text.disabled" },
-              }}
-              sx={{
-                flexDirection: ["column", "row"],
-                alignItems: ["flex-start", "center"],
-                "& .MuiCardHeader-action": { mb: 0 },
-                "& .MuiCardHeader-content": { mb: [2, 0] },
-              }}
-            />
+            <CardHeader title="Pembangkit RS, NC, Dll" />
             <CardContent>
               <DataGrid
                 autoHeight

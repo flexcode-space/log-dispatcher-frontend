@@ -61,13 +61,15 @@ export const TimePicker = ({ label, name }: DatePickerProps) => {
         name={name}
         control={control}
         render={({ field: { value, onChange } }) => (
-          <TimePicketMui
-            label={label}
-            ampm={false}
-            value={value}
-            onChange={onChange}
-            renderInput={(params) => <TextField {...params} />}
-          />
+          <LocalizationProvider dateAdapter={AdapterDateFns}>
+            <TimePicketMui
+              label={label}
+              ampm={false}
+              value={value}
+              onChange={onChange}
+              renderInput={(params) => <TextField {...params} />}
+            />
+          </LocalizationProvider>
         )}
       />
       {errors?.[name] && (

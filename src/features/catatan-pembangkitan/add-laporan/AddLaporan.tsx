@@ -7,8 +7,6 @@ import {
   Typography,
   Grid,
 } from "@mui/material";
-import AdapterDateFns from "@mui/lab/AdapterDateFns";
-import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import { SelectInput } from "src/components/select-input";
 import { InputField } from "src/components/input-field";
 import { DatePicker, TimePicker } from "src/components/date-picker";
@@ -47,14 +45,10 @@ const AddLaporan = () => {
                 <InputField name="mampu" label="Mampu" />
               </Grid>
               <Grid item xs={2}>
-                <LocalizationProvider dateAdapter={AdapterDateFns}>
-                  <DatePicker label="Tanggal Mulai" name="tanggal" />
-                </LocalizationProvider>
+                <DatePicker label="Tanggal Mulai" name="tanggal" />
               </Grid>
               <Grid item xs={2}>
-                <LocalizationProvider dateAdapter={AdapterDateFns}>
-                  <TimePicker label="Waktu Mulai" name="waktu_mulai" />
-                </LocalizationProvider>
+                <TimePicker label="Waktu Mulai" name="waktu_mulai" />
               </Grid>
               <Grid item xs={2}>
                 <div
