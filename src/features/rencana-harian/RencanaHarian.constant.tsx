@@ -8,13 +8,13 @@ export const defaultColumns = [
   {
     flex: 0.35,
     minWidth: 100,
-    field: "tipe",
+    field: "tanggal",
     headerName: "Tanggal Rencana Harian",
   },
   {
     flex: 0.25,
     minWidth: 200,
-    field: "tanggal",
+    field: "created_at",
     headerName: "Tanggal Diunggah",
   },
 ];

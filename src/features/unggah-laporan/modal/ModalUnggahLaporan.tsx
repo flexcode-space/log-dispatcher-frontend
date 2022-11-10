@@ -17,9 +17,9 @@ import { DatePicker } from "src/components/date-picker";
 import { SelectInput } from "src/components/select-input";
 import { initialValues, validationSchema } from "./ModalUnggahLaporan.constant";
 import { tipeLaporanOptions } from "../UnggahLaporan.constant";
-import { modal, closeModal } from "src/state/modal";
+import { modal, reloadPage } from "src/state/modal";
 import UploadFile from "./components/UploadFile";
-import { Axios } from "../../../api/axios";
+import { Axios } from "src/api/axios";
 import { unggahLaporanApi } from "src/api/unggah-laporan";
 import { convertDate } from "src/utils/date";
 import { FieldValues } from "../types";
@@ -61,6 +61,7 @@ const ModalUnggahLaporan = ({ handleClose }: ModalAddProps) => {
         ...jenis,
       });
       handleClose();
+      reloadPage();
     })();
   };
 

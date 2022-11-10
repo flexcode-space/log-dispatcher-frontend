@@ -1,7 +1,6 @@
 // ** React Imports
 import { useEffect, useState } from "react";
 import { useForm, FormProvider } from "react-hook-form";
-import { useRouter } from "next/router";
 import {
   Card,
   CardContent,
@@ -9,12 +8,9 @@ import {
   Typography,
   TextField,
   Button,
-  Select,
-  MenuItem,
-  InputLabel,
 } from "@mui/material";
-import { DataGrid } from "@mui/x-data-grid";
 import { useSnapshot } from "valtio";
+import { DataGrid } from "@mui/x-data-grid";
 import { StyledForm } from "src/components/form";
 import PageHeader from "src/@core/components/page-header";
 import { SelectInput } from "src/components/select-input";
@@ -22,16 +18,13 @@ import { defaultColumns, tipeLaporanOptions } from "./UnggahLaporan.constant";
 import { WrapperFilter } from "src/components/filter";
 
 import { unggahLaporanApi } from "src/api/unggah-laporan";
-import { openModal, closeModal, modal, reloadPage } from "src/state/modal";
+import { openModal, closeModal, modal } from "src/state/modal";
 import { useDebounce } from "src/hooks/useDebounce";
 import { ModalUnggahLaporan } from "./modal";
 
 const UnggahLaporan = () => {
   const modalSnapshot = useSnapshot(modal);
-
   const formMethods = useForm({});
-
-  const router = useRouter();
   const [limit, setLimit] = useState<number>(10);
   const [page, setPage] = useState<number>(1);
   const [search, setSearch] = useState<string>("");
@@ -58,6 +51,12 @@ const UnggahLaporan = () => {
   useEffect(() => {
     getUnggahLaporan();
   }, [debouncedSearch, limit, page, tipe]);
+
+  useEffect(() => {
+    if (modalSnapshot.isReloadData) {
+      getUnggahLaporan();
+    }
+  }, [modalSnapshot.isReloadData]);
 
   return (
     <>

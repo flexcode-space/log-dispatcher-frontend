@@ -1,6 +1,5 @@
 // ** React Imports
 import { useEffect, useState } from "react";
-import { useForm, FormProvider } from "react-hook-form";
 import {
   Card,
   CardContent,
@@ -10,28 +9,51 @@ import {
   Button,
 } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
-import AdapterDateFns from "@mui/lab/AdapterDateFns";
-import LocalizationProvider from "@mui/lab/LocalizationProvider";
-import { StyledForm } from "src/components/form";
+import { useSnapshot } from "valtio";
+// import AdapterDateFns from "@mui/lab/AdapterDateFns";
+// import LocalizationProvider from "@mui/lab/LocalizationProvider";
+// import DatePicketMui from "@mui/lab/DatePicker";
 import PageHeader from "src/@core/components/page-header";
 import { defaultColumns } from "./RencanaHarian.constant";
 import { WrapperFilter } from "src/components/filter";
-import { DatePicker } from "src/components/date-picker";
-import { openModal, closeModal } from "src/state/modal";
+import { rencanaHarianApi } from "src/api/rencana-harian";
+import { openModal, closeModal, modal } from "src/state/modal";
+import { useDebounce } from "src/hooks/useDebounce";
 import { ModalUpload } from "./modal";
 
 const RencanaHarian = () => {
-  const formMethods = useForm({
-    // resolver: yupResolver(validationSchema),
-    // defaultValues: initialValues,
-    mode: "onChange",
-  });
+  const modalSnapshot = useSnapshot(modal);
+  
+  const [limit, setLimit] = useState<number>(10);
+  const [page, setPage] = useState<number>(1);
+  const [search, setSearch] = useState<string>("");
 
-  const [pageSize, setPageSize] = useState<number>(10);
+  const debouncedSearch = useDebounce(search, 500);
+
+  const { getRencanaHarianList, rencanaHarianList, loading, totalData } =
+    rencanaHarianApi();
 
   const handleClose = () => {
     closeModal();
   };
+
+  const getRencanaHarian = () => {
+    if (debouncedSearch) {
+      getRencanaHarianList({ search, limit, page });
+    } else {
+      getRencanaHarianList({ limit, page });
+    }
+  };
+
+  useEffect(() => {
+    getRencanaHarian();
+  }, [debouncedSearch, limit, page]);
+
+  useEffect(() => {
+    if (modalSnapshot.isReloadData) {
+      getRencanaHarian();
+    }
+  }, [modalSnapshot.isReloadData]);
 
   return (
     <>
@@ -48,20 +70,24 @@ const RencanaHarian = () => {
               <WrapperFilter>
                 <div style={{ display: "flex" }}>
                   <TextField
-                    value=""
+                    value={search}
                     size="small"
                     sx={{ mr: 6, mb: 2, width: "300px" }}
                     placeholder="Cari File"
-                    onChange={(e) => null}
+                    onChange={(e) => setSearch(e.target.value)}
                   />
 
-                  <FormProvider {...formMethods}>
-                    <StyledForm noValidate>
-                      <LocalizationProvider dateAdapter={AdapterDateFns}>
-                        <DatePicker label="Tanggal" name="tanggal" />
-                      </LocalizationProvider>
-                    </StyledForm>
-                  </FormProvider>
+                  {/* <LocalizationProvider dateAdapter={AdapterDateFns}>
+                    <DatePicketMui
+                      value={date}
+                      inputFormat="dd/M/yyyy"
+                      label="Pilih Tanggal"
+                      onChange={(e) => setDate(e)}
+                      renderInput={(params) => (
+                        <TextField size="small" {...params} />
+                      )}
+                    />
+                  </LocalizationProvider> */}
                 </div>
 
                 <Button
@@ -74,13 +100,15 @@ const RencanaHarian = () => {
               </WrapperFilter>
               <DataGrid
                 autoHeight
-                rows={[]}
+                rowsPerPageOptions={[10, 20, 25, 50]}
+                pageSize={limit}
+                loading={loading}
+                rows={rencanaHarianList}
                 columns={defaultColumns}
-                pageSize={pageSize}
-                disableSelectionOnClick
-                rowsPerPageOptions={[10, 25, 50]}
-                onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
-                sx={{ "& .MuiDataGrid-columnHeaders": { borderRadius: 0 } }}
+                rowCount={totalData}
+                onPageSizeChange={(newPageSize) => setLimit(newPageSize)}
+                onPageChange={(currentPage) => setPage(currentPage + 1)}
+                paginationMode="server"
               />
             </CardContent>
           </Card>
