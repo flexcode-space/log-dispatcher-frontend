@@ -32,6 +32,7 @@ export const DatePicker = ({
             <DatePicketMui
               value={value}
               label={label}
+              inputFormat="dd/M/yyyy"
               onChange={onChange}
               renderInput={(params) => (
                 <TextField size={size} {...params} fullWidth />

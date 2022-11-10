@@ -1,5 +1,5 @@
 import { ChangeEvent } from "react";
-import { useForm, FormProvider } from "react-hook-form";
+import { useForm, FormProvider, FieldPath } from "react-hook-form";
 import {
   Button,
   Dialog,
@@ -9,15 +9,16 @@ import {
   Typography,
   Box,
 } from "@mui/material";
-import AdapterDateFns from "@mui/lab/AdapterDateFns";
-import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import { useSnapshot } from "valtio";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { Axios } from "src/api/axios";
 import { StyledForm } from "src/components/form";
 import { DatePicker } from "src/components/date-picker";
+import { OutlinedInputField } from "src/components/input-field";
+import { rencanaHarianApi } from "src/api/rencana-harian";
+import { modal, reloadPage } from "src/state/modal";
 import { initialValues, validationSchema } from "./ModalUpload.constant";
-import { modal } from "src/state/modal";
-import { UploadFile } from "src/components/upload-file";
+import { convertDate } from "src/utils/date";
 
 type ModalUpload = {
   handleClose: () => void;
@@ -26,19 +27,26 @@ type ModalUpload = {
 const ModalUpload = ({ handleClose }: ModalUpload) => {
   const modalSnapshot = useSnapshot(modal);
 
+  const { unggahRencanaHarian } = rencanaHarianApi();
+
   const formMethods = useForm({
     resolver: yupResolver(validationSchema),
     defaultValues: initialValues,
     mode: "onChange",
   });
 
-  const tipe = formMethods.watch("tipe");
-
   const onSubmit = (event?: React.FormEvent<HTMLFormElement>) => {
     event?.preventDefault();
 
     formMethods.handleSubmit(async (values) => {
-      // TODO
+      const { tanggal, file } = values;
+
+      await unggahRencanaHarian({
+        file,
+        tanggal: convertDate(tanggal! as string),
+      });
+      handleClose();
+      reloadPage();
     })();
   };
 
@@ -47,12 +55,22 @@ const ModalUpload = ({ handleClose }: ModalUpload) => {
     formMethods.reset({ ...initialValues });
   };
 
-  const handleFileUpload = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleFileUpload = (
+    e: ChangeEvent<HTMLInputElement>,
+    name: FieldPath<{ tanggal: string; file: string }>
+  ) => {
     if (!e.target.files) {
       return;
     }
 
     const file = e.target.files[0];
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    Axios.post("/laporan/upload", formData).then(({ data }) => {
+      formMethods.setValue(name, data.nama);
+    });
   };
 
   return (
@@ -80,12 +98,28 @@ const ModalUpload = ({ handleClose }: ModalUpload) => {
             </Box>
             <Grid container spacing={1} mt={1}>
               <Grid item xs={12} sm={12}>
-                <LocalizationProvider dateAdapter={AdapterDateFns}>
-                  <DatePicker label="Tanggal Rencana Harian" name="tanggal" />
-                </LocalizationProvider>
+                <DatePicker label="Tanggal Rencana Harian" name="tanggal" />
               </Grid>
               <Grid item xs={12} sm={12}>
-                <UploadFile label="Upload File" name="upload" />
+                <OutlinedInputField
+                  name="file"
+                  label="Upload File"
+                  disabled={true}
+                  Icon={
+                    <Button
+                      variant="outlined"
+                      component="label"
+                      style={{ maxHeight: 30 }}
+                    >
+                      Pilih File
+                      <input
+                        type="file"
+                        hidden
+                        onChange={(e) => handleFileUpload(e, "file")}
+                      />
+                    </Button>
+                  }
+                />
               </Grid>
             </Grid>
           </DialogContent>
