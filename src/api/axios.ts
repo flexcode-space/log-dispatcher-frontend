@@ -1,5 +1,5 @@
 import axios from 'axios'
-
+import authConfig from "src/configs/auth";
 // TODO: create env
 const baseURL = 'https://backend.logsheet-api.flexcode.co.id'
 
@@ -14,7 +14,10 @@ const instance = axios.create({
 instance.interceptors.request.use(
   async config => {
     // TODO: FIX ME
-    const authToken = 'a2hhaXJ1bDphYmNkMTIzNDU2'
+    // const authToken = 'a2hhaXJ1bDphYmNkMTIzNDU2'
+    const authToken = window.localStorage.getItem(
+      authConfig.storageTokenKeyName
+    )!;
     if (config.headers === undefined) {
       config.headers = {}
     } else {
