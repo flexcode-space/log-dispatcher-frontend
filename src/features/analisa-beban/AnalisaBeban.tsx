@@ -1,15 +1,35 @@
+import { useEffect, useState } from "react";
 import { Typography, TextField } from "@mui/material";
 import DatePicketMui from "@mui/lab/DatePicker";
 import Grid from "@mui/material/Grid";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
-import PageHeader from "src/@core/components/page-header";
-import { DatePicker } from "src/components/date-picker";
 import { WrapperFilter } from "src/components/filter";
 import { TableBebanSubsistem } from "./components/TableBebanSubsistem";
 import { TableMonitoring } from "./components/TableMonitoring";
+import { analisaBebanApi } from "src/api/analisa-beban";
+import { convertDate } from "src/utils/date";
 
 const AnalisaBeban = () => {
+  const [date, setDate] = useState<any>(new Date());
+
+  const {
+    getMonitorIbt,
+    getMonitorPenghantar,
+    getMonitorTrafo,
+    monitorIbtList,
+    monitorPengahantarList,
+    monitorTrafoList,
+  } = analisaBebanApi();
+
+  const tanggal = convertDate(date);
+
+  useEffect(() => {
+    getMonitorIbt({ tanggal });
+    getMonitorPenghantar({ tanggal });
+    getMonitorTrafo({ tanggal });
+  }, [date]);
+
   return (
     <>
       <Grid container spacing={6}>
@@ -21,9 +41,10 @@ const AnalisaBeban = () => {
             <Grid item xs={2}>
               <LocalizationProvider dateAdapter={AdapterDateFns}>
                 <DatePicketMui
-                  value={new Date()}
+                  value={date}
+                  inputFormat="dd/M/yyyy"
                   label="Tanggal"
-                  onChange={() => null}
+                  onChange={(e) => setDate(e)}
                   renderInput={(params) => (
                     <TextField size="small" {...params} fullWidth />
                   )}
@@ -33,16 +54,19 @@ const AnalisaBeban = () => {
           </WrapperFilter>
         </Grid>
         <Grid item xs={12}>
-          <TableBebanSubsistem />
+          <TableBebanSubsistem tanggal={tanggal} />
         </Grid>
         <Grid item xl={4} md={6}>
-          <TableMonitoring title="Monitoring IBT" />
+          <TableMonitoring title="Monitoring IBT" data={monitorIbtList} />
         </Grid>
         <Grid item xl={4} md={6}>
-          <TableMonitoring title="Monitoring Penghantar" />
+          <TableMonitoring
+            title="Monitoring Penghantar"
+            data={monitorPengahantarList}
+          />
         </Grid>
         <Grid item xl={4} md={6}>
-          <TableMonitoring title="Monitoring Trafo" />
+          <TableMonitoring title="Monitoring Trafo" data={monitorTrafoList} />
         </Grid>
       </Grid>
     </>

@@ -1,78 +1,99 @@
-export const dataMock = [
-  "Tanjung Jati",
-  "100",
-  "128",
-  "07:30",
-  "100",
-  "128",
-  "19:30",
-  "124",
-  "200",
-  "19:30",
-  "Pedan",
-  "Busbar 1",
-  "200",
-  "19:30",
-  "Pedan",
-  "Busbar 1",
-  "200",
-];
+import Typography from "@mui/material/Typography";
+import { formatDecimalNumber } from "src/utils/number";
+
+export interface CellType {
+  row: any;
+}
 
 export const defaultColumns = [
   {
     flex: 0.25,
     field: "subsistem",
+    minWidth: 200,
     headerName: "Subsistem",
   },
   {
     flex: 0.35,
-    // minWidth: 100,
-    field: "ibt",
+    minWidth: 100,
+    field: "nama",
     headerName: "IBT",
   },
   {
     flex: 0.25,
     field: "jam",
+    minWidth: 90,
     headerName: "Jam",
   },
   {
     flex: 0.25,
     field: "arus",
+    minWidth: 90,
     headerName: "Arus",
+    renderCell: ({ row }: CellType) => {
+      const { arus } = row;
+      return (
+        <Typography
+          variant="subtitle2"
+          noWrap
+          sx={{ textTransform: "capitalize" }}
+        >
+          {formatDecimalNumber(arus)}
+        </Typography>
+      );
+    },
   },
   {
     flex: 0.25,
+    minWidth: 90,
     field: "mw",
     headerName: "MW",
+    renderCell: ({ row }: CellType) => {
+      const { mw } = row;
+      return (
+        <Typography
+          variant="subtitle2"
+          noWrap
+          sx={{ textTransform: "capitalize" }}
+        >
+          {formatDecimalNumber(mw)}
+        </Typography>
+      );
+    },
   },
   {
     flex: 0.25,
+    minWidth: 90,
     field: "mvar",
     headerName: "MVAR",
+    renderCell: ({ row }: CellType) => {
+      const { mvar } = row;
+      return (
+        <Typography
+          variant="subtitle2"
+          noWrap
+          sx={{ textTransform: "capitalize" }}
+        >
+          {formatDecimalNumber(mvar)}
+        </Typography>
+      );
+    },
   },
   {
     flex: 0.25,
-    field: "persen",
+    minWidth: 90,
+    field: "percentage",
     headerName: "%",
+    renderCell: ({ row }: CellType) => {
+      const { percentage } = row;
+      return (
+        <Typography
+          variant="subtitle2"
+          noWrap
+          sx={{ textTransform: "capitalize" }}
+        >
+          {formatDecimalNumber(percentage)}
+        </Typography>
+      );
+    },
   },
 ];
-
-export const mockDataMonitoring = () => {
-  const data = {
-    subsistem: "Tanjung Jati",
-    ibt: "IBT-1",
-    jam: "18.00",
-    arus: "20",
-    mw: "124",
-    mvar: "40",
-    persen: "80%",
-  };
-
-  const array = [];
-
-  for (let i = 0; i < 5; i++) {
-    array.push({ ...data, id: i });
-  }
-
-  return array;
-};
