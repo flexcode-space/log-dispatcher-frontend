@@ -102,7 +102,11 @@ const Grafik = () => {
                 <FormProvider {...formMethods}>
                   <StyledForm noValidate onSubmit={() => null}>
                     <LocalizationProvider dateAdapter={AdapterDateFns}>
-                      <DatePicker label="Tanggal Laporan" name="tanggal" />
+                      <DatePicker
+                        size="small"
+                        label="Tanggal Laporan"
+                        name="tanggal"
+                      />
                     </LocalizationProvider>
                   </StyledForm>
                 </FormProvider>

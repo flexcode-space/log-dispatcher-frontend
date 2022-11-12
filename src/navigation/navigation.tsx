@@ -19,6 +19,7 @@ import KitlurIcon from "../assets/icons/kitlur-icon.svg";
 import CatatanPembangkitanIcon from "../assets/icons/catatan-pembangkitan-icon.svg";
 import CatatanPenyaluranIcon from "../assets/icons/catatan-penyaluran-icon.svg";
 import EnergizePeralatanIcon from "../assets/icons/energize-peralatan-icon.svg";
+import LoadFlowIcon from "../assets/icons/load-flow-icon.svg";
 
 // ** Type import
 import { HorizontalNavItemsType } from "src/@core/layouts/types";
@@ -93,6 +94,16 @@ export const navigation = (): HorizontalNavItemsType => [
         title: "Energize Peralatan",
         icon: EnergizePeralatanIcon,
         path: "/energize-peralatan",
+      },
+    ],
+  },
+  {
+    title: "Load Flow",
+    icon: LoadFlowIcon,
+    children: [
+      {
+        title: "Peta Jaringan",
+        path: "/peta-jaringan",
       },
     ],
   },
