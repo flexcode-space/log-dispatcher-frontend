@@ -3,9 +3,12 @@ import { Typography, TextField } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 
 import { WrapperFilter } from "src/components/filter";
-import { defaultColumns, mockDataMonitoring } from "../AnalisaBeban.constant";
+import { defaultColumns } from "../AnalisaBeban.constant";
 
-export const TableMonitoring: React.FC<{ title: string }> = ({ title }) => {
+export const TableMonitoring: React.FC<{ title: string; data: any }> = ({
+  title,
+  data,
+}) => {
   return (
     <Card>
       <CardContent>
@@ -20,12 +23,7 @@ export const TableMonitoring: React.FC<{ title: string }> = ({ title }) => {
             // onChange={(e) => setSearch(e.target.value)}
           />
         </WrapperFilter>
-        <DataGrid
-          hideFooter
-          autoHeight
-          rows={mockDataMonitoring()}
-          columns={defaultColumns}
-        />
+        <DataGrid hideFooter autoHeight rows={data} columns={defaultColumns} />
       </CardContent>
     </Card>
   );
