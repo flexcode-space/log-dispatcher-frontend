@@ -29,9 +29,10 @@ import {
   DataIBT,
   IBT,
 } from "src/api/beban/types";
-import { time, showValueBeban } from "./BebanHarian.constant";
+import { showValueBeban } from "./BebanHarian.constant";
 import { ModalSetBebanHarian } from "./modal";
 import { convertDate } from "src/utils/date";
+import { TIME } from "src/constants/time";
 
 const BebanHarian = () => {
   // ** States
@@ -123,14 +124,14 @@ const BebanHarian = () => {
                       >
                         Pembangkit
                       </TableCell>
-                      {time.map((value) => (
+                      {TIME.map((value) => (
                         <TableCell size="small" align="center" colSpan={2}>
                           {value}
                         </TableCell>
                       ))}
                     </TableRow>
                     <TableRow>
-                      {time.map(() => (
+                      {TIME.map(() => (
                         <>
                           <TableCell size="small" align="center">
                             MW
@@ -157,7 +158,7 @@ const BebanHarian = () => {
                                 fontSize: "14px",
                                 fontWeight: "700 !important",
                               }}
-                              colSpan={time.length * 2 + 2}
+                              colSpan={TIME.length * 2 + 2}
                             >
                               {value?.sub_sistem}
                             </TableCell>
