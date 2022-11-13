@@ -1,0 +1,1 @@
+export { default as grafikApi } from './grafikApi'

@@ -20,11 +20,12 @@ import EditIcon from "src/assets/icons/edit-icon.svg";
 import { openModal } from "src/state/modal";
 import { bebanApi } from "src/api/beban";
 import { IBTList, Data } from "./types";
-import { time, showValueBeban } from "./BebanIBTHarian.constant";
+import { showValueBeban } from "./BebanIBTHarian.constant";
 
 import { WrapperFilter } from "src/components/filter";
 import { ModalSetBebanHarian } from "./modal";
 import { convertDate } from "src/utils/date";
+import { TIME } from "src/constants/time";
 
 const BebanIBTHarian = () => {
   // ** States
@@ -159,14 +160,14 @@ const BebanIBTHarian = () => {
                       <TableCell size="small" rowSpan={2}>
                         Setting OCR
                       </TableCell>
-                      {time.map((value) => (
+                      {TIME.map((value) => (
                         <TableCell size="small" align="center" colSpan={6}>
                           {value}
                         </TableCell>
                       ))}
                     </TableRow>
                     <TableRow>
-                      {time.map(() => (
+                      {TIME.map(() => (
                         <>
                           <TableCell size="small">arus (a)</TableCell>
                           <TableCell size="small">mw</TableCell>

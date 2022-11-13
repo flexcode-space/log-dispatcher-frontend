@@ -19,11 +19,12 @@ import EditIcon from "src/assets/icons/edit-icon.svg";
 import { openModal } from "src/state/modal";
 import { bebanApi } from "src/api/beban";
 import { TeganganBusbar, Data } from "./types";
-import { time, showValueBeban } from "./TeganganBusbar.constant";
+import { showValueBeban } from "./TeganganBusbar.constant";
 
 import { WrapperFilter } from "src/components/filter";
 import { ModalSetBebanHarian } from "./modal";
 import { convertDate } from "src/utils/date";
+import { TIME } from "src/constants/time";
 
 const TeganganBusbar = () => {
   // ** States
@@ -152,14 +153,14 @@ const TeganganBusbar = () => {
                       <TableCell size="small" rowSpan={2}>
                         Arus Mampu (A)
                       </TableCell>
-                      {time.map((value) => (
+                      {TIME.map((value) => (
                         <TableCell size="small" align="center" colSpan={2}>
                           {value}
                         </TableCell>
                       ))}
                     </TableRow>
                     <TableRow>
-                      {time.map(() => (
+                      {TIME.map(() => (
                         <>
                           <TableCell size="small">Busbar 1 (V)</TableCell>
                           <TableCell size="small">Busbar 2 (V)</TableCell>

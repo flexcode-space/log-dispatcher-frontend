@@ -22,9 +22,10 @@ import { openModal } from "src/state/modal";
 import { WrapperFilter } from "src/components/filter";
 import { ModalSetBebanHarian } from "./modal";
 import { bebanApi } from "src/api/beban";
-import { showValueBeban, time } from "./BebanPenghantarHarian.constant";
+import { showValueBeban } from "./BebanPenghantarHarian.constant";
 import { BebanPenghantarHarian } from "./types";
 import { convertDate } from "src/utils/date";
+import { TIME } from "src/constants/time";
 
 const BebanPenghantarHarian = () => {
   // ** States
@@ -141,14 +142,14 @@ const BebanPenghantarHarian = () => {
                       <TableCell size="small" rowSpan={2}>
                         Setting OCR
                       </TableCell>
-                      {time.map((value) => (
+                      {TIME.map((value) => (
                         <TableCell size="small" align="center" colSpan={6}>
                           {value}
                         </TableCell>
                       ))}
                     </TableRow>
                     <TableRow>
-                      {time.map(() => (
+                      {TIME.map(() => (
                         <>
                           <TableCell size="small">arus (a)</TableCell>
                           <TableCell size="small">mw</TableCell>
