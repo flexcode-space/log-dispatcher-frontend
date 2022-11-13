@@ -24,7 +24,7 @@ const CustomTooltip = (data: TooltipProps<any, any>) => {
               >
                 <Circle sx={{ color: i.fill, mr: 2.5, fontSize: "0.6rem" }} />
                 <span>
-                  {data.label} : {formatDecimalNumber(i.payload[i.dataKey])}
+                  {i.dataKey} : {formatDecimalNumber(i.payload[i.dataKey])}
                 </span>
               </Box>
             );

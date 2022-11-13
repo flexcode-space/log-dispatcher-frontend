@@ -11,8 +11,14 @@ type ParamsGrafik = Params & {
   tanggal?: string
 }
 
+type GrafikData = {
+  time: string;
+  beban: any;
+  rencana: any;
+}[]
+
 const grafikApi = () => {
-  // const [grafikList, setGrafikList] = useState<{ time: any, value: string }[]>()
+  const [grafikSubsistem, setGrafikSubsistem] = useState<GrafikData>([] as GrafikData)
 
   const getGrafik = useCallback(async (params: ParamsGrafik = {}) => {
     const { data: { data } } = await Axios.get(endpoint, { params })
@@ -30,9 +36,31 @@ const grafikApi = () => {
     return []
   }, [])
 
+
+  const getGrafikSubsistem = useCallback(async (id?: string, params: ParamsGrafik = {}) => {
+    const { data: { data, rencana } } = await Axios.get(`${endpoint}/subsistem/${id}`, { params })
+
+    if (data && rencana) {
+      const result = Object.values(TIME).map((time) => {
+        const mw = "mw_" + time.replace(".", "");
+
+        return {
+          time,
+          beban: (data as any)[mw]! || 0,
+          rencana: (rencana as any)[mw]! || 0
+        }
+      })
+      setGrafikSubsistem(result)
+    } else {
+      console.log('masuk kesini')
+      setGrafikSubsistem([])
+    }
+  }, [])
+
   return {
-    // grafikList,
+    getGrafikSubsistem,
     getGrafik,
+    grafikSubsistem,
   }
 }
 
