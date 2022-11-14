@@ -71,6 +71,19 @@ const garduIndukApi = () => {
     }
   }, [])
 
+  const createUPT = useCallback(async (payload: any) => {
+    setLoading(true)
+
+    try {
+      await Axios.post(`${endpoint}/upt`, payload)
+      toast.success('Berhasil menambahkan UPT')
+    } catch (error) {
+      toast.error('Gagal menambahkan UPT')
+    } finally {
+      setLoading(false)
+    }
+  }, [])
+
 
   return {
     garduIndukList,
@@ -80,7 +93,8 @@ const garduIndukApi = () => {
     getGarduIndukDetail,
     createGarduInduk,
     updateGarduInduk,
-    deleteGarduInduk
+    deleteGarduInduk,
+    createUPT
   }
 }
 
