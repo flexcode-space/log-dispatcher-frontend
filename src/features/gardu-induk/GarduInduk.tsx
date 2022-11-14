@@ -20,11 +20,18 @@ import { defaultColumns } from "./GarduInduk.constant";
 import { CellType } from "./types";
 
 import { ModalAddGarduInduk } from "./modal";
+import ModallAddUPT from "./modal/ModalAddUPT";
 import { WrapperFilter } from "src/components/filter";
 
 import { garduIndukApi } from "src/api/gardu-induk";
 import { useDebounce } from "src/hooks/useDebounce";
-import { openModal, closeModal, modal, reloadPage } from "src/state/modal";
+import {
+  openModal,
+  closeModal,
+  modal,
+  reloadPage,
+  openModalUPT,
+} from "src/state/modal";
 
 const GarduInduk = () => {
   const modalSnapshot = useSnapshot(modal);
@@ -93,6 +100,7 @@ const GarduInduk = () => {
   return (
     <>
       <ModalAddGarduInduk handleClose={handleClose} />
+      <ModallAddUPT handleClose={() => null} />
       <Grid container spacing={6}>
         <Grid item xs={12}>
           <PageHeader
@@ -111,13 +119,22 @@ const GarduInduk = () => {
                   onChange={(e) => setSearch(e.target.value)}
                 />
 
-                <Button
-                  sx={{ mb: 2 }}
-                  onClick={() => openModal()}
-                  variant="contained"
-                >
-                  Tambah Gardu Induk
-                </Button>
+                <div style={{ display: "flex", gap: "10px" }}>
+                  <Button
+                    sx={{ mb: 2 }}
+                    onClick={() => openModalUPT()}
+                    variant="outlined"
+                  >
+                    Tambah UPT
+                  </Button>
+                  <Button
+                    sx={{ mb: 2 }}
+                    onClick={() => openModal()}
+                    variant="contained"
+                  >
+                    Tambah Gardu Induk
+                  </Button>
+                </div>
               </WrapperFilter>
               <Box>
                 <DataGrid

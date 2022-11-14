@@ -21,6 +21,7 @@ import { uptApi } from "src/api/upt";
 import IconButton from "@mui/material/IconButton";
 import Close from "mdi-material-ui/Close";
 import { validationSchema, initialValues } from "./ModalAddGarduInduk.constant";
+import { AutoComplete } from "src/components/autocomplete";
 
 type ModalAddGarduIndukProps = {
   handleClose: () => void;
@@ -100,8 +101,10 @@ const ModalAddGarduInduk = ({ handleClose }: ModalAddGarduIndukProps) => {
   };
 
   useEffect(() => {
-    getUPTList();
-  }, []);
+    if (modal.isOpen) {
+      getUPTList();
+    }
+  }, [modal.isOpen]);
 
   useEffect(() => {
     if (modalSnapshot.id) {
@@ -136,15 +139,7 @@ const ModalAddGarduInduk = ({ handleClose }: ModalAddGarduIndukProps) => {
           <DialogContent>
             <Grid container spacing={1} mt={1}>
               <Grid item xs={12} sm={12}>
-                <SelectInput
-                  label="UPT"
-                  name="upt_id"
-                  options={[
-                    ...uptOptions,
-                    { value: "2", label: "UPT 2" },
-                    { value: "3", label: "UPT 3" },
-                  ]}
-                />
+                <SelectInput label="UPT" name="upt_id" options={uptOptions} />
               </Grid>
               {fields.map((value, index: number) => {
                 return (

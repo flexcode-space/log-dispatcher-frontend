@@ -1,0 +1,1 @@
+export { default as GrafikPembangkit } from './GrafikPembangkit'

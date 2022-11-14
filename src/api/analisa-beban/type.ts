@@ -3,6 +3,7 @@ export interface BebanSubsistem {
   total: Data;
 }
 export interface Data {
+  id: string;
   nama: string;
   total: Total;
   pagi: PagiOrSiangOrMalam;
