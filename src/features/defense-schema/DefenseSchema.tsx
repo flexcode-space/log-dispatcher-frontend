@@ -11,7 +11,7 @@ import { UFR } from "./ufr";
 import { TAB_MENU } from "./DefenseSchema.constant";
 
 const DefenseSchema = () => {
-  const [activeTab, setActiveTab] = useState<string>("ufr");
+  const [activeTab, setActiveTab] = useState<string>("ols");
 
   return (
     <TabContext value={activeTab}>
