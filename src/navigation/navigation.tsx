@@ -20,6 +20,7 @@ import CatatanPembangkitanIcon from "../assets/icons/catatan-pembangkitan-icon.s
 import CatatanPenyaluranIcon from "../assets/icons/catatan-penyaluran-icon.svg";
 import EnergizePeralatanIcon from "../assets/icons/energize-peralatan-icon.svg";
 import LoadFlowIcon from "../assets/icons/load-flow-icon.svg";
+import DefenseSchemaIcon from "../assets/icons/defense-schema-icon.svg";
 
 // ** Type import
 import { HorizontalNavItemsType } from "src/@core/layouts/types";
@@ -157,6 +158,11 @@ export const navigation = (): HorizontalNavItemsType => [
         path: "/master-data/reaktor",
       },
     ],
+  },
+  {
+    title: "Defense Scheme",
+    icon: DefenseSchemaIcon,
+    path: "/defense-schema",
   },
   {
     title: "Lainnya",
