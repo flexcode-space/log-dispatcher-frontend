@@ -18,13 +18,10 @@ import {
 } from "@mui/material";
 import Plus from "mdi-material-ui/Plus";
 import { PencilOutline } from "mdi-material-ui";
-import DatePicker from "@mui/lab/DatePicker";
-import { TimePicker } from "@mui/x-date-pickers/TimePicker";
-import AdapterDateFns from "@mui/lab/AdapterDateFns";
-import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import { openModal } from "src/state/modal";
-import DownloadIcon from "src/assets/icons/download-icon.svg";
-import ModalAdd from "../modal/ModalAdd";
+import DownloadIcon from "src/assets/icons/download-green-icon.svg";
+import FilterIcon from "src/assets/icons/filter-green-icon.svg";
+import ModalAddUFR from "../modal/ModalAddUFR";
 
 import { WrapperFilter } from "src/components/filter";
 
@@ -44,7 +41,7 @@ const UfrComponent = () => {
 
   return (
     <>
-      <ModalAdd name="OGS" />
+      <ModalAddUFR />
       <Grid container spacing={6}>
         <Grid item xs={12}>
           <Card>
@@ -59,7 +56,7 @@ const UfrComponent = () => {
                     // onChange={(e) => setSearch(e.target.value)}
                   />
                   <Button sx={{ mb: 2 }} variant="outlined">
-                    <DownloadIcon />
+                    <FilterIcon />
                     Filter
                   </Button>
                 </div>

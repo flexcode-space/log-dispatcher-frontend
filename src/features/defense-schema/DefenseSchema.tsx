@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { Card, Grid, CardContent } from "@mui/material";
+import { Card, Grid, Typography } from "@mui/material";
 import { TabList, TabPanel, TabContext } from "@mui/lab";
 import { Tab, TabName } from "src/components/tab";
+import PageHeader from "src/@core/components/page-header";
 import { OLS } from "./ols";
 import { OGS } from "./ogs";
 import { DS } from "./ds";
@@ -15,6 +16,11 @@ const DefenseSchema = () => {
   return (
     <TabContext value={activeTab}>
       <Grid container spacing={6}>
+        <Grid item xs={12}>
+          <PageHeader
+            title={<Typography variant="h5">Defense Scheme</Typography>}
+          />
+        </Grid>
         <Grid item xs={12}>
           <Card>
             <TabList onChange={(e, newValue) => setActiveTab(newValue)}>
