@@ -1,13 +1,4 @@
-import {
-  Typography,
-  TextField,
-  Card,
-  CardContent,
-  Button,
-  Box,
-} from "@mui/material";
-import { Plus, ArrowRight } from "mdi-material-ui";
-import DatePicketMui from "@mui/lab/DatePicker";
+import { Typography, Card, CardContent } from "@mui/material";
 import Grid from "@mui/material/Grid";
 
 import { Chart } from "./components/Chart";
