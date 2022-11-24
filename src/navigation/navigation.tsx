@@ -169,20 +169,29 @@ export const navigation = (): HorizontalNavItemsType => [
     icon: LainnyaIcon,
     children: [
       {
-        title: "Kapasitor Reaktor",
-        path: "/kapasitor-reaktor",
+        title: "Dispact",
+        children: [
+          {
+            title: "Kapasitor Reaktor",
+            path: "/kapasitor-reaktor",
+          },
+          {
+            title: "Switching Diluar Rencana",
+            path: "/switching-diluar-rencana",
+          },
+          {
+            title: "Switching Pembangkit",
+            path: "/switching-pembangkit",
+          },
+          {
+            title: "Pengaturan Tegangan",
+            path: "/pengaturan-tegangan",
+          },
+        ],
       },
       {
-        title: "Switching Diluar Rencana",
-        path: "/switching-diluar-rencana",
-      },
-      {
-        title: "Switching Pembangkit",
-        path: "/switching-pembangkit",
-      },
-      {
-        title: "Pengaturan Tegangan",
-        path: "/pengaturan-tegangan",
+        title: "Dokumen",
+        path: "/dokumen",
       },
     ],
   },
