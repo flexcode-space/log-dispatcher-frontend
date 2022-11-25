@@ -169,7 +169,7 @@ export const navigation = (): HorizontalNavItemsType => [
     icon: LainnyaIcon,
     children: [
       {
-        title: "Dispact",
+        title: "Dispatcher",
         children: [
           {
             title: "Kapasitor Reaktor",
