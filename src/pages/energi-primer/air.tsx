@@ -1,4 +1,5 @@
 import Head from "next/head";
+import { Air } from "src/features/air";
 
 const AirPage = () => {
   return (
@@ -6,7 +7,7 @@ const AirPage = () => {
       <Head>
         <title>Energi Primer - Air</title>
       </Head>
-      <h1>air</h1>
+      <Air />
     </>
   );
 };

@@ -1,4 +1,5 @@
 import Head from "next/head";
+import { Batubara } from "src/features/batubara";
 
 const BatubaraPage = () => {
   return (
@@ -6,7 +7,7 @@ const BatubaraPage = () => {
       <Head>
         <title>Energi Primer - Batubara</title>
       </Head>
-      <h1>Batubara</h1>
+      <Batubara />
     </>
   );
 };
