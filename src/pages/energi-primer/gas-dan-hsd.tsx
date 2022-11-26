@@ -1,4 +1,5 @@
 import Head from "next/head";
+import { Gas } from "src/features/gas";
 
 const GasDanHSDPage = () => {
   return (
@@ -6,7 +7,7 @@ const GasDanHSDPage = () => {
       <Head>
         <title>Energi Primer - Gas dan hsd</title>
       </Head>
-      <h1>Gas dan hsd</h1>
+      <Gas />
     </>
   );
 };
