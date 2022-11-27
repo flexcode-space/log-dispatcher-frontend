@@ -11,18 +11,31 @@ export const defaultColumns = [
     field: "pembangkit",
     minWidth: 200,
     headerName: "Pembangkit",
+    renderCell: ({ row }: CellType) => (
+      <p className={row.pembangkit === "Total" ? "total" : ""}>
+        {row.pembangkit}
+      </p>
+    ),
   },
   {
     flex: 0.35,
     minWidth: 100,
     field: "mw",
     headerName: "Total MW",
+    renderCell: ({ row }: CellType) => (
+      <p className={row.pembangkit === "Total" ? "total" : ""}>{row.mw}</p>
+    ),
   },
   {
     flex: 0.35,
     minWidth: 100,
     field: "produksi",
     headerName: "Produksi",
+    renderCell: ({ row }: CellType) => (
+      <p className={row.pembangkit === "Total" ? "total" : ""}>
+        {row.produksi}
+      </p>
+    ),
   },
 ];
 
@@ -32,7 +45,7 @@ export const dataMock = () => {
   for (let i = 0; i < 10; i++) {
     data.push({
       id: i,
-      pembangkit: "Tambaklorok G1.1",
+      pembangkit: i === 9 ? "Total" : "Tambaklorok G1.1",
       mw: "30.000 MW",
       produksi: "30.000 kWh",
     });

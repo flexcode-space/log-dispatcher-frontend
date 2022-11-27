@@ -103,7 +103,7 @@ const Gas = () => {
                 </TableHead>
                 <TableBody>
                   {[0, 1, 2, 3, 4, 5].map(() => (
-                    <TableRow>
+                    <TableRow hover>
                       <TableCell>06.00</TableCell>
                       <TableCell>324</TableCell>
                       <TableCell>324</TableCell>

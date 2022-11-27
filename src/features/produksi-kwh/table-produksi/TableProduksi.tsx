@@ -1,6 +1,6 @@
 import { Card, CardContent } from "@mui/material";
 import { Typography, TextField } from "@mui/material";
-import { DataGrid } from "@mui/x-data-grid";
+import { DataGrid } from "src/components/table";
 
 import { WrapperFilter } from "src/components/filter";
 import { defaultColumns } from "./TableProduksi.constant";
@@ -24,6 +24,13 @@ export const TableProduksi: React.FC<{ title?: string; data: any }> = ({
           />
         </WrapperFilter>
         <DataGrid
+          sx={{
+            ".MuiDataGrid-cell:has( > p.total)": {
+              bgcolor: "#FFDFDF",
+              fontWeight: 700,
+              fontSize: "14px",
+            },
+          }}
           hideFooter
           autoHeight
           rows={data}
