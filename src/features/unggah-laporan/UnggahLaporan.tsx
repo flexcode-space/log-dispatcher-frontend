@@ -10,7 +10,7 @@ import {
   Button,
 } from "@mui/material";
 import { useSnapshot } from "valtio";
-import { DataGrid } from "@mui/x-data-grid";
+import { DataGrid } from "src/components/table";
 import { StyledForm } from "src/components/form";
 import PageHeader from "src/@core/components/page-header";
 import { SelectInput } from "src/components/select-input";
