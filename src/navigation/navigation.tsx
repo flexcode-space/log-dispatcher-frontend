@@ -2,7 +2,6 @@
 import HomeOutline from "mdi-material-ui/HomeOutline";
 import MasterDataIcon from "../assets/icons/masterdata-icon.svg";
 import SubsistemIcon from "../assets/icons/subsistem-icon.svg";
-import IBTIcon from "../assets/icons/ibt-icon.svg";
 import PenghantarIcon from "../assets/icons/penghantar-icon.svg";
 import PembangkitIcon from "../assets/icons/pembangkit-icon.svg";
 import TrafoIcon from "../assets/icons/trafo-icon.svg";
@@ -21,6 +20,8 @@ import CatatanPenyaluranIcon from "../assets/icons/catatan-penyaluran-icon.svg";
 import EnergizePeralatanIcon from "../assets/icons/energize-peralatan-icon.svg";
 import LoadFlowIcon from "../assets/icons/load-flow-icon.svg";
 import DefenseSchemaIcon from "../assets/icons/defense-schema-icon.svg";
+import EnergiPrimerIcon from "../assets/icons/energi-primer-icon.svg";
+import ProduksiAirIcon from "../assets/icons/produksi-air-icon.svg";
 
 // ** Type import
 import { HorizontalNavItemsType } from "src/@core/layouts/types";
@@ -109,6 +110,37 @@ export const navigation = (): HorizontalNavItemsType => [
     ],
   },
   {
+    title: "Energi Primer",
+    icon: EnergiPrimerIcon,
+    children: [
+      {
+        title: "Produksi kWh",
+        icon: SubsistemIcon,
+        path: "/energi-primer/produksi-kwh",
+      },
+      {
+        title: "Air",
+        icon: ProduksiAirIcon,
+        path: '/energi-primer/air'
+      },
+      {
+        title: "Gas & HSD",
+        icon: PembangkitIcon,
+        path: '/energi-primer/gas-dan-hsd'
+      },
+      {
+        title: "Batubara",
+        icon: PenghantarIcon,
+        path: '/energi-primer/batubara'
+      },
+      {
+        title: "Analisa Beban",
+        icon: TrafoIcon,
+        path: '/energi-primer/analisa-beban'
+      },
+    ],
+  },
+  {
     title: "Grafik",
     icon: GrafikIcon,
     path: "/grafik",
@@ -129,7 +161,7 @@ export const navigation = (): HorizontalNavItemsType => [
       },
       {
         title: "IBT",
-        icon: IBTIcon,
+        icon: ProduksiAirIcon,
         path: "/master-data/ibt",
       },
       {

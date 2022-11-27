@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Typography, TextField } from "@mui/material";
-import DatePicketMui from "@mui/lab/DatePicker";
+import DatePickerMui from "@mui/lab/DatePicker";
 import Grid from "@mui/material/Grid";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
@@ -40,7 +40,7 @@ const AnalisaBeban = () => {
             </Grid>
             <Grid item xs={2}>
               <LocalizationProvider dateAdapter={AdapterDateFns}>
-                <DatePicketMui
+                <DatePickerMui
                   value={date}
                   inputFormat="dd/M/yyyy"
                   label="Tanggal"

@@ -82,7 +82,7 @@ const OLS = () => {
                 </div>
               </WrapperFilter>
               <TableContainer>
-                <Table style={{ width: "auto", tableLayout: "auto" }}>
+                <Table>
                   <TableHead sx={{ height: "30px", background: "#F5F5F7" }}>
                     <TableRow>
                       <TableCell variant="head" size="small" rowSpan={2}>
