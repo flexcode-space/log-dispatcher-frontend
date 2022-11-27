@@ -5,15 +5,18 @@ import { useState, ChangeEvent, useEffect } from "react";
 import DatePicketMui from "@mui/lab/DatePicker";
 import { Card, CardContent, Button } from "@mui/material";
 import { Typography, TextField, Grid } from "@mui/material";
-import Table from "@mui/material/Table";
-import TableRow from "@mui/material/TableRow";
-import TableHead from "@mui/material/TableHead";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
 import TablePagination from "@mui/material/TablePagination";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
+import {
+  TableContainer,
+  Table,
+  TableHead,
+  TableRow,
+  TableCellHead,
+  TableCell,
+  TableBody,
+} from "src/components/table";
 import DownloadIcon from "src/assets/icons/download-icon.svg";
 import EditIcon from "src/assets/icons/edit-icon.svg";
 import { openModal } from "src/state/modal";
@@ -105,40 +108,25 @@ const BebanHarian = () => {
               </WrapperFilter>
               <TableContainer>
                 <Table style={{ width: "auto", tableLayout: "auto" }}>
-                  <TableHead sx={{ height: "30px", background: "#F5F5F7" }}>
+                  <TableHead>
                     <TableRow>
-                      <TableCell
-                        variant="head"
-                        sx={{
-                          minWidth: "200px",
-                        }}
-                        size="small"
-                        rowSpan={2}
-                      >
+                      <TableCellHead minWidth="200px" rowSpan={2}>
                         Jenis Pembangkit
-                      </TableCell>
-                      <TableCell
-                        size="small"
-                        rowSpan={2}
-                        style={{ minWidth: "200px" }}
-                      >
+                      </TableCellHead>
+                      <TableCellHead minWidth="200px" rowSpan={2}>
                         Pembangkit
-                      </TableCell>
+                      </TableCellHead>
                       {TIME.map((value) => (
-                        <TableCell size="small" align="center" colSpan={2}>
+                        <TableCellHead align="center" colSpan={2}>
                           {value}
-                        </TableCell>
+                        </TableCellHead>
                       ))}
                     </TableRow>
                     <TableRow>
                       {TIME.map(() => (
                         <>
-                          <TableCell size="small" align="center">
-                            MW
-                          </TableCell>
-                          <TableCell size="small" align="center">
-                            MX
-                          </TableCell>
+                          <TableCellHead align="center">MW</TableCellHead>
+                          <TableCellHead align="center">MX</TableCellHead>
                         </>
                       ))}
                     </TableRow>
