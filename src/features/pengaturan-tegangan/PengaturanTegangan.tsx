@@ -4,12 +4,6 @@ import {
   Card,
   CardContent,
   Grid,
-  Table,
-  TableRow,
-  TableHead,
-  TableBody,
-  TableCell,
-  TableContainer,
   TablePagination,
   Typography,
   TextField,
@@ -19,6 +13,15 @@ import {
 } from "@mui/material";
 import { PencilOutline } from "mdi-material-ui";
 import PageHeader from "src/@core/components/page-header";
+import {
+  Table,
+  TableRow,
+  TableHead,
+  TableBody,
+  TableCell,
+  TableCellHead,
+  TableContainer,
+} from "src/components/table";
 import DownloadIcon from "src/assets/icons/download-icon.svg";
 import KonfigurasiIcon from "src/assets/icons/konfigurasi-icon.svg";
 import FilterIcon from "src/assets/icons/filter-icon.svg";
@@ -95,34 +98,40 @@ const PengaturanTegangan = () => {
               </WrapperFilter>
               <TableContainer>
                 <Table>
-                  <TableHead sx={{ height: "30px", background: "#F5F5F7" }}>
+                  <TableHead>
                     <TableRow>
-                      <TableCell size="small">Lokasi</TableCell>
-                      <TableCell size="small">Jenis</TableCell>
-                      <TableCell size="small">Jurusan</TableCell>
-                      <TableCell size="small">Open/Close</TableCell>
-                      <TableCell size="small">Waktu</TableCell>
-                      <TableCell size="small">Sebelum</TableCell>
-                      <TableCell size="small">Sesudah</TableCell>
-                      <TableCell size="small">MVAR</TableCell>
-                      <TableCell size="small">Keterangan</TableCell>
-                      <TableCell size="small">Aksi</TableCell>
+                      <TableCellHead size="small">Lokasi</TableCellHead>
+                      <TableCellHead size="small">Jenis</TableCellHead>
+                      <TableCellHead size="small">Jurusan</TableCellHead>
+                      <TableCellHead size="small">Open/Close</TableCellHead>
+                      <TableCellHead size="small">Waktu</TableCellHead>
+                      <TableCellHead size="small">Sebelum</TableCellHead>
+                      <TableCellHead size="small">Sesudah</TableCellHead>
+                      <TableCellHead size="small">MVAR</TableCellHead>
+                      <TableCellHead size="small">Keterangan</TableCellHead>
+                      <TableCellHead size="small">Aksi</TableCellHead>
                     </TableRow>
                   </TableHead>
                   <TableBody>
                     <TableRow>
-                      <TableCell>UNGARAN</TableCell>
-                      <TableCell>Switching Capasitor</TableCell>
-                      <TableCell>Reaktor 4R-2 </TableCell>
-                      <TableCell>Open</TableCell>
-                      <TableCell>22 Januari 2022, 01.43 WIB</TableCell>
-                      <TableCell>22 Januari 2022, 01.43 WIB</TableCell>
-                      <TableCell>22 Januari 2022, 01.43 WIB</TableCell>
-                      <TableCell>1200</TableCell>
-                      <TableCell>
+                      <TableCell size="small">UNGARAN</TableCell>
+                      <TableCell size="small">Switching Capasitor</TableCell>
+                      <TableCell size="small">Reaktor 4R-2 </TableCell>
+                      <TableCell size="small">Open</TableCell>
+                      <TableCell size="small">
+                        22 Januari 2022, 01.43 WIB
+                      </TableCell>
+                      <TableCell size="small">
+                        22 Januari 2022, 01.43 WIB
+                      </TableCell>
+                      <TableCell size="small">
+                        22 Januari 2022, 01.43 WIB
+                      </TableCell>
+                      <TableCell size="small">1200</TableCell>
+                      <TableCell size="small">
                         PMT 66 KV dan Reaktor 4R-2 dinyatakan rusak.
                       </TableCell>
-                      <TableCell>
+                      <TableCell size="small">
                         <Box sx={{ display: "flex", alignItems: "center" }}>
                           <IconButton onClick={() => null}>
                             <PencilOutline />

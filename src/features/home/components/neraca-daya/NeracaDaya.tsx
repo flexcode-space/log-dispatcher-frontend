@@ -6,7 +6,7 @@ import {
   CardHeader,
   TextField,
 } from "@mui/material";
-import { DataGrid } from "@mui/x-data-grid";
+import { DataGrid } from "src/components/table";
 import { dataMock, columns } from "./NeracaDaya.constant";
 import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
