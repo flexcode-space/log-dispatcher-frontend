@@ -10,7 +10,7 @@ import {
   TextField,
   Button,
 } from "@mui/material";
-import { DataGrid } from "@mui/x-data-grid";
+import { DataGrid } from "src/components/table";
 import { useSnapshot } from "valtio";
 import { PencilOutline, DeleteOutline } from "mdi-material-ui";
 

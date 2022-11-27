@@ -21,6 +21,10 @@ export const DataGrid = styled(MuiDataGrid)({
     },
   },
 
+  ".MuiDataGrid-footerContainer": {
+    borderTop: "none",
+  },
+
   ".MuiDataGrid-row:last-child": {
     ".MuiDataGrid-cell": {
       borderBottom: borderColor,

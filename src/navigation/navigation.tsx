@@ -201,7 +201,7 @@ export const navigation = (): HorizontalNavItemsType => [
     icon: LainnyaIcon,
     children: [
       {
-        title: "Dispatcher",
+        title: "Dispatch",
         children: [
           {
             title: "Kapasitor Reaktor",

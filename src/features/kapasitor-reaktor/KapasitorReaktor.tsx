@@ -4,12 +4,6 @@ import {
   Card,
   CardContent,
   Grid,
-  Table,
-  TableRow,
-  TableHead,
-  TableBody,
-  TableCell,
-  TableContainer,
   TablePagination,
   Typography,
   TextField,
@@ -18,6 +12,15 @@ import {
 } from "@mui/material";
 import { PencilOutline } from "mdi-material-ui";
 import PageHeader from "src/@core/components/page-header";
+import {
+  Table,
+  TableRow,
+  TableHead,
+  TableBody,
+  TableCell,
+  TableCellHead,
+  TableContainer,
+} from "src/components/table";
 import DownloadIcon from "src/assets/icons/download-icon.svg";
 import FilterIcon from "src/assets/icons/filter-icon.svg";
 
@@ -74,44 +77,44 @@ const KapasitorReaktor = () => {
               </WrapperFilter>
               <TableContainer>
                 <Table>
-                  <TableHead sx={{ height: "30px", background: "#F5F5F7" }}>
+                  <TableHead>
                     <TableRow>
-                      <TableCell size="small" rowSpan={2}>
+                      <TableCellHead size="small" rowSpan={2}>
                         No
-                      </TableCell>
-                      <TableCell size="small" rowSpan={2}>
+                      </TableCellHead>
+                      <TableCellHead size="small" rowSpan={2}>
                         Lokasi
-                      </TableCell>
-                      <TableCell size="small" align="center" colSpan={2}>
+                      </TableCellHead>
+                      <TableCellHead size="small" align="center" colSpan={2}>
                         Jam
-                      </TableCell>
-                      <TableCell size="small" align="center" colSpan={2}>
+                      </TableCellHead>
+                      <TableCellHead size="small" align="center" colSpan={2}>
                         Tegangan
-                      </TableCell>
-                      <TableCell size="small" rowSpan={2}>
+                      </TableCellHead>
+                      <TableCellHead size="small" rowSpan={2}>
                         Keterangan
-                      </TableCell>
-                      <TableCell size="small" align="center" rowSpan={2}>
+                      </TableCellHead>
+                      <TableCellHead size="small" align="center" rowSpan={2}>
                         Aksi
-                      </TableCell>
+                      </TableCellHead>
                     </TableRow>
                     <TableRow>
-                      <TableCell>Buka</TableCell>
-                      <TableCell>Tutup</TableCell>
-                      <TableCell>Sebelum</TableCell>
-                      <TableCell>Sesudah</TableCell>
+                      <TableCellHead>Buka</TableCellHead>
+                      <TableCellHead>Tutup</TableCellHead>
+                      <TableCellHead>Sebelum</TableCellHead>
+                      <TableCellHead>Sesudah</TableCellHead>
                     </TableRow>
                   </TableHead>
                   <TableBody>
                     <TableRow>
-                      <TableCell>1</TableCell>
-                      <TableCell>PLTU RBANG</TableCell>
-                      <TableCell>07:02</TableCell>
-                      <TableCell>07:22</TableCell>
-                      <TableCell>Dika</TableCell>
-                      <TableCell>Bagus</TableCell>
-                      <TableCell>200 MW</TableCell>
-                      <TableCell>
+                      <TableCell size="small">1</TableCell>
+                      <TableCell size="small">PLTU RBANG</TableCell>
+                      <TableCell size="small">07:02</TableCell>
+                      <TableCell size="small">07:22</TableCell>
+                      <TableCell size="small">Dika</TableCell>
+                      <TableCell size="small">Bagus</TableCell>
+                      <TableCell size="small">200 MW</TableCell>
+                      <TableCell size="small">
                         <Box sx={{ display: "flex", alignItems: "center" }}>
                           <IconButton onClick={() => null}>
                             <PencilOutline />

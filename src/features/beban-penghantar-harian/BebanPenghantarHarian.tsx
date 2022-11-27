@@ -6,13 +6,16 @@ import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import { Card, CardContent, Button } from "@mui/material";
 import { Typography, TextField } from "@mui/material";
 import Grid from "@mui/material/Grid";
-import Table from "@mui/material/Table";
-import TableRow from "@mui/material/TableRow";
-import TableHead from "@mui/material/TableHead";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
 import TablePagination from "@mui/material/TablePagination";
+import {
+  Table,
+  TableRow,
+  TableHead,
+  TableBody,
+  TableCell,
+  TableCellHead,
+  TableContainer,
+} from "src/components/table";
 import PageHeader from "src/@core/components/page-header";
 import DownloadIcon from "src/assets/icons/download-icon.svg";
 import FilterIcon from "src/assets/icons/filter-icon.svg";
@@ -110,53 +113,37 @@ const BebanPenghantarHarian = () => {
               </WrapperFilter>
               <TableContainer>
                 <Table>
-                  <TableHead sx={{ height: "30px", background: "#F5F5F7" }}>
+                  <TableHead>
                     <TableRow>
-                      <TableCell size="small" rowSpan={2}>
-                        No
-                      </TableCell>
-                      <TableCell size="small" rowSpan={2}>
-                        UPT
-                      </TableCell>
-                      <TableCell size="small" rowSpan={2}>
-                        Subsistem
-                      </TableCell>
-                      <TableCell size="small" rowSpan={2}>
-                        Gardu Induk
-                      </TableCell>
-                      <TableCell size="small" rowSpan={2}>
-                        Penghantar
-                      </TableCell>
-                      <TableCell size="small" rowSpan={2}>
-                        Jenis
-                      </TableCell>
-                      <TableCell size="small" rowSpan={2}>
+                      <TableCellHead rowSpan={2}>No</TableCellHead>
+                      <TableCellHead rowSpan={2}>UPT</TableCellHead>
+                      <TableCellHead rowSpan={2}>Subsistem</TableCellHead>
+                      <TableCellHead minWidth="200px" rowSpan={2}>Gardu Induk</TableCellHead>
+                      <TableCellHead minWidth="250px" rowSpan={2}>Penghantar</TableCellHead>
+                      <TableCellHead rowSpan={2}>Jenis</TableCellHead>
+                      <TableCellHead minWidth="200px" rowSpan={2}>
                         Tegangan operasi
-                      </TableCell>
-                      <TableCell size="small" rowSpan={2}>
+                      </TableCellHead>
+                      <TableCellHead minWidth="150px" rowSpan={2}>
                         Arus Nominal (A)
-                      </TableCell>
-                      <TableCell size="small" rowSpan={2}>
-                        Arus Mampu (A)
-                      </TableCell>
-                      <TableCell size="small" rowSpan={2}>
-                        Setting OCR
-                      </TableCell>
+                      </TableCellHead>
+                      <TableCellHead minWidth="150px" rowSpan={2}>Arus Mampu (A)</TableCellHead>
+                      <TableCellHead minWidth="150px" rowSpan={2}>Setting OCR</TableCellHead>
                       {TIME.map((value) => (
-                        <TableCell size="small" align="center" colSpan={6}>
+                        <TableCellHead align="center" colSpan={6}>
                           {value}
-                        </TableCell>
+                        </TableCellHead>
                       ))}
                     </TableRow>
                     <TableRow>
                       {TIME.map(() => (
                         <>
-                          <TableCell size="small">arus (a)</TableCell>
-                          <TableCell size="small">mw</TableCell>
-                          <TableCell size="small">mvar</TableCell>
-                          <TableCell size="small">KWH</TableCell>
-                          <TableCell size="small">% i nom</TableCell>
-                          <TableCell size="small">% i mampu</TableCell>
+                          <TableCellHead minWidth="100px">arus (a)</TableCellHead>
+                          <TableCellHead>mw</TableCellHead>
+                          <TableCellHead>mvar</TableCellHead>
+                          <TableCellHead>KWH</TableCellHead>
+                          <TableCellHead minWidth="100px">% i nom</TableCellHead>
+                          <TableCellHead minWidth="120px">% i mampu</TableCellHead>
                         </>
                       ))}
                     </TableRow>

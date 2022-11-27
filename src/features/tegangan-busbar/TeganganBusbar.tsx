@@ -5,13 +5,16 @@ import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import { Card, CardContent, Button } from "@mui/material";
 import { Typography, TextField } from "@mui/material";
 import Grid from "@mui/material/Grid";
-import Table from "@mui/material/Table";
-import TableRow from "@mui/material/TableRow";
-import TableHead from "@mui/material/TableHead";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
 import TablePagination from "@mui/material/TablePagination";
+import {
+  Table,
+  TableRow,
+  TableHead,
+  TableBody,
+  TableCell,
+  TableCellHead,
+  TableContainer,
+} from "src/components/table";
 import PageHeader from "src/@core/components/page-header";
 import DownloadIcon from "src/assets/icons/download-icon.svg";
 import FilterIcon from "src/assets/icons/filter-icon.svg";
@@ -107,63 +110,47 @@ const TeganganBusbar = () => {
               </WrapperFilter>
               <TableContainer>
                 <Table>
-                  <TableHead sx={{ height: "30px", background: "#F5F5F7" }}>
+                  <TableHead>
                     <TableRow>
-                      <TableCell size="small" rowSpan={2}>
+                      <TableCellHead size="small" rowSpan={2}>
                         No
-                      </TableCell>
-                      <TableCell
-                        size="small"
-                        rowSpan={2}
-                        style={{ minWidth: "100px" }}
-                      >
+                      </TableCellHead>
+                      <TableCellHead size="small" rowSpan={2} minWidth="100px">
                         UPT
-                      </TableCell>
-                      <TableCell
-                        size="small"
-                        rowSpan={2}
-                        style={{ minWidth: "250px" }}
-                      >
+                      </TableCellHead>
+                      <TableCellHead size="small" rowSpan={2} minWidth="250px">
                         Subsistem
-                      </TableCell>
-                      <TableCell
-                        size="small"
-                        rowSpan={2}
-                        style={{ minWidth: "200px" }}
-                      >
+                      </TableCellHead>
+                      <TableCellHead size="small" rowSpan={2} minWidth="200px">
                         Gardu Induk
-                      </TableCell>
-                      <TableCell
-                        size="small"
-                        rowSpan={2}
-                        style={{ minWidth: "200px" }}
-                      >
+                      </TableCellHead>
+                      <TableCellHead size="small" rowSpan={2} minWidth="200px">
                         Busbar
-                      </TableCell>
-                      <TableCell
-                        size="small"
-                        rowSpan={2}
-                        style={{ minWidth: "100px" }}
-                      >
+                      </TableCellHead>
+                      <TableCellHead size="small" rowSpan={2} minWidth="200px">
                         Tegangan operasi
-                      </TableCell>
-                      <TableCell size="small" rowSpan={2}>
+                      </TableCellHead>
+                      <TableCellHead size="small" rowSpan={2} minWidth="150px">
                         Arus Nominal (A)
-                      </TableCell>
-                      <TableCell size="small" rowSpan={2}>
+                      </TableCellHead>
+                      <TableCellHead size="small" rowSpan={2} minWidth="150px">
                         Arus Mampu (A)
-                      </TableCell>
+                      </TableCellHead>
                       {TIME.map((value) => (
-                        <TableCell size="small" align="center" colSpan={2}>
+                        <TableCellHead size="small" align="center" colSpan={2}>
                           {value}
-                        </TableCell>
+                        </TableCellHead>
                       ))}
                     </TableRow>
                     <TableRow>
                       {TIME.map(() => (
                         <>
-                          <TableCell size="small">Busbar 1 (V)</TableCell>
-                          <TableCell size="small">Busbar 2 (V)</TableCell>
+                          <TableCellHead minWidth="120px" size="small">
+                            Busbar 1 (V)
+                          </TableCellHead>
+                          <TableCellHead minWidth="120px" size="small">
+                            Busbar 2 (V)
+                          </TableCellHead>
                         </>
                       ))}
                     </TableRow>

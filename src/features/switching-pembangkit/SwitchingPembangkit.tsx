@@ -4,12 +4,6 @@ import {
   Card,
   CardContent,
   Grid,
-  Table,
-  TableRow,
-  TableHead,
-  TableBody,
-  TableCell,
-  TableContainer,
   TablePagination,
   Typography,
   TextField,
@@ -19,6 +13,15 @@ import {
 } from "@mui/material";
 import { PencilOutline } from "mdi-material-ui";
 import PageHeader from "src/@core/components/page-header";
+import {
+  Table,
+  TableRow,
+  TableHead,
+  TableBody,
+  TableCell,
+  TableCellHead,
+  TableContainer,
+} from "src/components/table";
 import DownloadIcon from "src/assets/icons/download-green-icon.svg";
 import FilterIcon from "src/assets/icons/filter-icon.svg";
 
@@ -89,60 +92,60 @@ const SwitchingPembangkit = () => {
               </WrapperFilter>
               <TableContainer>
                 <Table>
-                  <TableHead sx={{ height: "30px", background: "#F5F5F7" }}>
+                  <TableHead>
                     <TableRow>
-                      <TableCell size="small" rowSpan={2}>
+                      <TableCellHead size="small" rowSpan={2}>
                         No
-                      </TableCell>
-                      <TableCell size="small" rowSpan={2}>
+                      </TableCellHead>
+                      <TableCellHead size="small" rowSpan={2}>
                         Switching
-                      </TableCell>
-                      <TableCell size="small" rowSpan={2}>
+                      </TableCellHead>
+                      <TableCellHead size="small" rowSpan={2}>
                         Pembangkit
-                      </TableCell>
-                      <TableCell size="small" align="center" rowSpan={2}>
+                      </TableCellHead>
+                      <TableCellHead minWidth="200px" size="small" align="center" rowSpan={2}>
                         Tanggal
-                      </TableCell>
-                      <TableCell size="small" align="center" colSpan={2}>
+                      </TableCellHead>
+                      <TableCellHead size="small" align="center" colSpan={2}>
                         Waktu
-                      </TableCell>
-                      <TableCell size="small" align="center" colSpan={3}>
+                      </TableCellHead>
+                      <TableCellHead size="small" align="center" colSpan={3}>
                         Operator
-                      </TableCell>
-                      <TableCell rowSpan={2}>Energi Primer</TableCell>
-                      <TableCell rowSpan={2}>Status</TableCell>
-                      <TableCell rowSpan={2}>Dispatch</TableCell>
-                      <TableCell rowSpan={2}>Keterangan</TableCell>
-                      <TableCell align="center" rowSpan={2}>
+                      </TableCellHead>
+                      <TableCellHead rowSpan={2}>Energi Primer</TableCellHead>
+                      <TableCellHead rowSpan={2}>Status</TableCellHead>
+                      <TableCellHead rowSpan={2}>Dispatch</TableCellHead>
+                      <TableCellHead rowSpan={2}>Keterangan</TableCellHead>
+                      <TableCellHead align="center" rowSpan={2}>
                         Aksi
-                      </TableCell>
+                      </TableCellHead>
                     </TableRow>
                     <TableRow>
-                      <TableCell>Perintah</TableCell>
-                      <TableCell>Real</TableCell>
-                      <TableCell>BPOS</TableCell>
-                      <TableCell>ACC</TableCell>
-                      <TableCell>Pembangkit</TableCell>
+                      <TableCellHead>Perintah</TableCellHead>
+                      <TableCellHead>Real</TableCellHead>
+                      <TableCellHead>BPOS</TableCellHead>
+                      <TableCellHead>ACC</TableCellHead>
+                      <TableCellHead>Pembangkit</TableCellHead>
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    <TableRow>
-                      <TableCell>1</TableCell>
-                      <TableCell>Start/Stop</TableCell>
-                      <TableCell>PLTU RBANG</TableCell>
-                      <TableCell>23 Agustus 2022</TableCell>
-                      <TableCell>07:22</TableCell>
-                      <TableCell>07:22</TableCell>
-                      <TableCell>Dika</TableCell>
-                      <TableCell>Bagoes</TableCell>
-                      <TableCell>Bagoes</TableCell>
-                      <TableCell>Air</TableCell>
-                      <TableCell>PO</TableCell>
-                      <TableCell>
+                    <TableRow hover>
+                      <TableCell size="small">1</TableCell>
+                      <TableCell size="small">Start/Stop</TableCell>
+                      <TableCell size="small">PLTU RBANG</TableCell>
+                      <TableCell size="small">23 Agustus 2022</TableCell>
+                      <TableCell size="small">07:22</TableCell>
+                      <TableCell size="small">07:22</TableCell>
+                      <TableCell size="small">Dika</TableCell>
+                      <TableCell size="small">Bagoes</TableCell>
+                      <TableCell size="small">Bagoes</TableCell>
+                      <TableCell size="small">Air</TableCell>
+                      <TableCell size="small">PO</TableCell>
+                      <TableCell size="small">
                         <Chip label="Start" color="success" />
                       </TableCell>
-                      <TableCell>-</TableCell>
-                      <TableCell>
+                      <TableCell size="small">-</TableCell>
+                      <TableCell size="small">
                         <Box sx={{ display: "flex", alignItems: "center" }}>
                           <IconButton onClick={() => null}>
                             <PencilOutline />

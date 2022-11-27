@@ -1,5 +1,6 @@
-import { Card, CardContent, CardHeader } from "@mui/material";
-import { DataGrid } from "@mui/x-data-grid";
+import { Card, CardContent } from "@mui/material";
+import { DataGrid } from "src/components/table";
+import { CardHeader } from "src/components/card";
 import CustomChip from "src/@core/components/mui/chip";
 
 export interface CellType {
@@ -75,20 +76,7 @@ export const dataMock = [
 export const StatusPembangkit = () => {
   return (
     <Card sx={{ height: "500px" }}>
-      <CardHeader
-        title="Status Pembangkitan"
-        titleTypographyProps={{ variant: "h6" }}
-        subheaderTypographyProps={{
-          variant: "caption",
-          sx: { color: "text.disabled" },
-        }}
-        sx={{
-          flexDirection: ["column", "row"],
-          alignItems: ["flex-start", "center"],
-          "& .MuiCardHeader-action": { mb: 0 },
-          "& .MuiCardHeader-content": { mb: [2, 0] },
-        }}
-      />
+      <CardHeader title="Status Pembangkitan" />
       <CardContent>
         <DataGrid autoHeight hideFooter rows={dataMock} columns={columns} />
       </CardContent>

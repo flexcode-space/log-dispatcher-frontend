@@ -1,12 +1,15 @@
 import { useEffect } from "react";
-import { Card, CardContent, Button } from "@mui/material";
+import { Card, CardContent } from "@mui/material";
 import { Typography, TextField } from "@mui/material";
-import Table from "@mui/material/Table";
-import TableRow from "@mui/material/TableRow";
-import TableHead from "@mui/material/TableHead";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
+import {
+  Table,
+  TableRow,
+  TableHead,
+  TableBody,
+  TableCell,
+  TableCellHead,
+  TableContainer,
+} from "src/components/table";
 import { WrapperFilter } from "src/components/filter";
 import { analisaBebanApi } from "src/api/analisa-beban";
 import { formatDecimalNumber } from "src/utils/number";
@@ -46,128 +49,81 @@ export const TableBebanSubsistem: React.FC<{ tanggal: string }> = ({
         </WrapperFilter>
         <TableContainer>
           <Table style={{ width: "100%", tableLayout: "auto" }}>
-            <TableHead sx={{ height: "30px", background: "#F5F5F7" }}>
+            <TableHead>
               <TableRow>
-                <TableCell
-                  variant="head"
-                  size="small"
-                  rowSpan={2}
-                  style={{ minWidth: "300px" }}
-                >
+                <TableCellHead size="small" rowSpan={2} minWidth="300px">
                   Subsistem
-                </TableCell>
-                <TableCell
-                  variant="head"
+                </TableCellHead>
+                <TableCellHead
                   size="small"
                   align="center"
                   colSpan={2}
-                  style={{ minWidth: "200px" }}
+                  minWidth="200px"
                 >
                   Total Beban
-                </TableCell>
-                <TableCell
-                  variant="head"
+                </TableCellHead>
+                <TableCellHead
                   size="small"
                   align="center"
                   colSpan={3}
-                  style={{ minWidth: "250px" }}
+                  minWidth="250px"
                 >
                   Beban Puncak Siang
-                </TableCell>
-                <TableCell
-                  variant="head"
+                </TableCellHead>
+                <TableCellHead
                   size="small"
                   align="center"
                   colSpan={3}
-                  style={{ minWidth: "200px" }}
+                  minWidth="200px"
                 >
                   Beban Puncak Malam
-                </TableCell>
-                <TableCell
-                  variant="head"
+                </TableCellHead>
+                <TableCellHead
                   size="small"
                   align="center"
                   colSpan={4}
-                  style={{ minWidth: "200px" }}
+                  minWidth="200px"
                 >
                   Tegangan Tertinggi
-                </TableCell>
-                <TableCell
-                  variant="head"
+                </TableCellHead>
+                <TableCellHead
                   size="small"
                   align="center"
                   colSpan={4}
-                  style={{ minWidth: "100px" }}
+                  minWidth="100px"
                 >
                   Tegangan Terendah
-                </TableCell>
+                </TableCellHead>
               </TableRow>
               <TableRow>
-                <TableCell variant="head" size="small">
-                  MW
-                </TableCell>
-                <TableCell variant="head" size="small">
-                  MVAR
-                </TableCell>
-                <TableCell variant="head" size="small">
-                  JAM
-                </TableCell>
-                <TableCell variant="head" size="small">
-                  MW
-                </TableCell>
-                <TableCell variant="head" size="small">
-                  MVAR
-                </TableCell>
-                <TableCell variant="head" size="small">
-                  JAM
-                </TableCell>
-                <TableCell variant="head" size="small">
-                  MW
-                </TableCell>
-                <TableCell variant="head" size="small">
-                  MVAR
-                </TableCell>
-                <TableCell variant="head" size="small">
-                  JAM
-                </TableCell>
-                <TableCell
-                  variant="head"
+                <TableCellHead size="small">MW</TableCellHead>
+                <TableCellHead size="small">MVAR</TableCellHead>
+                <TableCellHead size="small">JAM</TableCellHead>
+                <TableCellHead size="small">MW</TableCellHead>
+                <TableCellHead size="small">MVAR</TableCellHead>
+                <TableCellHead size="small">JAM</TableCellHead>
+                <TableCellHead size="small">MW</TableCellHead>
+                <TableCellHead size="small">MVAR</TableCellHead>
+                <TableCellHead size="small">JAM</TableCellHead>
+                <TableCellHead
                   size="small"
                   // align="center"
                   style={{ minWidth: "250px" }}
                 >
                   Gardu Induk
-                </TableCell>
-                <TableCell
-                  variant="head"
-                  size="small"
-                  style={{ minWidth: "250px" }}
-                >
+                </TableCellHead>
+                <TableCellHead size="small" style={{ minWidth: "250px" }}>
                   Busbar
-                </TableCell>
-                <TableCell variant="head" size="small">
-                  Tegangan
-                </TableCell>
-                <TableCell variant="head" size="small">
-                  JAM
-                </TableCell>
-                <TableCell
-                  variant="head"
-                  size="small"
-                  style={{ minWidth: "250px" }}
-                >
+                </TableCellHead>
+                <TableCellHead size="small">Tegangan</TableCellHead>
+                <TableCellHead size="small">JAM</TableCellHead>
+                <TableCellHead size="small" style={{ minWidth: "250px" }}>
                   Gardu Induk
-                </TableCell>
-                <TableCell
-                  variant="head"
-                  size="small"
-                  style={{ minWidth: "250px" }}
-                >
+                </TableCellHead>
+                <TableCellHead size="small" style={{ minWidth: "250px" }}>
                   Busbar
-                </TableCell>
-                <TableCell variant="head" size="small">
-                  Tegangan
-                </TableCell>
+                </TableCellHead>
+                <TableCellHead size="small">Tegangan</TableCellHead>
               </TableRow>
             </TableHead>
             <TableBody>

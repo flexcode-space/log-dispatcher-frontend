@@ -6,13 +6,16 @@ import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import { Card, CardContent, Button } from "@mui/material";
 import { Typography, TextField } from "@mui/material";
 import Grid from "@mui/material/Grid";
-import Table from "@mui/material/Table";
-import TableRow from "@mui/material/TableRow";
-import TableHead from "@mui/material/TableHead";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
 import TablePagination from "@mui/material/TablePagination";
+import {
+  Table,
+  TableRow,
+  TableHead,
+  TableBody,
+  TableCell,
+  TableCellHead,
+  TableContainer,
+} from "src/components/table";
 import PageHeader from "src/@core/components/page-header";
 import DownloadIcon from "src/assets/icons/download-icon.svg";
 import FilterIcon from "src/assets/icons/filter-icon.svg";
@@ -108,73 +111,57 @@ const BebanIBTHarian = () => {
               </WrapperFilter>
               <TableContainer>
                 <Table>
-                  <TableHead sx={{ height: "30px", background: "#F5F5F7" }}>
+                  <TableHead>
                     <TableRow>
-                      <TableCell size="small" rowSpan={2}>
+                      <TableCellHead size="small" rowSpan={2}>
                         No
-                      </TableCell>
-                      <TableCell
-                        size="small"
-                        rowSpan={2}
-                        style={{ minWidth: "100px" }}
-                      >
+                      </TableCellHead>
+                      <TableCellHead size="small" rowSpan={2} minWidth="100px">
                         UPT
-                      </TableCell>
-                      <TableCell
-                        size="small"
-                        rowSpan={2}
-                        style={{ minWidth: "250px" }}
-                      >
+                      </TableCellHead>
+                      <TableCellHead size="small" rowSpan={2} minWidth="250px">
                         Subsistem
-                      </TableCell>
-                      <TableCell
-                        size="small"
-                        rowSpan={2}
-                        style={{ minWidth: "200px" }}
-                      >
+                      </TableCellHead>
+                      <TableCellHead size="small" rowSpan={2} minWidth="200px">
                         Gardu Induk
-                      </TableCell>
-                      <TableCell
-                        size="small"
-                        rowSpan={2}
-                        style={{ minWidth: "200px" }}
-                      >
+                      </TableCellHead>
+                      <TableCellHead size="small" rowSpan={2} minWidth="200px">
                         Nama IBT
-                      </TableCell>
-                      <TableCell
+                      </TableCellHead>
+                      <TableCellHead
                         size="small"
                         rowSpan={2}
-                        style={{ minWidth: "100px" }}
+                        minWidth="120px"
                       >
                         Daya (MVA)
-                      </TableCell>
-                      <TableCell size="small" rowSpan={2}>
+                      </TableCellHead>
+                      <TableCellHead size="small" rowSpan={2}>
                         Ratio
-                      </TableCell>
-                      <TableCell size="small" rowSpan={2}>
+                      </TableCellHead>
+                      <TableCellHead minWidth="150px" size="small" rowSpan={2}>
                         Arus Nominal (A)
-                      </TableCell>
-                      <TableCell size="small" rowSpan={2}>
+                      </TableCellHead>
+                      <TableCellHead minWidth="150px" size="small" rowSpan={2}>
                         Arus Mampu (A)
-                      </TableCell>
-                      <TableCell size="small" rowSpan={2}>
+                      </TableCellHead>
+                      <TableCellHead minWidth="120px" size="small" rowSpan={2}>
                         Setting OCR
-                      </TableCell>
+                      </TableCellHead>
                       {TIME.map((value) => (
-                        <TableCell size="small" align="center" colSpan={6}>
+                        <TableCellHead size="small" align="center" colSpan={6}>
                           {value}
-                        </TableCell>
+                        </TableCellHead>
                       ))}
                     </TableRow>
                     <TableRow>
                       {TIME.map(() => (
                         <>
-                          <TableCell size="small">arus (a)</TableCell>
-                          <TableCell size="small">mw</TableCell>
-                          <TableCell size="small">mvar</TableCell>
-                          <TableCell size="small">KWH</TableCell>
-                          <TableCell size="small">% i nom</TableCell>
-                          <TableCell size="small">% i mampu</TableCell>
+                          <TableCellHead minWidth="100px" size="small">arus (a)</TableCellHead>
+                          <TableCellHead size="small">mw</TableCellHead>
+                          <TableCellHead size="small">mvar</TableCellHead>
+                          <TableCellHead size="small">KWH</TableCellHead>
+                          <TableCellHead minWidth="100px" size="small">% i nom</TableCellHead>
+                          <TableCellHead minWidth="120px" size="small">% i mampu</TableCellHead>
                         </>
                       ))}
                     </TableRow>

@@ -1,4 +1,5 @@
-import TableCell from "@mui/material/TableCell";
+import { TableCell } from "src/components/table";
+import { formatDecimalNumber } from "src/utils/number";
 import { Data } from "./types";
 import { TIME } from "src/constants/time";
 
@@ -8,18 +9,30 @@ export const showValueBeban = (data: Data) => {
   return Object.values(TIME).map((value) => {
     const arus = "arus_" + value.replace(".", "");
     const mw = "mw_" + value.replace(".", "");
-    const mvar = "mvar_" + value.replace(".", "");
+    const mvar = "mx_" + value.replace(".", "");
     const kwh = "kwh_" + value.replace(".", "");
     const inom = "inom_" + value.replace(".", "");
     const imampu = "imampu_" + value.replace(".", "");
     return (
       <>
-        <TableCell size="small">{(data as any)[arus]!}</TableCell>
-        <TableCell size="small">{(data as any)[mw]!}</TableCell>
-        <TableCell size="small">{(data as any)[mvar]!}</TableCell>
-        <TableCell size="small">{(data as any)[kwh]!}</TableCell>
-        <TableCell size="small">{(data as any)[inom]!}</TableCell>
-        <TableCell size="small">{(data as any)[imampu]!}</TableCell>
+        <TableCell size="small">
+          {formatDecimalNumber((data as any)[arus]!, 2)}
+        </TableCell>
+        <TableCell size="small">
+          {formatDecimalNumber((data as any)[mw]!, 2)}
+        </TableCell>
+        <TableCell size="small">
+          {formatDecimalNumber((data as any)[mvar]!, 2)}
+        </TableCell>
+        <TableCell size="small">
+          {formatDecimalNumber((data as any)[kwh]!, 2)}
+        </TableCell>
+        <TableCell size="small">
+          {formatDecimalNumber((data as any)[inom]!, 2)}
+        </TableCell>
+        <TableCell size="small">
+          {formatDecimalNumber((data as any)[imampu]!, 2)}
+        </TableCell>
       </>
     );
   });
