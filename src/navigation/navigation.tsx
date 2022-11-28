@@ -22,6 +22,12 @@ import LoadFlowIcon from "../assets/icons/load-flow-icon.svg";
 import DefenseSchemaIcon from "../assets/icons/defense-schema-icon.svg";
 import EnergiPrimerIcon from "../assets/icons/energi-primer-icon.svg";
 import ProduksiAirIcon from "../assets/icons/produksi-air-icon.svg";
+import DocumentIcon from "../assets/icons/document-icon.svg";
+import ReportIcon from "../assets/icons/report-icon.svg";
+import DispatchIcon from "../assets/icons/dispatch-icon.svg";
+import NeracaDayaIcon from "../assets/icons/neraca-daya-icon.svg";
+import PoskoApdIcon from "../assets/icons/posko-apd-icon.svg";
+import SubReportIcon from "../assets/icons/sub-report-icon.svg";
 
 // ** Type import
 import { HorizontalNavItemsType } from "src/@core/layouts/types";
@@ -121,22 +127,17 @@ export const navigation = (): HorizontalNavItemsType => [
       {
         title: "Air",
         icon: ProduksiAirIcon,
-        path: '/energi-primer/air'
+        path: "/energi-primer/air",
       },
       {
         title: "Gas & HSD",
         icon: PembangkitIcon,
-        path: '/energi-primer/gas-dan-hsd'
+        path: "/energi-primer/gas-dan-hsd",
       },
       {
         title: "Batubara",
         icon: PenghantarIcon,
-        path: '/energi-primer/batubara'
-      },
-      {
-        title: "Analisa Beban",
-        icon: TrafoIcon,
-        path: '/energi-primer/analisa-beban'
+        path: "/energi-primer/batubara",
       },
     ],
   },
@@ -202,6 +203,7 @@ export const navigation = (): HorizontalNavItemsType => [
     children: [
       {
         title: "Dispatch",
+        icon: DispatchIcon,
         children: [
           {
             title: "Kapasitor Reaktor",
@@ -223,7 +225,49 @@ export const navigation = (): HorizontalNavItemsType => [
       },
       {
         title: "Dokumen",
+        icon: DocumentIcon,
         path: "/dokumen",
+      },
+      {
+        title: "Laporan",
+        icon: ReportIcon,
+        children: [
+          {
+            title: "Neraca Daya",
+            icon: NeracaDayaIcon,
+            path: "/laporan/neraca-daya",
+          },
+          {
+            title: "Posko APD",
+            icon: PoskoApdIcon,
+            path: "/laporan/posko-apd",
+          },
+          {
+            title: "Laporan FOR",
+            icon: SubReportIcon,
+            path: "/laporan/for",
+          },
+          {
+            title: "Laporan FreeGov",
+            icon: SubReportIcon,
+            path: "/laporan/freegov",
+          },
+          {
+            title: "Laporan Pekerjaan",
+            icon: SubReportIcon,
+            path: "/laporan/pekerjaan",
+          },
+          {
+            title: "Rekonfigurasi",
+            icon: SubReportIcon,
+            path: "/laporan/rekonfigurasi",
+          },
+          {
+            title: "Laporan SCADA",
+            icon: SubReportIcon,
+            path: "/laporan/scada",
+          },
+        ],
       },
     ],
   },
