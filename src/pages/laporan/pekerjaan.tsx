@@ -1,4 +1,5 @@
 import Head from "next/head";
+import { LaporanPekerjaan } from "src/features/laporan-pekerjaan";
 
 const LaporanPekerjaanPage = () => {
   return (
@@ -6,7 +7,7 @@ const LaporanPekerjaanPage = () => {
       <Head>
         <title>Laporan Pekerjaan</title>
       </Head>
-      <h1>Laporan</h1>
+      <LaporanPekerjaan />
     </>
   );
 };
