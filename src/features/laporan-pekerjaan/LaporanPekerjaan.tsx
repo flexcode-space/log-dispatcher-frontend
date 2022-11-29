@@ -1,54 +1,18 @@
 import { useState } from "react";
-import {
-  Box,
-  Card,
-  CardContent,
-  Grid,
-  Typography,
-  TextField,
-  Button,
-  IconButton,
-} from "@mui/material";
-import { Pencil } from "mdi-material-ui";
+import { Grid, Typography, TextField, Button } from "@mui/material";
+// import { DataGrid, gridClasses } from "@mui/x-data-grid";
 import DatePickerMui from "@mui/lab/DatePicker";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import PageHeader from "src/@core/components/page-header";
-import { CardHeader } from "src/components/card";
 import { WrapperFilter } from "src/components/filter";
-import { DataGrid } from "src/components/table";
 import { openModal } from "src/state/modal";
+import { TableLaporan, TableLain } from "./table-laporan";
 
-import {
-  defaultColumns,
-  datamock,
-  listTable,
-} from "./LaporanPekerjaan.constant";
-
-export interface CellType {
-  row: any;
-}
+import { listTable } from "./LaporanPekerjaan.constant";
 
 const LaporanPekerjaan = () => {
   const [search, setSearch] = useState<string>("");
-
-  const columns = [
-    ...defaultColumns,
-    {
-      flex: 0.15,
-      minWidth: 100,
-      sortable: false,
-      field: "actions",
-      headerName: "Aksi",
-      renderCell: ({ row }: CellType) => (
-        <Box sx={{ display: "flex", alignItems: "center" }}>
-          <IconButton onClick={() => null}>
-            <Pencil />
-          </IconButton>
-        </Box>
-      ),
-    },
-  ];
 
   return (
     <>
@@ -99,21 +63,10 @@ const LaporanPekerjaan = () => {
             </div>
           </WrapperFilter>
         </Grid>
-        {listTable.map((value) => (
-          <Grid item xs={12} key={`document-${value.title}`}>
-            <Card>
-              <CardHeader title={value.title} />
-              <CardContent>
-                <DataGrid
-                  hideFooter
-                  autoHeight
-                  columns={columns}
-                  rows={datamock}
-                />
-              </CardContent>
-            </Card>
-          </Grid>
+        {listTable.map((value, index) => (
+          <TableLaporan key={`table-${index}`} title={value.title} />
         ))}
+        <TableLain />
       </Grid>
     </>
   );
