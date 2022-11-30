@@ -1,14 +1,15 @@
 import Head from "next/head";
+import { Rekonfigurasi } from "src/features/rekonfigurasi";
 
-const LaporanPekerjaanPage = () => {
+const RekonfigurasiPage = () => {
   return (
     <>
       <Head>
-        <title>Laporan Pekerjaan</title>
+        <title>Rekonfigurasi</title>
       </Head>
-      <h1>Laporan</h1>
+      <Rekonfigurasi />
     </>
   );
 };
 
-export default LaporanPekerjaanPage;
+export default RekonfigurasiPage;

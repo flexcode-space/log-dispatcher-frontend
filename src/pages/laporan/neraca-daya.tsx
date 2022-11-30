@@ -1,14 +1,15 @@
 import Head from "next/head";
+import { LaporanNeracaDaya } from "src/features/laporan-neraca-daya";
 
-const LaporanPekerjaanPage = () => {
+const LaporanNeracaDayaPage = () => {
   return (
     <>
       <Head>
-        <title>Laporan Pekerjaan</title>
+        <title>Laporan Neraca Daya</title>
       </Head>
-      <h1>Laporan</h1>
+      <LaporanNeracaDaya />
     </>
   );
 };
 
-export default LaporanPekerjaanPage;
+export default LaporanNeracaDayaPage;

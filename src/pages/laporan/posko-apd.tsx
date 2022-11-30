@@ -1,14 +1,15 @@
 import Head from "next/head";
+import { LaporanPoskoApd } from "src/features/laporan-posko-apd";
 
-const LaporanPekerjaanPage = () => {
+const LaporanPoskoApdPage = () => {
   return (
     <>
       <Head>
-        <title>Laporan Pekerjaan</title>
+        <title>Laporan Posko APD</title>
       </Head>
-      <h1>Laporan</h1>
+      <LaporanPoskoApd />
     </>
   );
 };
 
-export default LaporanPekerjaanPage;
+export default LaporanPoskoApdPage;
