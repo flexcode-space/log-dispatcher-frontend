@@ -1,14 +1,15 @@
 import Head from "next/head";
+import { LaporanFor } from "src/features/laporan-for";
 
-const LaporanPekerjaanPage = () => {
+const LaporanForPage = () => {
   return (
     <>
       <Head>
-        <title>Laporan Pekerjaan</title>
+        <title>Laporan FOR</title>
       </Head>
-      <h1>Laporan</h1>
+      <LaporanFor />
     </>
   );
 };
 
-export default LaporanPekerjaanPage;
+export default LaporanForPage;
