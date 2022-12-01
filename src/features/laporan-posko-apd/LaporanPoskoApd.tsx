@@ -25,6 +25,7 @@ import {
   TableCellHead,
   TableContainer,
 } from "src/components/table";
+import FilterGreenIcon from "src/assets/icons/filter-green-icon.svg";
 
 const LaporanPoskoApd = () => {
   const [search, setSearch] = useState<string>("");
@@ -82,6 +83,9 @@ const LaporanPoskoApd = () => {
                     size="small"
                     sx={{ height: "40px" }}
                   >
+                    <IconButton>
+                      <FilterGreenIcon />
+                    </IconButton>
                     Filter
                   </Button>
                   <Button

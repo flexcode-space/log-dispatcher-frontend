@@ -1,14 +1,12 @@
-import { useState, useCallback, useMemo } from "react";
+import { useState, useMemo } from "react";
 import { GridColumns } from "@mui/x-data-grid";
 import {
-  Box,
   Card,
   CardContent,
   Grid,
   Typography,
   TextField,
   Button,
-  IconButton,
 } from "@mui/material";
 import DatePickerMui from "@mui/lab/DatePicker";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
@@ -39,8 +37,6 @@ const Air = () => {
     });
     return arrayTime;
   };
-
-  console.log("datamock", datamock);
 
   const columns = useMemo(
     () => [

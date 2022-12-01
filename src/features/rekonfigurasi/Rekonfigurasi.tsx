@@ -8,13 +8,8 @@ import {
   CardContent,
   IconButton,
 } from "@mui/material";
-import DatePickerMui from "@mui/lab/DatePicker";
-import AdapterDateFns from "@mui/lab/AdapterDateFns";
-import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import { Pencil } from "mdi-material-ui";
 import PageHeader from "src/@core/components/page-header";
-import { WrapperFilter } from "src/components/filter";
-import { openModal } from "src/state/modal";
 import { CardHeader } from "src/components/card";
 import {
   Table,
@@ -25,6 +20,7 @@ import {
   TableCellHead,
   TableContainer,
 } from "src/components/table";
+import FilterGreenIcon from "src/assets/icons/filter-green-icon.svg";
 
 const Rekonfigurasi = () => {
   const [search, setSearch] = useState<string>("");
@@ -48,6 +44,9 @@ const Rekonfigurasi = () => {
                     size="small"
                     sx={{ height: "40px" }}
                   >
+                    <IconButton>
+                      <FilterGreenIcon />
+                    </IconButton>
                     Filter
                   </Button>
                   <Button

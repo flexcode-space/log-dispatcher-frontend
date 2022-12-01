@@ -1,14 +1,15 @@
 import Head from "next/head";
+import { LaporanFreeGov } from "src/features/laporan-free-gov";
 
-const LaporanPekerjaanPage = () => {
+const LaporanFreeGovPage = () => {
   return (
     <>
       <Head>
-        <title>Laporan Pekerjaan</title>
+        <title>Laporan FreeGov</title>
       </Head>
-      <h1>Laporan</h1>
+      <LaporanFreeGov />
     </>
   );
 };
 
-export default LaporanPekerjaanPage;
+export default LaporanFreeGovPage;
