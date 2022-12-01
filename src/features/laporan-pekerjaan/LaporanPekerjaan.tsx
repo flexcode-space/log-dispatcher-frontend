@@ -1,0 +1,75 @@
+import { useState } from "react";
+import { Grid, Typography, TextField, Button } from "@mui/material";
+// import { DataGrid, gridClasses } from "@mui/x-data-grid";
+import DatePickerMui from "@mui/lab/DatePicker";
+import AdapterDateFns from "@mui/lab/AdapterDateFns";
+import LocalizationProvider from "@mui/lab/LocalizationProvider";
+import PageHeader from "src/@core/components/page-header";
+import { WrapperFilter } from "src/components/filter";
+import { openModal } from "src/state/modal";
+import { TableLaporan, TableLain } from "./table-laporan";
+
+import { listTable } from "./LaporanPekerjaan.constant";
+
+const LaporanPekerjaan = () => {
+  const [search, setSearch] = useState<string>("");
+
+  return (
+    <>
+      <Grid container spacing={6}>
+        <Grid item xs={12}>
+          <WrapperFilter>
+            <Grid item xs={4}>
+              <PageHeader
+                title={<Typography variant="h5">Laporan Pekerjaan</Typography>}
+              />
+            </Grid>
+            <div style={{ display: "flex", gap: "10px" }}>
+              <TextField
+                size="small"
+                value={search}
+                sx={{ mb: 2 }}
+                placeholder="Cari"
+                onChange={(e) => setSearch(e.target.value)}
+              />
+              <LocalizationProvider dateAdapter={AdapterDateFns}>
+                <DatePickerMui
+                  value={null}
+                  label="Pilih Tanggal"
+                  onChange={() => null}
+                  renderInput={(params) => (
+                    <TextField
+                      size="small"
+                      {...params}
+                      sx={{ width: "200px" }}
+                    />
+                  )}
+                />
+              </LocalizationProvider>
+              <Button
+                sx={{ mb: 2 }}
+                onClick={() => openModal()}
+                variant="outlined"
+              >
+                Tambah Data
+              </Button>
+              <Button
+                sx={{ mb: 2 }}
+                onClick={() => openModal()}
+                variant="contained"
+              >
+                Generate Laporan
+              </Button>
+            </div>
+          </WrapperFilter>
+        </Grid>
+        {listTable.map((value, index) => (
+          <TableLaporan key={`table-${index}`} title={value.title} />
+        ))}
+        <TableLain />
+      </Grid>
+    </>
+  );
+};
+
+export default LaporanPekerjaan;
