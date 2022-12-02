@@ -28,6 +28,7 @@ import DispatchIcon from "../assets/icons/dispatch-icon.svg";
 import NeracaDayaIcon from "../assets/icons/neraca-daya-icon.svg";
 import PoskoApdIcon from "../assets/icons/posko-apd-icon.svg";
 import SubReportIcon from "../assets/icons/sub-report-icon.svg";
+import GangguanIcon from "../assets/icons/gangguan-icon.svg";
 
 // ** Type import
 import { HorizontalNavItemsType } from "src/@core/layouts/types";
@@ -227,6 +228,11 @@ export const navigation = (): HorizontalNavItemsType => [
         title: "Dokumen",
         icon: DocumentIcon,
         path: "/dokumen",
+      },
+      {
+        title: "Gangguan",
+        icon: GangguanIcon,
+        path: "/gangguan",
       },
       {
         title: "Laporan",
