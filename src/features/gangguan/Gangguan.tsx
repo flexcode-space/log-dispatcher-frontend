@@ -7,6 +7,9 @@ import {
   Card,
   CardContent,
   IconButton,
+  Menu,
+  MenuItem,
+  Box,
 } from "@mui/material";
 import DatePickerMui from "@mui/lab/DatePicker";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
@@ -27,6 +30,8 @@ import {
 } from "src/components/table";
 import FilterGreenIcon from "src/assets/icons/filter-green-icon.svg";
 import DownloadGreenIcon from "src/assets/icons/download-green-icon.svg";
+
+import { MenuMore } from "./components";
 
 const Gangguan = () => {
   const [search, setSearch] = useState<string>("");
@@ -163,9 +168,12 @@ const Gangguan = () => {
                         KESUGIHAN sekitar tower 178-179
                       </TableCell>
                       <TableCell>
-                        <IconButton>
-                          <Pencil />
-                        </IconButton>
+                        <Box display="flex">
+                          <IconButton>
+                            <Pencil />
+                          </IconButton>
+                          <MenuMore />
+                        </Box>
                       </TableCell>
                     </TableRow>
                   </TableBody>
