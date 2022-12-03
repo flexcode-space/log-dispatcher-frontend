@@ -1,10 +1,12 @@
 import { useState } from "react";
+import { useRouter } from "next/router";
 import {
   IconButton,
   Menu,
   MenuItem,
   ListItemIcon,
   Typography,
+  Link,
 } from "@mui/material";
 import MoreMenuIcon from "src/assets/icons/more-menu-icon.svg";
 import LihatKeteranganIcon from "src/assets/icons/lihat-keterangan-icon.svg";
@@ -14,6 +16,7 @@ import FilePendukungIcon from "src/assets/icons/file-pendukung-icon.svg";
 import HapusIcon from "src/assets/icons/hapus-icon.svg";
 
 const MenuMore = () => {
+  const router = useRouter();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
 
@@ -58,7 +61,7 @@ const MenuMore = () => {
           </ListItemIcon>
           <Typography variant="inherit">Lihat Keterangan</Typography>
         </MenuItem>
-        <MenuItem>
+        <MenuItem onClick={() => router.push("/gangguan/manuver")}>
           <IconButton>
             <TambahManuverIcon />
           </IconButton>

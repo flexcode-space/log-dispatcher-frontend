@@ -6,21 +6,24 @@ interface Modal {
   isOpenModalUPT: boolean;
   id?: string
   isReloadData?: boolean
+  target?: string
 }
 
 const initialModal = {
   isOpen: false,
   isOpenModalUPT: false,
   id: "",
-  isReloadData: false
+  isReloadData: false,
+  target: ""
 }
 
 export const modal = proxy<Modal>(initialModal)
 
-export const openModal = (id?: string): void => {
+export const openModal = (id?: string, target?: string): void => {
   modal.isOpenModalUPT = false
   modal.isOpen = true
   modal.id = id || ""
+  modal.target = target
 }
 
 export const openModalUPT = (): void => {
@@ -36,6 +39,7 @@ export const closeModalUPT = (): void => {
 export const closeModal = (): void => {
   modal.isOpen = initialModal.isOpen
   modal.id = initialModal.id
+  modal.target = initialModal.target
 }
 
 export const reloadPage = (): void => {

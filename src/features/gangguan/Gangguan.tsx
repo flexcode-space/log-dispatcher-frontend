@@ -12,6 +12,7 @@ import {
   Box,
 } from "@mui/material";
 import DatePickerMui from "@mui/lab/DatePicker";
+import TablePagination from "@mui/material/TablePagination";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import { Pencil } from "mdi-material-ui";
@@ -35,6 +36,19 @@ import { MenuMore } from "./components";
 
 const Gangguan = () => {
   const [search, setSearch] = useState<string>("");
+  const [page, setPage] = useState<number>(0);
+  const [rowsPerPage, setRowsPerPage] = useState<number>(10);
+
+  const handleChangePage = (event: unknown, newPage: number) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setRowsPerPage(+event.target.value);
+    setPage(0);
+  };
 
   return (
     <>
@@ -179,6 +193,15 @@ const Gangguan = () => {
                   </TableBody>
                 </Table>
               </TableContainer>
+              <TablePagination
+                rowsPerPageOptions={[10, 25, 100]}
+                component="div"
+                count={12}
+                rowsPerPage={rowsPerPage}
+                page={page}
+                onPageChange={handleChangePage}
+                onRowsPerPageChange={handleChangeRowsPerPage}
+              />
             </CardContent>
           </Card>
         </Grid>
