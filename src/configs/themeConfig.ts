@@ -44,7 +44,7 @@ type ThemeConfig = {
 
 const themeConfig: ThemeConfig = {
   // ** Layout Configs
-  templateName: 'Log Sheet Online Jateng & DIY' /* App Name */,
+  templateName: 'Logsheet Online Dispatcher' /* App Name */,
   layout: 'horizontal' /* vertical | horizontal */,
   mode: 'light' /* light | dark */,
   direction: 'ltr' /* ltr | rtl */,

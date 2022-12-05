@@ -20,6 +20,8 @@ import { modal, closeModal } from "src/state/modal";
 export const ModalDataPadam = () => {
   const modalSnapshot = useSnapshot(modal);
 
+  const [isAddDataPadam, setIsAddDataPadam] = useState<boolean>(false);
+
   const isOpen =
     modalSnapshot.isOpen && modalSnapshot.target === "modal-data-padam";
 
@@ -119,32 +121,49 @@ export const ModalDataPadam = () => {
                   />
                 </Grid>
                 <Grid item xs={12}>
-                  <Grid container spacing={2}>
-                    <Grid item xs={12}>
-                      <Typography variant="subtitle1" fontWeight={500}>
-                        Tambah Data Padam
-                      </Typography>
+                  {isAddDataPadam && (
+                    <Grid container spacing={2}>
+                      <Grid item xs={12}>
+                        <Typography variant="subtitle1" fontWeight={500}>
+                          Tambah Data Padam
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={3}>
+                        <InputField name="penyulang" label="Penyulang" />
+                      </Grid>
+                      <Grid item xs={3}>
+                        <InputField name="kw" label="KW" />
+                      </Grid>
+                      <Grid item xs={3}>
+                        <InputField name="menit" label="Menit" />
+                      </Grid>
+                      <Grid item xs={3}>
+                        <InputField name="keterangan" label="Keterangan" />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <Button
+                          variant="text"
+                          onClick={() => setIsAddDataPadam(false)}
+                        >
+                          Batal
+                        </Button>
+                        <Button variant="outlined">Simpan</Button>
+                      </Grid>
                     </Grid>
-                    <Grid item xs={3}>
-                      <InputField name="penyulang" label="Penyulang" />
-                    </Grid>
-                    <Grid item xs={3}>
-                      <InputField name="kw" label="KW" />
-                    </Grid>
-                    <Grid item xs={3}>
-                      <InputField name="menit" label="Menit" />
-                    </Grid>
-                    <Grid item xs={3}>
-                      <InputField name="keterangan" label="Keterangan" />
-                    </Grid>
+                  )}
+                </Grid>
+                {!isAddDataPadam && (
+                  <Grid item xs={12}>
+                    <Button
+                      onClick={() => setIsAddDataPadam(true)}
+                      sx={{ height: "30px" }}
+                      variant="outlined"
+                    >
+                      <PlusCircleOutline />
+                      Tambah
+                    </Button>
                   </Grid>
-                </Grid>
-                <Grid item xs={12}>
-                  <Button sx={{ height: "30px" }} variant="outlined">
-                    <PlusCircleOutline />
-                    Tambah
-                  </Button>
-                </Grid>
+                )}
               </Grid>
             </DialogContent>
             <DialogActions className="dialog-actions-dense">
