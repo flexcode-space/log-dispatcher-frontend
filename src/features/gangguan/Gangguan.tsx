@@ -33,7 +33,11 @@ import FilterGreenIcon from "src/assets/icons/filter-green-icon.svg";
 import DownloadGreenIcon from "src/assets/icons/download-green-icon.svg";
 
 import { MenuMore } from "./components";
-import { ModalAddGangguan, ModalKeteranganGangguan } from "./modal";
+import {
+  ModalAddGangguan,
+  ModalKeteranganGangguan,
+  ModalDataPadam,
+} from "./modal";
 
 const Gangguan = () => {
   const [search, setSearch] = useState<string>("");
@@ -53,6 +57,7 @@ const Gangguan = () => {
 
   return (
     <>
+      <ModalDataPadam />
       <ModalAddGangguan />
       <ModalKeteranganGangguan />
       <Grid container spacing={6}>

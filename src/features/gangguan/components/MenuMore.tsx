@@ -68,7 +68,7 @@ const MenuMore = () => {
           </IconButton>
           <Typography variant="inherit">Tambah Manuver</Typography>
         </MenuItem>
-        <MenuItem>
+        <MenuItem onClick={() => openModal("", "modal-data-padam")}>
           <IconButton>
             <DataPadamIcon />
           </IconButton>
