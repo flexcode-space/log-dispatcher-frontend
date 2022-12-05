@@ -33,6 +33,7 @@ import FilterGreenIcon from "src/assets/icons/filter-green-icon.svg";
 import DownloadGreenIcon from "src/assets/icons/download-green-icon.svg";
 
 import { MenuMore } from "./components";
+import { ModalAddGangguan, ModalKeteranganGangguan } from "./modal";
 
 const Gangguan = () => {
   const [search, setSearch] = useState<string>("");
@@ -52,6 +53,8 @@ const Gangguan = () => {
 
   return (
     <>
+      <ModalAddGangguan />
+      <ModalKeteranganGangguan />
       <Grid container spacing={6}>
         <Grid item xs={12}>
           <WrapperFilter>
@@ -115,6 +118,7 @@ const Gangguan = () => {
                     variant="contained"
                     size="small"
                     sx={{ height: "40px" }}
+                    onClick={() => openModal("", "modal-add-gangguan")}
                   >
                     Tambah Pencatatan Gangguan
                   </Button>

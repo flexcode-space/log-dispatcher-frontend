@@ -8,6 +8,7 @@ import {
   Typography,
   Link,
 } from "@mui/material";
+import { openModal } from "src/state/modal";
 import MoreMenuIcon from "src/assets/icons/more-menu-icon.svg";
 import LihatKeteranganIcon from "src/assets/icons/lihat-keterangan-icon.svg";
 import TambahManuverIcon from "src/assets/icons/tambah-manuver-icon.svg";
@@ -53,7 +54,7 @@ const MenuMore = () => {
           },
         }}
       >
-        <MenuItem>
+        <MenuItem onClick={() => openModal("", "modal-keterangan-gangguan")}>
           <ListItemIcon>
             <IconButton>
               <LihatKeteranganIcon />
