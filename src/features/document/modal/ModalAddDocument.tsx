@@ -1,5 +1,5 @@
-// import { useEffect } from "react";
-import { useForm, FormProvider } from "react-hook-form";
+import { ChangeEvent } from "react";
+import { useForm, FormProvider, FieldPath } from "react-hook-form";
 import {
   Button,
   Dialog,
@@ -16,10 +16,13 @@ import { SelectInput } from "src/components/select-input";
 import { UploadFile } from "src/components/upload-file";
 import { StyledForm } from "src/components/form";
 import { modal, closeModal } from "src/state/modal";
+import { Axios } from "src/api/axios";
+import { documentApi } from "src/api/document";
 import { typeDocumentOptions } from "../Document.constant";
 
 const ModalAddDocument = () => {
   const modalSnapshot = useSnapshot(modal);
+  const { createDocument } = documentApi();
 
   const formMethods = useForm({
     // resolver: yupResolver(validationSchema),
@@ -32,12 +35,31 @@ const ModalAddDocument = () => {
 
     formMethods.handleSubmit(async (values) => {
       // TODO
+      await createDocument(values);
     })();
   };
 
   const onClickCloseModal = () => {
     closeModal();
     // formMethods.reset({ ...initialValues });
+  };
+
+  const handleFileUpload = (
+    e: ChangeEvent<HTMLInputElement>,
+    name: FieldPath<any>
+  ) => {
+    if (!e.target.files) {
+      return;
+    }
+
+    const file = e.target.files[0];
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    Axios.post("/laporan/upload", formData).then(({ data }) => {
+      formMethods.setValue(name, data.nama);
+    });
   };
 
   return (
@@ -78,7 +100,7 @@ const ModalAddDocument = () => {
                 <UploadFile
                   name="nama_url"
                   label="Pilih Dokumen"
-                  onChange={() => null}
+                  onChange={handleFileUpload}
                 />
               </Grid>
               <Grid item xs={12}>

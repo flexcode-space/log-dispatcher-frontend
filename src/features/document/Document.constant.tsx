@@ -1,3 +1,5 @@
+import { ListTable, TypeDocument } from "./types";
+
 export const defaultColumns = [
   {
     flex: 0.25,
@@ -19,7 +21,7 @@ export const defaultColumns = [
   },
 ];
 
-export const listTable = [
+export const listTable: ListTable[] = [
   {
     title: "Grid Code",
     type: "code",

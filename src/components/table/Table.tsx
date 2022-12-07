@@ -16,7 +16,7 @@ export const DataGrid = styled(MuiDataGrid)({
   ".MuiDataGrid-cell": {
     borderRight: borderColor,
 
-    ":first-child": {
+    ":first-of-type": {
       borderLeft: borderColor,
     },
   },
@@ -66,7 +66,7 @@ export const TableCell = styled(MuiTableCell)({
 
 export const TableRow = styled(MuiTableRow)({
   ".MuiTableCell-body": {
-    ":first-child": {
+    ":first-of-type": {
       borderLeft: borderColor,
     },
   },
