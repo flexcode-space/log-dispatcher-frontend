@@ -1,10 +1,5 @@
 import { useState } from "react";
-import {
-  Grid,
-  Typography,
-  TextField,
-  Button,
-} from "@mui/material";
+import { Grid, Typography, TextField, Button } from "@mui/material";
 import DatePickerMui from "@mui/lab/DatePicker";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
@@ -58,7 +53,7 @@ const Document = () => {
               </LocalizationProvider>
               <Button
                 sx={{ mb: 2 }}
-                onClick={() => openModal()}
+                onClick={() => openModal("", "modal-add-document")}
                 variant="contained"
               >
                 Unggah Dokumen

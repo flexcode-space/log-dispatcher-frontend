@@ -1,11 +1,12 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Box, Card, CardContent, IconButton } from "@mui/material";
 import { DeleteOutline, EyeOutline, Download } from "mdi-material-ui";
+import { useSnapshot } from "valtio";
 import { CardHeader } from "src/components/card";
 import { DataGrid } from "src/components/table";
 import { documentApi } from "src/api/document";
-
-import { defaultColumns, datamock } from "../Document.constant";
+import { modal } from "src/state/modal";
+import { defaultColumns } from "../Document.constant";
 import { TypeDocument } from "../types";
 
 export interface CellType {
@@ -22,7 +23,12 @@ type TableDocumentProps = {
 };
 
 const TableDocument = ({ title, type, filter }: TableDocumentProps) => {
-  const { getDocumentList, documentList } = documentApi();
+  const modalSnapshot = useSnapshot(modal);
+  const { getDocumentList, documentList, deleteDocument } = documentApi();
+
+  const onClickDelete = async (id: string) => {
+    await deleteDocument({ id });
+  };
 
   const columns = [
     ...defaultColumns,
@@ -32,25 +38,41 @@ const TableDocument = ({ title, type, filter }: TableDocumentProps) => {
       sortable: false,
       field: "actions",
       headerName: "Aksi",
-      renderCell: ({ row }: CellType) => (
-        <Box sx={{ display: "flex", alignItems: "center" }}>
-          <IconButton onClick={() => null}>
-            <EyeOutline />
-          </IconButton>
-          <IconButton onClick={() => null}>
-            <Download />
-          </IconButton>
-          <IconButton>
-            <DeleteOutline onClick={() => null} />
-          </IconButton>
-        </Box>
-      ),
+      renderCell: ({ row }: CellType) => {
+        return (
+          <Box sx={{ display: "flex", alignItems: "center" }}>
+            <IconButton
+              onClick={() => window.open(row.url, "_blank", "noreferrer")}
+            >
+              <EyeOutline />
+            </IconButton>
+            <IconButton
+              onClick={() => window.open(row.url, "_blank", "noreferrer")}
+            >
+              <Download />
+            </IconButton>
+            <IconButton>
+              <DeleteOutline onClick={() => onClickDelete(row.id)} />
+            </IconButton>
+          </Box>
+        );
+      },
     },
   ];
 
-  useEffect(() => {
+  const getDocument = () => {
     getDocumentList({ tipe: type });
+  };
+
+  useEffect(() => {
+    getDocument();
   }, [type]);
+
+  useEffect(() => {
+    if (modalSnapshot.isReloadData) {
+      getDocument();
+    }
+  }, [modalSnapshot.isReloadData]);
 
   return (
     <Card>

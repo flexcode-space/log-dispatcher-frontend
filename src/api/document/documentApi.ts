@@ -39,12 +39,25 @@ const documentApi = () => {
     }
   }, [])
 
+  const deleteDocument = useCallback(async (payload: any) => {
+    setLoading(true)
+    try {
+      await Axios.delete(endpoint, { data: payload })
+      toast.success('Berhasil menghapus dokumen')
+    } catch (error) {
+      toast.error('Gagal menghapus dokumen')
+    } finally {
+      setLoading(false)
+    }
+  }, [])
+
 
   return {
     documentList,
     loading,
     getDocumentList,
     createDocument,
+    deleteDocument
   }
 }
 

@@ -9,24 +9,32 @@ import {
   Typography,
   Box,
 } from "@mui/material";
-// import { yupResolver } from "@hookform/resolvers/yup";
+import { yupResolver } from "@hookform/resolvers/yup";
 import { useSnapshot } from "valtio";
 import { InputField, TextArea } from "src/components/input-field";
 import { SelectInput } from "src/components/select-input";
 import { UploadFile } from "src/components/upload-file";
 import { StyledForm } from "src/components/form";
-import { modal, closeModal } from "src/state/modal";
+import { modal, closeModal, reloadPage } from "src/state/modal";
 import { Axios } from "src/api/axios";
 import { documentApi } from "src/api/document";
 import { typeDocumentOptions } from "../Document.constant";
+import {
+  validationSchema,
+  initialValues,
+  UploadDocumentType,
+} from "./ModalAddDocument.constant";
 
 const ModalAddDocument = () => {
   const modalSnapshot = useSnapshot(modal);
   const { createDocument } = documentApi();
 
+  const isOpen =
+    modalSnapshot.isOpen && modalSnapshot.target === "modal-add-document";
+
   const formMethods = useForm({
-    // resolver: yupResolver(validationSchema),
-    // defaultValues: initialValues,
+    resolver: yupResolver(validationSchema),
+    defaultValues: initialValues,
     mode: "onSubmit",
   });
 
@@ -35,18 +43,22 @@ const ModalAddDocument = () => {
 
     formMethods.handleSubmit(async (values) => {
       // TODO
+      console.log("values", values);
       await createDocument(values);
+
+      closeModal();
+      reloadPage();
     })();
   };
 
   const onClickCloseModal = () => {
     closeModal();
-    // formMethods.reset({ ...initialValues });
+    formMethods.reset({ ...initialValues });
   };
 
   const handleFileUpload = (
     e: ChangeEvent<HTMLInputElement>,
-    name: FieldPath<any>
+    name: FieldPath<UploadDocumentType>
   ) => {
     if (!e.target.files) {
       return;
@@ -64,7 +76,7 @@ const ModalAddDocument = () => {
 
   return (
     <Dialog
-      open={modalSnapshot.isOpen}
+      open={isOpen}
       fullWidth
       onClose={onClickCloseModal}
       maxWidth="sm"
@@ -100,7 +112,7 @@ const ModalAddDocument = () => {
                 <UploadFile
                   name="nama_url"
                   label="Pilih Dokumen"
-                  onChange={handleFileUpload}
+                  onChange={(e) => handleFileUpload(e, "nama_url")}
                 />
               </Grid>
               <Grid item xs={12}>

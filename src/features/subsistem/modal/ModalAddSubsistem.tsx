@@ -19,8 +19,6 @@ import { subsistemApi } from "src/api/subsistem";
 import IconButton from "@mui/material/IconButton";
 import Close from "mdi-material-ui/Close";
 import { validationSchema, initialValues } from "./ModalAddSubsistem.constant";
-import toast from "react-hot-toast";
-import Alert from "@mui/material/Alert";
 
 type ModalAddSubsistemProps = {
   handleClose: () => void;
@@ -69,8 +67,6 @@ const ModalAddSubsistem = ({ handleClose }: ModalAddSubsistemProps) => {
     event?.preventDefault();
 
     formMethods.handleSubmit(async (values) => {
-      console.log("value", values);
-
       const data: Array<string> = [];
       values.subsistem.forEach((value) => {
         if (value.nama) {
