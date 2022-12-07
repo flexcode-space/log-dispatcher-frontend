@@ -20,6 +20,7 @@ export const UploadFile = <T extends FieldValues>({
     <OutlinedInputField
       name={name}
       label={label}
+      disabled={true}
       Icon={
         <Button variant="outlined" component="label" style={{ maxHeight: 30 }}>
           Pilih File
