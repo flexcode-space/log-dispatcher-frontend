@@ -59,7 +59,7 @@ const Busbar = () => {
         const { id } = row;
         return (
           <Box sx={{ display: "flex", alignItems: "center" }}>
-            <IconButton onClick={() => openModal(id)}>
+            <IconButton onClick={() => openModal("modal-busbar", id)}>
               <PencilOutline />
             </IconButton>
             <IconButton>
@@ -116,7 +116,7 @@ const Busbar = () => {
 
                 <Button
                   sx={{ mb: 2 }}
-                  onClick={() => openModal()}
+                  onClick={() => openModal("modal-busbar")}
                   variant="contained"
                 >
                   Tambah Busbar

@@ -12,25 +12,16 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useSnapshot } from "valtio";
 import { StyledForm } from "../GarduInduk.styled";
 import { InputField } from "src/components/input-field";
-import { modal, reloadPage, closeModalUPT } from "src/state/modal";
+import { modal, reloadPage, closeModalUPT, closeModal } from "src/state/modal";
 import { uptApi } from "src/api/upt";
 
 import { validationSchema, initialValues } from "./ModalAddUPT.constant";
 
-type ModallAddUPTProps = {
-  handleClose: () => void;
-};
-
-const defaultValue = {
-  nama: "",
-};
-
-type DefaultValueProps = {
-  nama: string;
-}[];
-
-const ModallAddUPT = ({ handleClose }: ModallAddUPTProps) => {
+const ModallAddUPT = () => {
   const modalSnapshot = useSnapshot(modal);
+
+  const isOpen = modalSnapshot.isOpen && modal.target === "modal-upt";
+
   const { createUPT } = uptApi();
 
   const formMethods = useForm({
@@ -41,7 +32,7 @@ const ModallAddUPT = ({ handleClose }: ModallAddUPTProps) => {
   });
 
   const onResetModal = () => {
-    closeModalUPT();
+    closeModal();
     formMethods.reset({ ...initialValues });
   };
 
@@ -61,7 +52,7 @@ const ModallAddUPT = ({ handleClose }: ModallAddUPTProps) => {
 
   return (
     <Dialog
-      open={modalSnapshot.isOpenModalUPT}
+      open={isOpen}
       fullWidth
       onClose={onClickCloseModal}
       maxWidth="sm"

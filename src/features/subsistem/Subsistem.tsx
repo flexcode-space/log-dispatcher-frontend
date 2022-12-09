@@ -24,7 +24,7 @@ import { WrapperFilter } from "src/components/filter";
 
 import { subsistemApi } from "src/api/subsistem";
 import { useDebounce } from "src/hooks/useDebounce";
-import { openModal, closeModal, modal, reloadPage } from "src/state/modal";
+import { openModal, modal, reloadPage } from "src/state/modal";
 
 const Subsistem = () => {
   const modalSnapshot = useSnapshot(modal);
@@ -34,8 +34,13 @@ const Subsistem = () => {
 
   const debouncedSearch = useDebounce(search, 500);
 
-  const { subsistemList, getSubsistemList, loading, deleteSubsistem, totalData } =
-    subsistemApi();
+  const {
+    subsistemList,
+    getSubsistemList,
+    loading,
+    deleteSubsistem,
+    totalData,
+  } = subsistemApi();
 
   const onClickDelete = async (id: string) => {
     await deleteSubsistem({ id });
@@ -52,7 +57,7 @@ const Subsistem = () => {
       headerName: "Aksi",
       renderCell: ({ row }: CellType) => (
         <Box sx={{ display: "flex", alignItems: "center" }}>
-          <IconButton onClick={() => openModal(row.id)}>
+          <IconButton onClick={() => openModal("modal-subsistem", row.id)}>
             <PencilOutline />
           </IconButton>
           <IconButton>
@@ -62,10 +67,6 @@ const Subsistem = () => {
       ),
     },
   ];
-
-  const handleClose = () => {
-    closeModal();
-  };
 
   const getSubsistem = () => {
     if (debouncedSearch) {
@@ -87,7 +88,7 @@ const Subsistem = () => {
 
   return (
     <>
-      <ModalAddSubsistem handleClose={handleClose} />
+      <ModalAddSubsistem />
       <Grid container spacing={6}>
         <Grid item xs={12}>
           <PageHeader title={<Typography variant="h5">Subsistem</Typography>} />
@@ -106,7 +107,7 @@ const Subsistem = () => {
 
                 <Button
                   sx={{ mb: 2 }}
-                  onClick={() => openModal()}
+                  onClick={() => openModal("modal-subsistem")}
                   variant="contained"
                 >
                   Tambah Subsistem

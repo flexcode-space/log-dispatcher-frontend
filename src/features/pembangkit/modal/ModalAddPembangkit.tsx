@@ -16,16 +16,12 @@ import { InputField } from "src/components/input-field";
 import { SelectInput } from "src/components/select-input";
 
 import { pembangkitApi } from "src/api/pembangkit";
-import { modal, reloadPage } from "src/state/modal";
+import { closeModal, modal, reloadPage } from "src/state/modal";
 
 import { useModal } from "./useModal";
 import { initialValues, validationSchema } from "./ModalAdd.constants";
 
-type ModalAddProps = {
-  handleClose: () => void;
-};
-
-const ModalAddPembangkit = ({ handleClose }: ModalAddProps) => {
+const ModalAddPembangkit = () => {
   const {
     subsistemOptions,
     garduIndukOptions,
@@ -38,6 +34,9 @@ const ModalAddPembangkit = ({ handleClose }: ModalAddProps) => {
     pembangkitApi();
 
   const modalSnapshot = useSnapshot(modal);
+
+  const isOpen =
+    modalSnapshot.isOpen && modalSnapshot.target === "modal-pembangkit";
 
   const formMethods = useForm({
     resolver: yupResolver(validationSchema),
@@ -62,13 +61,13 @@ const ModalAddPembangkit = ({ handleClose }: ModalAddProps) => {
       } else {
         await createPembangkit(payload);
       }
-      handleClose();
+      closeModal();
       reloadPage();
     })();
   };
 
   const onClickCloseModal = () => {
-    handleClose();
+    closeModal();
     formMethods.reset({ ...initialValues });
   };
 
@@ -85,7 +84,6 @@ const ModalAddPembangkit = ({ handleClose }: ModalAddProps) => {
           ...rest
         } = data;
 
-        console.log("kategori", kategori);
         formMethods.reset({
           ...rest,
           ...scada,
@@ -101,7 +99,7 @@ const ModalAddPembangkit = ({ handleClose }: ModalAddProps) => {
 
   return (
     <Dialog
-      open={modalSnapshot.isOpen}
+      open={isOpen}
       fullWidth
       onClose={onClickCloseModal}
       maxWidth="sm"

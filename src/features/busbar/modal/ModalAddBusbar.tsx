@@ -29,6 +29,9 @@ const ModalAdd = ({ handleClose }: ModalAddProps) => {
 
   const modalSnapshot = useSnapshot(modal);
 
+  const isOpen =
+    modalSnapshot.isOpen && modalSnapshot.target === "modal-busbar";
+
   const { createBusbar, getBusbarDetail, updateBusbar } = busbarApi();
 
   const formMethods = useForm({
@@ -83,7 +86,7 @@ const ModalAdd = ({ handleClose }: ModalAddProps) => {
 
   return (
     <Dialog
-      open={modalSnapshot.isOpen}
+      open={isOpen}
       fullWidth
       onClose={onClickCloseModal}
       maxWidth="sm"

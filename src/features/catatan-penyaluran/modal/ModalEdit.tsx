@@ -6,8 +6,6 @@ import {
   DialogContent,
   DialogTitle,
   Grid,
-  Typography,
-  Box,
 } from "@mui/material";
 // import { yupResolver } from "@hookform/resolvers/yup";
 import { useSnapshot } from "valtio";
@@ -23,6 +21,9 @@ type ModalFilter = {
 
 const ModalFilter = ({ handleClose }: ModalFilter) => {
   const modalSnapshot = useSnapshot(modal);
+
+  const isOpen =
+    modalSnapshot.isOpen && modalSnapshot.target === "modal-catatan-penyaluran";
 
   const formMethods = useForm({
     // resolver: yupResolver(validationSchema),
@@ -47,7 +48,7 @@ const ModalFilter = ({ handleClose }: ModalFilter) => {
 
   return (
     <Dialog
-      open={modalSnapshot.isOpen}
+      open={isOpen}
       fullWidth
       onClose={onClickCloseModal}
       maxWidth="sm"

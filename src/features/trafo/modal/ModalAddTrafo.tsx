@@ -13,7 +13,7 @@ import { useSnapshot } from "valtio";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { InputField } from "src/components/input-field";
 import { SelectInput } from "src/components/select-input";
-import { modal, reloadPage } from "src/state/modal";
+import { closeModal, modal, reloadPage } from "src/state/modal";
 import { trafoApi } from "src/api/trafo";
 import {
   initialValues,
@@ -23,12 +23,10 @@ import {
 import { StyledForm } from "../Trafo.styled";
 import { useModalTrafo } from "./useModalTrafo";
 
-type ModalAddProps = {
-  handleClose: () => void;
-};
-
-const ModalAddTrafo = ({ handleClose }: ModalAddProps) => {
+const ModalAddTrafo = () => {
   const modalSnapshot = useSnapshot(modal);
+
+  const isOpen = modalSnapshot.isOpen && modalSnapshot.target === "modal-trafo";
 
   const {
     subsistemOptions,
@@ -64,13 +62,13 @@ const ModalAddTrafo = ({ handleClose }: ModalAddProps) => {
         await createTrafo(payload);
       }
 
-      handleClose();
+      closeModal();
       reloadPage();
     })();
   };
 
   const onClickCloseModal = () => {
-    handleClose();
+    closeModal();
     formMethods.reset({ ...initialValues });
   };
 
@@ -92,7 +90,7 @@ const ModalAddTrafo = ({ handleClose }: ModalAddProps) => {
 
   return (
     <Dialog
-      open={modalSnapshot.isOpen}
+      open={isOpen}
       fullWidth
       onClose={onClickCloseModal}
       maxWidth="sm"

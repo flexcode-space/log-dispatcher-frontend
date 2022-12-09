@@ -20,15 +20,13 @@ import {
   numberIbtOptions,
 } from "./ModalBT.constant";
 import { StyledForm } from "../IBT.styled";
-import { modal, reloadPage } from "src/state/modal";
+import { closeModal, modal, reloadPage } from "src/state/modal";
 import { useModalIBt } from "./useModalIBT";
 
-type ModalAddProps = {
-  handleClose: () => void;
-};
-
-const ModalAddIBT = ({ handleClose }: ModalAddProps) => {
+const ModalAddIBT = () => {
   const modalSnapshot = useSnapshot(modal);
+
+  const isOpen = modalSnapshot.isOpen && modalSnapshot.target === "modal-ibt";
 
   const {
     subsistemOptions,
@@ -64,13 +62,13 @@ const ModalAddIBT = ({ handleClose }: ModalAddProps) => {
         await createIbt(payload);
       }
 
-      handleClose();
+      closeModal();
       reloadPage();
     })();
   };
 
   const onClickCloseModal = () => {
-    handleClose();
+    closeModal();
     formMethods.reset({ ...initialValues });
   };
 
@@ -79,7 +77,7 @@ const ModalAddIBT = ({ handleClose }: ModalAddProps) => {
       getIbtDetail(modalSnapshot.id).then((data: any) => {
         const { gardu_induk, scada, sub_sistem, rasio_tegangan, mva, ...rest } =
           data;
-        console.log('rasio_tegangan', rasio_tegangan)
+
         formMethods.reset({
           ...rest,
           ...scada,
@@ -94,7 +92,7 @@ const ModalAddIBT = ({ handleClose }: ModalAddProps) => {
 
   return (
     <Dialog
-      open={modalSnapshot.isOpen}
+      open={isOpen}
       fullWidth
       onClose={onClickCloseModal}
       maxWidth="sm"

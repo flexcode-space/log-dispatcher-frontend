@@ -24,10 +24,6 @@ import { ModalEdit } from "./modal";
 import { defaultColumns, mockData } from "./CatatanPenyaluran.constant";
 
 const CatatanPembangkitan = () => {
-  // ** States
-  const [page, setPage] = useState<number>(0);
-  const [rowsPerPage, setRowsPerPage] = useState<number>(10);
-
   const columns = [
     ...defaultColumns,
     {
@@ -38,22 +34,13 @@ const CatatanPembangkitan = () => {
       headerName: "Aksi",
       renderCell: () => {
         return (
-          <IconButton onClick={() => openModal()}>
+          <IconButton onClick={() => openModal("modal-catatan-penyaluran")}>
             <PencilOutline />
           </IconButton>
         );
       },
     },
   ];
-
-  const handleChangePage = (event: unknown, newPage: number) => {
-    setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = (event: ChangeEvent<HTMLInputElement>) => {
-    setRowsPerPage(+event.target.value);
-    setPage(0);
-  };
 
   const handleClose = () => {
     closeModal();
@@ -90,7 +77,9 @@ const CatatanPembangkitan = () => {
                     variant="outlined"
                     // onClick={() => openModal()}
                   >
-                    <FilterIcon />
+                    <IconButton>
+                      <FilterIcon />
+                    </IconButton>
                     Filter
                   </Button>
                   <LocalizationProvider dateAdapter={AdapterDateFns}>

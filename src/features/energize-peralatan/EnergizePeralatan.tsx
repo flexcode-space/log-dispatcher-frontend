@@ -1,4 +1,4 @@
-import { useState, ChangeEvent } from "react";
+import { useState, useEffect } from "react";
 import {
   Card,
   CardContent,
@@ -20,12 +20,12 @@ import FilterIcon from "src/assets/icons/filter-green-icon.svg";
 import { CardHeader } from "src/components/card";
 import { openModal, closeModal } from "src/state/modal";
 import { ModalEdit } from "./modal";
-import { defaultColumns, mockData } from "./EnergizePeralatan.constant";
+import { defaultColumns } from "./EnergizePeralatan.constant";
+import { energizePeralatanApi } from "src/api/energize-peralatan";
 
 const EnergizePeralatan = () => {
-  // ** States
-  const [page, setPage] = useState<number>(0);
-  const [rowsPerPage, setRowsPerPage] = useState<number>(10);
+  const { getEnergizePeralatanList, energizePeralatanList } =
+    energizePeralatanApi();
 
   const columns = [
     ...defaultColumns,
@@ -38,7 +38,7 @@ const EnergizePeralatan = () => {
       renderCell: () => {
         return (
           <Box sx={{ display: "flex", alignItems: "center" }}>
-            <IconButton onClick={() => openModal()}>
+            <IconButton onClick={() => openModal("modal-energize-peralatan")}>
               <PencilOutline />
             </IconButton>
             <IconButton onClick={() => null}>
@@ -50,22 +50,13 @@ const EnergizePeralatan = () => {
     },
   ];
 
-  const handleChangePage = (event: unknown, newPage: number) => {
-    setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = (event: ChangeEvent<HTMLInputElement>) => {
-    setRowsPerPage(+event.target.value);
-    setPage(0);
-  };
-
-  const handleClose = () => {
-    closeModal();
-  };
+  useEffect(() => {
+    getEnergizePeralatanList();
+  }, []);
 
   return (
     <>
-      <ModalEdit handleClose={handleClose} />
+      <ModalEdit />
       <Grid container spacing={6}>
         <Grid item xs={12}>
           <PageHeader
@@ -108,7 +99,7 @@ const EnergizePeralatan = () => {
                     <Button
                       sx={{ mb: 2 }}
                       variant="contained"
-                      onClick={() => openModal()}
+                      onClick={() => openModal("modal-energize-peralatan")}
                     >
                       Tambah Data
                     </Button>
@@ -119,7 +110,7 @@ const EnergizePeralatan = () => {
             <CardContent>
               <DataGrid
                 autoHeight
-                rows={mockData()}
+                rows={energizePeralatanList}
                 columns={columns}
                 hideFooter
               />

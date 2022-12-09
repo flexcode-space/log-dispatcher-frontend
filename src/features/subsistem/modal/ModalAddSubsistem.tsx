@@ -13,16 +13,12 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useSnapshot } from "valtio";
 import { StyledForm } from "../Subsistem.styled";
 import { OutlinedInputField } from "src/components/input-field";
-import { modal, reloadPage } from "src/state/modal";
+import { closeModal, modal, reloadPage } from "src/state/modal";
 import { subsistemApi } from "src/api/subsistem";
 
 import IconButton from "@mui/material/IconButton";
 import Close from "mdi-material-ui/Close";
 import { validationSchema, initialValues } from "./ModalAddSubsistem.constant";
-
-type ModalAddSubsistemProps = {
-  handleClose: () => void;
-};
 
 const defaultValue = {
   nama: "",
@@ -32,8 +28,11 @@ type DefaultValueProps = {
   nama: string;
 }[];
 
-const ModalAddSubsistem = ({ handleClose }: ModalAddSubsistemProps) => {
+const ModalAddSubsistem = () => {
   const modalSnapshot = useSnapshot(modal);
+
+  const isOpen =
+    modalSnapshot.isOpen && modalSnapshot.target === "modal-subsistem";
 
   const { createSubsistem, updateSubsistem, getSubsistemDetail } =
     subsistemApi();
@@ -48,7 +47,7 @@ const ModalAddSubsistem = ({ handleClose }: ModalAddSubsistemProps) => {
   });
 
   const onResetModal = () => {
-    handleClose();
+    closeModal();
     setFields([defaultValue]);
     formMethods.reset({ ...initialValues });
   };
@@ -102,7 +101,7 @@ const ModalAddSubsistem = ({ handleClose }: ModalAddSubsistemProps) => {
 
   return (
     <Dialog
-      open={modalSnapshot.isOpen}
+      open={isOpen}
       fullWidth
       onClose={onClickCloseModal}
       maxWidth="sm"

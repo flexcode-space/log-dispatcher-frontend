@@ -64,7 +64,7 @@ const Pembangkit = () => {
         const { id } = row;
         return (
           <Box sx={{ display: "flex", alignItems: "center" }}>
-            <IconButton onClick={() => openModal(id)}>
+            <IconButton onClick={() => openModal("modal-pembangkit", id)}>
               <PencilOutline />
             </IconButton>
             <IconButton>
@@ -75,10 +75,6 @@ const Pembangkit = () => {
       },
     },
   ];
-
-  const handleClose = () => {
-    closeModal();
-  };
 
   const getPembangkit = () => {
     if (debouncedSearch) {
@@ -100,7 +96,7 @@ const Pembangkit = () => {
 
   return (
     <>
-      <ModalAddPembangkit handleClose={handleClose} />
+      <ModalAddPembangkit />
       <Grid container spacing={6}>
         {!id && (
           <Grid item xs={12}>
@@ -123,7 +119,7 @@ const Pembangkit = () => {
 
                 <Button
                   sx={{ mb: 2 }}
-                  onClick={() => openModal()}
+                  onClick={() => openModal("modal-pembangkit")}
                   variant="contained"
                 >
                   Tambah Pembangkit

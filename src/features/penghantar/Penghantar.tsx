@@ -62,7 +62,7 @@ const Penghantar = () => {
         const { id } = row;
         return (
           <Box sx={{ display: "flex", alignItems: "center" }}>
-            <IconButton onClick={() => openModal(id)}>
+            <IconButton onClick={() => openModal("modal-penghantar", id)}>
               <PencilOutline />
             </IconButton>
             <IconButton>
@@ -73,10 +73,6 @@ const Penghantar = () => {
       },
     },
   ];
-
-  const handleClose = () => {
-    closeModal();
-  };
 
   const getPenghantar = () => {
     if (debouncedSearch) {
@@ -98,7 +94,7 @@ const Penghantar = () => {
 
   return (
     <>
-      <ModalAddPenghantar handleClose={handleClose} />
+      <ModalAddPenghantar />
       <Grid container spacing={6}>
         {!id && (
           <Grid item xs={12}>
@@ -121,7 +117,7 @@ const Penghantar = () => {
 
                 <Button
                   sx={{ mb: 2 }}
-                  onClick={() => openModal()}
+                  onClick={() => openModal("modal-penghantar")}
                   variant="contained"
                 >
                   Tambah Penghantar

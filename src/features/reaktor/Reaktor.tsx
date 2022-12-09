@@ -57,7 +57,7 @@ const Reaktor = () => {
       headerName: "Aksi",
       renderCell: ({ row }: CellType) => (
         <Box sx={{ display: "flex", alignItems: "center" }}>
-          <IconButton onClick={() => openModal(row.id)}>
+          <IconButton onClick={() => openModal("modal-reaktor", row.id)}>
             <PencilOutline />
           </IconButton>
           <IconButton>
@@ -67,10 +67,6 @@ const Reaktor = () => {
       ),
     },
   ];
-
-  const handleClose = () => {
-    closeModal();
-  };
 
   const getReaktor = () => {
     if (debouncedSearch) {
@@ -92,7 +88,7 @@ const Reaktor = () => {
 
   return (
     <>
-      <ModalAddReaktor handleClose={handleClose} />
+      <ModalAddReaktor />
       <Grid container spacing={6}>
         {!id && (
           <Grid item xs={12}>
@@ -113,7 +109,7 @@ const Reaktor = () => {
 
                 <Button
                   sx={{ mb: 2 }}
-                  onClick={() => openModal()}
+                  onClick={() => openModal("modal-reaktor")}
                   variant="contained"
                 >
                   Tambah Reaktor
