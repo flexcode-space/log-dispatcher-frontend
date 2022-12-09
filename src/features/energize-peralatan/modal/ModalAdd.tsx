@@ -7,28 +7,22 @@ import {
   DialogTitle,
   Grid,
   Typography,
-  Box,
 } from "@mui/material";
 import Plus from "mdi-material-ui/Plus";
 // import { yupResolver } from "@hookform/resolvers/yup";
 import { useSnapshot } from "valtio";
 import { SelectInput } from "src/components/select-input";
-import {
-  InputField,
-  TextArea,
-  OutlinedInputField,
-} from "src/components/input-field";
+import { InputField, TextArea } from "src/components/input-field";
 import { StyledForm } from "src/components/form";
-import { modal, reloadPage } from "src/state/modal";
+import { closeModal, modal, reloadPage } from "src/state/modal";
 import { DatePicker, TimePicker } from "src/components/date-picker";
 import { UploadFile } from "../components/UploadFile";
 
-type ModalFilter = {
-  handleClose: () => void;
-};
-
-const ModalFilter = ({ handleClose }: ModalFilter) => {
+const ModalFilter = () => {
   const modalSnapshot = useSnapshot(modal);
+
+  const isOpen =
+    modalSnapshot.isOpen && modalSnapshot.target === "modal-energize-peralatan";
 
   const formMethods = useForm({
     // resolver: yupResolver(validationSchema),
@@ -42,18 +36,18 @@ const ModalFilter = ({ handleClose }: ModalFilter) => {
     formMethods.handleSubmit(async (values) => {
       console.log(values);
 
-      handleClose();
+      closeModal();
     })();
   };
 
   const onClickCloseModal = () => {
-    handleClose();
+    closeModal();
     // formMethods.reset({ ...initialValues });
   };
 
   return (
     <Dialog
-      open={modalSnapshot.isOpen}
+      open={isOpen}
       fullWidth
       onClose={onClickCloseModal}
       maxWidth="md"
@@ -103,7 +97,7 @@ const ModalFilter = ({ handleClose }: ModalFilter) => {
                 <TimePicker label="Close" name="close" />
               </Grid>
               <Grid item xs={12}>
-                <Button variant="outlined" sx={{ height: '30px'}}>
+                <Button variant="outlined" sx={{ height: "30px" }}>
                   <Plus />
                   Tambah Manuver
                 </Button>

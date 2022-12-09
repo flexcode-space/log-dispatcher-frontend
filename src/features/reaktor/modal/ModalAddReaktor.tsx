@@ -14,7 +14,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { StyledForm } from "../Reaktor.styled";
 import { InputField } from "src/components/input-field";
 import { SelectInput } from "src/components/select-input";
-import { modal, reloadPage } from "src/state/modal";
+import { closeModal, modal, reloadPage } from "src/state/modal";
 import { reaktorApi } from "src/api/reaktor";
 import {
   initialValues,
@@ -23,12 +23,11 @@ import {
 } from "./ModalAddReaktor.constant";
 import { useModalReaktor } from "./useModalReaktor";
 
-type ModalAddProps = {
-  handleClose: () => void;
-};
-
-const ModalAddReaktor = ({ handleClose }: ModalAddProps) => {
+const ModalAddReaktor = () => {
   const modalSnapshot = useSnapshot(modal);
+
+  const isOpen =
+    modalSnapshot.isOpen && modalSnapshot.target === "modal-reaktor";
 
   const { createReaktor, updateReaktor, getReaktorDetail } = reaktorApi();
   const { subsistemOptions, garduIndukOptions, teganganOptions } =
@@ -59,13 +58,13 @@ const ModalAddReaktor = ({ handleClose }: ModalAddProps) => {
         await createReaktor(payload);
       }
 
-      handleClose();
+      closeModal();
       reloadPage();
     })();
   };
 
   const onClickCloseModal = () => {
-    handleClose();
+    closeModal();
     formMethods.reset({ ...initialValues });
   };
 
@@ -86,7 +85,7 @@ const ModalAddReaktor = ({ handleClose }: ModalAddProps) => {
 
   return (
     <Dialog
-      open={modalSnapshot.isOpen}
+      open={isOpen}
       fullWidth
       onClose={onClickCloseModal}
       maxWidth="sm"

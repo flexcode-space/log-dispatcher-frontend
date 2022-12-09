@@ -1,4 +1,3 @@
-import { useState, ChangeEvent } from "react";
 import {
   Card,
   CardContent,
@@ -24,10 +23,6 @@ import { ModalEdit } from "./modal";
 import { defaultColumns, mockData } from "./CatatanPembangkitan.constant";
 
 const CatatanPembangkitan = () => {
-  // ** States
-  const [page, setPage] = useState<number>(0);
-  const [rowsPerPage, setRowsPerPage] = useState<number>(10);
-
   const columns = [
     ...defaultColumns,
     {
@@ -38,30 +33,16 @@ const CatatanPembangkitan = () => {
       headerName: "Aksi",
       renderCell: () => {
         return (
-          <IconButton onClick={() => openModal()}>
+          <IconButton onClick={() => openModal("modal-catatan-pembangkit")}>
             <PencilOutline />
           </IconButton>
         );
       },
     },
   ];
-
-  const handleChangePage = (event: unknown, newPage: number) => {
-    setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = (event: ChangeEvent<HTMLInputElement>) => {
-    setRowsPerPage(+event.target.value);
-    setPage(0);
-  };
-
-  const handleClose = () => {
-    closeModal();
-  };
-
   return (
     <>
-      <ModalEdit handleClose={handleClose} />
+      <ModalEdit />
       <Grid container spacing={6}>
         <Grid item xs={12}>
           <PageHeader
@@ -87,7 +68,9 @@ const CatatanPembangkitan = () => {
                 variant="outlined"
                 // onClick={() => openModal()}
               >
-                <FilterIcon />
+                <IconButton>
+                  <FilterIcon />
+                </IconButton>
                 Filter
               </Button>
               <LocalizationProvider dateAdapter={AdapterDateFns}>

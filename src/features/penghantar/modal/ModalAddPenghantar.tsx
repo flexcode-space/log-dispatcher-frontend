@@ -12,7 +12,7 @@ import {
 import { useSnapshot } from "valtio";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { StyledForm } from "../Penghantar.styled";
-import { modal, reloadPage } from "src/state/modal";
+import { closeModal, modal, reloadPage } from "src/state/modal";
 import { InputField } from "src/components/input-field";
 import { SelectInput } from "src/components/select-input";
 import { penghantarApi } from "src/api/penghantar";
@@ -23,11 +23,7 @@ import {
 } from "./ModalAddPenghantar.constant";
 import { useModalPenghantar } from "./useModalPenghantar";
 
-type ModalAddProps = {
-  handleClose: () => void;
-};
-
-const ModalAddPenghantar = ({ handleClose }: ModalAddProps) => {
+const ModalAddPenghantar = () => {
   const { subsistemOptions, garduIndukOptions, teganganOptions } =
     useModalPenghantar();
 
@@ -35,6 +31,9 @@ const ModalAddPenghantar = ({ handleClose }: ModalAddProps) => {
     penghantarApi();
 
   const modalSnapshot = useSnapshot(modal);
+
+  const isOpen =
+    modalSnapshot.isOpen && modalSnapshot.target === "modal-penghantar";
 
   const formMethods = useForm({
     resolver: yupResolver(validationSchema),
@@ -61,13 +60,13 @@ const ModalAddPenghantar = ({ handleClose }: ModalAddProps) => {
         await createPenghantar(payload);
       }
 
-      handleClose();
+      closeModal();
       reloadPage();
     })();
   };
 
   const onClickCloseModal = () => {
-    handleClose();
+    closeModal();
     formMethods.reset({ ...initialValues });
   };
 
@@ -96,7 +95,7 @@ const ModalAddPenghantar = ({ handleClose }: ModalAddProps) => {
 
   return (
     <Dialog
-      open={modalSnapshot.isOpen}
+      open={isOpen}
       fullWidth
       onClose={onClickCloseModal}
       maxWidth="sm"

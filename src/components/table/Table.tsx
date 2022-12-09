@@ -5,10 +5,12 @@ import {
   TableRow as MuiTableRow,
   TableContainer,
   TableBody,
+  Typography,
 } from "@mui/material";
 import { DataGrid as MuiDataGrid } from "@mui/x-data-grid";
 import { styled } from "@mui/material/styles";
 import { TableCellHeadProps } from "./Table.type";
+import React from "react";
 
 const borderColor = "1px solid rgba(233, 233, 236, 1)";
 
@@ -71,5 +73,13 @@ export const TableRow = styled(MuiTableRow)({
     },
   },
 });
+
+export const RenderCell = ({ children }: { children: React.ReactNode }) => {
+  return (
+    <Typography variant="subtitle2" noWrap sx={{ textTransform: "capitalize" }}>
+      {children}
+    </Typography>
+  );
+};
 
 export { TableContainer, Table, TableBody };

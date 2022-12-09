@@ -57,7 +57,7 @@ const IBT = () => {
         const { id } = row;
         return (
           <Box sx={{ display: "flex", alignItems: "center" }}>
-            <IconButton onClick={() => openModal(id)}>
+            <IconButton onClick={() => openModal("modal-ibt", id)}>
               <PencilOutline />
             </IconButton>
             <IconButton>
@@ -68,10 +68,6 @@ const IBT = () => {
       },
     },
   ];
-
-  const handleClose = () => {
-    closeModal();
-  };
 
   const getIbt = () => {
     if (debouncedSearch) {
@@ -93,7 +89,7 @@ const IBT = () => {
 
   return (
     <>
-      <ModalAddIBT handleClose={handleClose} />
+      <ModalAddIBT />
       <Grid container spacing={6}>
         {!id && (
           <Grid item xs={12}>
@@ -114,7 +110,7 @@ const IBT = () => {
 
                 <Button
                   sx={{ mb: 2 }}
-                  onClick={() => openModal()}
+                  onClick={() => openModal("modal-ibt")}
                   variant="contained"
                 >
                   Tambah IBT

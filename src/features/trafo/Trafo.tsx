@@ -25,7 +25,7 @@ import { ModalAddTrafo } from "./modal";
 import { WrapperFilter } from "src/components/filter";
 
 import { trafoApi } from "src/api/trafo";
-import { openModal, closeModal, modal, reloadPage } from "src/state/modal";
+import { openModal, modal, reloadPage } from "src/state/modal";
 import { useDebounce } from "src/hooks/useDebounce";
 
 const Trafo = () => {
@@ -59,7 +59,7 @@ const Trafo = () => {
       headerName: "Aksi",
       renderCell: ({ row }: CellType) => (
         <Box sx={{ display: "flex", alignItems: "center" }}>
-          <IconButton onClick={() => openModal(row.id)}>
+          <IconButton onClick={() => openModal("modal-trafo", row.id)}>
             <PencilOutline />
           </IconButton>
           <IconButton>
@@ -69,10 +69,6 @@ const Trafo = () => {
       ),
     },
   ];
-
-  const handleClose = () => {
-    closeModal();
-  };
 
   const getTrafo = () => {
     if (debouncedSearch) {
@@ -94,7 +90,7 @@ const Trafo = () => {
 
   return (
     <>
-      <ModalAddTrafo handleClose={handleClose} />
+      <ModalAddTrafo />
       <Grid container spacing={6}>
         {!id && (
           <Grid item xs={12}>
@@ -115,7 +111,7 @@ const Trafo = () => {
 
                 <Button
                   sx={{ mb: 2 }}
-                  onClick={() => openModal()}
+                  onClick={() => openModal("modal-trafo")}
                   variant="contained"
                 >
                   Tambah Trafo

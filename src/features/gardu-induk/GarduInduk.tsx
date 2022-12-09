@@ -25,13 +25,7 @@ import { WrapperFilter } from "src/components/filter";
 
 import { garduIndukApi } from "src/api/gardu-induk";
 import { useDebounce } from "src/hooks/useDebounce";
-import {
-  openModal,
-  closeModal,
-  modal,
-  reloadPage,
-  openModalUPT,
-} from "src/state/modal";
+import { openModal, closeModal, modal, reloadPage } from "src/state/modal";
 
 const GarduInduk = () => {
   const modalSnapshot = useSnapshot(modal);
@@ -64,7 +58,7 @@ const GarduInduk = () => {
       headerName: "Aksi",
       renderCell: ({ row }: CellType) => (
         <Box sx={{ display: "flex", alignItems: "center" }}>
-          <IconButton onClick={() => openModal(row.id)}>
+          <IconButton onClick={() => openModal("modal-gardu-induk", row.id)}>
             <PencilOutline />
           </IconButton>
           <IconButton>
@@ -100,7 +94,7 @@ const GarduInduk = () => {
   return (
     <>
       <ModalAddGarduInduk handleClose={handleClose} />
-      <ModallAddUPT handleClose={() => null} />
+      <ModallAddUPT />
       <Grid container spacing={6}>
         <Grid item xs={12}>
           <PageHeader
@@ -122,14 +116,14 @@ const GarduInduk = () => {
                 <div style={{ display: "flex", gap: "10px" }}>
                   <Button
                     sx={{ mb: 2 }}
-                    onClick={() => openModalUPT()}
+                    onClick={() => openModal("modal-upt")}
                     variant="outlined"
                   >
                     Tambah UPT
                   </Button>
                   <Button
                     sx={{ mb: 2 }}
-                    onClick={() => openModal()}
+                    onClick={() => openModal("modal-add-gardu-induk")}
                     variant="contained"
                   >
                     Tambah Gardu Induk

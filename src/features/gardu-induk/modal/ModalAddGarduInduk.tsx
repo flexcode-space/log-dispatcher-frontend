@@ -38,6 +38,9 @@ type DefaultValueProps = {
 const ModalAddGarduInduk = ({ handleClose }: ModalAddGarduIndukProps) => {
   const modalSnapshot = useSnapshot(modal);
 
+  const isOpen =
+    modalSnapshot.isOpen && modalSnapshot.target === "modal-gardu-induk";
+
   const { createGarduInduk, updateGarduInduk, getGarduIndukDetail } =
     garduIndukApi();
   const { getUPTList, uptList } = uptApi();
@@ -125,7 +128,7 @@ const ModalAddGarduInduk = ({ handleClose }: ModalAddGarduIndukProps) => {
 
   return (
     <Dialog
-      open={modalSnapshot.isOpen}
+      open={isOpen}
       fullWidth
       onClose={onClickCloseModal}
       maxWidth="sm"

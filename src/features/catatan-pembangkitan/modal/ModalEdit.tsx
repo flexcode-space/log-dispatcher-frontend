@@ -6,23 +6,20 @@ import {
   DialogContent,
   DialogTitle,
   Grid,
-  Typography,
-  Box,
 } from "@mui/material";
 // import { yupResolver } from "@hookform/resolvers/yup";
 import { useSnapshot } from "valtio";
 import { SelectInput } from "src/components/select-input";
 import { InputField, TextArea } from "src/components/input-field";
 import { StyledForm } from "src/components/form";
-import { modal, reloadPage } from "src/state/modal";
+import { closeModal, modal } from "src/state/modal";
 import { DatePicker, TimePicker } from "src/components/date-picker";
 
-type ModalFilter = {
-  handleClose: () => void;
-};
-
-const ModalFilter = ({ handleClose }: ModalFilter) => {
+const ModalFilter = () => {
   const modalSnapshot = useSnapshot(modal);
+
+  const isOpen =
+    modalSnapshot.isOpen && modalSnapshot.target === "modal-catatan-pembangkit";
 
   const formMethods = useForm({
     // resolver: yupResolver(validationSchema),
@@ -36,18 +33,18 @@ const ModalFilter = ({ handleClose }: ModalFilter) => {
     formMethods.handleSubmit(async (values) => {
       console.log(values);
 
-      handleClose();
+      closeModal();
     })();
   };
 
   const onClickCloseModal = () => {
-    handleClose();
+    closeModal();
     // formMethods.reset({ ...initialValues });
   };
 
   return (
     <Dialog
-      open={modalSnapshot.isOpen}
+      open={isOpen}
       fullWidth
       onClose={onClickCloseModal}
       maxWidth="sm"
