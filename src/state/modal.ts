@@ -23,14 +23,6 @@ export const openModal = (target?: string, id?: string,): void => {
   modal.target = target
 }
 
-export const openModalUPT = (): void => {
-  modal.isOpen = false
-}
-
-export const closeModalUPT = (): void => {
-  modal.id = initialModal.id
-}
-
 export const closeModal = (): void => {
   modal.isOpen = initialModal.isOpen
   modal.id = initialModal.id

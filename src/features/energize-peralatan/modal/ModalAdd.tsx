@@ -17,9 +17,12 @@ import { StyledForm } from "src/components/form";
 import { closeModal, modal, reloadPage } from "src/state/modal";
 import { DatePicker, TimePicker } from "src/components/date-picker";
 import { UploadFile } from "../components/UploadFile";
+import { useModalAdd } from "./useModalAdd";
 
-const ModalFilter = () => {
+const ModalAdd = () => {
   const modalSnapshot = useSnapshot(modal);
+
+  const { garduIndukOptions } = useModalAdd();
 
   const isOpen =
     modalSnapshot.isOpen && modalSnapshot.target === "modal-energize-peralatan";
@@ -62,7 +65,7 @@ const ModalFilter = () => {
                 <SelectInput
                   label="Gardu Induk"
                   name="gardu_induk_id"
-                  options={[]}
+                  options={garduIndukOptions}
                 />
               </Grid>
               <Grid item xs={6}>
@@ -153,4 +156,4 @@ const ModalFilter = () => {
   );
 };
 
-export default ModalFilter;
+export default ModalAdd;

@@ -19,9 +19,12 @@ import FilterIcon from "src/assets/icons/filter-green-icon.svg";
 
 import { CardHeader } from "src/components/card";
 import { openModal, closeModal } from "src/state/modal";
-import { ModalEdit } from "./modal";
+import { ModalEdit, ModalDetail } from "./modal";
 import { defaultColumns } from "./EnergizePeralatan.constant";
 import { energizePeralatanApi } from "src/api/energize-peralatan";
+import { CellType } from "src/types";
+import { EnergizeList } from "./types";
+import { selectData } from "src/state/energizePeralatan";
 
 const EnergizePeralatan = () => {
   const { getEnergizePeralatanList, energizePeralatanList } =
@@ -35,13 +38,18 @@ const EnergizePeralatan = () => {
       sortable: false,
       field: "actions",
       headerName: "Aksi",
-      renderCell: () => {
+      renderCell: ({ row }: CellType) => {
         return (
           <Box sx={{ display: "flex", alignItems: "center" }}>
             <IconButton onClick={() => openModal("modal-energize-peralatan")}>
               <PencilOutline />
             </IconButton>
-            <IconButton onClick={() => null}>
+            <IconButton
+              onClick={() => {
+                openModal("modal-energize-peralatan-detail");
+                selectData(row as EnergizeList);
+              }}
+            >
               <EyeOutline />
             </IconButton>
           </Box>
@@ -57,6 +65,7 @@ const EnergizePeralatan = () => {
   return (
     <>
       <ModalEdit />
+      <ModalDetail />
       <Grid container spacing={6}>
         <Grid item xs={12}>
           <PageHeader

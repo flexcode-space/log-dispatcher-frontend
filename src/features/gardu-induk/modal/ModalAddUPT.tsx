@@ -12,7 +12,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useSnapshot } from "valtio";
 import { StyledForm } from "../GarduInduk.styled";
 import { InputField } from "src/components/input-field";
-import { modal, reloadPage, closeModalUPT, closeModal } from "src/state/modal";
+import { modal, reloadPage, closeModal } from "src/state/modal";
 import { uptApi } from "src/api/upt";
 
 import { validationSchema, initialValues } from "./ModalAddUPT.constant";
