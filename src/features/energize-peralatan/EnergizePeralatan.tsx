@@ -41,7 +41,9 @@ const EnergizePeralatan = () => {
       renderCell: ({ row }: CellType) => {
         return (
           <Box sx={{ display: "flex", alignItems: "center" }}>
-            <IconButton onClick={() => openModal("modal-energize-peralatan")}>
+            <IconButton
+              onClick={() => openModal("modal-energize-peralatan", row?.id)}
+            >
               <PencilOutline />
             </IconButton>
             <IconButton

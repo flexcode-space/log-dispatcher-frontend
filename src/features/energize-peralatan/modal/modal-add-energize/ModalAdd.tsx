@@ -1,4 +1,4 @@
-import { useForm, FormProvider } from "react-hook-form";
+import { useForm, FormProvider, FieldPath } from "react-hook-form";
 import {
   Button,
   Dialog,
@@ -11,6 +11,7 @@ import {
 import Plus from "mdi-material-ui/Plus";
 // import { yupResolver } from "@hookform/resolvers/yup";
 import { useSnapshot } from "valtio";
+import { Axios } from "src/api/axios";
 import { SelectInput } from "src/components/select-input";
 import { InputField, TextArea } from "src/components/input-field";
 import { StyledForm } from "src/components/form";
@@ -18,12 +19,14 @@ import { closeModal, modal, reloadPage } from "src/state/modal";
 import { DatePicker, TimePicker } from "src/components/date-picker";
 import { UploadFile } from "src/components/upload-file";
 import { useModalAdd } from "./useModalAdd";
+import { CreateEnergizePeralatan } from "../../types";
 
 const ModalAdd = () => {
   const modalSnapshot = useSnapshot(modal);
 
   const { garduIndukOptions, optionJenisPeralatan } = useModalAdd();
 
+  const titleModal = !!modalSnapshot.id ? "Ubah Data" : "Tambah Data";
   const isOpen =
     modalSnapshot.isOpen && modalSnapshot.target === "modal-energize-peralatan";
 
@@ -48,6 +51,24 @@ const ModalAdd = () => {
     // formMethods.reset({ ...initialValues });
   };
 
+  const handleFileUpload = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    name: FieldPath<CreateEnergizePeralatan>
+  ) => {
+    if (!e.target.files) {
+      return;
+    }
+
+    const file = e.target.files[0];
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    Axios.post("/laporan/upload", formData).then(({ data }) => {
+      formMethods.setValue(name, data.nama);
+    });
+  };
+
   return (
     <Dialog
       open={isOpen}
@@ -58,7 +79,7 @@ const ModalAdd = () => {
     >
       <FormProvider {...formMethods}>
         <StyledForm noValidate onSubmit={onSubmit}>
-          <DialogTitle id="max-width-dialog-title">Tambah Data</DialogTitle>
+          <DialogTitle id="max-width-dialog-title">{titleModal}</DialogTitle>
           <DialogContent>
             <Grid container spacing={1} mt={1}>
               <Grid item xs={12}>
@@ -116,25 +137,29 @@ const ModalAdd = () => {
               <Grid item xs={6}>
                 <UploadFile
                   label="SOP Energize"
-                  name="sop_energize"
-                  onChange={() => null}
+                  name="sop"
+                  onChange={(e) => handleFileUpload(e, "sop")}
                 />
               </Grid>
               <Grid item xs={6}>
-                <UploadFile label="RLD" name="rld" onChange={() => null} />
+                <UploadFile
+                  label="RLD"
+                  name="rlb"
+                  onChange={(e) => handleFileUpload(e, "rlb")}
+                />
               </Grid>
               <Grid item xs={6}>
                 <UploadFile
                   label="Surat Permohonan"
-                  name="surat_permohonan"
-                  onChange={() => null}
+                  name="permohonan"
+                  onChange={(e) => handleFileUpload(e, "permohonan")}
                 />
               </Grid>
               <Grid item xs={6}>
                 <UploadFile
                   label="BA PTP"
                   name="ba_ptp"
-                  onChange={() => null}
+                  onChange={(e) => handleFileUpload(e, "ba_ptp")}
                 />
               </Grid>
               <Grid item xs={12}>

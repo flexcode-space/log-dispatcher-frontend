@@ -9,7 +9,7 @@ import {
   ListItemText,
 } from "@mui/material";
 import { useSnapshot } from "valtio";
-import { closeModal, modal } from "src/state/modal";
+import { closeModal, modal, openModal } from "src/state/modal";
 import { energizePeralatan, removeData } from "src/state/energizePeralatan";
 import { StyledListItem } from "./ModalDetail.styled";
 
@@ -24,6 +24,10 @@ const ModalDetail = () => {
   const onClickCloseModal = () => {
     closeModal();
     removeData();
+  };
+
+  const onClickUpdateData = () => {
+    openModal("modal-energize-peralatan", data?.id);
   };
 
   const ButtonDownload = ({ url }: { url: string }) => (
@@ -73,7 +77,9 @@ const ModalDetail = () => {
         </Grid>
       </DialogContent>
       <DialogActions className="dialog-actions-dense">
-        <Button variant="outlined">Ubah Data</Button>
+        <Button variant="outlined" onClick={onClickUpdateData}>
+          Ubah Data
+        </Button>
         <Button variant="contained" onClick={onClickCloseModal}>
           Tutup
         </Button>
