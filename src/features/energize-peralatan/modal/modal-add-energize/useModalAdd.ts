@@ -16,7 +16,6 @@ export const useModalAdd = (jenisPeralatan: string) => {
 
   useEffect(() => {
     if (modalSnap.isOpen && modalSnap.target === "modal-energize-peralatan") {
-      console.log('masuk kesini')
       getGarduIndukList()
     }
   }, [modalSnap.isOpen])

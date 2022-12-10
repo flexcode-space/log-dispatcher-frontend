@@ -1,5 +1,5 @@
 import { useState, ChangeEvent } from "react";
-import { Card, CardContent, Grid, TextField, Button } from "@mui/material";
+import { Card, CardContent, Grid, TextField, Button, IconButton } from "@mui/material";
 import { DataGrid } from "src/components/table";
 import Plus from "mdi-material-ui/Plus";
 import DatePicker from "@mui/lab/DatePicker";
@@ -7,7 +7,7 @@ import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import { openModal } from "src/state/modal";
-import DownloadIcon from "src/assets/icons/download-icon.svg";
+import DownloadIcon from "src/assets/icons/download-green-icon.svg";
 import { defaultColumns, dataMock } from "./TargetIsland.constant";
 import ModalAddTargetIsland from "../modal/ModalAddTargetIsland";
 
@@ -58,16 +58,21 @@ const TargetIsland = () => {
                       )}
                     />
                   </LocalizationProvider>
-                  <Button sx={{ mb: 2 }} variant="outlined">
-                    <DownloadIcon />
+                  <Button sx={{ mb: 2 }} size="small" variant="outlined">
+                    <IconButton>
+                      <DownloadIcon />
+                    </IconButton>
                     Download Laporan
                   </Button>
                   <Button
                     sx={{ mb: 2 }}
+                    size="small"
                     variant="contained"
                     onClick={() => openModal()}
                   >
-                    <Plus />
+                    <IconButton>
+                      <Plus />
+                    </IconButton>
                     Tambah Target Island
                   </Button>
                 </div>

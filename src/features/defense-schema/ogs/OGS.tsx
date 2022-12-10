@@ -14,6 +14,7 @@ import {
   TextField,
   Button,
   Chip,
+  IconButton,
 } from "@mui/material";
 import Plus from "mdi-material-ui/Plus";
 import DatePicker from "@mui/lab/DatePicker";
@@ -21,7 +22,7 @@ import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import { openModal } from "src/state/modal";
-import DownloadIcon from "src/assets/icons/download-icon.svg";
+import DownloadIcon from "src/assets/icons/download-green-icon.svg";
 import ModalAdd from "../modal/ModalAdd";
 
 import { WrapperFilter } from "src/components/filter";
@@ -86,16 +87,21 @@ const OgsComponent = () => {
                       )}
                     />
                   </LocalizationProvider>
-                  <Button sx={{ mb: 2 }} variant="outlined">
-                    <DownloadIcon />
+                  <Button size="small" sx={{ mb: 2 }} variant="outlined">
+                    <IconButton>
+                      <DownloadIcon />
+                    </IconButton>
                     Download Laporan
                   </Button>
                   <Button
                     sx={{ mb: 2 }}
+                    size="small"
                     variant="contained"
                     onClick={() => openModal()}
                   >
-                    <Plus />
+                    <IconButton>
+                      <Plus />
+                    </IconButton>
                     Tambah OGS
                   </Button>
                 </div>
