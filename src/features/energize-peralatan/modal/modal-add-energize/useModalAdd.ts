@@ -1,7 +1,8 @@
+import { useEffect } from 'react'
 import { useSnapshot } from 'valtio'
 import { garduIndukApi } from 'src/api/gardu-induk'
 import { modal } from 'src/state/modal'
-import { useEffect } from 'react'
+import { optionJenisPeralatan } from './ModalAdd.contant'
 
 export const useModalAdd = () => {
   const modalSnap = useSnapshot(modal)
@@ -16,6 +17,7 @@ export const useModalAdd = () => {
   }, [modalSnap.isOpen])
 
   return {
-    garduIndukOptions
+    garduIndukOptions,
+    optionJenisPeralatan
   }
 }

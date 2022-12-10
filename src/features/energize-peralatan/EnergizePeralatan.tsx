@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import {
   Card,
   CardContent,
@@ -18,8 +18,8 @@ import PageHeader from "src/@core/components/page-header";
 import FilterIcon from "src/assets/icons/filter-green-icon.svg";
 
 import { CardHeader } from "src/components/card";
-import { openModal, closeModal } from "src/state/modal";
-import { ModalEdit, ModalDetail } from "./modal";
+import { openModal } from "src/state/modal";
+import { ModalAdd, ModalDetail } from "./modal";
 import { defaultColumns } from "./EnergizePeralatan.constant";
 import { energizePeralatanApi } from "src/api/energize-peralatan";
 import { CellType } from "src/types";
@@ -64,7 +64,7 @@ const EnergizePeralatan = () => {
 
   return (
     <>
-      <ModalEdit />
+      <ModalAdd />
       <ModalDetail />
       <Grid container spacing={6}>
         <Grid item xs={12}>

@@ -16,13 +16,13 @@ import { InputField, TextArea } from "src/components/input-field";
 import { StyledForm } from "src/components/form";
 import { closeModal, modal, reloadPage } from "src/state/modal";
 import { DatePicker, TimePicker } from "src/components/date-picker";
-import { UploadFile } from "../components/UploadFile";
+import { UploadFile } from "src/components/upload-file";
 import { useModalAdd } from "./useModalAdd";
 
 const ModalAdd = () => {
   const modalSnapshot = useSnapshot(modal);
 
-  const { garduIndukOptions } = useModalAdd();
+  const { garduIndukOptions, optionJenisPeralatan } = useModalAdd();
 
   const isOpen =
     modalSnapshot.isOpen && modalSnapshot.target === "modal-energize-peralatan";
@@ -71,8 +71,8 @@ const ModalAdd = () => {
               <Grid item xs={6}>
                 <SelectInput
                   label="Jenis Peralatan"
-                  name="jenis_peralatan_id"
-                  options={[]}
+                  name="jenis_peralatan"
+                  options={optionJenisPeralatan}
                 />
               </Grid>
               <Grid item xs={6}>
