@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useForm, FormProvider, FieldPath } from "react-hook-form";
 import {
   Button,
@@ -9,7 +10,7 @@ import {
   Typography,
 } from "@mui/material";
 import Plus from "mdi-material-ui/Plus";
-// import { yupResolver } from "@hookform/resolvers/yup";
+import { yupResolver } from "@hookform/resolvers/yup";
 import { useSnapshot } from "valtio";
 import { Axios } from "src/api/axios";
 import { SelectInput } from "src/components/select-input";
@@ -19,36 +20,59 @@ import { closeModal, modal, reloadPage } from "src/state/modal";
 import { DatePicker, TimePicker } from "src/components/date-picker";
 import { UploadFile } from "src/components/upload-file";
 import { useModalAdd } from "./useModalAdd";
+import { validationSchema, initialValues } from "./ModalAdd.contant";
+import { energizePeralatan, removeData } from "src/state/energizePeralatan";
+import { energizePeralatanApi } from "src/api/energize-peralatan";
 import { CreateEnergizePeralatan } from "../../types";
+import { convertDate } from "src/utils/date";
 
 const ModalAdd = () => {
   const modalSnapshot = useSnapshot(modal);
+  const { data } = useSnapshot(energizePeralatan);
 
-  const { garduIndukOptions, optionJenisPeralatan } = useModalAdd();
+  const formMethods = useForm({
+    resolver: yupResolver(validationSchema),
+    defaultValues: initialValues,
+    mode: "onSubmit",
+  });
+
+  const jenisPeralatan = formMethods.watch("jenis_peralatan");
+
+  const { garduIndukOptions, optionJenisPeralatan, peratanOptions } =
+    useModalAdd(jenisPeralatan);
+
+  const { createEnergizePeralatan, updateEnergizePeralatan } =
+    energizePeralatanApi();
 
   const titleModal = !!modalSnapshot.id ? "Ubah Data" : "Tambah Data";
   const isOpen =
     modalSnapshot.isOpen && modalSnapshot.target === "modal-energize-peralatan";
 
-  const formMethods = useForm({
-    // resolver: yupResolver(validationSchema),
-    // defaultValues: initialValues,
-    mode: "onSubmit",
-  });
-
   const onSubmit = (event?: React.FormEvent<HTMLFormElement>) => {
     event?.preventDefault();
 
     formMethods.handleSubmit(async (values) => {
-      console.log(values);
+      const { tanggal, ...rest } = values;
 
-      closeModal();
+      const payload = {
+        ...rest,
+        tanggal: convertDate(tanggal),
+      };
+
+      if (modalSnapshot.id) {
+        await updateEnergizePeralatan({ ...payload, id: modalSnapshot.id });
+      } else {
+        await createEnergizePeralatan([payload]);
+      }
+      onCloseModal();
+      reloadPage();
     })();
   };
 
-  const onClickCloseModal = () => {
+  const onCloseModal = () => {
     closeModal();
-    // formMethods.reset({ ...initialValues });
+    removeData();
+    formMethods.reset({ ...initialValues });
   };
 
   const handleFileUpload = (
@@ -69,11 +93,17 @@ const ModalAdd = () => {
     });
   };
 
+  useEffect(() => {
+    if (modalSnapshot.id) {
+      formMethods.reset({ ...data, gardu_induk_id: data?.gardu_induk?.id });
+    }
+  }, [modalSnapshot.id]);
+
   return (
     <Dialog
       open={isOpen}
       fullWidth
-      onClose={onClickCloseModal}
+      onClose={onCloseModal}
       maxWidth="md"
       scroll="body"
     >
@@ -100,7 +130,7 @@ const ModalAdd = () => {
                 <SelectInput
                   label="Peralatan"
                   name="peralatan_id"
-                  options={[]}
+                  options={peratanOptions}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -117,9 +147,9 @@ const ModalAdd = () => {
               <Grid item xs={6}>
                 <DatePicker label="Tanggal" name="tanggal" />
               </Grid>
-              <Grid item xs={6}>
+              {/* <Grid item xs={6}>
                 <TimePicker label="Close" name="close" />
-              </Grid>
+              </Grid> */}
               <Grid item xs={12}>
                 <Button variant="outlined" sx={{ height: "30px" }}>
                   <Plus />
@@ -168,7 +198,7 @@ const ModalAdd = () => {
             </Grid>
           </DialogContent>
           <DialogActions className="dialog-actions-dense">
-            <Button variant="outlined" onClick={onClickCloseModal}>
+            <Button variant="outlined" onClick={onCloseModal}>
               Batal
             </Button>
             <Button variant="contained" type="submit">

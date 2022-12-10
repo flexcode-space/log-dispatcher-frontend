@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import {
   Card,
   CardContent,
@@ -9,11 +9,14 @@ import {
   IconButton,
   Box,
 } from "@mui/material";
+import { useSnapshot } from "valtio";
 import { DataGrid } from "src/components/table";
 import { PencilOutline, EyeOutline } from "mdi-material-ui";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import DatePicketMui from "@mui/lab/DatePicker";
+import { modal } from "src/state/modal";
+import { useDebounce } from "src/hooks/useDebounce";
 import PageHeader from "src/@core/components/page-header";
 import FilterIcon from "src/assets/icons/filter-green-icon.svg";
 
@@ -27,6 +30,11 @@ import { EnergizeList } from "./types";
 import { selectData } from "src/state/energizePeralatan";
 
 const EnergizePeralatan = () => {
+  const modalSnapshot = useSnapshot(modal);
+  const [search, setSearch] = useState<string>("");
+
+  const debouncedSearch = useDebounce(search, 500);
+
   const { getEnergizePeralatanList, energizePeralatanList } =
     energizePeralatanApi();
 
@@ -42,7 +50,10 @@ const EnergizePeralatan = () => {
         return (
           <Box sx={{ display: "flex", alignItems: "center" }}>
             <IconButton
-              onClick={() => openModal("modal-energize-peralatan", row?.id)}
+              onClick={() => {
+                openModal("modal-energize-peralatan", row?.id);
+                selectData(row as EnergizeList);
+              }}
             >
               <PencilOutline />
             </IconButton>
@@ -60,9 +71,23 @@ const EnergizePeralatan = () => {
     },
   ];
 
+  const getEnergize = () => {
+    if (debouncedSearch) {
+      getEnergizePeralatanList({ search });
+    } else {
+      getEnergizePeralatanList({ search });
+    }
+  };
+
   useEffect(() => {
-    getEnergizePeralatanList();
-  }, []);
+    getEnergize();
+  }, [debouncedSearch]);
+
+  useEffect(() => {
+    if (modalSnapshot.isReloadData) {
+      getEnergize();
+    }
+  }, [modalSnapshot.isReloadData]);
 
   return (
     <>
@@ -80,10 +105,10 @@ const EnergizePeralatan = () => {
               title={
                 <TextField
                   size="small"
-                  value=""
+                  value={search}
                   sx={{ mr: 6, mb: 2, bgcolor: "#ffffff" }}
                   placeholder="Cari"
-                  // onChange={(e) => setSearch(e.target.value)}
+                  onChange={(e) => setSearch(e.target.value)}
                 />
               }
               action={
