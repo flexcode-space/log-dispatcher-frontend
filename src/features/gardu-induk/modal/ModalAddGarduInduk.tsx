@@ -39,7 +39,7 @@ const ModalAddGarduInduk = ({ handleClose }: ModalAddGarduIndukProps) => {
   const modalSnapshot = useSnapshot(modal);
 
   const isOpen =
-    modalSnapshot.isOpen && modalSnapshot.target === "modal-gardu-induk";
+    modalSnapshot.isOpen && modalSnapshot.target === "modal-add-gardu-induk";
 
   const { createGarduInduk, updateGarduInduk, getGarduIndukDetail } =
     garduIndukApi();

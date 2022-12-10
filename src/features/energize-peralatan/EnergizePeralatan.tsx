@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import {
   Card,
   CardContent,
@@ -9,21 +9,32 @@ import {
   IconButton,
   Box,
 } from "@mui/material";
+import { useSnapshot } from "valtio";
 import { DataGrid } from "src/components/table";
 import { PencilOutline, EyeOutline } from "mdi-material-ui";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import DatePicketMui from "@mui/lab/DatePicker";
+import { modal } from "src/state/modal";
+import { useDebounce } from "src/hooks/useDebounce";
 import PageHeader from "src/@core/components/page-header";
 import FilterIcon from "src/assets/icons/filter-green-icon.svg";
 
 import { CardHeader } from "src/components/card";
-import { openModal, closeModal } from "src/state/modal";
-import { ModalEdit } from "./modal";
+import { openModal } from "src/state/modal";
+import { ModalAdd, ModalDetail } from "./modal";
 import { defaultColumns } from "./EnergizePeralatan.constant";
 import { energizePeralatanApi } from "src/api/energize-peralatan";
+import { CellType } from "src/types";
+import { EnergizeList } from "./types";
+import { selectData } from "src/state/energizePeralatan";
 
 const EnergizePeralatan = () => {
+  const modalSnapshot = useSnapshot(modal);
+  const [search, setSearch] = useState<string>("");
+
+  const debouncedSearch = useDebounce(search, 500);
+
   const { getEnergizePeralatanList, energizePeralatanList } =
     energizePeralatanApi();
 
@@ -35,13 +46,23 @@ const EnergizePeralatan = () => {
       sortable: false,
       field: "actions",
       headerName: "Aksi",
-      renderCell: () => {
+      renderCell: ({ row }: CellType) => {
         return (
           <Box sx={{ display: "flex", alignItems: "center" }}>
-            <IconButton onClick={() => openModal("modal-energize-peralatan")}>
+            <IconButton
+              onClick={() => {
+                openModal("modal-energize-peralatan", row?.id);
+                selectData(row as EnergizeList);
+              }}
+            >
               <PencilOutline />
             </IconButton>
-            <IconButton onClick={() => null}>
+            <IconButton
+              onClick={() => {
+                openModal("modal-energize-peralatan-detail");
+                selectData(row as EnergizeList);
+              }}
+            >
               <EyeOutline />
             </IconButton>
           </Box>
@@ -50,13 +71,28 @@ const EnergizePeralatan = () => {
     },
   ];
 
+  const getEnergize = () => {
+    if (debouncedSearch) {
+      getEnergizePeralatanList({ search });
+    } else {
+      getEnergizePeralatanList({ search });
+    }
+  };
+
   useEffect(() => {
-    getEnergizePeralatanList();
-  }, []);
+    getEnergize();
+  }, [debouncedSearch]);
+
+  useEffect(() => {
+    if (modalSnapshot.isReloadData) {
+      getEnergize();
+    }
+  }, [modalSnapshot.isReloadData]);
 
   return (
     <>
-      <ModalEdit />
+      <ModalAdd />
+      <ModalDetail />
       <Grid container spacing={6}>
         <Grid item xs={12}>
           <PageHeader
@@ -69,10 +105,10 @@ const EnergizePeralatan = () => {
               title={
                 <TextField
                   size="small"
-                  value=""
+                  value={search}
                   sx={{ mr: 6, mb: 2, bgcolor: "#ffffff" }}
                   placeholder="Cari"
-                  // onChange={(e) => setSearch(e.target.value)}
+                  onChange={(e) => setSearch(e.target.value)}
                 />
               }
               action={
@@ -93,7 +129,9 @@ const EnergizePeralatan = () => {
                       />
                     </LocalizationProvider>
                     <Button sx={{ mb: 2 }} variant="outlined">
-                      <FilterIcon />
+                      <IconButton>
+                        <FilterIcon />
+                      </IconButton>
                       Filter
                     </Button>
                     <Button
