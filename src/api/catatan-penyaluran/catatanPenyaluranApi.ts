@@ -8,7 +8,7 @@ export type Params = {
 
 const endpoint = '/kit-lur/catatan-penyaluran'
 
-const catatanPenyaluran = () => {
+const catatanPenyaluranApi = () => {
   const [catatanPenyaluranList, setCatatanPenyaluran] = useState<[]>([])
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -59,4 +59,4 @@ const catatanPenyaluran = () => {
   }
 }
 
-export default catatanPenyaluran
+export default catatanPenyaluranApi

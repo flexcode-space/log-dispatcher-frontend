@@ -1,6 +1,7 @@
 import * as yup from "yup";
 import { CellType } from "src/types";
 import { RenderCell } from "src/components/table";
+import { PayloadCatatanPenyaluran } from "./types";
 
 export const defaultColumns = [
   {
@@ -39,14 +40,14 @@ export const defaultColumns = [
   },
 ];
 
-export const initialValues = {
+export const initialValues: PayloadCatatanPenyaluran = {
   gardu_induk_id: "",
   jurusan: "",
   keterangan: "",
-  tanggal_akhir: "",
-  waktu_akhir: "",
-  tanggal_mulai: "",
-  waktu_mulai: "",
+  tanggal_mulai: new Date(),
+  waktu_mulai: new Date(),
+  tanggal_akhir: new Date(),
+  waktu_akhir: new Date(),
 };
 
 export const validationSchema = yup.object({
