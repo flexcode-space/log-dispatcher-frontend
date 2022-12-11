@@ -1,4 +1,4 @@
-import { useState, ChangeEvent } from "react";
+import { useEffect } from "react";
 import {
   Card,
   CardContent,
@@ -10,6 +10,7 @@ import {
 } from "@mui/material";
 import { DataGrid } from "src/components/table";
 import { PencilOutline } from "mdi-material-ui";
+import { useSnapshot } from "valtio";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import DatePicketMui from "@mui/lab/DatePicker";
@@ -17,13 +18,21 @@ import PageHeader from "src/@core/components/page-header";
 import FilterIcon from "src/assets/icons/filter-green-icon.svg";
 
 import { WrapperFilter } from "src/components/filter";
-import { CardHeader } from "src/components/card";
+import { catatanPenyaluranApi } from "src/api/catatan-penyaluran";
+import { selectData } from "src/state/catatanPenyaluran";
 import { AddData } from "./add-data";
-import { openModal, closeModal } from "src/state/modal";
+import { openModal, closeModal, modal } from "src/state/modal";
 import { ModalEdit } from "./modal";
-import { defaultColumns, mockData } from "./CatatanPenyaluran.constant";
+import { defaultColumns } from "./CatatanPenyaluran.constant";
+import { CellType } from "src/types";
+import { CatatanPenyaluranList } from "./types";
 
 const CatatanPembangkitan = () => {
+  const modalSnap = useSnapshot(modal);
+
+  const { getCatatanPenyaluranList, catatanPenyaluranList } =
+    catatanPenyaluranApi();
+
   const columns = [
     ...defaultColumns,
     {
@@ -32,9 +41,14 @@ const CatatanPembangkitan = () => {
       sortable: false,
       field: "actions",
       headerName: "Aksi",
-      renderCell: () => {
+      renderCell: ({ row }: CellType) => {
         return (
-          <IconButton onClick={() => openModal("modal-catatan-penyaluran")}>
+          <IconButton
+            onClick={() => {
+              openModal("modal-catatan-penyaluran");
+              selectData(row as CatatanPenyaluranList);
+            }}
+          >
             <PencilOutline />
           </IconButton>
         );
@@ -45,6 +59,20 @@ const CatatanPembangkitan = () => {
   const handleClose = () => {
     closeModal();
   };
+
+  const getCatatanPenyaluran = () => {
+    getCatatanPenyaluranList();
+  };
+
+  useEffect(() => {
+    getCatatanPenyaluran();
+  }, []);
+
+  useEffect(() => {
+    if (modalSnap.isReloadData) {
+      getCatatanPenyaluran();
+    }
+  }, [modalSnap.isReloadData]);
 
   return (
     <>
@@ -60,7 +88,6 @@ const CatatanPembangkitan = () => {
         </Grid>
         <Grid item xs={12}>
           <Card>
-            {/* <CardHeader title="Pembangkit Derating" /> */}
             <CardContent>
               <WrapperFilter sx={{ alignItems: "baseline" }}>
                 <TextField
@@ -101,7 +128,7 @@ const CatatanPembangkitan = () => {
               </WrapperFilter>
               <DataGrid
                 autoHeight
-                rows={mockData()}
+                rows={catatanPenyaluranList}
                 columns={columns}
                 hideFooter
               />

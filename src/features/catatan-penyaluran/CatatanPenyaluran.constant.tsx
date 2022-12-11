@@ -1,49 +1,61 @@
+import * as yup from "yup";
+import { CellType } from "src/types";
+import { RenderCell } from "src/components/table";
+import { PayloadCatatanPenyaluran } from "./types";
+
 export const defaultColumns = [
   {
     flex: 0.25,
-    field: "lokasi",
+    field: "gardu_induk",
     minWidth: 200,
     headerName: "Lokasi",
+    renderCell: ({ row }: CellType) => {
+      const { gardu_induk } = row;
+      return <RenderCell>{gardu_induk?.nama}</RenderCell>;
+    },
   },
   {
     flex: 0.25,
-    minWidth: 70,
+    minWidth: 50,
     field: "jurusan",
     headerName: "Jurusan",
   },
   {
     flex: 0.25,
-    minWidth: 200,
-    field: "waktu_mulai",
+    minWidth: 100,
+    field: "tanggal_mulai",
     headerName: "Waktu Mulai",
   },
   {
     flex: 0.25,
-    minWidth: 200,
-    field: "waktu_akhir",
+    minWidth: 100,
+    field: "tanggal_akhir",
     headerName: "Waktu Akhir",
   },
   {
     flex: 0.25,
-    minWidth: 200,
+    minWidth: 600,
     field: "keterangan",
     headerName: "Keterangan",
   },
 ];
 
-export const mockData = () => {
-  const array = [];
-
-  for (let i = 0; i < 5; i++) {
-    array.push({
-      id: i,
-      lokasi: "PLTA MRICA 1",
-      jurusan: "Reaktor 4R-2. ",
-      waktu_mulai: "22 Januari 2022, 01.43 WIB",
-      waktu_akhir: "23 Januari 2022, 01.43 WIB",
-      keterangan: "PMT 66 KV dan Reaktor 4R-2 dinyatakan rusak.",
-    });
-  }
-
-  return array;
+export const initialValues: PayloadCatatanPenyaluran = {
+  gardu_induk_id: "",
+  jurusan: "",
+  keterangan: "",
+  tanggal_mulai: new Date(),
+  waktu_mulai: new Date(),
+  tanggal_akhir: new Date(),
+  waktu_akhir: new Date(),
 };
+
+export const validationSchema = yup.object({
+  gardu_induk_id: yup.string().required("This field is required"),
+  jurusan: yup.string().required("This field is required"),
+  tanggal_akhir: yup.string(),
+  waktu_akhir: yup.string(),
+  tanggal_mulai: yup.string().required("This field is required"),
+  waktu_mulai: yup.string().required("This field is required"),
+  keterangan: yup.string(),
+});

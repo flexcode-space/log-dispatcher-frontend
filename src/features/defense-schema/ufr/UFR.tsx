@@ -56,22 +56,29 @@ const UfrComponent = () => {
                     // onChange={(e) => setSearch(e.target.value)}
                   />
                   <Button sx={{ mb: 2 }} variant="outlined">
-                    <FilterIcon />
+                    <IconButton>
+                      <FilterIcon />
+                    </IconButton>
                     Filter
                   </Button>
                 </div>
 
                 <div style={{ display: "flex", gap: "10px" }}>
-                  <Button sx={{ mb: 2 }} variant="outlined">
-                    <DownloadIcon />
+                  <Button sx={{ mb: 2 }} size="small" variant="outlined">
+                    <IconButton>
+                      <DownloadIcon />
+                    </IconButton>
                     Download Laporan
                   </Button>
                   <Button
                     sx={{ mb: 2 }}
+                    size="small"
                     variant="contained"
                     onClick={() => openModal()}
                   >
-                    <Plus />
+                    <IconButton>
+                      <Plus />
+                    </IconButton>
                     Tambah Laporan
                   </Button>
                 </div>

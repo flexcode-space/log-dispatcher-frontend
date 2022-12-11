@@ -75,8 +75,11 @@ const OLS = () => {
                     sx={{ mb: 2 }}
                     variant="contained"
                     onClick={() => openModal()}
+                    size="small"
                   >
-                    <DownloadIcon />
+                    <IconButton>
+                      <DownloadIcon />
+                    </IconButton>
                     Tambah OLS
                   </Button>
                 </div>
