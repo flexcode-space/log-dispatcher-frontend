@@ -11,6 +11,7 @@ import {
   IconButton,
 } from "@mui/material";
 import { PencilOutline } from "mdi-material-ui";
+import { useSnapshot } from "valtio";
 import PageHeader from "src/@core/components/page-header";
 import {
   Table,
@@ -23,14 +24,14 @@ import {
 } from "src/components/table";
 import DownloadIcon from "src/assets/icons/download-green-icon.svg";
 import FilterIcon from "src/assets/icons/filter-icon.svg";
-
+import { modal } from "src/state/modal";
 import { WrapperFilter } from "src/components/filter";
 import { AddLaporan } from "./add-laporan";
 import { kapasitorReaktorApi } from "src/api/kapasitorReaktorApi";
 import { KapasitorReaktorList } from "./types";
 
 const KapasitorReaktor = () => {
-  // ** States
+  const modalSnap = useSnapshot(modal);
   const [page, setPage] = useState<number>(0);
   const [rowsPerPage, setRowsPerPage] = useState<number>(10);
 
@@ -46,9 +47,19 @@ const KapasitorReaktor = () => {
     setPage(0);
   };
 
-  useEffect(() => {
+  const getKapasitorReaktor = () => {
     getKapasitorReaktorList();
+  };
+
+  useEffect(() => {
+    getKapasitorReaktor();
   }, []);
+
+  useEffect(() => {
+    if (modalSnap.isReloadData) {
+      getKapasitorReaktor();
+    }
+  }, [modalSnap.isReloadData]);
 
   return (
     <>
