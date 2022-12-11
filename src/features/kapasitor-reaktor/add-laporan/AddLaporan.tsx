@@ -14,8 +14,7 @@ import { InputField } from "src/components/input-field";
 import { DatePicker, TimePicker } from "src/components/date-picker";
 
 import { StyledForm } from "src/components/form";
-
-import { ENERGI_PRIMER } from "../KapasitorReaktor.constant";
+import { CardHeader } from "src/components/card";
 
 const AddLaporan = () => {
   const formMethods = useForm({
@@ -26,14 +25,13 @@ const AddLaporan = () => {
 
   return (
     <Card>
-      <CardContent>
-        <Box sx={{ mb: 8 }}>
-          <Typography variant="h5" sx={{ mb: 3, lineHeight: "2rem" }}>
-            Tambah Laporan
-          </Typography>
-        </Box>
-        <FormProvider {...formMethods}>
-          <StyledForm noValidate onSubmit={() => null} sx={{ width: "100%" }}>
+      <FormProvider {...formMethods}>
+        <StyledForm noValidate onSubmit={() => null} sx={{ width: "100%" }}>
+          <CardHeader
+            title="Tambah Laporan"
+            action={<DatePicker label="Tanggal" name="tanggal" />}
+          />
+          <CardContent>
             <Grid container spacing={2} mt={1}>
               <Grid item xs={4}>
                 <SelectInput label="Lokasi" name="lokasi" options={[]} />
@@ -65,9 +63,9 @@ const AddLaporan = () => {
                 </Button>
               </Grid>
             </Grid>
-          </StyledForm>
-        </FormProvider>
-      </CardContent>
+          </CardContent>
+        </StyledForm>
+      </FormProvider>
     </Card>
   );
 };
