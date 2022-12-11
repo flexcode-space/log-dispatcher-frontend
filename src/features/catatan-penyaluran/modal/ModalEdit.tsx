@@ -7,13 +7,15 @@ import {
   DialogTitle,
   Grid,
 } from "@mui/material";
-// import { yupResolver } from "@hookform/resolvers/yup";
+import { yupResolver } from "@hookform/resolvers/yup";
 import { useSnapshot } from "valtio";
 import { SelectInput } from "src/components/select-input";
 import { InputField, TextArea } from "src/components/input-field";
 import { StyledForm } from "src/components/form";
 import { modal, reloadPage } from "src/state/modal";
 import { DatePicker, TimePicker } from "src/components/date-picker";
+import { useCatatanPenyaluran } from "../useCatatanPenyaluran";
+import { validationSchema, initialValues } from "../CatatanPenyaluran.constant";
 
 type ModalFilter = {
   handleClose: () => void;
@@ -22,12 +24,14 @@ type ModalFilter = {
 const ModalFilter = ({ handleClose }: ModalFilter) => {
   const modalSnapshot = useSnapshot(modal);
 
+  const { garduIndukOptions } = useCatatanPenyaluran();
+
   const isOpen =
     modalSnapshot.isOpen && modalSnapshot.target === "modal-catatan-penyaluran";
 
   const formMethods = useForm({
-    // resolver: yupResolver(validationSchema),
-    // defaultValues: initialValues,
+    resolver: yupResolver(validationSchema),
+    defaultValues: initialValues,
     mode: "onSubmit",
   });
 
@@ -63,23 +67,23 @@ const ModalFilter = ({ handleClose }: ModalFilter) => {
                 <SelectInput
                   label="Gardu Induk"
                   name="gardu_induk_id"
-                  options={[]}
+                  options={garduIndukOptions}
                 />
               </Grid>
               <Grid item xs={12}>
                 <InputField label="Jurusan" name="jurusan" />
               </Grid>
               <Grid item xs={6}>
-                <DatePicker label="Tanggal Mulai" name="tanggal" />
+                <DatePicker label="Tanggal Mulai" name="tanggal_mulai" />
               </Grid>
               <Grid item xs={6}>
-                <TimePicker label="Watu Mulai" name="tanggal" />
+                <TimePicker label="Watu Mulai" name="waktu_mulai" />
               </Grid>
               <Grid item xs={6}>
-                <DatePicker label="Tanggal Akhir" name="tanggal" />
+                <DatePicker label="Tanggal Akhir" name="tanggal_akhir" />
               </Grid>
               <Grid item xs={6}>
-                <TimePicker label="Watu Akhir" name="tanggal" />
+                <TimePicker label="Watu Akhir" name="waktu_akhir" />
               </Grid>
               <Grid item xs={12}>
                 <TextArea label="Keterangan" name="keterangan" />

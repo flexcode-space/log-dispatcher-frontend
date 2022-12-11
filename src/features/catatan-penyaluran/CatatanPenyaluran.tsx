@@ -1,4 +1,4 @@
-import { useState, ChangeEvent } from "react";
+import { useEffect, ChangeEvent } from "react";
 import {
   Card,
   CardContent,
@@ -17,13 +17,16 @@ import PageHeader from "src/@core/components/page-header";
 import FilterIcon from "src/assets/icons/filter-green-icon.svg";
 
 import { WrapperFilter } from "src/components/filter";
-import { CardHeader } from "src/components/card";
+import { catatanPenyaluranApi } from "src/api/catatan-penyaluran";
 import { AddData } from "./add-data";
 import { openModal, closeModal } from "src/state/modal";
 import { ModalEdit } from "./modal";
-import { defaultColumns, mockData } from "./CatatanPenyaluran.constant";
+import { defaultColumns } from "./CatatanPenyaluran.constant";
 
 const CatatanPembangkitan = () => {
+  const { getCatatanPenyaluranList, catatanPenyaluranList } =
+    catatanPenyaluranApi();
+
   const columns = [
     ...defaultColumns,
     {
@@ -45,6 +48,10 @@ const CatatanPembangkitan = () => {
   const handleClose = () => {
     closeModal();
   };
+
+  useEffect(() => {
+    getCatatanPenyaluranList();
+  }, []);
 
   return (
     <>
@@ -101,7 +108,7 @@ const CatatanPembangkitan = () => {
               </WrapperFilter>
               <DataGrid
                 autoHeight
-                rows={mockData()}
+                rows={catatanPenyaluranList}
                 columns={columns}
                 hideFooter
               />
