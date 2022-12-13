@@ -1,1 +1,0 @@
-export { default as AddLaporan } from './AddLaporan'

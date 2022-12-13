@@ -25,8 +25,9 @@ import { switchingLuarRencanaApi } from "src/api/switchingDiluarRencanaApi";
 import DownloadIcon from "src/assets/icons/download-green-icon.svg";
 import FilterIcon from "src/assets/icons/filter-icon.svg";
 import { WrapperFilter } from "src/components/filter";
-import { AddLaporan } from "./add-laporan";
+import { ModalAddSwitching } from "./modal";
 import { SwitchingLuarRencanaList } from "./types";
+import { openModal } from "src/state/modal";
 
 const SwitchingDiluarRencana = () => {
   const { getSwitchingLuarRencanaList, switchingLuarRencana } =
@@ -50,6 +51,7 @@ const SwitchingDiluarRencana = () => {
 
   return (
     <>
+      <ModalAddSwitching />
       <Grid container spacing={6}>
         <Grid item xs={12}>
           <PageHeader
@@ -83,7 +85,12 @@ const SwitchingDiluarRencana = () => {
                     </IconButton>
                     Download laporan
                   </Button>
-                  <Button size="small" sx={{ mb: 2 }} variant="contained">
+                  <Button
+                    onClick={() => openModal("modal-switching-luar-rencana")}
+                    size="small"
+                    sx={{ mb: 2 }}
+                    variant="contained"
+                  >
                     Tambah Switching
                   </Button>
                 </div>
@@ -130,7 +137,14 @@ const SwitchingDiluarRencana = () => {
                           <TableCell size="small">{list.keterangan}</TableCell>
                           <TableCell size="small">
                             <Box sx={{ display: "flex", alignItems: "center" }}>
-                              <IconButton onClick={() => null}>
+                              <IconButton
+                                onClick={() =>
+                                  openModal(
+                                    "modal-switching-luar-rencana",
+                                    list.id
+                                  )
+                                }
+                              >
                                 <PencilOutline />
                               </IconButton>
                             </Box>

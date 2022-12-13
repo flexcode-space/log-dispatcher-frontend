@@ -13,3 +13,13 @@ export interface SwitchingLuarRencanaList {
   };
   tanggal: string;
 }
+
+export interface PayloadSwitchingLuarRencana {
+  gardu_induk_id: string;
+  jam_buka: Date;
+  jam_tutup: Date;
+  keterangan: string;
+  penghantar_id: string;
+  tanggal: string;
+}
+
