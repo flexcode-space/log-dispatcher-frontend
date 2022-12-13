@@ -1,9 +1,15 @@
-import { ThemeColor } from "src/@core/layouts/types";
-
-export interface Colors {
-  [key: string]: ThemeColor;
-}
-
-export interface CellType {
-  row: any;
+export interface SwitchingLuarRencanaList {
+  gardu_induk: {
+    id: string;
+    nama: string;
+  };
+  id: string;
+  jam_buka: string;
+  jam_tutup: string;
+  keterangan: string;
+  penghantar: {
+    id: string;
+    nama: string;
+  };
+  tanggal: string;
 }

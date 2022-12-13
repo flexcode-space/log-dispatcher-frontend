@@ -1,4 +1,4 @@
-import { useState, ChangeEvent } from "react";
+import { useState, ChangeEvent, useEffect } from "react";
 import {
   Box,
   Card,
@@ -21,14 +21,17 @@ import {
   TableCellHead,
   TableContainer,
 } from "src/components/table";
-import DownloadIcon from "src/assets/icons/download-icon.svg";
+import { switchingLuarRencanaApi } from "src/api/switchingDiluarRencanaApi";
+import DownloadIcon from "src/assets/icons/download-green-icon.svg";
 import FilterIcon from "src/assets/icons/filter-icon.svg";
-
 import { WrapperFilter } from "src/components/filter";
 import { AddLaporan } from "./add-laporan";
+import { SwitchingLuarRencanaList } from "./types";
 
 const SwitchingDiluarRencana = () => {
-  // ** States
+  const { getSwitchingLuarRencanaList, switchingLuarRencana } =
+    switchingLuarRencanaApi();
+
   const [page, setPage] = useState<number>(0);
   const [rowsPerPage, setRowsPerPage] = useState<number>(10);
 
@@ -40,6 +43,10 @@ const SwitchingDiluarRencana = () => {
     setRowsPerPage(+event.target.value);
     setPage(0);
   };
+
+  useEffect(() => {
+    getSwitchingLuarRencanaList();
+  }, []);
 
   return (
     <>
@@ -64,15 +71,19 @@ const SwitchingDiluarRencana = () => {
                 />
 
                 <div style={{ display: "flex", gap: "10px" }}>
-                  <Button sx={{ mb: 2 }} variant="outlined">
-                    <FilterIcon />
+                  <Button size="small" sx={{ mb: 2 }} variant="outlined">
+                    <IconButton>
+                      <FilterIcon />
+                    </IconButton>
                     Filter
                   </Button>
-                  <Button sx={{ mb: 2 }} variant="outlined">
-                    <DownloadIcon />
+                  <Button size="small" sx={{ mb: 2 }} variant="outlined">
+                    <IconButton>
+                      <DownloadIcon />
+                    </IconButton>
                     Download laporan
                   </Button>
-                  <Button sx={{ mb: 2 }} variant="contained">
+                  <Button size="small" sx={{ mb: 2 }} variant="contained">
                     Tambah Switching
                   </Button>
                 </div>
@@ -104,21 +115,29 @@ const SwitchingDiluarRencana = () => {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    <TableRow>
-                      <TableCell size="small">1</TableCell>
-                      <TableCell size="small">PLTU RBANG</TableCell>
-                      <TableCell size="small">PLTU RBANG</TableCell>
-                      <TableCell size="small">07:02</TableCell>
-                      <TableCell size="small">07:22</TableCell>
-                      <TableCell size="small">200 MW</TableCell>
-                      <TableCell size="small">
-                        <Box sx={{ display: "flex", alignItems: "center" }}>
-                          <IconButton onClick={() => null}>
-                            <PencilOutline />
-                          </IconButton>
-                        </Box>
-                      </TableCell>
-                    </TableRow>
+                    {switchingLuarRencana.map(
+                      (list: SwitchingLuarRencanaList, index) => (
+                        <TableRow key={list.id}>
+                          <TableCell size="small">{index + 1}</TableCell>
+                          <TableCell size="small">
+                            {list.gardu_induk.nama}
+                          </TableCell>
+                          <TableCell size="small">
+                            {list.penghantar.nama}
+                          </TableCell>
+                          <TableCell size="small">{list.jam_buka}</TableCell>
+                          <TableCell size="small">{list.jam_tutup}</TableCell>
+                          <TableCell size="small">{list.keterangan}</TableCell>
+                          <TableCell size="small">
+                            <Box sx={{ display: "flex", alignItems: "center" }}>
+                              <IconButton onClick={() => null}>
+                                <PencilOutline />
+                              </IconButton>
+                            </Box>
+                          </TableCell>
+                        </TableRow>
+                      )
+                    )}
                   </TableBody>
                 </Table>
               </TableContainer>
