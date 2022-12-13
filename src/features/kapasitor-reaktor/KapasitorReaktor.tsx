@@ -24,11 +24,13 @@ import {
 } from "src/components/table";
 import DownloadIcon from "src/assets/icons/download-green-icon.svg";
 import FilterIcon from "src/assets/icons/filter-icon.svg";
-import { modal } from "src/state/modal";
+import { modal, openModal } from "src/state/modal";
 import { WrapperFilter } from "src/components/filter";
+import { selectData } from "src/state/kapasitorReaktor";
 import { AddLaporan } from "./add-laporan";
 import { kapasitorReaktorApi } from "src/api/kapasitorReaktorApi";
 import { KapasitorReaktorList } from "./types";
+import { ModalEdit } from "./modal";
 
 const KapasitorReaktor = () => {
   const modalSnap = useSnapshot(modal);
@@ -63,6 +65,7 @@ const KapasitorReaktor = () => {
 
   return (
     <>
+      <ModalEdit />
       <Grid container spacing={6}>
         <Grid item xs={12}>
           <PageHeader
@@ -148,7 +151,15 @@ const KapasitorReaktor = () => {
                           <TableCell size="small">{list.keterangan}</TableCell>
                           <TableCell size="small">
                             <Box sx={{ display: "flex", alignItems: "center" }}>
-                              <IconButton onClick={() => null}>
+                              <IconButton
+                                onClick={() => {
+                                  openModal(
+                                    "modal-edit-kapasitor-reaktor",
+                                    list.id
+                                  );
+                                  selectData(list as KapasitorReaktorList);
+                                }}
+                              >
                                 <PencilOutline />
                               </IconButton>
                             </Box>

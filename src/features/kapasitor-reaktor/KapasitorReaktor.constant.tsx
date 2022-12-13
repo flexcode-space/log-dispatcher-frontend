@@ -1,13 +1,14 @@
 import * as yup from "yup";
+import { PayloadKapasitorReaktor } from "./types";
 
-export const initialValues = {
+export const initialValues: PayloadKapasitorReaktor = {
   gardu_induk_id: "",
   jam_buka: new Date(),
   jam_tutup: new Date(),
   keterangan: "",
   tanggal: new Date(),
-  tegangan_sebelum: "",
-  tegangan_sesudah: "",
+  tegangan_sebelum: null,
+  tegangan_sesudah: null,
 };
 
 export const validationSchema = yup.object({

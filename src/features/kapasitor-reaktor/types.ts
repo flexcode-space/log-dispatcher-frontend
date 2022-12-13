@@ -1,3 +1,13 @@
+export type PayloadKapasitorReaktor = {
+  gardu_induk_id: string,
+  jam_buka: Date,
+  jam_tutup: Date,
+  keterangan: string,
+  tanggal: Date,
+  tegangan_sebelum: number | null,
+  tegangan_sesudah: number | null,
+};
+
 export interface KapasitorReaktorList {
   id: string;
   gardu_induk: {
