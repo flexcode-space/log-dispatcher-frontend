@@ -1,4 +1,4 @@
-import { useState, ChangeEvent } from "react";
+import { useState, ChangeEvent, useEffect } from "react";
 import {
   Box,
   Card,
@@ -11,6 +11,7 @@ import {
   IconButton,
 } from "@mui/material";
 import { PencilOutline } from "mdi-material-ui";
+import { useSnapshot } from "valtio";
 import PageHeader from "src/@core/components/page-header";
 import {
   Table,
@@ -21,16 +22,23 @@ import {
   TableCellHead,
   TableContainer,
 } from "src/components/table";
-import DownloadIcon from "src/assets/icons/download-icon.svg";
+import DownloadIcon from "src/assets/icons/download-green-icon.svg";
 import FilterIcon from "src/assets/icons/filter-icon.svg";
-
+import { modal, openModal } from "src/state/modal";
 import { WrapperFilter } from "src/components/filter";
+import { selectData } from "src/state/kapasitorReaktor";
 import { AddLaporan } from "./add-laporan";
+import { kapasitorReaktorApi } from "src/api/kapasitorReaktorApi";
+import { KapasitorReaktorList } from "./types";
+import { ModalEdit } from "./modal";
 
 const KapasitorReaktor = () => {
-  // ** States
+  const modalSnap = useSnapshot(modal);
   const [page, setPage] = useState<number>(0);
   const [rowsPerPage, setRowsPerPage] = useState<number>(10);
+
+  const { getKapasitorReaktorList, kapasitorReaktorList } =
+    kapasitorReaktorApi();
 
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
@@ -41,8 +49,23 @@ const KapasitorReaktor = () => {
     setPage(0);
   };
 
+  const getKapasitorReaktor = () => {
+    getKapasitorReaktorList();
+  };
+
+  useEffect(() => {
+    getKapasitorReaktor();
+  }, []);
+
+  useEffect(() => {
+    if (modalSnap.isReloadData) {
+      getKapasitorReaktor();
+    }
+  }, [modalSnap.isReloadData]);
+
   return (
     <>
+      <ModalEdit />
       <Grid container spacing={6}>
         <Grid item xs={12}>
           <PageHeader
@@ -65,12 +88,16 @@ const KapasitorReaktor = () => {
                 />
 
                 <div style={{ display: "flex", gap: "10px" }}>
-                  <Button sx={{ mb: 2 }} variant="outlined">
-                    <FilterIcon />
+                  <Button size="small" sx={{ mb: 2 }} variant="outlined">
+                    <IconButton>
+                      <FilterIcon />
+                    </IconButton>
                     Filter
                   </Button>
-                  <Button sx={{ mb: 2 }} variant="contained">
-                    <DownloadIcon />
+                  <Button size="small" sx={{ mb: 2 }} variant="outlined">
+                    <IconButton>
+                      <DownloadIcon />
+                    </IconButton>
                     Download laporan
                   </Button>
                 </div>
@@ -106,22 +133,40 @@ const KapasitorReaktor = () => {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    <TableRow>
-                      <TableCell size="small">1</TableCell>
-                      <TableCell size="small">PLTU RBANG</TableCell>
-                      <TableCell size="small">07:02</TableCell>
-                      <TableCell size="small">07:22</TableCell>
-                      <TableCell size="small">Dika</TableCell>
-                      <TableCell size="small">Bagus</TableCell>
-                      <TableCell size="small">200 MW</TableCell>
-                      <TableCell size="small">
-                        <Box sx={{ display: "flex", alignItems: "center" }}>
-                          <IconButton onClick={() => null}>
-                            <PencilOutline />
-                          </IconButton>
-                        </Box>
-                      </TableCell>
-                    </TableRow>
+                    {kapasitorReaktorList.map(
+                      (list: KapasitorReaktorList, index) => (
+                        <TableRow key={list.id}>
+                          <TableCell size="small">{index + 1}</TableCell>
+                          <TableCell size="small">
+                            {list.gardu_induk.nama}
+                          </TableCell>
+                          <TableCell size="small">{list.jam_buka}</TableCell>
+                          <TableCell size="small">{list.jam_tutup}</TableCell>
+                          <TableCell size="small">
+                            {list.tegangan_sebelum}
+                          </TableCell>
+                          <TableCell size="small">
+                            {list.tegangan_sesudah}
+                          </TableCell>
+                          <TableCell size="small">{list.keterangan}</TableCell>
+                          <TableCell size="small">
+                            <Box sx={{ display: "flex", alignItems: "center" }}>
+                              <IconButton
+                                onClick={() => {
+                                  openModal(
+                                    "modal-edit-kapasitor-reaktor",
+                                    list.id
+                                  );
+                                  selectData(list as KapasitorReaktorList);
+                                }}
+                              >
+                                <PencilOutline />
+                              </IconButton>
+                            </Box>
+                          </TableCell>
+                        </TableRow>
+                      )
+                    )}
                   </TableBody>
                 </Table>
               </TableContainer>
