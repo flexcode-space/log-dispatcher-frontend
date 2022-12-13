@@ -16,10 +16,10 @@ export interface SwitchingLuarRencanaList {
 
 export interface PayloadSwitchingLuarRencana {
   gardu_induk_id: string;
-  jam_buka: Date;
-  jam_tutup: Date;
+  jam_buka: Array<{ value: Date }>;
+  jam_tutup: Array<{ value: Date }>;
   keterangan: string;
-  penghantar_id: string;
-  tanggal: string;
+  penghantar: Array<{ id: string }>;
+  tanggal: Date;
 }
 

@@ -1,5 +1,6 @@
 import { useCallback, useState } from 'react'
 import { toast } from 'src/components/toast'
+import { PayloadSwitchingLuarRencana } from 'src/features/switching-diluar-rencana/types';
 import { Axios } from '../axios'
 
 export type Params = {
@@ -23,7 +24,7 @@ const switchingLuarRencanaApi = () => {
     }
   }, [])
 
-  const createSwitchingLuarRencana = useCallback(async (payload: any) => {
+  const createSwitchingLuarRencana = useCallback(async (payload: PayloadSwitchingLuarRencana[]) => {
     setLoading(true)
 
     try {
