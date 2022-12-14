@@ -60,7 +60,7 @@ const ModalAdd = () => {
     formMethods.handleSubmit(async (values) => {
       let payload: PayloadSwitchingLuarRencana[] = [];
 
-      values.penghantar.forEach((value, index) => {
+      values.penghantar.forEach((value, index: number) => {
         payload.push({
           gardu_induk_id: values.gardu_induk_id,
           jam_buka: dayjs(values.jam_buka[index].value).format("HH:MM"),
