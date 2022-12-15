@@ -28,6 +28,7 @@ import { WrapperFilter } from "src/components/filter";
 import { ModalAddSwitching } from "./modal";
 import { SwitchingLuarRencanaList } from "./types";
 import { openModal } from "src/state/modal";
+import { selectData } from "./state";
 
 const SwitchingDiluarRencana = () => {
   const { getSwitchingLuarRencanaList, switchingLuarRencana } =
@@ -138,12 +139,13 @@ const SwitchingDiluarRencana = () => {
                           <TableCell size="small">
                             <Box sx={{ display: "flex", alignItems: "center" }}>
                               <IconButton
-                                onClick={() =>
+                                onClick={() => {
                                   openModal(
                                     "modal-switching-luar-rencana",
                                     list.id
-                                  )
-                                }
+                                  );
+                                  selectData(list);
+                                }}
                               >
                                 <PencilOutline />
                               </IconButton>

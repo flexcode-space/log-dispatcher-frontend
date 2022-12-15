@@ -12,6 +12,8 @@ import {
 import Plus from "mdi-material-ui/Plus";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useSnapshot } from "valtio";
+import dayjs from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat";
 import { SelectInput } from "src/components/select-input";
 import { TextArea } from "src/components/input-field";
 import { StyledForm } from "src/components/form";
@@ -19,10 +21,11 @@ import { closeModal, modal, reloadPage } from "src/state/modal";
 import { TimePicker } from "src/components/date-picker";
 import { useModalAdd } from "./useModalAdd";
 import { validationSchema, initialValues } from "./ModalAddSwitching.contant";
-import { energizePeralatan, removeData } from "src/state/energizePeralatan";
+import { switchingDiluarRencana, removeData } from "../state";
 import { PayloadSwitchingLuarRencana } from "../types";
-import dayjs from "dayjs";
 import { switchingLuarRencanaApi } from "src/api/switchingDiluarRencanaApi";
+
+dayjs.extend(customParseFormat);
 
 const defaultValue = {
   jurusan: "",
@@ -35,9 +38,10 @@ type DefaultValueProps = {
 const ModalAdd = () => {
   const [fields, setFields] = useState<DefaultValueProps>([defaultValue]);
   const modalSnapshot = useSnapshot(modal);
-  const { data } = useSnapshot(energizePeralatan);
+  const { data } = useSnapshot(switchingDiluarRencana);
 
-  const { createSwitchingLuarRencana } = switchingLuarRencanaApi();
+  const { createSwitchingLuarRencana, updateSwitchingLuarRencana } =
+    switchingLuarRencanaApi();
 
   const formMethods = useForm({
     resolver: yupResolver(validationSchema),
@@ -71,23 +75,33 @@ const ModalAdd = () => {
         });
       });
 
-      createSwitchingLuarRencana(payload);
+      if (modalSnapshot.id) {
+        updateSwitchingLuarRencana({ ...payload[0], id: data.id });
+      } else {
+        createSwitchingLuarRencana(payload);
+      }
       onCloseModal();
     })();
   };
 
   const onCloseModal = () => {
     closeModal();
-    // removeData();
+    removeData();
     setFields([defaultValue]);
     formMethods.reset({ ...initialValues });
   };
 
-  // useEffect(() => {
-  //   if (modalSnapshot.id) {
-  //     formMethods.reset({ ...data, gardu_induk_id: data?.gardu_induk?.id });
-  //   }
-  // }, [modalSnapshot.id]);
+  useEffect(() => {
+    if (modalSnapshot.id) {
+      formMethods.reset({
+        ...data,
+        gardu_induk_id: data?.gardu_induk?.id,
+        jam_buka: [{ value: dayjs(data.jam_buka, "hh:mm") }],
+        jam_tutup: [{ value: dayjs(data.jam_tutup, "hh:mm") }],
+        penghantar: [{ id: data.penghantar.id }],
+      });
+    }
+  }, [modalSnapshot.id]);
 
   return (
     <Dialog
