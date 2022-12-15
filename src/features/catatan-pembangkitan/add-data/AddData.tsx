@@ -14,9 +14,13 @@ import { DatePicker, TimePicker } from "src/components/date-picker";
 import { StyledForm } from "src/components/form";
 import AddIcon from "src/assets/icons/add-icon.svg";
 import DeleteIcon from "src/assets/icons/delete-icon.svg";
+import { useCatatanPembangkitan } from "../useCatatanPembangkitan";
 
 const AddData = () => {
   const [showWaktuAkhir, setShowWaktuAkhir] = useState<boolean>(false);
+
+  const { pembangkitOptions, statusOptions } = useCatatanPembangkitan();
+
   const formMethods = useForm({
     // resolver: yupResolver(validationSchema),
     // defaultValues: initialValues,
@@ -37,18 +41,22 @@ const AddData = () => {
               <Grid item xs={2}>
                 <SelectInput
                   label="Pembangkit"
-                  name="pembangkit"
-                  options={[]}
+                  name="pembangkit_id"
+                  options={pembangkitOptions}
                 />
               </Grid>
               <Grid item xs={2}>
-                <SelectInput label="Status" name="status" options={[]} />
+                <SelectInput
+                  label="Status"
+                  name="status"
+                  options={statusOptions}
+                />
               </Grid>
               <Grid item xs={2}>
-                <InputField name="mampu" label="Mampu" />
+                <InputField type="number" name="mampu" label="Mampu" />
               </Grid>
               <Grid item xs={2}>
-                <DatePicker label="Tanggal Mulai" name="tanggal" />
+                <DatePicker label="Tanggal Mulai" name="tanggal_mulai" />
               </Grid>
               <Grid item xs={2}>
                 <TimePicker label="Waktu Mulai" name="waktu_mulai" />
@@ -80,7 +88,7 @@ const AddData = () => {
               {showWaktuAkhir && (
                 <>
                   <Grid item xs={2}>
-                    <DatePicker label="Tanggal Akhir" name="tanggal" />
+                    <DatePicker label="Tanggal Akhir" name="tanggal_akhir" />
                   </Grid>
                   <Grid item xs={2}>
                     <TimePicker label="Waktu Akhir" name="waktu_mulai" />

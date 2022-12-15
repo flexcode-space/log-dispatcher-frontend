@@ -1,9 +1,17 @@
+import { CellType } from "src/types";
+import { RenderCell } from "src/components/table";
+import dayjs from "dayjs";
+
 export const defaultColumns = [
   {
     flex: 0.25,
     field: "pembangkit",
     minWidth: 200,
     headerName: "Pembangkit",
+    renderCell: ({ row }: CellType) => {
+      const { pembangkit } = row;
+      return <RenderCell>{pembangkit?.nama}</RenderCell>;
+    },
   },
   {
     flex: 0.25,
@@ -26,14 +34,22 @@ export const defaultColumns = [
   {
     flex: 0.25,
     minWidth: 200,
-    field: "waktu_mulai",
+    field: "tanggal_mulai",
     headerName: "Waktu Mulai",
+    renderCell: ({ row }: CellType) => {
+      const startDate = dayjs(row?.tanggal_mulai).format("HH:MM");
+      return <RenderCell>{startDate}</RenderCell>;
+    },
   },
   {
     flex: 0.25,
     minWidth: 200,
     field: "waktu_akhir",
     headerName: "Waktu Akhir",
+    renderCell: ({ row }: CellType) => {
+      const endDate = dayjs(row?.tanggal_akhir).format("HH:MM");
+      return <RenderCell>{endDate}</RenderCell>;
+    },
   },
   {
     flex: 0.25,
@@ -43,21 +59,27 @@ export const defaultColumns = [
   },
 ];
 
-export const mockData = () => {
-  const array = [];
+export const STATUS = [
+  "FD1",
+  "FD2",
+  "FD3",
+  "MD",
+  "MDE",
+  "PD",
+  "PDE",
 
-  for (let i = 0; i < 5; i++) {
-    array.push({
-      id: i,
-      pembangkit: "PLTA MRICA 1",
-      mampu: "50",
-      status: "FD3",
-      operator: "Bagoes",
-      waktu_mulai: "22 Januari 2022, 01.43 WIB",
-      waktu_akhir: "23 Januari 2022, 01.43 WIB",
-      keterangan: "Kendala indikasi di hot well pump abnormal",
-    });
-  }
+  "FO1",
+  "FO2",
+  "FO3",
+  "MO",
+  "ME",
+  "PO",
+  "PE",
 
-  return array;
-};
+  "IR",
+  "MB",
+  "NC",
+  "RS",
+  "RU",
+  "SF",
+];

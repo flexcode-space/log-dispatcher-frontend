@@ -1,12 +1,16 @@
 import { useForm, FormProvider } from "react-hook-form";
 import {
+  Box,
   Button,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
   Grid,
+  IconButton,
+  Stack,
 } from "@mui/material";
+import { TrashCanOutline } from "mdi-material-ui";
 // import { yupResolver } from "@hookform/resolvers/yup";
 import { useSnapshot } from "valtio";
 import { SelectInput } from "src/components/select-input";
@@ -14,9 +18,11 @@ import { InputField, TextArea } from "src/components/input-field";
 import { StyledForm } from "src/components/form";
 import { closeModal, modal } from "src/state/modal";
 import { DatePicker, TimePicker } from "src/components/date-picker";
+import { useCatatanPembangkitan } from "../useCatatanPembangkitan";
 
 const ModalFilter = () => {
   const modalSnapshot = useSnapshot(modal);
+  const { pembangkitOptions, statusOptions } = useCatatanPembangkitan();
 
   const isOpen =
     modalSnapshot.isOpen && modalSnapshot.target === "modal-catatan-pembangkit";
@@ -59,11 +65,18 @@ const ModalFilter = () => {
                 <SelectInput
                   label="Pembangkit"
                   name="pembangkit_id"
-                  options={[]}
+                  options={pembangkitOptions}
                 />
               </Grid>
-              <Grid item xs={12}>
-                <InputField label="Jurusan" name="jurusan" />
+              <Grid item xs={6}>
+                <SelectInput
+                  label="Status"
+                  name="status"
+                  options={statusOptions}
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <InputField type="number" name="mampu" label="Mampu" />
               </Grid>
               <Grid item xs={6}>
                 <DatePicker label="Tanggal Mulai" name="tanggal" />
@@ -83,12 +96,29 @@ const ModalFilter = () => {
             </Grid>
           </DialogContent>
           <DialogActions className="dialog-actions-dense">
-            <Button variant="outlined" onClick={onClickCloseModal}>
-              Batal
-            </Button>
-            <Button variant="contained" type="submit">
-              Simpan
-            </Button>
+            <Stack
+              width="100%"
+              direction="row"
+              alignItems="center"
+              justifyContent="space-between"
+            >
+              <Box>
+                <Button variant="text" onClick={onClickCloseModal}>
+                  <IconButton>
+                    <TrashCanOutline />
+                  </IconButton>
+                  Hapus data
+                </Button>
+              </Box>
+              <Box display="flex" gap="10px">
+                <Button variant="outlined" onClick={onClickCloseModal}>
+                  Batal
+                </Button>
+                <Button variant="contained" type="submit">
+                  Simpan
+                </Button>
+              </Box>
+            </Stack>
           </DialogActions>
         </StyledForm>
       </FormProvider>
