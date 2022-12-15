@@ -1,6 +1,8 @@
+import * as yup from "yup";
 import { CellType } from "src/types";
 import { RenderCell } from "src/components/table";
 import dayjs from "dayjs";
+import { PayloadCatatanPembangkitan } from "./types";
 
 export const defaultColumns = [
   {
@@ -24,12 +26,6 @@ export const defaultColumns = [
     minWidth: 80,
     field: "status",
     headerName: "Status",
-  },
-  {
-    flex: 0.25,
-    minWidth: 200,
-    field: "operator",
-    headerName: "Operator",
   },
   {
     flex: 0.25,
@@ -83,3 +79,25 @@ export const STATUS = [
   "RU",
   "SF",
 ];
+
+export const initialValues: PayloadCatatanPembangkitan = {
+  pembangkit_id: "",
+  mampu: null,
+  status: "",
+  tanggal_mulai: new Date(),
+  waktu_mulai: new Date(),
+  tanggal_akhir: new Date(),
+  waktu_akhir: new Date(),
+  keterangan: "",
+};
+
+export const validationSchema = yup.object({
+  pembangkit_id: yup.string().required("This field is required"),
+  mampu: yup.number().required("This field is required"),
+  status: yup.string().required("This field is required"),
+  tanggal_mulai: yup.string(),
+  waktu_mulai: yup.string(),
+  tanggal_akhir: yup.string(),
+  waktu_akhir: yup.string(),
+  keterangan: yup.string().required("This field is required"),
+});

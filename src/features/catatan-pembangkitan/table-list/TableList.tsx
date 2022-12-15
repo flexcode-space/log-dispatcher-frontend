@@ -4,7 +4,10 @@ import { useEffect } from "react";
 import catatanPembangkitanApi from "src/api/catatan-pembangkitan/catatanPembangkitanApi";
 import { DataGrid } from "src/components/table";
 import { openModal } from "src/state/modal";
+import { CellType } from "src/types";
 import { defaultColumns } from "../CatatanPembangkitan.constant";
+import { selectData } from "../state";
+import { CatatanPembangkitanList } from "../types";
 
 type TableListProps = {
   type: string;
@@ -23,9 +26,14 @@ const TableList = ({ type, title }: TableListProps) => {
       sortable: false,
       field: "actions",
       headerName: "Aksi",
-      renderCell: () => {
+      renderCell: ({ row }: CellType) => {
         return (
-          <IconButton onClick={() => openModal("modal-catatan-pembangkit")}>
+          <IconButton
+            onClick={() => {
+              openModal("modal-catatan-pembangkit");
+              selectData(row as CatatanPembangkitanList);
+            }}
+          >
             <PencilOutline />
           </IconButton>
         );

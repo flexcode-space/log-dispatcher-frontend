@@ -1,3 +1,5 @@
+import { useEffect } from "react";
+import dayjs from "dayjs";
 import { useForm, FormProvider } from "react-hook-form";
 import {
   Box,
@@ -11,25 +13,35 @@ import {
   Stack,
 } from "@mui/material";
 import { TrashCanOutline } from "mdi-material-ui";
-// import { yupResolver } from "@hookform/resolvers/yup";
 import { useSnapshot } from "valtio";
+import { yupResolver } from "@hookform/resolvers/yup";
 import { SelectInput } from "src/components/select-input";
 import { InputField, TextArea } from "src/components/input-field";
 import { StyledForm } from "src/components/form";
-import { closeModal, modal } from "src/state/modal";
+import { closeModal, modal, reloadPage } from "src/state/modal";
 import { DatePicker, TimePicker } from "src/components/date-picker";
 import { useCatatanPembangkitan } from "../useCatatanPembangkitan";
+import {
+  initialValues,
+  validationSchema,
+} from "../CatatanPembangkitan.constant";
+import { catatanPembangkitan } from "../state";
+import catatanPembangkitanApi from "src/api/catatan-pembangkitan/catatanPembangkitanApi";
 
 const ModalFilter = () => {
   const modalSnapshot = useSnapshot(modal);
+  const { data } = useSnapshot(catatanPembangkitan);
   const { pembangkitOptions, statusOptions } = useCatatanPembangkitan();
+  const { updateCatatanPembangkitan } = catatanPembangkitanApi();
 
   const isOpen =
     modalSnapshot.isOpen && modalSnapshot.target === "modal-catatan-pembangkit";
 
+  console.log("data", data);
+
   const formMethods = useForm({
-    // resolver: yupResolver(validationSchema),
-    // defaultValues: initialValues,
+    resolver: yupResolver(validationSchema),
+    defaultValues: initialValues,
     mode: "onSubmit",
   });
 
@@ -37,16 +49,52 @@ const ModalFilter = () => {
     event?.preventDefault();
 
     formMethods.handleSubmit(async (values) => {
-      console.log(values);
+      const {
+        tanggal_mulai,
+        waktu_mulai,
+        tanggal_akhir,
+        waktu_akhir,
+        ...rest
+      } = values;
 
+      const startDate = dayjs(tanggal_mulai).format("YYYY-MM-DD");
+      const startTime = dayjs(waktu_mulai).format("HH:MM");
+
+      const endDate = dayjs(tanggal_akhir).format("YYYY-MM-DD");
+      const endTime = dayjs(waktu_akhir).format("HH:MM");
+
+      const payload = {
+        ...rest,
+        id: data.id,
+        tanggal_mulai: `${startDate} ${startTime}`,
+        tanggal_akhir: `${endDate} ${endTime}`,
+      };
+      updateCatatanPembangkitan(payload);
       closeModal();
+      reloadPage();
     })();
   };
 
   const onClickCloseModal = () => {
     closeModal();
-    // formMethods.reset({ ...initialValues });
+    formMethods.reset({ ...initialValues });
   };
+
+  useEffect(() => {
+    const startDate = dayjs(data.tanggal_mulai);
+    const endDate = dayjs(data?.tanggal_akhir);
+
+    formMethods.reset({
+      pembangkit_id: data?.pembangkit?.id,
+      tanggal_mulai: startDate.format("HH:MM"),
+      waktu_mulai: startDate.format("YYYY-MM-DD"),
+      tanggal_akhir: endDate.format("HH:MM"),
+      waktu_akhir: endDate.format("YYYY-MM-DD"),
+      keterangan: data.keterangan,
+      status: data.status,
+      mampu: data.mampu,
+    });
+  }, []);
 
   return (
     <Dialog

@@ -96,8 +96,8 @@ const ModalAdd = () => {
       formMethods.reset({
         ...data,
         gardu_induk_id: data?.gardu_induk?.id,
-        jam_buka: [{ value: dayjs(data.jam_buka, "hh:mm") }],
-        jam_tutup: [{ value: dayjs(data.jam_tutup, "hh:mm") }],
+        jam_buka: [{ value: dayjs(data.jam_buka, "HH:MM") }],
+        jam_tutup: [{ value: dayjs(data.jam_tutup, "HH:MM") }],
         penghantar: [{ id: data.penghantar.id }],
       });
     }
