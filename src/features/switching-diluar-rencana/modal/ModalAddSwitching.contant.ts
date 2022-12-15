@@ -1,20 +1,44 @@
 import * as yup from 'yup'
-import { PayloadSwitchingLuarRencana } from '../types'
+import { InitialValuesSwitching } from '../types'
 
-export const initialValues: PayloadSwitchingLuarRencana = {
+export const initialValues: InitialValuesSwitching = {
   gardu_induk_id: '',
-  jam_buka: new Date(),
-  jam_tutup: new Date,
+  jam_buka: [
+    {
+      value: new Date()
+    }
+  ],
+  jam_tutup: [
+    {
+      value: new Date()
+    }
+  ],
   keterangan: '',
-  penghantar_id: '',
-  tanggal: '',
+  penghantar: [
+    {
+      id: ''
+    }
+  ],
+  tanggal: new Date(),
 }
 
 export const validationSchema = yup.object({
   gardu_induk_id: yup.string().required('This field is required'),
-  jam_buka: yup.date().required('This field is required'),
-  jam_tutup: yup.date().required('This field is required'),
+  jam_buka: yup.array().of(
+    yup.object().shape({
+      value: yup.date(),
+    })
+  ),
+  jam_tutup: yup.array().of(
+    yup.object().shape({
+      value: yup.date(),
+    })
+  ),
+  penghantar: yup.array().of(
+    yup.object().shape({
+      id: yup.string().required('This field is required'),
+    })
+  ),
   keterangan: yup.string().required('This field is required'),
-  penghantar_id: yup.string().required('This field is required'),
   tanggal: yup.string().required('This field is required'),
 })
