@@ -21,4 +21,5 @@ export type PayloadCatatanPembangkitan = {
   tanggal_akhir?: Date;
   waktu_akhir?: Date;
   keterangan: string;
+  operator: string
 };

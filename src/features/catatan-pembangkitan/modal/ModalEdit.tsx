@@ -25,7 +25,7 @@ import {
   initialValues,
   validationSchema,
 } from "../CatatanPembangkitan.constant";
-import { catatanPembangkitan } from "../state";
+import { catatanPembangkitan, removeData } from "../state";
 import catatanPembangkitanApi from "src/api/catatan-pembangkitan/catatanPembangkitanApi";
 
 const ModalFilter = () => {
@@ -37,7 +37,6 @@ const ModalFilter = () => {
   const isOpen =
     modalSnapshot.isOpen && modalSnapshot.target === "modal-catatan-pembangkit";
 
-  console.log("data", data);
 
   const formMethods = useForm({
     resolver: yupResolver(validationSchema),
@@ -69,7 +68,8 @@ const ModalFilter = () => {
         tanggal_mulai: `${startDate} ${startTime}`,
         tanggal_akhir: `${endDate} ${endTime}`,
       };
-      updateCatatanPembangkitan(payload);
+
+      await updateCatatanPembangkitan(payload);
       closeModal();
       reloadPage();
     })();
@@ -77,24 +77,26 @@ const ModalFilter = () => {
 
   const onClickCloseModal = () => {
     closeModal();
+    removeData();
     formMethods.reset({ ...initialValues });
   };
 
   useEffect(() => {
-    const startDate = dayjs(data.tanggal_mulai);
-    const endDate = dayjs(data?.tanggal_akhir);
+    const startDate = dayjs(data.tanggal_mulai).format("YYYY-MM-DD HH:MM");
+    const endDate = dayjs(data?.tanggal_akhir).format("YYYY-MM-DD HH:MM");
 
     formMethods.reset({
       pembangkit_id: data?.pembangkit?.id,
-      tanggal_mulai: startDate.format("HH:MM"),
-      waktu_mulai: startDate.format("YYYY-MM-DD"),
-      tanggal_akhir: endDate.format("HH:MM"),
-      waktu_akhir: endDate.format("YYYY-MM-DD"),
+      tanggal_mulai: startDate,
+      waktu_mulai: startDate,
+      tanggal_akhir: endDate,
+      waktu_akhir: endDate,
       keterangan: data.keterangan,
+      operator: data.operator,
       status: data.status,
       mampu: data.mampu,
     });
-  }, []);
+  }, [modalSnapshot.isOpen]);
 
   return (
     <Dialog
@@ -127,16 +129,19 @@ const ModalFilter = () => {
                 <InputField type="number" name="mampu" label="Mampu" />
               </Grid>
               <Grid item xs={6}>
-                <DatePicker label="Tanggal Mulai" name="tanggal" />
+                <DatePicker label="Tanggal Mulai" name="tanggal_mulai" />
               </Grid>
               <Grid item xs={6}>
-                <TimePicker label="Watu Mulai" name="tanggal" />
+                <TimePicker label="Waktu Mulai" name="waktu_mulai" />
               </Grid>
               <Grid item xs={6}>
-                <DatePicker label="Tanggal Akhir" name="tanggal" />
+                <DatePicker label="Tanggal Akhir" name="tanggal_akhir" />
               </Grid>
               <Grid item xs={6}>
-                <TimePicker label="Watu Akhir" name="tanggal" />
+                <TimePicker label="Watu Akhir" name="tanggal_akhir" />
+              </Grid>
+              <Grid item xs={12}>
+                <InputField name="operator" label="Operator Pembangkit" />
               </Grid>
               <Grid item xs={12}>
                 <TextArea label="Keterangan" name="keterangan" />

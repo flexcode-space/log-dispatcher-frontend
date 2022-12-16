@@ -36,7 +36,7 @@ const AddData = () => {
     mode: "onChange",
   });
 
-  const onSubmit = (event?: React.FormEvent<HTMLFormElement>) => {
+  const onSubmit = async (event?: React.FormEvent<HTMLFormElement>) => {
     event?.preventDefault();
 
     formMethods.handleSubmit(async (values) => {
@@ -60,8 +60,9 @@ const AddData = () => {
         ...(showWaktuAkhir && { tanggal_akhir: `${endDate} ${endTime}` }),
       };
 
-      createCatatanPembangkitan(payload);
+      await createCatatanPembangkitan(payload);
       reloadPage();
+      formMethods.reset({ ...initialValues });
     })();
   };
 
@@ -119,6 +120,9 @@ const AddData = () => {
                       : "Tambah waktu akhir"}
                   </Typography>
                 </div>
+              </Grid>
+              <Grid item xs={4}>
+                <InputField name="operator" label="Operator Pembangkit" />
               </Grid>
               <Grid item xs={4}>
                 <InputField name="keterangan" label="Keterangan" />

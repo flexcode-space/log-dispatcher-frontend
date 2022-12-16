@@ -3,8 +3,9 @@ import { PencilOutline } from "mdi-material-ui";
 import { useEffect } from "react";
 import catatanPembangkitanApi from "src/api/catatan-pembangkitan/catatanPembangkitanApi";
 import { DataGrid } from "src/components/table";
-import { openModal } from "src/state/modal";
+import { modal, openModal } from "src/state/modal";
 import { CellType } from "src/types";
+import { useSnapshot } from "valtio";
 import { defaultColumns } from "../CatatanPembangkitan.constant";
 import { selectData } from "../state";
 import { CatatanPembangkitanList } from "../types";
@@ -15,6 +16,8 @@ type TableListProps = {
 };
 
 const TableList = ({ type, title }: TableListProps) => {
+  const modalSnapshot = useSnapshot(modal);
+
   const { getCatatanPembangkitanList, catatanPembangkitanList } =
     catatanPembangkitanApi();
 
@@ -44,6 +47,12 @@ const TableList = ({ type, title }: TableListProps) => {
   useEffect(() => {
     getCatatanPembangkitanList({ tipe: type });
   }, []);
+
+  useEffect(() => {
+    if (modalSnapshot.isReloadData) {
+      getCatatanPembangkitanList({ tipe: type });
+    }
+  }, [modalSnapshot.isReloadData]);
 
   return (
     <Grid item xs={12}>

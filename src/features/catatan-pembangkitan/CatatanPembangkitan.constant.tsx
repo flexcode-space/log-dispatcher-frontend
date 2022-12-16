@@ -29,6 +29,12 @@ export const defaultColumns = [
   },
   {
     flex: 0.25,
+    minWidth: 80,
+    field: "operator",
+    headerName: "Operator",
+  },
+  {
+    flex: 0.25,
     minWidth: 200,
     field: "tanggal_mulai",
     headerName: "Waktu Mulai",
@@ -89,6 +95,7 @@ export const initialValues: PayloadCatatanPembangkitan = {
   tanggal_akhir: new Date(),
   waktu_akhir: new Date(),
   keterangan: "",
+  operator: "",
 };
 
 export const validationSchema = yup.object({
@@ -100,4 +107,5 @@ export const validationSchema = yup.object({
   tanggal_akhir: yup.string(),
   waktu_akhir: yup.string(),
   keterangan: yup.string().required("This field is required"),
+  operator: yup.string().required("This field is required"),
 });
