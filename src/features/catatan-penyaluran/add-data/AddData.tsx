@@ -47,10 +47,10 @@ const AddData = () => {
       } = values;
 
       const startDate = dayjs(values.tanggal_mulai).format("YYYY-MM-DD");
-      const startTime = dayjs(values.waktu_mulai).format("HH:MM");
+      const startTime = dayjs(values.waktu_mulai).format("HH:mm");
 
       const endDate = dayjs(values?.tanggal_akhir).format("YYYY-MM-DD");
-      const endTime = dayjs(values?.waktu_akhir).format("HH:MM");
+      const endTime = dayjs(values?.waktu_akhir).format("HH:mm");
 
       const payload = {
         ...rest,

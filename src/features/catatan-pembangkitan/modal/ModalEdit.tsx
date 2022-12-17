@@ -37,7 +37,6 @@ const ModalFilter = () => {
   const isOpen =
     modalSnapshot.isOpen && modalSnapshot.target === "modal-catatan-pembangkit";
 
-
   const formMethods = useForm({
     resolver: yupResolver(validationSchema),
     defaultValues: initialValues,
@@ -57,10 +56,10 @@ const ModalFilter = () => {
       } = values;
 
       const startDate = dayjs(tanggal_mulai).format("YYYY-MM-DD");
-      const startTime = dayjs(waktu_mulai).format("HH:MM");
+      const startTime = dayjs(waktu_mulai).format("HH:mm");
 
       const endDate = dayjs(tanggal_akhir).format("YYYY-MM-DD");
-      const endTime = dayjs(waktu_akhir).format("HH:MM");
+      const endTime = dayjs(waktu_akhir).format("HH:mm");
 
       const payload = {
         ...rest,
@@ -82,8 +81,8 @@ const ModalFilter = () => {
   };
 
   useEffect(() => {
-    const startDate = dayjs(data.tanggal_mulai).format("YYYY-MM-DD HH:MM");
-    const endDate = dayjs(data?.tanggal_akhir).format("YYYY-MM-DD HH:MM");
+    const startDate = dayjs(data.tanggal_mulai).format("YYYY-MM-DD HH:mm");
+    const endDate = dayjs(data?.tanggal_akhir).format("YYYY-MM-DD HH:mm");
 
     formMethods.reset({
       pembangkit_id: data?.pembangkit?.id,
@@ -138,7 +137,7 @@ const ModalFilter = () => {
                 <DatePicker label="Tanggal Akhir" name="tanggal_akhir" />
               </Grid>
               <Grid item xs={6}>
-                <TimePicker label="Watu Akhir" name="tanggal_akhir" />
+                <TimePicker label="Waktu Akhir" name="waktu_akhir" />
               </Grid>
               <Grid item xs={12}>
                 <InputField name="operator" label="Operator Pembangkit" />

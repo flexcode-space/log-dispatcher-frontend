@@ -55,10 +55,10 @@ const ModalFilter = ({ handleClose }: ModalFilter) => {
       } = values;
 
       const startDate = dayjs(values.tanggal_mulai).format("YYYY-MM-DD");
-      const startTime = dayjs(values.waktu_mulai).format("hh:mm");
+      const startTime = dayjs(values.waktu_mulai).format("HH:mm");
 
       const endDate = dayjs(values?.tanggal_akhir).format("YYYY-MM-DD");
-      const endTime = dayjs(values?.waktu_akhir).format("hh:mm");
+      const endTime = dayjs(values?.waktu_akhir).format("HH:mm");
 
       const payload = {
         ...rest,

@@ -33,8 +33,8 @@ const AddLaporan = () => {
 
       const payload = {
         ...rest,
-        jam_buka: dayjs(jam_buka).format("hh:mm"),
-        jam_tutup: dayjs(jam_tutup).format("hh:mm"),
+        jam_buka: dayjs(jam_buka).format("HH:mm"),
+        jam_tutup: dayjs(jam_tutup).format("HH:mm"),
         tanggal: dayjs(tanggal).format("YYYY-MM-DD"),
       };
 
