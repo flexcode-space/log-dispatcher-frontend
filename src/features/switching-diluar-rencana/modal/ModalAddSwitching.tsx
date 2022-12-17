@@ -67,8 +67,8 @@ const ModalAdd = () => {
       values.penghantar.forEach((value, index: number) => {
         payload.push({
           gardu_induk_id: values.gardu_induk_id,
-          jam_buka: dayjs(values.jam_buka[index].value).format("HH:MM"),
-          jam_tutup: dayjs(values.jam_tutup[index].value).format("HH:MM"),
+          jam_buka: dayjs(values.jam_buka[index].value).format("HH:mm"),
+          jam_tutup: dayjs(values.jam_tutup[index].value).format("HH:mm"),
           penghantar_id: value.id,
           tanggal: dayjs(values.tanggal).format("YYYY-MM-DD"),
           keterangan: values.keterangan,
@@ -96,8 +96,8 @@ const ModalAdd = () => {
       formMethods.reset({
         ...data,
         gardu_induk_id: data?.gardu_induk?.id,
-        jam_buka: [{ value: dayjs(data.jam_buka, "hh:mm") }],
-        jam_tutup: [{ value: dayjs(data.jam_tutup, "hh:mm") }],
+        jam_buka: [{ value: dayjs(data.jam_buka, "HH:mm") }],
+        jam_tutup: [{ value: dayjs(data.jam_tutup, "HH:mm") }],
         penghantar: [{ id: data.penghantar.id }],
       });
     }

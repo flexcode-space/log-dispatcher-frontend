@@ -1,14 +1,4 @@
-import {
-  Card,
-  CardContent,
-  Grid,
-  Typography,
-  TextField,
-  Button,
-  IconButton,
-} from "@mui/material";
-import { DataGrid } from "src/components/table";
-import { PencilOutline } from "mdi-material-ui";
+import { Grid, Typography, TextField, Button, IconButton } from "@mui/material";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import DatePicketMui from "@mui/lab/DatePicker";
@@ -16,30 +6,12 @@ import PageHeader from "src/@core/components/page-header";
 import FilterIcon from "src/assets/icons/filter-green-icon.svg";
 
 import { WrapperFilter } from "src/components/filter";
-import { CardHeader } from "src/components/card";
 import { AddData } from "./add-data";
 import { openModal, closeModal } from "src/state/modal";
 import { ModalEdit } from "./modal";
-import { defaultColumns, mockData } from "./CatatanPembangkitan.constant";
+import { TableList } from "./table-list";
 
 const CatatanPembangkitan = () => {
-  const columns = [
-    ...defaultColumns,
-    {
-      flex: 0.15,
-      minWidth: 100,
-      sortable: false,
-      field: "actions",
-      headerName: "Aksi",
-      renderCell: () => {
-        return (
-          <IconButton onClick={() => openModal("modal-catatan-pembangkit")}>
-            <PencilOutline />
-          </IconButton>
-        );
-      },
-    },
-  ];
   return (
     <>
       <ModalEdit />
@@ -91,45 +63,9 @@ const CatatanPembangkitan = () => {
             </div>
           </WrapperFilter>
         </Grid>
-        <Grid item xs={12}>
-          <Card>
-            <CardHeader title="Pembangkit Derating" />
-            <CardContent>
-              <DataGrid
-                autoHeight
-                rows={mockData()}
-                columns={columns}
-                hideFooter
-              />
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid item xs={12}>
-          <Card>
-            <CardHeader title="Pembangkit Outage" />
-            <CardContent>
-              <DataGrid
-                autoHeight
-                rows={mockData()}
-                columns={columns}
-                hideFooter
-              />
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid item xs={12}>
-          <Card>
-            <CardHeader title="Pembangkit RS, NC, Dll" />
-            <CardContent>
-              <DataGrid
-                autoHeight
-                rows={mockData()}
-                columns={columns}
-                hideFooter
-              />
-            </CardContent>
-          </Card>
-        </Grid>
+        <TableList title="Pembangkit Derating" type="derating" />
+        <TableList title="Pembangkit Outage" type="outage" />
+        <TableList title="Pembangkit RS, NC, Dll" type="lain" />
       </Grid>
     </>
   );

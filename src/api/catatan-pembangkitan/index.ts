@@ -1,0 +1,1 @@
+export { default as catatanPembangkitan } from './catatanPembangkitanApi'

@@ -49,8 +49,8 @@ const ModalEdit = () => {
 
       const payload = {
         ...rest,
-        jam_buka: dayjs(jam_buka).format("hh:mm"),
-        jam_tutup: dayjs(jam_tutup).format("hh:mm"),
+        jam_buka: dayjs(jam_buka).format("HH:mm"),
+        jam_tutup: dayjs(jam_tutup).format("HH:mm"),
         tanggal: dayjs(tanggal).format("YYYY-MM-DD"),
       };
 
@@ -69,8 +69,8 @@ const ModalEdit = () => {
     formMethods.reset({
       ...data,
       tanggal: dayjs(data.tanggal),
-      jam_buka: dayjs(data.jam_buka, "hh:mm"),
-      jam_tutup: dayjs(data.jam_tutup, "hh:mm"),
+      jam_buka: dayjs(data.jam_buka, "HH:mm"),
+      jam_tutup: dayjs(data.jam_tutup, "HH:mm"),
       gardu_induk_id: data.gardu_induk?.id,
     });
   }, [modalSnapshot.isOpen]);
