@@ -12,6 +12,7 @@ import {
   Chip,
 } from "@mui/material";
 import { PencilOutline } from "mdi-material-ui";
+import { useRouter } from "next/router";
 import PageHeader from "src/@core/components/page-header";
 import {
   Table,
@@ -30,9 +31,10 @@ import { WrapperFilter } from "src/components/filter";
 import { AddLaporan } from "./add-laporan";
 import { openModal, closeModal, modal, reloadPage } from "src/state/modal";
 import { ModalFilter } from "./modal";
+import { CardHeader } from "src/components/card";
 
 const PengaturanTegangan = () => {
-  // ** States
+  const router = useRouter();
   const [page, setPage] = useState<number>(0);
   const [rowsPerPage, setRowsPerPage] = useState<number>(10);
 
@@ -67,8 +69,8 @@ const PengaturanTegangan = () => {
         </Grid>
         <Grid item xs={9}>
           <Card>
-            <CardContent>
-              <WrapperFilter sx={{ alignItems: "baseline" }}>
+            <CardHeader
+              title={
                 <TextField
                   size="small"
                   value=""
@@ -76,26 +78,41 @@ const PengaturanTegangan = () => {
                   placeholder="Cari"
                   // onChange={(e) => setSearch(e.target.value)}
                 />
-
-                <div style={{ display: "flex", gap: "10px" }}>
+              }
+              action={
+                <div style={{ display: "flex", gap: "10px", height: "50px" }}>
                   <Button
                     sx={{ mb: 2 }}
                     variant="outlined"
                     onClick={() => openModal()}
                   >
-                    <FilterIcon />
+                    <IconButton>
+                      <FilterIcon />
+                    </IconButton>
                     Filter
                   </Button>
                   <Button sx={{ mb: 2 }} variant="contained">
-                    <DownloadIcon />
+                    <IconButton>
+                      <DownloadIcon />
+                    </IconButton>
                     Download laporan
                   </Button>
-                  <Button sx={{ mb: 2 }} variant="outlined">
-                    <KonfigurasiIcon />
+                  <Button
+                    sx={{ mb: 2 }}
+                    variant="outlined"
+                    onClick={() =>
+                      router.push("/pengaturan-tegangan/konfigurasi")
+                    }
+                  >
+                    <IconButton>
+                      <KonfigurasiIcon />
+                    </IconButton>
                     Konfigurasi
                   </Button>
                 </div>
-              </WrapperFilter>
+              }
+            />
+            <CardContent>
               <TableContainer>
                 <Table>
                   <TableHead>
