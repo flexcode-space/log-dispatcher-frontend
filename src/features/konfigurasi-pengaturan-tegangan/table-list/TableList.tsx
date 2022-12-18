@@ -5,9 +5,12 @@ import catatanPembangkitanApi from "src/api/catatan-pembangkitan/catatanPembangk
 import { pengaturanTeganganApi } from "src/api/pengaturan-tegangan";
 import { DataGrid } from "src/components/table";
 import { modal, openModal } from "src/state/modal";
+import { reloadPage } from "src/state/reloadPage";
 import { CellType } from "src/types";
 import { useSnapshot } from "valtio";
 import { defaultColumns } from "../KonfigurasiPengaturanTegangan.constant";
+import { selectData } from "../state/konfigurasiPengaturanTegangan";
+import { KonfigurasiPengaturanTegangan } from "../types";
 // import { selectData } from "../state";
 // import { CatatanPembangkitanList } from "../types";
 
@@ -18,6 +21,7 @@ type TableListProps = {
 
 const TableList = ({ type, title }: TableListProps) => {
   const modalSnapshot = useSnapshot(modal);
+  const reloadPageSnap = useSnapshot(reloadPage);
 
   const { getKonfigurasiList, konfigurasiList } = pengaturanTeganganApi();
 
@@ -25,7 +29,7 @@ const TableList = ({ type, title }: TableListProps) => {
     ...defaultColumns,
     {
       flex: 0.15,
-      minWidth: 100,
+      minWidth: 500,
       sortable: false,
       field: "actions",
       headerName: "Aksi",
@@ -33,8 +37,8 @@ const TableList = ({ type, title }: TableListProps) => {
         return (
           <IconButton
             onClick={() => {
-              openModal("modal-catatan-pembangkit");
-              // selectData(row as CatatanPembangkitanList);
+              openModal("modal-add-konfigurasi", row.id);
+              selectData(row as KonfigurasiPengaturanTegangan);
             }}
           >
             <PencilOutline />
@@ -48,11 +52,11 @@ const TableList = ({ type, title }: TableListProps) => {
     getKonfigurasiList({ tipe: type });
   }, []);
 
-  // useEffect(() => {
-  //   if (modalSnapshot.isReloadData) {
-  //     getCatatanPembangkitanList({ tipe: type });
-  //   }
-  // }, [modalSnapshot.isReloadData]);
+  useEffect(() => {
+    if (reloadPageSnap.target === "modal-add-konfigurasi") {
+      getKonfigurasiList({ tipe: type });
+    }
+  }, [reloadPageSnap]);
 
   return (
     <Grid item xs={12}>

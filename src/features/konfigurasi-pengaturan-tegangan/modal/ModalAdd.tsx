@@ -7,6 +7,8 @@ import {
   Grid,
   Typography,
   Box,
+  Stack,
+  IconButton,
 } from "@mui/material";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useSnapshot } from "valtio";
@@ -17,15 +19,24 @@ import { closeModal, modal, reloadPage } from "src/state/modal";
 import { useModalAdd } from "./useModalAdd";
 import { initialValues, validationSchema } from "./ModalAdd.constant";
 import { pengaturanTeganganApi } from "src/api/pengaturan-tegangan";
+import {
+  konfigurasiPengaturanTegangan,
+  removeData,
+} from "../state/konfigurasiPengaturanTegangan";
+import { useEffect } from "react";
+import { setReloadPage } from "src/state/reloadPage";
+import { TrashCanOutline } from "mdi-material-ui";
 
 const ModalAdd = () => {
   const modalSnapshot = useSnapshot(modal);
+  const { data } = useSnapshot(konfigurasiPengaturanTegangan);
 
   const isOpen =
     modalSnapshot.isOpen && modalSnapshot.target === "modal-add-konfigurasi";
 
   const { garduIndukOptions, jenisSwitchingOptions } = useModalAdd();
-  const { createKonfigurasi } = pengaturanTeganganApi();
+  const { createKonfigurasi, updateKonfigurasi, deleteKonfigurasi } =
+    pengaturanTeganganApi();
 
   const formMethods = useForm({
     resolver: yupResolver(validationSchema),
@@ -37,16 +48,43 @@ const ModalAdd = () => {
     event?.preventDefault();
 
     formMethods.handleSubmit(async (values) => {
-      await createKonfigurasi(values);
+      if (modalSnapshot.id) {
+        await updateKonfigurasi({
+          id: modalSnapshot.id,
+          gardu_induk_id: values.gardu_induk_id,
+          jenis: values.jenis,
+          jurusan: values.jurusan,
+        });
+      } else {
+        await createKonfigurasi(values);
+      }
 
       handleClickCloseModal();
+      setReloadPage("modal-add-konfigurasi");
     })();
+  };
+
+  const handleDelete = async () => {
+    await deleteKonfigurasi({ id: data.id });
+    handleClickCloseModal();
+    setReloadPage("modal-add-konfigurasi");
   };
 
   const handleClickCloseModal = () => {
     closeModal();
+    removeData();
     formMethods.reset({ ...initialValues });
   };
+
+  useEffect(() => {
+    if (modalSnapshot.id) {
+      formMethods.reset({
+        ...data,
+        jenis: data.tipe,
+        gardu_induk_id: data.gardu_induk.id,
+      });
+    }
+  }, [modalSnapshot.id]);
 
   return (
     <Dialog
@@ -92,12 +130,31 @@ const ModalAdd = () => {
             </Grid>
           </DialogContent>
           <DialogActions className="dialog-actions-dense">
-            <Button variant="outlined" onClick={handleClickCloseModal}>
-              Batal
-            </Button>
-            <Button variant="contained" type="submit">
-              Simpan
-            </Button>
+            <Stack
+              width="100%"
+              direction="row"
+              alignItems="center"
+              justifyContent="space-between"
+            >
+              <Box>
+                {modalSnapshot.id && (
+                  <Button variant="text" onClick={handleDelete}>
+                    <IconButton>
+                      <TrashCanOutline />
+                    </IconButton>
+                    Hapus data
+                  </Button>
+                )}
+              </Box>
+              <Box display="flex" gap="10px">
+                <Button variant="outlined" onClick={handleClickCloseModal}>
+                  Batal
+                </Button>
+                <Button variant="contained" type="submit">
+                  Simpan
+                </Button>
+              </Box>
+            </Stack>
           </DialogActions>
         </StyledForm>
       </FormProvider>

@@ -32,7 +32,7 @@ const pengaturanTeganganApi = () => {
     setLoading(true)
 
     try {
-      const { data: { data } } = await Axios.get(endpoint, { params })
+      const { data: { data } } = await Axios.get(`${endpoint}/konfigurasi`, { params })
       setKonfigurasiList(data || [])
     } finally {
       setLoading(false)
@@ -78,6 +78,32 @@ const pengaturanTeganganApi = () => {
     }
   }, [])
 
+  const updateKonfigurasi = useCallback(async (payload: any) => {
+    setLoading(true)
+
+    try {
+      await Axios.put(`${endpoint}/konfigurasi`, payload)
+      toast.success('Berhasil mengubah Data')
+    } catch (error) {
+      toast.error('Gagal mengubah Data')
+    } finally {
+      setLoading(false)
+    }
+  }, [])
+
+  const deleteKonfigurasi = useCallback(async (payload: any) => {
+    setLoading(true)
+
+    try {
+      await Axios.delete(`${endpoint}/konfigurasi`, { data: payload })
+      toast.success('Berhasil menghapus Data')
+    } catch (error) {
+      toast.error('Gagal menghapus Data')
+    } finally {
+      setLoading(false)
+    }
+  }, [])
+
 
   return {
     loading,
@@ -87,7 +113,9 @@ const pengaturanTeganganApi = () => {
     getPengaturanTeganganList,
     createPengaturanTegangan,
     updatePengaturanTegangan,
-    createKonfigurasi
+    createKonfigurasi,
+    updateKonfigurasi,
+    deleteKonfigurasi
   }
 }
 
