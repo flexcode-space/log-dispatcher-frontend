@@ -1,0 +1,1 @@
+export { default as pengaturanTeganganApi } from './pengaturanTeganganApi'

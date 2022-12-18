@@ -123,7 +123,7 @@ const Gangguan = () => {
                     variant="contained"
                     size="small"
                     sx={{ height: "40px" }}
-                    onClick={() => openModal("", "modal-add-gangguan")}
+                    onClick={() => openModal("modal-add-gangguan")}
                   >
                     Tambah Pencatatan Gangguan
                   </Button>
