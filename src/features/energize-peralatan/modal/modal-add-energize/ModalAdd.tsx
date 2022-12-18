@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useForm, FormProvider, FieldPath } from "react-hook-form";
 import {
   Button,
@@ -24,9 +24,18 @@ import { validationSchema, initialValues } from "./ModalAdd.contant";
 import { energizePeralatan, removeData } from "src/state/energizePeralatan";
 import { energizePeralatanApi } from "src/api/energize-peralatan";
 import { CreateEnergizePeralatan } from "../../types";
-import { convertDate } from "src/utils/date";
+import dayjs from "dayjs";
+
+const defaultValue = {
+  manuver: "",
+};
+
+type DefaultValueProps = {
+  manuver: string;
+}[];
 
 const ModalAdd = () => {
+  const [fields, setFields] = useState<DefaultValueProps>([defaultValue]);
   const modalSnapshot = useSnapshot(modal);
   const { data } = useSnapshot(energizePeralatan);
 
@@ -52,17 +61,31 @@ const ModalAdd = () => {
     event?.preventDefault();
 
     formMethods.handleSubmit(async (values) => {
-      const { tanggal, ...rest } = values;
+      let payload: CreateEnergizePeralatan[] = [];
 
-      const payload = {
-        ...rest,
-        tanggal: convertDate(tanggal),
-      };
+      values.manuver.forEach((manuver, index: number) => {
+        const date = dayjs(values.tanggal[index].value).format("YYYY-MM-DD");
+        const time = dayjs(values.close[index].value).format("HH:mm");
+
+        payload.push({
+          ba_ptp: values.ba_ptp,
+          gardu_induk_id: values.gardu_induk_id,
+          jenis_peralatan: values.jenis_peralatan,
+          keterangan: values.keterangan,
+          manuver: manuver.value,
+          peralatan_id: values.peralatan_id,
+          permohonan: values.permohonan,
+          rlb: values.rlb,
+          sop: values.sop,
+          tanggal: `${date}`,
+          close: time,
+        });
+      });
 
       if (modalSnapshot.id) {
-        await updateEnergizePeralatan({ ...payload, id: modalSnapshot.id });
+        await updateEnergizePeralatan({ ...payload[0], id: modalSnapshot.id });
       } else {
-        await createEnergizePeralatan([payload]);
+        await createEnergizePeralatan(payload);
       }
       onCloseModal();
       reloadPage();
@@ -72,6 +95,7 @@ const ModalAdd = () => {
   const onCloseModal = () => {
     closeModal();
     removeData();
+    setFields([defaultValue]);
     formMethods.reset({ ...initialValues });
   };
 
@@ -94,8 +118,17 @@ const ModalAdd = () => {
   };
 
   useEffect(() => {
+    const date = dayjs(data.tanggal);
+
     if (modalSnapshot.id) {
-      formMethods.reset({ ...data, gardu_induk_id: data?.gardu_induk?.id });
+      formMethods.reset({
+        ...data,
+        manuver: [{ value: data.manuver }],
+        gardu_induk_id: data?.gardu_induk?.id,
+        peralatan_id: data.peralatan.id,
+        tanggal: [{ value: date }],
+        close: [{ value: date }],
+      });
     }
   }, [modalSnapshot.id]);
 
@@ -133,25 +166,46 @@ const ModalAdd = () => {
                   options={peratanOptions}
                 />
               </Grid>
+              {fields.map((value, index) => {
+                return (
+                  <>
+                    <Grid item xs={12}>
+                      <Typography
+                        variant="subtitle1"
+                        sx={{ fontWeight: "500", fontSize: "14px", pb: "8px" }}
+                      >
+                        {`Manuver ${index + 1}`}
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={12}>
+                      <InputField
+                        label="Manuver"
+                        name={`manuver[${index}].value`}
+                      />
+                    </Grid>
+                    <Grid item xs={6}>
+                      <DatePicker
+                        label="Tanggal"
+                        name={`tanggal[${index}].value`}
+                      />
+                    </Grid>
+                    <Grid item xs={6}>
+                      <TimePicker
+                        label="Close"
+                        name={`close[${index}].value`}
+                      />
+                    </Grid>
+                  </>
+                );
+              })}
               <Grid item xs={12}>
-                <Typography
-                  variant="subtitle1"
-                  sx={{ fontWeight: "500", fontSize: "14px", pb: "8px" }}
+                <Button
+                  variant="outlined"
+                  sx={{ height: "30px" }}
+                  onClick={() =>
+                    setFields((prevState) => [...prevState, defaultValue])
+                  }
                 >
-                  Manuver 1
-                </Typography>
-              </Grid>
-              <Grid item xs={12}>
-                <InputField label="Manuver" name="manuver" />
-              </Grid>
-              <Grid item xs={6}>
-                <DatePicker label="Tanggal" name="tanggal" />
-              </Grid>
-              {/* <Grid item xs={6}>
-                <TimePicker label="Close" name="close" />
-              </Grid> */}
-              <Grid item xs={12}>
-                <Button variant="outlined" sx={{ height: "30px" }}>
                   <Plus />
                   Tambah Manuver
                 </Button>
