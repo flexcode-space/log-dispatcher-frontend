@@ -22,13 +22,13 @@ import {
   TableCellHead,
   TableContainer,
 } from "src/components/table";
-import DownloadIcon from "src/assets/icons/download-green-icon.svg";
+import DownloadIcon from "src/assets/icons/download-icon.svg";
 import FilterIcon from "src/assets/icons/filter-icon.svg";
 
 import { WrapperFilter } from "src/components/filter";
 import { AddLaporan } from "./add-laporan";
 import { openModal, closeModal, modal, reloadPage } from "src/state/modal";
-import { ModalFilter } from "./modal";
+import { ModalFilter, ModalEdit } from "./modal";
 
 const SwitchingPembangkit = () => {
   // ** States
@@ -51,6 +51,7 @@ const SwitchingPembangkit = () => {
   return (
     <>
       <ModalFilter handleClose={handleClose} />
+      <ModalEdit />
       <Grid container spacing={6}>
         <Grid item xs={12}>
           <PageHeader
@@ -72,21 +73,22 @@ const SwitchingPembangkit = () => {
                   // onChange={(e) => setSearch(e.target.value)}
                 />
 
-                <div style={{ display: "flex", gap: "10px" }}>
+                <div style={{ display: "flex", gap: "10px", height: "45px" }}>
                   <Button
                     sx={{ mb: 2 }}
                     variant="outlined"
                     onClick={() => openModal()}
                   >
-                    <FilterIcon />
+                    <IconButton>
+                      <FilterIcon />
+                    </IconButton>
                     Filter
                   </Button>
-                  <Button sx={{ mb: 2 }} variant="outlined">
-                    <DownloadIcon />
-                    Download laporan
-                  </Button>
                   <Button sx={{ mb: 2 }} variant="contained">
-                    Tambah Switching
+                    <IconButton>
+                      <DownloadIcon />
+                    </IconButton>
+                    Download laporan
                   </Button>
                 </div>
               </WrapperFilter>
@@ -103,7 +105,12 @@ const SwitchingPembangkit = () => {
                       <TableCellHead size="small" rowSpan={2}>
                         Pembangkit
                       </TableCellHead>
-                      <TableCellHead minWidth="200px" size="small" align="center" rowSpan={2}>
+                      <TableCellHead
+                        minWidth="200px"
+                        size="small"
+                        align="center"
+                        rowSpan={2}
+                      >
                         Tanggal
                       </TableCellHead>
                       <TableCellHead size="small" align="center" colSpan={2}>
@@ -134,11 +141,36 @@ const SwitchingPembangkit = () => {
                       <TableCell size="small">Start/Stop</TableCell>
                       <TableCell size="small">PLTU RBANG</TableCell>
                       <TableCell size="small">23 Agustus 2022</TableCell>
-                      <TableCell size="small">07:22</TableCell>
-                      <TableCell size="small">07:22</TableCell>
-                      <TableCell size="small">Dika</TableCell>
-                      <TableCell size="small">Bagoes</TableCell>
-                      <TableCell size="small">Bagoes</TableCell>
+                      <TableCell
+                        size="small"
+                        sx={{ bgcolor: "rgba(255, 77, 73, 0.05)" }}
+                      >
+                        07:22
+                      </TableCell>
+                      <TableCell
+                        size="small"
+                        sx={{ bgcolor: "rgba(255, 77, 73, 0.05)" }}
+                      >
+                        07:22
+                      </TableCell>
+                      <TableCell
+                        size="small"
+                        sx={{ bgcolor: "rgba(38, 198, 249, 0.05)" }}
+                      >
+                        Dika
+                      </TableCell>
+                      <TableCell
+                        size="small"
+                        sx={{ bgcolor: "rgba(38, 198, 249, 0.05)" }}
+                      >
+                        Bagoes
+                      </TableCell>
+                      <TableCell
+                        size="small"
+                        sx={{ bgcolor: "rgba(38, 198, 249, 0.05)" }}
+                      >
+                        Bagoes
+                      </TableCell>
                       <TableCell size="small">Air</TableCell>
                       <TableCell size="small">PO</TableCell>
                       <TableCell size="small">
@@ -147,7 +179,11 @@ const SwitchingPembangkit = () => {
                       <TableCell size="small">-</TableCell>
                       <TableCell size="small">
                         <Box sx={{ display: "flex", alignItems: "center" }}>
-                          <IconButton onClick={() => null}>
+                          <IconButton
+                            onClick={() =>
+                              openModal("modal-edit-switching-pembangkit")
+                            }
+                          >
                             <PencilOutline />
                           </IconButton>
                         </Box>
