@@ -1,39 +1,50 @@
+import { useEffect } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import {
-  Card,
-  CardContent,
   Button,
-  Box,
-  Typography,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
   Grid,
+  Typography,
 } from "@mui/material";
-import AdapterDateFns from "@mui/lab/AdapterDateFns";
-import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { useSnapshot } from "valtio";
+import dayjs from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat";
 import { SelectInput } from "src/components/select-input";
 import { InputField } from "src/components/input-field";
-import { DatePicker, TimePicker } from "src/components/date-picker";
-
 import { StyledForm } from "src/components/form";
-import { usePengaturanTegangan } from "../usePengaturanTegangan";
+import { closeModal, modal } from "src/state/modal";
+import { DatePicker, TimePicker } from "src/components/date-picker";
 import {
   validationSchema,
   initialValues,
 } from "../PengaturanTegangan.constant";
-import dayjs from "dayjs";
+import { usePengaturanTegangan } from "../usePengaturanTegangan";
+import { pengaturanTegangan, removeData } from "../state/pengaturanTegangan";
 import { pengaturanTeganganApi } from "src/api/pengaturan-tegangan";
-import { setReloadPage } from "src/state/reloadPage";
 
-const AddLaporan = () => {
+dayjs.extend(customParseFormat);
+
+const ModalEdit = () => {
+  const modalSnapshot = useSnapshot(modal);
+  const { data } = useSnapshot(pengaturanTegangan);
+
+  const { updatePengaturanTegangan } = pengaturanTeganganApi();
+
   const { garduIndukOptions, openCloseOptions, konfigurasiOptions } =
     usePengaturanTegangan();
 
-  const { createPengaturanTegangan } = pengaturanTeganganApi();
+  const isOpen =
+    modalSnapshot.isOpen &&
+    modalSnapshot.target === "modal-edit-pengaturan-tegangan";
 
   const formMethods = useForm({
     resolver: yupResolver(validationSchema),
     defaultValues: initialValues,
-    mode: "onChange",
+    mode: "onSubmit",
   });
 
   const onSubmit = (event?: React.FormEvent<HTMLFormElement>) => {
@@ -44,26 +55,48 @@ const AddLaporan = () => {
 
       const payload = {
         ...rest,
+        id: data.id,
         tanggal: dayjs(tanggal).format("YYYY-MM-DD"),
         waktu: dayjs(waktu).format("HH:mm"),
       };
 
-      await createPengaturanTegangan(payload);
-      formMethods.reset({ ...initialValues });
-      setReloadPage("pengaturan-tegangan");
+      await updatePengaturanTegangan(payload);
+      handleCloseModal();
     })();
   };
 
+  const handleCloseModal = () => {
+    closeModal();
+    removeData();
+    formMethods.reset({ ...initialValues });
+  };
+
+  useEffect(() => {
+    formMethods.reset({
+      gardu_induk_id: data?.gardu_induk?.id,
+      tanggal: dayjs(data.tanggal).format("YYYY-MM-DD"),
+      waktu: dayjs(data.waktu, "HH:mm"),
+      keterangan: data.keterangan,
+      mvar: data.mvar,
+      open_close: data.open_close,
+      sebelum: data.sebelum,
+      sesudah: data.sesudah,
+      jurusan_id: data.jurusan_id,
+    });
+  }, [modalSnapshot.isOpen]);
+
   return (
-    <Card>
-      <CardContent>
-        <Box sx={{ mb: 8 }}>
-          <Typography variant="h6" sx={{ mb: 3, lineHeight: "2rem" }}>
-            Tambah Laporan
-          </Typography>
-        </Box>
-        <FormProvider {...formMethods}>
-          <StyledForm noValidate onSubmit={onSubmit} sx={{ width: "100%" }}>
+    <Dialog
+      open={isOpen}
+      fullWidth
+      onClose={handleCloseModal}
+      maxWidth="sm"
+      scroll="body"
+    >
+      <FormProvider {...formMethods}>
+        <StyledForm noValidate onSubmit={onSubmit}>
+          <DialogTitle id="max-width-dialog-title">Ubah Data</DialogTitle>
+          <DialogContent>
             <Grid container spacing={2} mt={1}>
               <Grid item xs={12}>
                 <SelectInput
@@ -72,29 +105,25 @@ const AddLaporan = () => {
                   options={garduIndukOptions}
                 />
               </Grid>
-              <Grid item xs={12}>
+              <Grid item xs={6}>
                 <SelectInput
                   label="Jurusan"
                   name="jurusan_id"
                   options={konfigurasiOptions}
                 />
               </Grid>
-              <Grid item xs={12}>
+              <Grid item xs={6}>
                 <SelectInput
                   label="Open / Close"
                   name="open_close"
                   options={openCloseOptions}
                 />
               </Grid>
-              <Grid item xs={12}>
-                <LocalizationProvider dateAdapter={AdapterDateFns}>
-                  <DatePicker label="Tanggal" name="tanggal" />
-                </LocalizationProvider>
+              <Grid item xs={6}>
+                <DatePicker label="Tanggal" name="tanggal" />
               </Grid>
-              <Grid item xs={12}>
-                <LocalizationProvider dateAdapter={AdapterDateFns}>
-                  <TimePicker label="Waktu" name="waktu" />
-                </LocalizationProvider>
+              <Grid item xs={6}>
+                <TimePicker label="Waktu" name="waktu" />
               </Grid>
               <Grid item xs={12}>
                 <Typography variant="subtitle1" fontWeight="bold">
@@ -113,18 +142,20 @@ const AddLaporan = () => {
               <Grid item xs={12}>
                 <InputField name="keterangan" label="Keterangan" />
               </Grid>
-
-              <Grid item xs={12}>
-                <Button variant="contained" type="submit">
-                  Tambah
-                </Button>
-              </Grid>
             </Grid>
-          </StyledForm>
-        </FormProvider>
-      </CardContent>
-    </Card>
+          </DialogContent>
+          <DialogActions className="dialog-actions-dense">
+            <Button variant="outlined" onClick={handleCloseModal}>
+              Batal
+            </Button>
+            <Button variant="contained" type="submit">
+              Simpan
+            </Button>
+          </DialogActions>
+        </StyledForm>
+      </FormProvider>
+    </Dialog>
   );
 };
 
-export default AddLaporan;
+export default ModalEdit;

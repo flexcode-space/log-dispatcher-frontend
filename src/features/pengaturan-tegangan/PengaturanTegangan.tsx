@@ -1,15 +1,13 @@
-import { useState, ChangeEvent } from "react";
+import { useEffect } from "react";
 import {
   Box,
   Card,
   CardContent,
   Grid,
-  TablePagination,
   Typography,
   TextField,
   Button,
   IconButton,
-  Chip,
 } from "@mui/material";
 import { PencilOutline } from "mdi-material-ui";
 import { useRouter } from "next/router";
@@ -26,34 +24,38 @@ import {
 import DownloadIcon from "src/assets/icons/download-icon.svg";
 import KonfigurasiIcon from "src/assets/icons/konfigurasi-icon.svg";
 import FilterIcon from "src/assets/icons/filter-icon.svg";
-
-import { WrapperFilter } from "src/components/filter";
 import { AddLaporan } from "./add-laporan";
-import { openModal, closeModal, modal, reloadPage } from "src/state/modal";
-import { ModalFilter } from "./modal";
+import { openModal, closeModal } from "src/state/modal";
+
+import { ModalEdit, ModalFilter } from "./modal";
 import { CardHeader } from "src/components/card";
+import { pengaturanTeganganApi } from "src/api/pengaturan-tegangan";
+import { PengaturanTeganganList } from "./types";
+import dayjs from "dayjs";
+import { selectData } from "./state/pengaturanTegangan";
+import { useSnapshot } from "valtio";
+import { reloadPage } from "src/state/reloadPage";
 
 const PengaturanTegangan = () => {
   const router = useRouter();
-  const [page, setPage] = useState<number>(0);
-  const [rowsPerPage, setRowsPerPage] = useState<number>(10);
+  const reloadPageSnap = useSnapshot(reloadPage);
 
-  const handleChangePage = (event: unknown, newPage: number) => {
-    setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = (event: ChangeEvent<HTMLInputElement>) => {
-    setRowsPerPage(+event.target.value);
-    setPage(0);
-  };
+  const { getPengaturanTeganganList, pengaturanTeganganList } =
+    pengaturanTeganganApi();
 
   const handleClose = () => {
     closeModal();
   };
 
+  useEffect(() => {
+    if(reloadPageSnap.target === "pengaturan-tegangan")
+    getPengaturanTeganganList();
+  }, [reloadPageSnap]);
+
   return (
     <>
       <ModalFilter handleClose={handleClose} />
+      <ModalEdit />
       <Grid container spacing={6}>
         <Grid item xs={12}>
           <PageHeader
@@ -84,7 +86,9 @@ const PengaturanTegangan = () => {
                   <Button
                     sx={{ mb: 2 }}
                     variant="outlined"
-                    onClick={() => openModal()}
+                    onClick={() =>
+                      openModal("modal-filter-pengaturan-tegangan")
+                    }
                   >
                     <IconButton>
                       <FilterIcon />
@@ -117,57 +121,94 @@ const PengaturanTegangan = () => {
                 <Table>
                   <TableHead>
                     <TableRow>
-                      <TableCellHead size="small">Lokasi</TableCellHead>
-                      <TableCellHead size="small">Jenis</TableCellHead>
-                      <TableCellHead size="small">Jurusan</TableCellHead>
-                      <TableCellHead size="small">Open/Close</TableCellHead>
-                      <TableCellHead size="small">Waktu</TableCellHead>
-                      <TableCellHead size="small">Sebelum</TableCellHead>
-                      <TableCellHead size="small">Sesudah</TableCellHead>
-                      <TableCellHead size="small">MVAR</TableCellHead>
-                      <TableCellHead size="small">Keterangan</TableCellHead>
-                      <TableCellHead size="small">Aksi</TableCellHead>
+                      <TableCellHead minWidth="200px" size="small">
+                        Lokasi
+                      </TableCellHead>
+                      <TableCellHead minWidth="150px" size="small">
+                        Jenis
+                      </TableCellHead>
+                      <TableCellHead minWidth="100px" size="small">
+                        Jurusan
+                      </TableCellHead>
+                      <TableCellHead minWidth="100px" size="small">
+                        Open/Close
+                      </TableCellHead>
+                      <TableCellHead minWidth="250px" size="small">
+                        Waktu
+                      </TableCellHead>
+                      <TableCellHead minWidth="100px" size="small">
+                        Sebelum
+                      </TableCellHead>
+                      <TableCellHead minWidth="100px" size="small">
+                        Sesudah
+                      </TableCellHead>
+                      <TableCellHead minWidth="100px" size="small">
+                        MVAR
+                      </TableCellHead>
+                      <TableCellHead minWidth="200px" size="small">
+                        Keterangan
+                      </TableCellHead>
+                      <TableCellHead minWidth="50px" size="small">
+                        Aksi
+                      </TableCellHead>
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    <TableRow>
-                      <TableCell size="small">UNGARAN</TableCell>
-                      <TableCell size="small">Switching Capasitor</TableCell>
-                      <TableCell size="small">Reaktor 4R-2 </TableCell>
-                      <TableCell size="small">Open</TableCell>
-                      <TableCell size="small">
-                        22 Januari 2022, 01.43 WIB
-                      </TableCell>
-                      <TableCell size="small">
-                        22 Januari 2022, 01.43 WIB
-                      </TableCell>
-                      <TableCell size="small">
-                        22 Januari 2022, 01.43 WIB
-                      </TableCell>
-                      <TableCell size="small">1200</TableCell>
-                      <TableCell size="small">
-                        PMT 66 KV dan Reaktor 4R-2 dinyatakan rusak.
-                      </TableCell>
-                      <TableCell size="small">
-                        <Box sx={{ display: "flex", alignItems: "center" }}>
-                          <IconButton onClick={() => null}>
-                            <PencilOutline />
-                          </IconButton>
-                        </Box>
-                      </TableCell>
-                    </TableRow>
+                    {pengaturanTeganganList.length > 0
+                      ? pengaturanTeganganList.map(
+                          (value: PengaturanTeganganList, index) => (
+                            <TableRow key={`list-${index}`}>
+                              <TableCell size="small">
+                                {value?.gardu_induk?.nama}
+                              </TableCell>
+                              <TableCell size="small">{value.jenis}</TableCell>
+                              <TableCell size="small">
+                                {value.jurusan}
+                              </TableCell>
+                              <TableCell size="small">
+                                {value.open_close}
+                              </TableCell>
+                              <TableCell size="small">
+                                {`${dayjs(value.tanggal).format(
+                                  "DD MMMM YYYY"
+                                )}, ${value?.waktu} WIB`}
+                              </TableCell>
+                              <TableCell size="small">
+                                {value.sebelum}
+                              </TableCell>
+                              <TableCell size="small">
+                                {value.sesudah}
+                              </TableCell>
+                              <TableCell size="small">{value.mvar}</TableCell>
+                              <TableCell size="small">
+                                {value.keterangan}
+                              </TableCell>
+                              <TableCell size="small">
+                                <Box
+                                  sx={{ display: "flex", alignItems: "center" }}
+                                >
+                                  <IconButton
+                                    onClick={() => {
+                                      openModal(
+                                        "modal-edit-pengaturan-tegangan",
+                                        value.id
+                                      );
+                                      selectData(
+                                        value as PengaturanTeganganList
+                                      );
+                                    }}
+                                  >
+                                    <PencilOutline />
+                                  </IconButton>
+                                </Box>
+                              </TableCell>
+                            </TableRow>
+                          )
+                        )
+                      : null}
                   </TableBody>
                 </Table>
               </TableContainer>
-              <TablePagination
-                rowsPerPageOptions={[10, 25, 100]}
-                component="div"
-                count={12}
-                rowsPerPage={rowsPerPage}
-                page={page}
-                onPageChange={handleChangePage}
-                onRowsPerPageChange={handleChangeRowsPerPage}
-              />
             </CardContent>
           </Card>
         </Grid>

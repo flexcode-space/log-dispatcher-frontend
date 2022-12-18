@@ -21,6 +21,10 @@ type ModalFilter = {
 const ModalFilter = ({ handleClose }: ModalFilter) => {
   const modalSnapshot = useSnapshot(modal);
 
+  const isOpen =
+    modalSnapshot.isOpen &&
+    modalSnapshot.target === "modal-filter-pengaturan-tegangan";
+
   const formMethods = useForm({
     // resolver: yupResolver(validationSchema),
     // defaultValues: initialValues,
@@ -44,7 +48,7 @@ const ModalFilter = ({ handleClose }: ModalFilter) => {
 
   return (
     <Dialog
-      open={modalSnapshot.isOpen}
+      open={isOpen}
       fullWidth
       onClose={onClickCloseModal}
       maxWidth="sm"

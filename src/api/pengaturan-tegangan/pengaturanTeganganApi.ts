@@ -7,7 +7,7 @@ export type Params = {
 }
 
 export type ParamsKonfigurasi = Params & {
-  tipe: string
+  tipe?: string
 }
 
 const endpoint = '/dispatch/switching-khusus'
@@ -28,7 +28,7 @@ const pengaturanTeganganApi = () => {
     }
   }, [])
 
-  const getKonfigurasiList = useCallback(async (params: ParamsKonfigurasi) => {
+  const getKonfigurasiList = useCallback(async (params: ParamsKonfigurasi = {}) => {
     setLoading(true)
 
     try {
