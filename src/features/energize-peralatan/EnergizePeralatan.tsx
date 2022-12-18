@@ -112,37 +112,35 @@ const EnergizePeralatan = () => {
                 />
               }
               action={
-                <>
-                  <div style={{ display: "flex", gap: "10px" }}>
-                    <LocalizationProvider dateAdapter={AdapterDateFns}>
-                      <DatePicketMui
-                        value={new Date()}
-                        label="Pilih Tanggal"
-                        onChange={() => null}
-                        renderInput={(params) => (
-                          <TextField
-                            size="small"
-                            {...params}
-                            sx={{ bgcolor: "#ffffff" }}
-                          />
-                        )}
-                      />
-                    </LocalizationProvider>
-                    <Button sx={{ mb: 2 }} variant="outlined">
-                      <IconButton>
-                        <FilterIcon />
-                      </IconButton>
-                      Filter
-                    </Button>
-                    <Button
-                      sx={{ mb: 2 }}
-                      variant="contained"
-                      onClick={() => openModal("modal-energize-peralatan")}
-                    >
-                      Tambah Data
-                    </Button>
-                  </div>
-                </>
+                <div style={{ display: "flex", gap: "10px" }}>
+                  <LocalizationProvider dateAdapter={AdapterDateFns}>
+                    <DatePicketMui
+                      value={new Date()}
+                      label="Pilih Tanggal"
+                      onChange={() => null}
+                      renderInput={(params) => (
+                        <TextField
+                          size="small"
+                          {...params}
+                          sx={{ bgcolor: "#ffffff" }}
+                        />
+                      )}
+                    />
+                  </LocalizationProvider>
+                  <Button sx={{ mb: 2 }} variant="outlined">
+                    <IconButton>
+                      <FilterIcon />
+                    </IconButton>
+                    Filter
+                  </Button>
+                  <Button
+                    sx={{ mb: 2 }}
+                    variant="contained"
+                    onClick={() => openModal("modal-energize-peralatan")}
+                  >
+                    Tambah Data
+                  </Button>
+                </div>
               }
             ></CardHeader>
             <CardContent>

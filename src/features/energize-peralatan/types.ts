@@ -28,4 +28,5 @@ export type CreateEnergizePeralatan = {
   rlb: string
   sop: string
   tanggal: string
+  close?: string
 }
