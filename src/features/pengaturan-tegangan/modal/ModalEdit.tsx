@@ -25,6 +25,7 @@ import {
 import { usePengaturanTegangan } from "../usePengaturanTegangan";
 import { pengaturanTegangan, removeData } from "../state/pengaturanTegangan";
 import { pengaturanTeganganApi } from "src/api/pengaturan-tegangan";
+import { setReloadPage } from "src/state/reloadPage";
 
 dayjs.extend(customParseFormat);
 
@@ -62,6 +63,7 @@ const ModalEdit = () => {
 
       await updatePengaturanTegangan(payload);
       handleCloseModal();
+      setReloadPage("pengaturan-tegangan")
     })();
   };
 
