@@ -1,5 +1,5 @@
 import { Card, CardContent } from "@mui/material";
-import { DataGrid } from "src/components/table";
+import { DataGrid } from "@mui/x-data-grid";
 import { CardHeader } from "src/components/card";
 import CustomChip from "src/@core/components/mui/chip";
 

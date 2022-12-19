@@ -1,6 +1,6 @@
 import { Card, CardContent } from "@mui/material";
 import { Typography, TextField } from "@mui/material";
-import { DataGrid } from "src/components/table";
+import { DataGrid } from "@mui/x-data-grid";
 
 import { WrapperFilter } from "src/components/filter";
 import { defaultColumns } from "./TableProduksi.constant";

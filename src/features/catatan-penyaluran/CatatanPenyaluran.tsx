@@ -8,7 +8,7 @@ import {
   Button,
   IconButton,
 } from "@mui/material";
-import { DataGrid } from "src/components/table";
+import { DataGrid } from "@mui/x-data-grid";
 import { PencilOutline } from "mdi-material-ui";
 import { useSnapshot } from "valtio";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";

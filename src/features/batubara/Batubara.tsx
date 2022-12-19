@@ -16,7 +16,7 @@ import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import PageHeader from "src/@core/components/page-header";
 import { WrapperFilter } from "src/components/filter";
-import { DataGrid } from "src/components/table";
+import { DataGrid } from "@mui/x-data-grid";
 import { openModal } from "src/state/modal";
 import ModalAddData from "./modal/ModalAddData";
 

@@ -2,7 +2,7 @@ import { Grid, Card, CardContent, CardHeader, IconButton } from "@mui/material";
 import { PencilOutline } from "mdi-material-ui";
 import { useEffect } from "react";
 import catatanPembangkitanApi from "src/api/catatan-pembangkitan/catatanPembangkitanApi";
-import { DataGrid } from "src/components/table";
+import { DataGrid } from "@mui/x-data-grid";
 import { modal, openModal } from "src/state/modal";
 import { CellType } from "src/types";
 import { useSnapshot } from "valtio";

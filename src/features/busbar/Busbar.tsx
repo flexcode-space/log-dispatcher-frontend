@@ -11,7 +11,7 @@ import {
   TextField,
   Button,
 } from "@mui/material";
-import { DataGrid } from "src/components/table";
+import { DataGrid } from "@mui/x-data-grid";
 import { PencilOutline, DeleteOutline } from "mdi-material-ui";
 import { useSnapshot } from "valtio";
 import PageHeader from "src/@core/components/page-header";

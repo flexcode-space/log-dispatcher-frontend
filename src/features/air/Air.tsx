@@ -14,7 +14,7 @@ import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import PageHeader from "src/@core/components/page-header";
 import { CardHeader } from "src/components/card";
 import { WrapperFilter } from "src/components/filter";
-import { DataGrid } from "src/components/table";
+import { DataGrid } from "@mui/x-data-grid";
 import { TIME } from "src/constants/time";
 
 import { defaultColumns, datamock } from "./Air.constant";

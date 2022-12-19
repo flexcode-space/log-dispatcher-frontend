@@ -3,7 +3,7 @@ import { Box, Card, CardContent, IconButton } from "@mui/material";
 import { DeleteOutline, EyeOutline, Download } from "mdi-material-ui";
 import { useSnapshot } from "valtio";
 import { CardHeader } from "src/components/card";
-import { DataGrid } from "src/components/table";
+import { DataGrid } from "@mui/x-data-grid";
 import { documentApi } from "src/api/document";
 import { modal } from "src/state/modal";
 import { defaultColumns } from "../Document.constant";

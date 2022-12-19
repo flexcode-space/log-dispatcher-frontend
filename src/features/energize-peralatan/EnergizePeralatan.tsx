@@ -10,7 +10,7 @@ import {
   Box,
 } from "@mui/material";
 import { useSnapshot } from "valtio";
-import { DataGrid } from "src/components/table";
+import { DataGrid } from "@mui/x-data-grid";
 import { PencilOutline, EyeOutline } from "mdi-material-ui";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";

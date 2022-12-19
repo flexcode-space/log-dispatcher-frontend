@@ -1,5 +1,5 @@
 import { Card, CardContent } from "@mui/material";
-import { DataGrid } from "src/components/table";
+import { DataGrid } from "@mui/x-data-grid";
 import { CardHeader } from "src/components/card";
 
 export interface CellType {
