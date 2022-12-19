@@ -7,12 +7,21 @@ import {
   Typography,
   Grid,
 } from "@mui/material";
+import { yupResolver } from "@hookform/resolvers/yup";
 import { SelectInput } from "src/components/select-input";
 import { InputField } from "src/components/input-field";
 import { DatePicker, TimePicker } from "src/components/date-picker";
 
 import { StyledForm } from "src/components/form";
 import { useSwitchingPembengkit } from "../useSwitchingPembangkit";
+// import { AutoCompletePerson } from "../components/autocomplete-person";
+import {
+  initialValues,
+  validationSchema,
+} from "../SwitchingPembangkit.constant";
+import dayjs from "dayjs";
+import { switchingPembangkitApi } from "src/api/switching-pembangkit";
+import { setReloadPage } from "src/state/reloadPage";
 
 const AddLaporan = () => {
   const {
@@ -20,13 +29,35 @@ const AddLaporan = () => {
     pembangkitOptions,
     statusOptions,
     energiPrimerOptions,
+    personOptions,
   } = useSwitchingPembengkit();
 
+  const { createSwitchingPembangkit } = switchingPembangkitApi();
+
   const formMethods = useForm({
-    // resolver: yupResolver(validationSchema),
-    // defaultValues: initialValues,
+    resolver: yupResolver(validationSchema),
+    defaultValues: initialValues,
     mode: "onChange",
   });
+
+  const onSubmit = (event?: React.FormEvent<HTMLFormElement>) => {
+    event?.preventDefault();
+
+    formMethods.handleSubmit(async (values) => {
+      const { tanggal, waktu_perintah, waktu_real, ...rest } = values;
+
+      const payload = {
+        ...rest,
+        tanggal: dayjs(tanggal).format("YYYY-MM-DD"),
+        waktu_perintah: dayjs(waktu_perintah).format("HH:mm"),
+        waktu_real: dayjs(waktu_real).format("HH:mm"),
+      };
+
+      await createSwitchingPembangkit(payload);
+      formMethods.reset({ ...initialValues });
+      setReloadPage('switching-pembangkit')
+    })();
+  };
 
   return (
     <Card>
@@ -37,8 +68,11 @@ const AddLaporan = () => {
           </Typography>
         </Box>
         <FormProvider {...formMethods}>
-          <StyledForm noValidate onSubmit={() => null} sx={{ width: "100%" }}>
+          <StyledForm noValidate onSubmit={onSubmit} sx={{ width: "100%" }}>
             <Grid container spacing={2} mt={1}>
+              {/* <Grid item xs={12}>
+                <AutoCompletePerson name="test" label="test" />
+              </Grid> */}
               <Grid item xs={12}>
                 <SelectInput
                   label="Jenis Switching"
@@ -66,17 +100,21 @@ const AddLaporan = () => {
                 <SelectInput
                   label="BPOS"
                   name="operator_bops_id"
-                  options={[]}
+                  options={personOptions}
                 />
               </Grid>
               <Grid item xs={12}>
-                <SelectInput label="ACC" name="operator_acc_id" options={[]} />
+                <SelectInput
+                  label="ACC"
+                  name="operator_acc_id"
+                  options={personOptions}
+                />
               </Grid>
               <Grid item xs={12}>
                 <SelectInput
                   label="Operator Pembengkit"
                   name="operator_pembangkit_id"
-                  options={[]}
+                  options={personOptions}
                 />
               </Grid>
               <Grid item xs={12}>

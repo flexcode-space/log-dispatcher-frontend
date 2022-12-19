@@ -10,6 +10,7 @@ const endpoint = '/dispatch/switching-pembangkit'
 
 const switchingPembangkitApi = () => {
   const [switchingPembangkitList, setSwitchingPembangkitList] = useState<[]>([])
+  const [personList, setPersonList] = useState<[]>([])
   const [loading, setLoading] = useState<boolean>(false);
 
   const getSwitchingPembangkitList = useCallback(async (params: Params = {}) => {
@@ -49,11 +50,24 @@ const switchingPembangkitApi = () => {
     }
   }, [])
 
+  const getPersonList = useCallback(async (params: Params = {}) => {
+    setLoading(true)
+
+    try {
+      const { data } = await Axios.get(`${endpoint}/person`, { params })
+      setPersonList(data || [])
+    } finally {
+      setLoading(false)
+    }
+  }, [])
+
 
   return {
+    personList,
     switchingPembangkitList,
     loading,
     getSwitchingPembangkitList,
+    getPersonList,
     createSwitchingPembangkit,
     updateSwitchingPembangkit
   }

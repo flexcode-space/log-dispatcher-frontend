@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import {
   Button,
@@ -8,27 +9,48 @@ import {
   Typography,
   Box,
 } from "@mui/material";
-// import { yupResolver } from "@hookform/resolvers/yup";
+import { yupResolver } from "@hookform/resolvers/yup";
 import { useSnapshot } from "valtio";
+import dayjs from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat";
 import { SelectInput } from "src/components/select-input";
 import { StyledForm } from "src/components/form";
 import { closeModal, modal, reloadPage } from "src/state/modal";
 import { InputField } from "src/components/input-field";
 import { DatePicker, TimePicker } from "src/components/date-picker";
 import { useSwitchingPembengkit } from "../useSwitchingPembangkit";
+import {
+  initialValues,
+  validationSchema,
+} from "../SwitchingPembangkit.constant";
+import { switchingPembangkitApi } from "src/api/switching-pembangkit";
+import { setReloadPage } from "src/state/reloadPage";
+import { removeData } from "../state/switchingPembangkit";
+import { switchingPembangkit } from "../state/switchingPembangkit";
+
+dayjs.extend(customParseFormat);
 
 const ModalFilter = () => {
   const modalSnapshot = useSnapshot(modal);
+  const { data } = useSnapshot(switchingPembangkit);
 
-  const { jenisSwitchingOptions, pembangkitOptions } = useSwitchingPembengkit();
+  const {
+    jenisSwitchingOptions,
+    pembangkitOptions,
+    statusOptions,
+    energiPrimerOptions,
+    personOptions,
+  } = useSwitchingPembengkit();
+
+  const { updateSwitchingPembangkit } = switchingPembangkitApi();
 
   const isOpen =
     modalSnapshot.isOpen &&
     modalSnapshot.target === "modal-edit-switching-pembangkit";
 
   const formMethods = useForm({
-    // resolver: yupResolver(validationSchema),
-    // defaultValues: initialValues,
+    resolver: yupResolver(validationSchema),
+    defaultValues: initialValues,
     mode: "onSubmit",
   });
 
@@ -36,16 +58,39 @@ const ModalFilter = () => {
     event?.preventDefault();
 
     formMethods.handleSubmit(async (values) => {
-      console.log(values);
+      const { tanggal, waktu_perintah, waktu_real, ...rest } = values;
 
-      closeModal();
+      const payload = {
+        ...rest,
+        id: data.id,
+        tanggal: dayjs(tanggal).format("YYYY-MM-DD"),
+        waktu_perintah: dayjs(waktu_perintah).format("HH:mm"),
+        waktu_real: dayjs(waktu_real).format("HH:mm"),
+      };
+
+      await updateSwitchingPembangkit(payload);
+      formMethods.reset({ ...initialValues });
+
+      handleCloseModal();
     })();
   };
 
   const handleCloseModal = () => {
     closeModal();
-    // formMethods.reset({ ...initialValues });
+    formMethods.reset({ ...initialValues });
+    setReloadPage("switching-pembangkit");
+    removeData();
   };
+
+  useEffect(() => {
+    formMethods.reset({
+      ...data,
+      pembangkit_id: data.pembangkit?.id,
+      tanggal: dayjs(data.tanggal),
+      waktu_perintah: dayjs(data.waktu_perintah, "HH: mm"),
+      waktu_real: dayjs(data.waktu_real, "HH:mm"),
+    });
+  }, [modalSnapshot.isOpen]);
 
   return (
     <Dialog
@@ -98,28 +143,36 @@ const ModalFilter = () => {
                 <SelectInput
                   label="BPOS"
                   name="operator_bops_id"
-                  options={[]}
+                  options={personOptions}
                 />
               </Grid>
               <Grid item xs={4}>
-                <SelectInput label="ACC" name="operator_acc_id" options={[]} />
+                <SelectInput
+                  label="ACC"
+                  name="operator_acc_id"
+                  options={personOptions}
+                />
               </Grid>
               <Grid item xs={4}>
                 <SelectInput
                   label="Operator Pembengkit"
                   name="operator_pembangkit_id"
-                  options={[]}
+                  options={personOptions}
                 />
               </Grid>
               <Grid item xs={12}>
                 <SelectInput
                   label="Energi Primer"
                   name="energi_primer"
-                  options={[]}
+                  options={energiPrimerOptions}
                 />
               </Grid>
               <Grid item xs={12}>
-                <SelectInput label="Status" name="status" options={[]} />
+                <SelectInput
+                  label="Status"
+                  name="status"
+                  options={statusOptions}
+                />
               </Grid>
 
               <Grid item xs={12}>

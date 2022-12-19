@@ -1,17 +1,17 @@
 import { useEffect } from 'react'
 import { pembangkitApi } from 'src/api/pembangkit'
 import { STATUS } from './SwitchingPembangkit.constant'
-// import { garduIndukApi } from 'src/api/gardu-induk'
-// import { pengaturanTeganganApi } from 'src/api/pengaturan-tegangan'
+import { switchingPembangkitApi } from 'src/api/switching-pembangkit'
 
 export const useSwitchingPembengkit = () => {
   const { getPembangkitList, pembangkitList } = pembangkitApi()
-  // const { getKonfigurasiList, konfigurasiList } = pengaturanTeganganApi()
+  const { getPersonList, personList } = switchingPembangkitApi()
 
   const pembangkitOptions = pembangkitList.map(({ id, nama }) => ({ value: id, label: nama }))
   const statusOptions = STATUS.map((value) => ({ value: value, label: value }))
+  const personOptions = personList.map(({ id, name }) => ({ value: id, label: name }))
   const jenisSwitchingOptions = [
-    { value: 'naik-turn', label: 'Naik Turun' },
+    { value: 'naik-turun', label: 'Naik Turun' },
     { value: 'change-over', label: 'Change Over' },
     { value: 'start-stop', label: 'Start Stop' },
   ]
@@ -24,13 +24,14 @@ export const useSwitchingPembengkit = () => {
 
   useEffect(() => {
     getPembangkitList()
-    // getKonfigurasiList()
+    getPersonList()
   }, [])
 
   return {
     pembangkitOptions,
     jenisSwitchingOptions,
     statusOptions,
-    energiPrimerOptions
+    energiPrimerOptions,
+    personOptions
   }
 }
