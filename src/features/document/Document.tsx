@@ -31,7 +31,7 @@ const Document = () => {
             <TextField
               size="small"
               value={search}
-              sx={{ mr: 6, mb: 2, bgcolor: "#fff" }}
+              sx={{ mr: 6, mb: 2 }}
               placeholder="Cari"
               onChange={(e) => setSearch(e.target.value)}
             />
