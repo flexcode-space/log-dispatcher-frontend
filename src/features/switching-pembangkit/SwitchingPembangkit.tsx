@@ -1,4 +1,4 @@
-import { useState, ChangeEvent } from "react";
+import { useState, ChangeEvent, useEffect } from "react";
 import {
   Box,
   Card,
@@ -27,13 +27,18 @@ import FilterIcon from "src/assets/icons/filter-icon.svg";
 
 import { WrapperFilter } from "src/components/filter";
 import { AddLaporan } from "./add-laporan";
-import { openModal, closeModal, modal, reloadPage } from "src/state/modal";
+import { openModal, closeModal } from "src/state/modal";
 import { ModalFilter, ModalEdit } from "./modal";
+import { switchingPembangkitApi } from "src/api/switching-pembangkit";
+import { SwitchingPembangkitList } from "./types";
 
 const SwitchingPembangkit = () => {
   // ** States
   const [page, setPage] = useState<number>(0);
   const [rowsPerPage, setRowsPerPage] = useState<number>(10);
+
+  const { getSwitchingPembangkitList, switchingPembangkitList } =
+    switchingPembangkitApi();
 
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
@@ -47,6 +52,10 @@ const SwitchingPembangkit = () => {
   const handleClose = () => {
     closeModal();
   };
+
+  useEffect(() => {
+    getSwitchingPembangkitList();
+  }, []);
 
   return (
     <>
@@ -136,66 +145,72 @@ const SwitchingPembangkit = () => {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    <TableRow hover>
-                      <TableCell size="small">1</TableCell>
-                      <TableCell size="small">Start/Stop</TableCell>
-                      <TableCell size="small">PLTU RBANG</TableCell>
-                      <TableCell size="small">23 Agustus 2022</TableCell>
-                      <TableCell
-                        size="small"
-                        sx={{ bgcolor: "rgba(255, 77, 73, 0.05)" }}
-                      >
-                        07:22
-                      </TableCell>
-                      <TableCell
-                        size="small"
-                        sx={{ bgcolor: "rgba(255, 77, 73, 0.05)" }}
-                      >
-                        07:22
-                      </TableCell>
-                      <TableCell
-                        size="small"
-                        sx={{ bgcolor: "rgba(38, 198, 249, 0.05)" }}
-                      >
-                        Dika
-                      </TableCell>
-                      <TableCell
-                        size="small"
-                        sx={{ bgcolor: "rgba(38, 198, 249, 0.05)" }}
-                      >
-                        Bagoes
-                      </TableCell>
-                      <TableCell
-                        size="small"
-                        sx={{ bgcolor: "rgba(38, 198, 249, 0.05)" }}
-                      >
-                        Bagoes
-                      </TableCell>
-                      <TableCell size="small">Air</TableCell>
-                      <TableCell size="small">PO</TableCell>
-                      <TableCell size="small">
-                        <Chip label="Start" color="success" />
-                      </TableCell>
-                      <TableCell size="small">-</TableCell>
-                      <TableCell size="small">
-                        <Box sx={{ display: "flex", alignItems: "center" }}>
-                          <IconButton
-                            onClick={() =>
-                              openModal("modal-edit-switching-pembangkit")
-                            }
-                          >
-                            <PencilOutline />
-                          </IconButton>
-                        </Box>
-                      </TableCell>
-                    </TableRow>
+                    {switchingPembangkitList?.map(
+                      (list: SwitchingPembangkitList, index: number) => {
+                        const timeColor = {
+                          bgcolor: "rgba(255, 77, 73, 0.05)",
+                        };
+                        const operatorColor = {
+                          bgcolor: "rgba(38, 198, 249, 0.05)",
+                        };
+
+                        return (
+                          <TableRow hover key={list.id}>
+                            <TableCell size="small">{index + 1}</TableCell>
+                            <TableCell size="small">{list.jenis}</TableCell>
+                            <TableCell size="small">
+                              {list.pembangkit.nama}
+                            </TableCell>
+                            <TableCell size="small">{list.tanggal}</TableCell>
+                            <TableCell size="small" sx={timeColor}>
+                              {list.waktu_perintah}
+                            </TableCell>
+                            <TableCell size="small" sx={timeColor}>
+                              {list.waktu_real}
+                            </TableCell>
+                            <TableCell size="small" sx={operatorColor}>
+                              {list.operator_bops}
+                            </TableCell>
+                            <TableCell size="small" sx={operatorColor}>
+                              {list.operator_acc}
+                            </TableCell>
+                            <TableCell size="small" sx={operatorColor}>
+                              {list.operator_pembangkit}
+                            </TableCell>
+                            <TableCell size="small">
+                              {list.energi_primer}
+                            </TableCell>
+                            <TableCell size="small">{list.status}</TableCell>
+                            <TableCell size="small">
+                              <Chip label={list.dispatch} color="success" />
+                            </TableCell>
+                            <TableCell size="small">
+                              {list.keterangan}
+                            </TableCell>
+                            <TableCell size="small">
+                              <Box
+                                sx={{ display: "flex", alignItems: "center" }}
+                              >
+                                <IconButton
+                                  onClick={() =>
+                                    openModal("modal-edit-switching-pembangkit")
+                                  }
+                                >
+                                  <PencilOutline />
+                                </IconButton>
+                              </Box>
+                            </TableCell>
+                          </TableRow>
+                        );
+                      }
+                    )}
                   </TableBody>
                 </Table>
               </TableContainer>
               <TablePagination
                 rowsPerPageOptions={[10, 25, 100]}
                 component="div"
-                count={12}
+                count={switchingPembangkitList.length || 0}
                 rowsPerPage={rowsPerPage}
                 page={page}
                 onPageChange={handleChangePage}

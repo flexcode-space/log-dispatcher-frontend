@@ -15,7 +15,12 @@ import { StyledForm } from "src/components/form";
 import { useSwitchingPembengkit } from "../useSwitchingPembangkit";
 
 const AddLaporan = () => {
-  const { jenisSwitchingOptions, pembangkitOptions } = useSwitchingPembengkit();
+  const {
+    jenisSwitchingOptions,
+    pembangkitOptions,
+    statusOptions,
+    energiPrimerOptions,
+  } = useSwitchingPembengkit();
 
   const formMethods = useForm({
     // resolver: yupResolver(validationSchema),
@@ -78,11 +83,15 @@ const AddLaporan = () => {
                 <SelectInput
                   label="Energi Primer"
                   name="energi_primer"
-                  options={[]}
+                  options={energiPrimerOptions}
                 />
               </Grid>
               <Grid item xs={12}>
-                <SelectInput label="Status" name="status" options={[]} />
+                <SelectInput
+                  label="Status"
+                  name="status"
+                  options={statusOptions}
+                />
               </Grid>
 
               <Grid item xs={12}>
