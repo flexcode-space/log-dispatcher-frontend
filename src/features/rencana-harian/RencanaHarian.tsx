@@ -8,7 +8,7 @@ import {
   TextField,
   Button,
 } from "@mui/material";
-import { DataGrid } from "src/components/table";
+import { DataGrid } from "@mui/x-data-grid";
 import { useSnapshot } from "valtio";
 // import AdapterDateFns from "@mui/lab/AdapterDateFns";
 // import LocalizationProvider from "@mui/lab/LocalizationProvider";

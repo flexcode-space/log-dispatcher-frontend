@@ -1,47 +1,19 @@
 import {
   Table,
-  TableCell as MuiTableCell,
+  TableCell,
   TableHead as MuiTableHead,
-  TableRow as MuiTableRow,
+  TableRow,
   TableContainer,
   TableBody,
   Typography,
 } from "@mui/material";
-import { DataGrid as MuiDataGrid } from "@mui/x-data-grid";
-import { styled } from "@mui/material/styles";
 import { TableCellHeadProps } from "./Table.type";
 import React from "react";
-
-const borderColor = "1px solid rgba(233, 233, 236, 1)";
-
-export const DataGrid = styled(MuiDataGrid)({
-  ".MuiDataGrid-cell": {
-    borderRight: borderColor,
-
-    ":first-of-type": {
-      borderLeft: borderColor,
-    },
-  },
-
-  ".MuiDataGrid-footerContainer": {
-    borderTop: "none",
-  },
-
-  ".MuiDataGrid-row:last-child": {
-    ".MuiDataGrid-cell": {
-      borderBottom: borderColor,
-    },
-  },
-});
 
 export const TableHead: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  return (
-    <MuiTableHead sx={{ height: "30px", background: "#F5F5F7" }}>
-      {children}
-    </MuiTableHead>
-  );
+  return <MuiTableHead sx={{ height: "30px" }}>{children}</MuiTableHead>;
 };
 
 export const TableCellHead = ({
@@ -51,28 +23,11 @@ export const TableCellHead = ({
   ...props
 }: TableCellHeadProps) => {
   return (
-    <MuiTableCell
-      variant="head"
-      size={size}
-      style={{ minWidth, borderRight: borderColor }}
-      {...props}
-    >
+    <TableCell variant="head" size={size} style={{ minWidth }} {...props}>
       {children}
-    </MuiTableCell>
+    </TableCell>
   );
 };
-
-export const TableCell = styled(MuiTableCell)({
-  borderRight: borderColor,
-});
-
-export const TableRow = styled(MuiTableRow)({
-  ".MuiTableCell-body": {
-    ":first-of-type": {
-      borderLeft: borderColor,
-    },
-  },
-});
 
 export const RenderCell = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -82,4 +37,4 @@ export const RenderCell = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-export { TableContainer, Table, TableBody };
+export { TableContainer, Table, TableBody, TableCell, TableRow };

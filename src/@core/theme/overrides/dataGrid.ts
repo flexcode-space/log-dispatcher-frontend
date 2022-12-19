@@ -6,7 +6,6 @@ const DataGrid = (theme: Theme) => {
     MuiDataGrid: {
       styleOverrides: {
         root: {
-          border: 0,
           color: theme.palette.text.primary,
           '& .MuiDataGrid-columnHeader:focus, & .MuiDataGrid-columnHeader:focus-within': {
             outline: 'none'
@@ -70,6 +69,7 @@ const DataGrid = (theme: Theme) => {
           minHeight: '50px !important',
           lineHeight: '20px !important',
           borderColor: theme.palette.divider,
+          borderRight: `1px solid ${theme.palette.divider}`,
           '&:not(.MuiDataGrid-cellCheckbox)': {
             padding: theme.spacing(4),
             '&:first-of-type': {
@@ -77,11 +77,12 @@ const DataGrid = (theme: Theme) => {
             }
           },
           '&:last-of-type': {
-            paddingRight: theme.spacing(5)
+            paddingRight: theme.spacing(5),
+            borderRight: 'none'
           },
           '&:focus, &:focus-within': {
             outline: 'none'
-          }
+          },
         },
         cellCheckbox: {
           maxWidth: '58px !important',

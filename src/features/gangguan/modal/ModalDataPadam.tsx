@@ -14,7 +14,7 @@ import { PlusCircleOutline } from "mdi-material-ui";
 import { useSnapshot } from "valtio";
 import { InputField } from "src/components/input-field";
 import { StyledForm } from "src/components/form";
-import { DataGrid } from "src/components/table";
+import { DataGrid } from "@mui/x-data-grid";
 import { modal, closeModal } from "src/state/modal";
 
 export const ModalDataPadam = () => {

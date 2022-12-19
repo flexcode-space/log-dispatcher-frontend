@@ -14,7 +14,7 @@ import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import PageHeader from "src/@core/components/page-header";
 import { WrapperFilter } from "src/components/filter";
 import { CardHeader } from "src/components/card";
-import { DataGrid } from "src/components/table";
+import { DataGrid } from "@mui/x-data-grid";
 import { openModal } from "src/state/modal";
 import { TIME } from "src/constants/time";
 import { TableVerifikasi } from "./table-verifikasi";

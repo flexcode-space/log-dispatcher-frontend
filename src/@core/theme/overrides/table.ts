@@ -19,7 +19,11 @@ const Table = (theme: Theme) => {
             fontWeight: 500,
             fontSize: '0.75rem',
             lineHeight: '1.959rem',
-            letterSpacing: '0.17px'
+            letterSpacing: '0.17px',
+            backgroundColor: theme.palette.customColors.tableHeaderBg,
+            '&:last-of-type': {
+              borderRight: `1px solid ${theme.palette.divider}`,
+            }
           }
         }
       }
@@ -35,6 +39,12 @@ const Table = (theme: Theme) => {
             '&:not(.MuiTableCell-sizeSmall):not(.MuiTableCell-paddingCheckbox):not(.MuiTableCell-paddingNone)': {
               paddingTop: theme.spacing(4),
               paddingBottom: theme.spacing(4)
+            },
+            '&:first-of-type': {
+              borderLeft: `1px solid ${theme.palette.divider}`,
+            },
+            '&:last-of-type': {
+              borderRight: `1px solid ${theme.palette.divider}`,
             }
           }
         }
@@ -55,10 +65,11 @@ const Table = (theme: Theme) => {
     MuiTableCell: {
       styleOverrides: {
         root: {
-          borderBottom: `1px solid ${theme.palette.divider}`,
+          borderLeft: '1px solid red',
+          border: `1px solid ${theme.palette.divider}`,
           '& .MuiButton-root': {
             textTransform: 'uppercase',
-            color: theme.palette.text.secondary
+            color: theme.palette.text.secondary,
           }
         },
         stickyHeader: {

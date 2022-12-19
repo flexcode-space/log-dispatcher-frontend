@@ -1,6 +1,6 @@
 import { useState, ChangeEvent } from "react";
 import { Card, CardContent, Grid, TextField, Button, IconButton } from "@mui/material";
-import { DataGrid } from "src/components/table";
+import { DataGrid } from "@mui/x-data-grid";
 import Plus from "mdi-material-ui/Plus";
 import DatePicker from "@mui/lab/DatePicker";
 import { TimePicker } from "@mui/x-date-pickers/TimePicker";

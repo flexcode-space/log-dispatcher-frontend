@@ -14,7 +14,7 @@ import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import PageHeader from "src/@core/components/page-header";
 import { CardHeader } from "src/components/card";
 import { WrapperFilter } from "src/components/filter";
-import { DataGrid } from "src/components/table";
+import { DataGrid } from "@mui/x-data-grid";
 import { TIME } from "src/constants/time";
 
 import { defaultColumns, datamock } from "./Air.constant";
@@ -66,7 +66,7 @@ const Air = () => {
                 <TextField
                   size="small"
                   value={search}
-                  sx={{ mr: 6, mb: 2, bgcolor: "#fff" }}
+                  sx={{ mr: 6, mb: 2 }}
                   placeholder="Cari"
                   onChange={(e) => setSearch(e.target.value)}
                 />
