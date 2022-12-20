@@ -5,20 +5,14 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  Grid,
-  Typography,
-  Box,
 } from "@mui/material";
 // import Plus from "mdi-material-ui/Plus";
 // import { yupResolver } from "@hookform/resolvers/yup";
 import { useSnapshot } from "valtio";
-import { InputField } from "src/components/input-field";
-import { SelectInput } from "src/components/select-input";
-import { DatePicker } from "src/components/date-picker";
 import { StyledForm } from "src/components/form";
-import { modal, reloadPage, closeModal } from "src/state/modal";
+import { modal, closeModal } from "src/state/modal";
 import { useModalAdd } from "./useModalAdd";
-import { Index } from "./Form";
+import FormLainLain from "./form/FormLainLain";
 
 const ModalAdd = () => {
   const [isNextPage, setIsNextPage] = useState<boolean>(false);
@@ -67,7 +61,7 @@ const ModalAdd = () => {
               position: "relative",
             }}
           >
-            <Index jenisPekerjaanOptions={jenisPekerjaanOptions} />
+            <FormLainLain />
           </DialogContent>
           <DialogActions className="dialog-actions-dense">
             <Button
