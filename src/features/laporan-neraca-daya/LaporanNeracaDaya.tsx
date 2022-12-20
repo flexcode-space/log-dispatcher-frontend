@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Grid,
   Typography,
@@ -25,12 +25,34 @@ import {
   TableCellHead,
   TableContainer,
 } from "src/components/table";
+import { ModalAdd } from "./modal";
+import { laporanNeracaDayaApi } from "src/api/laporan-neraca-daya";
+import { LaporanNeracaDayaList } from "./types";
+import { useSnapshot } from "valtio";
+import { reloadPage } from "src/state/reloadPage";
+import { selectData } from "./state/laporanNeracaDaya";
 
 const LaporanNeracaDaya = () => {
+  const reloadPageSnap = useSnapshot(reloadPage);
+
   const [search, setSearch] = useState<string>("");
+
+  const { getLaporanNeracaDayaList, laporanNeracaDayaList } =
+    laporanNeracaDayaApi();
+
+  useEffect(() => {
+    getLaporanNeracaDayaList();
+  }, []);
+
+  useEffect(() => {
+    if (reloadPageSnap.target === "laporan-neraca-daya") {
+      getLaporanNeracaDayaList();
+    }
+  }, [reloadPageSnap.id]);
 
   return (
     <>
+      <ModalAdd />
       <Grid container spacing={6}>
         <Grid item xs={12}>
           <WrapperFilter>
@@ -78,7 +100,12 @@ const LaporanNeracaDaya = () => {
             <CardHeader
               title="Rencana Beban Subsistem"
               action={
-                <Button variant="outlined" size="small" sx={{ height: "40px" }}>
+                <Button
+                  variant="outlined"
+                  size="small"
+                  sx={{ height: "40px" }}
+                  onClick={() => openModal("modal-neraca-daya")}
+                >
                   Tambah Data
                 </Button>
               }
@@ -94,25 +121,41 @@ const LaporanNeracaDaya = () => {
                       <TableCellHead>Beban IBT</TableCellHead>
                       <TableCellHead>Pembangkit</TableCellHead>
                       <TableCellHead>Beban KIT</TableCellHead>
-                      <TableCellHead>Keterangan</TableCellHead>
+                      <TableCellHead minWidth={250}>Keterangan</TableCellHead>
                       <TableCellHead>Aksi</TableCellHead>
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    <TableRow hover>
-                      <TableCell>Ungaran</TableCell>
-                      <TableCell>1900 MW</TableCell>
-                      <TableCell>IBT 1</TableCell>
-                      <TableCell>800 MW</TableCell>
-                      <TableCell>PLTGU TBROK</TableCell>
-                      <TableCell>200MW</TableCell>
-                      <TableCell>2 GT 1 ST</TableCell>
-                      <TableCell>
-                        <IconButton>
-                          <Pencil />
-                        </IconButton>
-                      </TableCell>
-                    </TableRow>
+                    {laporanNeracaDayaList.length > 0 &&
+                      laporanNeracaDayaList.map(
+                        (list: LaporanNeracaDayaList) => (
+                          <TableRow key={list.id} hover>
+                            <TableCell size="small">
+                              {list.sub_sistem.nama}
+                            </TableCell>
+                            <TableCell size="small">{list.dm_pasok}</TableCell>
+                            <TableCell size="small">{list.ibt.nama}</TableCell>
+                            <TableCell size="small">{list.beban_ibt}</TableCell>
+                            <TableCell size="small">
+                              {list.pembangkit.nama}
+                            </TableCell>
+                            <TableCell size="small">{list.beban_kit}</TableCell>
+                            <TableCell size="small">
+                              {list.keterangan}
+                            </TableCell>
+                            <TableCell size="small">
+                              <IconButton
+                                onClick={() => {
+                                  openModal("modal-neraca-daya", list.id);
+                                  selectData(list as LaporanNeracaDayaList);
+                                }}
+                              >
+                                <Pencil />
+                              </IconButton>
+                            </TableCell>
+                          </TableRow>
+                        )
+                      )}
                   </TableBody>
                 </Table>
               </TableContainer>
