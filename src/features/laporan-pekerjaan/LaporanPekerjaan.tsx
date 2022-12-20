@@ -9,13 +9,15 @@ import { WrapperFilter } from "src/components/filter";
 import { openModal } from "src/state/modal";
 import { TableLaporan, TableLain } from "./table-laporan";
 
-import { listTable } from "./LaporanPekerjaan.constant";
+import { laporanPekerjaanList } from "./LaporanPekerjaan.constant";
+import { ModalAdd } from "./modal";
 
 const LaporanPekerjaan = () => {
   const [search, setSearch] = useState<string>("");
 
   return (
     <>
+      <ModalAdd />
       <Grid container spacing={6}>
         <Grid item xs={12}>
           <WrapperFilter>
@@ -48,7 +50,7 @@ const LaporanPekerjaan = () => {
               </LocalizationProvider>
               <Button
                 sx={{ mb: 2 }}
-                onClick={() => openModal()}
+                onClick={() => openModal("modal-laporan-pekerjaan")}
                 variant="outlined"
               >
                 Tambah Data
@@ -63,7 +65,7 @@ const LaporanPekerjaan = () => {
             </div>
           </WrapperFilter>
         </Grid>
-        {listTable.map((value, index) => (
+        {laporanPekerjaanList.map((value, index) => (
           <TableLaporan key={`table-${index}`} title={value.title} />
         ))}
         <TableLain />
