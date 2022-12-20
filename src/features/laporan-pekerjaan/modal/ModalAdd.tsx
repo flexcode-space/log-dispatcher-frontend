@@ -18,8 +18,11 @@ import { DatePicker } from "src/components/date-picker";
 import { StyledForm } from "src/components/form";
 import { modal, reloadPage, closeModal } from "src/state/modal";
 import { useModalAdd } from "./useModalAdd";
+import { Index } from "./Form";
 
 const ModalAdd = () => {
+  const [isNextPage, setIsNextPage] = useState<boolean>(false);
+
   const modalSnapshot = useSnapshot(modal);
 
   const { jenisPekerjaanOptions } = useModalAdd();
@@ -64,33 +67,29 @@ const ModalAdd = () => {
               position: "relative",
             }}
           >
-            <Box sx={{ mb: 8 }}>
-              <Typography variant="h5" sx={{ mb: 3, lineHeight: "2rem" }}>
-                Tambah Laporan Pekerjaan
-              </Typography>
-            </Box>
-            <Grid container spacing={1} mt={1}>
-              <Grid item xs={12} sm={12}>
-                <SelectInput
-                  label="Jenis Pekerjaan"
-                  name="jenis"
-                  options={jenisPekerjaanOptions}
-                />
-              </Grid>
-              <Grid item xs={12} sm={12}>
-                <DatePicker label="Pilih Tanggal" name="tanggal" />
-              </Grid>
-            </Grid>
+            <Index jenisPekerjaanOptions={jenisPekerjaanOptions} />
           </DialogContent>
           <DialogActions className="dialog-actions-dense">
-            <Button variant="outlined" onClick={onClickCloseModal}>
+            <Button
+              variant={isNextPage ? "text" : "outlined"}
+              onClick={onClickCloseModal}
+            >
               Batal
             </Button>
-            <Button variant="contained">Selanjutnya</Button>
-            <Button variant="contained">Sebelumnya</Button>
-            <Button variant="contained" type="submit">
-              Tambah
-            </Button>
+            {isNextPage ? (
+              <>
+                <Button variant="outlined" onClick={() => setIsNextPage(false)}>
+                  Sebelumnya
+                </Button>
+                <Button variant="contained" type="submit">
+                  Tambah
+                </Button>
+              </>
+            ) : (
+              <Button variant="contained" onClick={() => setIsNextPage(true)}>
+                Selanjutnya
+              </Button>
+            )}
           </DialogActions>
         </StyledForm>
       </FormProvider>
