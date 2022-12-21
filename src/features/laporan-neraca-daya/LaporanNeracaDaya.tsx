@@ -12,6 +12,7 @@ import DatePickerMui from "@mui/lab/DatePicker";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import { Pencil } from "mdi-material-ui";
+import dayjs, { Dayjs } from "dayjs";
 import PageHeader from "src/@core/components/page-header";
 import { WrapperFilter } from "src/components/filter";
 import { openModal } from "src/state/modal";
@@ -36,13 +37,16 @@ const LaporanNeracaDaya = () => {
   const reloadPageSnap = useSnapshot(reloadPage);
 
   const [search, setSearch] = useState<string>("");
+  const [date, setDate] = useState<Dayjs | null>(null);
+
+  const filterDate = date ? dayjs(date).format("YYYY-MM-DD") : "";
 
   const { getLaporanNeracaDayaList, laporanNeracaDayaList } =
     laporanNeracaDayaApi();
 
   useEffect(() => {
-    getLaporanNeracaDayaList();
-  }, []);
+    getLaporanNeracaDayaList({ tanggal: filterDate });
+  }, [date]);
 
   useEffect(() => {
     if (reloadPageSnap.target === "laporan-neraca-daya") {
@@ -73,9 +77,10 @@ const LaporanNeracaDaya = () => {
               />
               <LocalizationProvider dateAdapter={AdapterDateFns}>
                 <DatePickerMui
-                  value={null}
+                  value={date}
                   label="Pilih Tanggal"
-                  onChange={() => null}
+                  inputFormat="dd/M/yyyy"
+                  onChange={setDate}
                   renderInput={(params) => (
                     <TextField
                       size="small"
@@ -115,6 +120,7 @@ const LaporanNeracaDaya = () => {
                 <Table>
                   <TableHead>
                     <TableRow>
+                      <TableCellHead>Tanggal</TableCellHead>
                       <TableCellHead>Subsistem</TableCellHead>
                       <TableCellHead>DM Pasok</TableCellHead>
                       <TableCellHead>IBT</TableCellHead>
@@ -130,6 +136,9 @@ const LaporanNeracaDaya = () => {
                       laporanNeracaDayaList.map(
                         (list: LaporanNeracaDayaList) => (
                           <TableRow key={list.id} hover>
+                            <TableCell size="small">
+                              {dayjs(list.tanggal).format("DD MMMM YYYY")}
+                            </TableCell>
                             <TableCell size="small">
                               {list.sub_sistem.nama}
                             </TableCell>
