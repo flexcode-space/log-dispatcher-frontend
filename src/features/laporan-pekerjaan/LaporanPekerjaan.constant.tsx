@@ -1,18 +1,22 @@
 export const laporanPekerjaanList = [
   {
     title: "Pekerjaan Terencana",
-    type: "pekerjaan_terencana",
+    type: "terencana",
   },
   {
     title: "Pekerjaan Yang Menyebabkan N-1-1 tidak Terpenuhi",
-    type: "pekerjaan_n11",
+    type: "tidak-tepenuhi",
   },
   {
     title: "Pekerjaan Padam Menginap / Belum Normal",
-    type: "pekerjaan_padam",
+    type: "menginap",
   },
   {
     title: "Pekerjaan Emergency",
-    type: "pekerjaan_emergency",
+    type: "emergency",
+  },
+  {
+    title: "Lain - Lain",
+    type: "lain",
   },
 ];
