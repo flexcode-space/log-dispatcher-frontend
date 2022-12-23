@@ -1,7 +1,7 @@
-import { Button, Card, CardContent, IconButton } from "@mui/material";
-import { Pencil } from "mdi-material-ui";
+import { Card, CardContent, IconButton } from "@mui/material";
+import { Pencil, TrashCanOutline } from "mdi-material-ui";
 import { CardHeader } from "src/components/card";
-import FilterGreenIcon from "src/assets/icons/filter-green-icon.svg";
+import { useEffect } from "react";
 import {
   Table,
   TableHead,
@@ -11,39 +11,45 @@ import {
   TableCellHead,
   TableContainer,
 } from "src/components/table";
+import { selectData } from "../state/laporanScada";
+import { laporanScadaApi } from "src/api/laporan-scada";
+import { LaporanScadaList } from "../type";
+import { openModal } from "src/state/modal";
+import dayjs from "dayjs";
+import { useSnapshot } from "valtio";
+import { reloadPage } from "src/state/reloadPage";
 
 type TableMonitoringProps = {
   title: string;
+  type: string;
 };
 
-const TableMonitoring = ({ title }: TableMonitoringProps) => {
+const TableMonitoring = ({ title, type }: TableMonitoringProps) => {
+  const reloadPageSnap = useSnapshot(reloadPage);
+  const { getLaporanScadaList, laporanScadaList } = laporanScadaApi();
+
+  useEffect(() => {
+    getLaporanScadaList({ tipe: type });
+  }, []);
+
+  useEffect(() => {
+    if (reloadPageSnap.target === "laporan-scada") {
+      getLaporanScadaList({ tipe: type });
+    }
+  }, [reloadPage.target]);
+
   return (
     <Card>
-      <CardHeader
-        title={title}
-        action={
-          <div style={{ display: "flex", gap: "10px" }}>
-            <Button variant="outlined" size="small" sx={{ height: "40px" }}>
-              <IconButton>
-                <FilterGreenIcon />
-              </IconButton>
-              Filter
-            </Button>
-            <Button variant="contained" size="small" sx={{ height: "40px" }}>
-              Tambah Data
-            </Button>
-          </div>
-        }
-      />
+      <CardHeader title={title} />
       <CardContent>
         <TableContainer>
           <Table>
             <TableHead>
               <TableRow>
                 <TableCellHead>Tanggal</TableCellHead>
-                <TableCellHead>Gardu Induk</TableCellHead>
+                <TableCellHead minWidth="150px">Gardu Induk</TableCellHead>
                 <TableCellHead>Bay</TableCellHead>
-                <TableCellHead>Keterangan</TableCellHead>
+                <TableCellHead minWidth="300px">Keterangan</TableCellHead>
                 <TableCellHead>Tanggal Konfirmasi</TableCellHead>
                 <TableCellHead>Aksi scada</TableCellHead>
                 <TableCellHead>Aset</TableCellHead>
@@ -52,21 +58,31 @@ const TableMonitoring = ({ title }: TableMonitoringProps) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              <TableRow hover>
-                <TableCell>21 Agustus 2022</TableCell>
-                <TableCell>SRGEN</TableCell>
-                <TableCell>BUSBAR 1</TableCell>
-                <TableCell>Tegangan berubah-berubah tidak stabil</TableCell>
-                <TableCell>24 Agustus 2022</TableCell>
-                <TableCell>Di cek dulu</TableCell>
-                <TableCell>Di cek dulu</TableCell>
-                <TableCell>-</TableCell>
-                <TableCell>
-                  <IconButton>
-                    <Pencil />
-                  </IconButton>
-                </TableCell>
-              </TableRow>
+              {laporanScadaList.length > 0 &&
+                laporanScadaList.map((list: LaporanScadaList) => (
+                  <TableRow hover key={list.id}>
+                    <TableCell>
+                      {dayjs(list.tanggal).format("DD MMMM YYYY")}
+                    </TableCell>
+                    <TableCell>{list.gardu_induk.nama}</TableCell>
+                    <TableCell>{list.bay}</TableCell>
+                    <TableCell>{list.keterangan}</TableCell>
+                    <TableCell>{list.tanggal_konfirmasi}</TableCell>
+                    <TableCell>{list.aksi}</TableCell>
+                    <TableCell>{list.aset}</TableCell>
+                    <TableCell>{list.status}</TableCell>
+                    <TableCell>
+                      <IconButton
+                        onClick={() => {
+                          openModal("modal-laporan-scada", list.id);
+                          selectData(list as LaporanScadaList);
+                        }}
+                      >
+                        <Pencil />
+                      </IconButton>
+                    </TableCell>
+                  </TableRow>
+                ))}
             </TableBody>
           </Table>
         </TableContainer>
