@@ -1,22 +1,22 @@
-export const listTable = [
+export const laporanPekerjaanList = [
   {
     title: "Pekerjaan Terencana",
-    type: "pekerjaan",
+    type: "terencana",
   },
   {
     title: "Pekerjaan Yang Menyebabkan N-1-1 tidak Terpenuhi",
-    type: "pekerjaan",
+    type: "tidak-tepenuhi",
   },
   {
     title: "Pekerjaan Padam Menginap / Belum Normal",
-    type: "pekerjaan",
-  },
-  {
-    title: "Pekerjaan Padam Menginap / Belum Normal",
-    type: "pekerjaan",
+    type: "menginap",
   },
   {
     title: "Pekerjaan Emergency",
-    type: "pekerjaan",
+    type: "emergency",
+  },
+  {
+    title: "Lain - Lain",
+    type: "lain",
   },
 ];

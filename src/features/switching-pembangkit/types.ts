@@ -4,9 +4,18 @@ export interface SwitchingPembangkitList {
   id: string;
   jenis: string;
   keterangan: string;
-  operator_acc: string;
-  operator_bops: string;
-  operator_pembangkit: string;
+  operator_acc: {
+    id: string;
+    nama: string;
+  };
+  operator_bops: {
+    id: string;
+    nama: string;
+  };
+  operator_pembangkit: {
+    id: string;
+    nama: string;
+  };
   pembangkit: {
     id: string;
     nama: string;

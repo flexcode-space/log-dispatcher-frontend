@@ -48,8 +48,12 @@ const PengaturanTegangan = () => {
   };
 
   useEffect(() => {
-    if(reloadPageSnap.target === "pengaturan-tegangan")
     getPengaturanTeganganList();
+  }, []);
+
+  useEffect(() => {
+    if (reloadPageSnap.target === "pengaturan-tegangan")
+      getPengaturanTeganganList();
   }, [reloadPageSnap]);
 
   return (

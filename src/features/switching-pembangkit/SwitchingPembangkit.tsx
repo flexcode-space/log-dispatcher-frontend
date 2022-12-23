@@ -180,13 +180,13 @@ const SwitchingPembangkit = () => {
                                 {list.waktu_real}
                               </TableCell>
                               <TableCell size="small" sx={operatorColor}>
-                                {list.operator_bops}
+                                {list.operator_bops.nama}
                               </TableCell>
                               <TableCell size="small" sx={operatorColor}>
-                                {list.operator_acc}
+                                {list.operator_acc.nama}
                               </TableCell>
                               <TableCell size="small" sx={operatorColor}>
-                                {list.operator_pembangkit}
+                                {list.operator_pembangkit.nama}
                               </TableCell>
                               <TableCell size="small">
                                 {list.energi_primer}

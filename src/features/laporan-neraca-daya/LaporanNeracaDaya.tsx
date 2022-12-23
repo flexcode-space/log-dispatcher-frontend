@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Grid,
   Typography,
@@ -12,6 +12,7 @@ import DatePickerMui from "@mui/lab/DatePicker";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import { Pencil } from "mdi-material-ui";
+import dayjs, { Dayjs } from "dayjs";
 import PageHeader from "src/@core/components/page-header";
 import { WrapperFilter } from "src/components/filter";
 import { openModal } from "src/state/modal";
@@ -25,12 +26,37 @@ import {
   TableCellHead,
   TableContainer,
 } from "src/components/table";
+import { ModalAdd } from "./modal";
+import { laporanNeracaDayaApi } from "src/api/laporan-neraca-daya";
+import { LaporanNeracaDayaList } from "./types";
+import { useSnapshot } from "valtio";
+import { reloadPage } from "src/state/reloadPage";
+import { selectData } from "./state/laporanNeracaDaya";
 
 const LaporanNeracaDaya = () => {
+  const reloadPageSnap = useSnapshot(reloadPage);
+
   const [search, setSearch] = useState<string>("");
+  const [date, setDate] = useState<Dayjs | null>(null);
+
+  const filterDate = date ? dayjs(date).format("YYYY-MM-DD") : "";
+
+  const { getLaporanNeracaDayaList, laporanNeracaDayaList } =
+    laporanNeracaDayaApi();
+
+  useEffect(() => {
+    getLaporanNeracaDayaList({ tanggal: filterDate });
+  }, [date]);
+
+  useEffect(() => {
+    if (reloadPageSnap.target === "laporan-neraca-daya") {
+      getLaporanNeracaDayaList();
+    }
+  }, [reloadPageSnap.id]);
 
   return (
     <>
+      <ModalAdd />
       <Grid container spacing={6}>
         <Grid item xs={12}>
           <WrapperFilter>
@@ -51,9 +77,10 @@ const LaporanNeracaDaya = () => {
               />
               <LocalizationProvider dateAdapter={AdapterDateFns}>
                 <DatePickerMui
-                  value={null}
+                  value={date}
                   label="Pilih Tanggal"
-                  onChange={() => null}
+                  inputFormat="dd/M/yyyy"
+                  onChange={setDate}
                   renderInput={(params) => (
                     <TextField
                       size="small"
@@ -78,7 +105,12 @@ const LaporanNeracaDaya = () => {
             <CardHeader
               title="Rencana Beban Subsistem"
               action={
-                <Button variant="outlined" size="small" sx={{ height: "40px" }}>
+                <Button
+                  variant="outlined"
+                  size="small"
+                  sx={{ height: "40px" }}
+                  onClick={() => openModal("modal-neraca-daya")}
+                >
                   Tambah Data
                 </Button>
               }
@@ -88,31 +120,51 @@ const LaporanNeracaDaya = () => {
                 <Table>
                   <TableHead>
                     <TableRow>
+                      <TableCellHead>Tanggal</TableCellHead>
                       <TableCellHead>Subsistem</TableCellHead>
                       <TableCellHead>DM Pasok</TableCellHead>
                       <TableCellHead>IBT</TableCellHead>
                       <TableCellHead>Beban IBT</TableCellHead>
                       <TableCellHead>Pembangkit</TableCellHead>
                       <TableCellHead>Beban KIT</TableCellHead>
-                      <TableCellHead>Keterangan</TableCellHead>
+                      <TableCellHead minWidth={250}>Keterangan</TableCellHead>
                       <TableCellHead>Aksi</TableCellHead>
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    <TableRow hover>
-                      <TableCell>Ungaran</TableCell>
-                      <TableCell>1900 MW</TableCell>
-                      <TableCell>IBT 1</TableCell>
-                      <TableCell>800 MW</TableCell>
-                      <TableCell>PLTGU TBROK</TableCell>
-                      <TableCell>200MW</TableCell>
-                      <TableCell>2 GT 1 ST</TableCell>
-                      <TableCell>
-                        <IconButton>
-                          <Pencil />
-                        </IconButton>
-                      </TableCell>
-                    </TableRow>
+                    {laporanNeracaDayaList.length > 0 &&
+                      laporanNeracaDayaList.map(
+                        (list: LaporanNeracaDayaList) => (
+                          <TableRow key={list.id} hover>
+                            <TableCell size="small">
+                              {dayjs(list.tanggal).format("DD MMMM YYYY")}
+                            </TableCell>
+                            <TableCell size="small">
+                              {list.sub_sistem.nama}
+                            </TableCell>
+                            <TableCell size="small">{list.dm_pasok}</TableCell>
+                            <TableCell size="small">{list.ibt.nama}</TableCell>
+                            <TableCell size="small">{list.beban_ibt}</TableCell>
+                            <TableCell size="small">
+                              {list.pembangkit.nama}
+                            </TableCell>
+                            <TableCell size="small">{list.beban_kit}</TableCell>
+                            <TableCell size="small">
+                              {list.keterangan}
+                            </TableCell>
+                            <TableCell size="small">
+                              <IconButton
+                                onClick={() => {
+                                  openModal("modal-neraca-daya", list.id);
+                                  selectData(list as LaporanNeracaDayaList);
+                                }}
+                              >
+                                <Pencil />
+                              </IconButton>
+                            </TableCell>
+                          </TableRow>
+                        )
+                      )}
                   </TableBody>
                 </Table>
               </TableContainer>
