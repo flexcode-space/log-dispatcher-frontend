@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import {
   Button,
@@ -10,29 +11,27 @@ import {
 } from "@mui/material";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useSnapshot } from "valtio";
-import { InputField } from "src/components/input-field";
-import { SelectInput } from "src/components/select-input";
-import { DatePicker } from "src/components/date-picker";
+import dayjs from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat";
+import { InputField, TextArea } from "src/components/input-field";
+import { DatePicker, TimePicker } from "src/components/date-picker";
 import { StyledForm } from "src/components/form";
 import { modal, closeModal } from "src/state/modal";
-import { useModalAdd } from "./useModalAdd";
 import { initialValues, validationSchema } from "./ModalAdd.constant";
-import { laporanScadaApi } from "src/api/laporan-scada";
-import dayjs from "dayjs";
 import { setReloadPage } from "src/state/reloadPage";
-import { useEffect } from "react";
-import { laporanScada, removeData } from "../state/laporanScada";
+import { laporanPosko, removeData } from "../state/laporanPosko";
+import laporanPoskoApi from "src/api/laporan-posko/laporanPoskoApi";
+
+dayjs.extend(customParseFormat);
 
 const ModalAdd = () => {
   const modalSnapshot = useSnapshot(modal);
-  const { data } = useSnapshot(laporanScada);
+  const { data } = useSnapshot(laporanPosko);
 
-  const { createLaporanScada, updateLaporanScada } = laporanScadaApi();
+  const { createLaporanPosko, updateLaporanPosko } = laporanPoskoApi();
 
   const isOpen =
-    modalSnapshot.isOpen && modalSnapshot.target === "modal-laporan-scada";
-
-  const { garduIndukOptions, typeOptions } = useModalAdd();
+    modalSnapshot.isOpen && modalSnapshot.target === "modal-laporan-posko";
 
   const formMethods = useForm({
     resolver: yupResolver(validationSchema),
@@ -44,19 +43,20 @@ const ModalAdd = () => {
     event?.preventDefault();
 
     formMethods.handleSubmit(async (values) => {
-      const { tanggal, tanggal_konfirmasi, ...rest } = values;
+      const { tanggal, start_time, end_time, ...rest } = values;
+
+      const startTime = dayjs(start_time).format("HH:mm");
+      const endTime = dayjs(end_time).format("HH:mm");
 
       const payload = {
         ...rest,
         tanggal: dayjs(tanggal).format("YYYY-MM-DD"),
-        tanggal_konfirmasi:
-          dayjs(tanggal_konfirmasi).format("YYYY-MM-DD HH:mm"),
+        periode: `${startTime} ${endTime}`,
       };
-
       if (modalSnapshot.id) {
-        await updateLaporanScada({ ...payload, id: data.id });
+        await updateLaporanPosko({ ...payload, id: data.id });
       } else {
-        await createLaporanScada(payload);
+        await createLaporanPosko(payload);
       }
       hanleCloseModal();
     })();
@@ -65,19 +65,23 @@ const ModalAdd = () => {
   const hanleCloseModal = () => {
     closeModal();
     formMethods.reset({ ...initialValues });
-    setReloadPage("laporan-scada");
-    removeData()
+    setReloadPage("laporan-posko");
+    removeData();
   };
 
   useEffect(() => {
-    const { tanggal, tanggal_konfirmasi, ...rest } = data;
+    if (modalSnapshot.isOpen && !!modalSnapshot.id) {
+      const { tanggal, periode, ...rest } = data;
 
-    formMethods.reset({
-      ...rest,
-      gardu_induk_id: rest?.gardu_induk?.id,
-      tanggal: dayjs(tanggal),
-      tanggal_konfirmasi: dayjs(tanggal_konfirmasi),
-    });
+      const splitPeriode = periode.split(" ")
+
+      formMethods.reset({
+        ...rest,
+        tanggal: dayjs(data.tanggal),
+        start_time: dayjs(splitPeriode[0], "HH:mm"),
+        end_time: dayjs(splitPeriode[1], "HH:mm"),
+      });
+    }
   }, [modalSnapshot.isOpen]);
 
   return (
@@ -104,43 +108,48 @@ const ModalAdd = () => {
               </Typography>
             </Box>
             <Grid container spacing={1} mt={1}>
-              <Grid item xs={12}>
-                <SelectInput
-                  label="Jenis Laporan"
-                  name="tipe"
-                  options={typeOptions}
-                />
+              <Grid item xs={4}>
+                <DatePicker label="Tanggal Mulai" name="tanggal" />
               </Grid>
-              <Grid item xs={12} sm={6}>
-                <SelectInput
-                  label="Gardu Induk"
-                  name="gardu_induk_id"
-                  options={garduIndukOptions}
-                />
+              <Grid item xs={4}>
+                <TimePicker label="Dari Jam" name="start_time" />
               </Grid>
-              <Grid item xs={12} sm={6}>
-                <InputField label="Bay" name="bay" />
+              <Grid item xs={4}>
+                <TimePicker label="Sampai Jam" name="end_time" />
               </Grid>
               <Grid item xs={6}>
-                <DatePicker label="Tanggal" name="tanggal" />
-              </Grid>
-              <Grid item xs={6}>
-                <DatePicker
-                  label="Tanggal Konfirmasi"
-                  name="tanggal_konfirmasi"
+                <InputField
+                  type="number"
+                  label="Pasokan Kit"
+                  name="pasokan_kit"
                 />
               </Grid>
-              <Grid item xs={12}>
-                <InputField label="Aksi Scada" name="aksi" />
+              <Grid item xs={6}>
+                <InputField
+                  type="number"
+                  label="Cadangan KIT"
+                  name="cadangan_kit"
+                />
               </Grid>
-              <Grid item xs={12}>
-                <InputField label="Aset" name="aset" />
+              <Grid item xs={6}>
+                <InputField
+                  type="number"
+                  label="Pasokan IBT & Transfer"
+                  name="pasokan_ibt"
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <InputField
+                  type="number"
+                  label="Beban Puncak"
+                  name="beban_puncak"
+                />
               </Grid>
               <Grid item xs={12}>
                 <InputField label="Status" name="status" />
               </Grid>
               <Grid item xs={12}>
-                <InputField label="Keterangan" name="keterangan" />
+                <TextArea label="Keterangan" name="keterangan" />
               </Grid>
             </Grid>
           </DialogContent>

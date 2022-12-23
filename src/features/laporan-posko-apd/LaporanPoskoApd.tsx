@@ -1,16 +1,12 @@
-import { useState } from "react";
+import { useEffect } from "react";
 import {
   Grid,
   Typography,
-  TextField,
   Button,
   Card,
   CardContent,
   IconButton,
 } from "@mui/material";
-import DatePickerMui from "@mui/lab/DatePicker";
-import AdapterDateFns from "@mui/lab/AdapterDateFns";
-import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import { Pencil } from "mdi-material-ui";
 import PageHeader from "src/@core/components/page-header";
 import { WrapperFilter } from "src/components/filter";
@@ -26,50 +22,39 @@ import {
   TableContainer,
 } from "src/components/table";
 import FilterGreenIcon from "src/assets/icons/filter-green-icon.svg";
+import { laporanPoskoApdApi } from "src/api/laporan-posko";
+import { LaporanPoskoList } from "./types";
+import dayjs from "dayjs";
+import { selectData } from "./state/laporanPosko";
+import { ModalAdd } from "./modal";
+import { useSnapshot } from "valtio";
+import { reloadPage } from "src/state/reloadPage";
 
 const LaporanPoskoApd = () => {
-  const [search, setSearch] = useState<string>("");
+  const reloadPageSnap = useSnapshot(reloadPage);
+  const { getLaporanPoskoList, laporanPoskoList } = laporanPoskoApdApi();
+
+  useEffect(() => {
+    getLaporanPoskoList();
+  }, []);
+
+  useEffect(() => {
+    if (reloadPageSnap.target === "laporan-posko") {
+      getLaporanPoskoList();
+    }
+  }, [reloadPageSnap]);
 
   return (
     <>
+      <ModalAdd />
       <Grid container spacing={6}>
         <Grid item xs={12}>
           <WrapperFilter>
-            <Grid item xs={4}>
+            <Grid item xs={12}>
               <PageHeader
                 title={<Typography variant="h5">Posko APD</Typography>}
               />
             </Grid>
-            <div style={{ display: "flex", gap: "10px" }}>
-              <TextField
-                size="small"
-                value={search}
-                sx={{ mb: 2 }}
-                placeholder="Cari"
-                onChange={(e) => setSearch(e.target.value)}
-              />
-              <LocalizationProvider dateAdapter={AdapterDateFns}>
-                <DatePickerMui
-                  value={null}
-                  label="Pilih Tanggal"
-                  onChange={() => null}
-                  renderInput={(params) => (
-                    <TextField
-                      size="small"
-                      {...params}
-                      sx={{ width: "200px" }}
-                    />
-                  )}
-                />
-              </LocalizationProvider>
-              <Button
-                sx={{ mb: 2 }}
-                onClick={() => openModal()}
-                variant="contained"
-              >
-                Generate Laporan
-              </Button>
-            </div>
           </WrapperFilter>
         </Grid>
         <Grid item xs={12}>
@@ -92,6 +77,7 @@ const LaporanPoskoApd = () => {
                     variant="contained"
                     size="small"
                     sx={{ height: "40px" }}
+                    onClick={() => openModal("modal-laporan-posko")}
                   >
                     Tambah Data
                   </Button>
@@ -110,26 +96,40 @@ const LaporanPoskoApd = () => {
                       <TableCellHead>Beban Puncak</TableCellHead>
                       <TableCellHead>Cadangan kit</TableCellHead>
                       <TableCellHead>Status</TableCellHead>
-                      <TableCellHead>Keterangan</TableCellHead>
+                      <TableCellHead minWidth="400px">Keterangan</TableCellHead>
                       <TableCellHead>Aksi</TableCellHead>
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    <TableRow hover>
-                      <TableCell>22 Agustus 2022</TableCell>
-                      <TableCell>14.00 - 20.00</TableCell>
-                      <TableCell>1538 MW</TableCell>
-                      <TableCell>1900 MW</TableCell>
-                      <TableCell>4144 MW</TableCell>
-                      <TableCell>800 MW</TableCell>
-                      <TableCell>Aman & Normal</TableCell>
-                      <TableCell>Beban puncak terjadi pukul 21.30</TableCell>
-                      <TableCell>
-                        <IconButton>
-                          <Pencil />
-                        </IconButton>
-                      </TableCell>
-                    </TableRow>
+                    {laporanPoskoList.length > 0 &&
+                      laporanPoskoList.map((list: LaporanPoskoList) => (
+                        <TableRow key={list.id} hover>
+                          <TableCell size="small">
+                            {dayjs(list.tanggal).format("DD-MM-YYYY")}
+                          </TableCell>
+                          <TableCell size="small">{list.periode}</TableCell>
+                          <TableCell size="small">{list.pasokan_ibt}</TableCell>
+                          <TableCell size="small">{list.pasokan_kit}</TableCell>
+                          <TableCell size="small">
+                            {list.beban_puncak}
+                          </TableCell>
+                          <TableCell size="small">
+                            {list.cadangan_kit}
+                          </TableCell>
+                          <TableCell size="small">{list.status}</TableCell>
+                          <TableCell size="small">{list.keterangan}</TableCell>
+                          <TableCell size="small">
+                            <IconButton
+                              onClick={() => {
+                                openModal("modal-laporan-posko", list.id);
+                                selectData(list);
+                              }}
+                            >
+                              <Pencil />
+                            </IconButton>
+                          </TableCell>
+                        </TableRow>
+                      ))}
                   </TableBody>
                 </Table>
               </TableContainer>

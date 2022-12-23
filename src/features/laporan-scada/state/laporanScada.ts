@@ -1,5 +1,5 @@
 import { proxy } from 'valtio'
-import { LaporanScadaList } from '../type'
+import { LaporanScadaList } from '../types'
 
 
 const initialValues = {

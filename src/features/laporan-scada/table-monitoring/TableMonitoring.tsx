@@ -13,7 +13,7 @@ import {
 } from "src/components/table";
 import { selectData } from "../state/laporanScada";
 import { laporanScadaApi } from "src/api/laporan-scada";
-import { LaporanScadaList } from "../type";
+import { LaporanScadaList } from "../types";
 import { openModal } from "src/state/modal";
 import dayjs from "dayjs";
 import { useSnapshot } from "valtio";

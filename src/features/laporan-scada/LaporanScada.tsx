@@ -29,7 +29,7 @@ const LaporanScada = () => {
           </div>
         </Grid>
         <Grid item xs={12}>
-          <TableMonitoring type="oop" title="Monitoring SCADA OOP" />
+          <TableMonitoring type="oop" title="Monitoring Scada OOP" />
         </Grid>
         <Grid item xs={12}>
           <TableMonitoring
