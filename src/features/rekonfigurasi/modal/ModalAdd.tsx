@@ -113,11 +113,7 @@ const ModalAdd = () => {
             </Box>
             <Grid container spacing={1} mt={1}>
               <Grid item xs={12}>
-                <SelectInput
-                  name="gi"
-                  label="Gardu Induk/Peralatan"
-                  options={garduIndukOptions}
-                />
+                <InputField name="gi" label="Gardu Induk/Peralatan" />
               </Grid>
               <Grid item xs={6}>
                 <DatePicker name="tanggal" label="Tanggal" />

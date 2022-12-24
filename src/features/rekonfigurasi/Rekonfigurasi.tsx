@@ -41,7 +41,7 @@ const Rekonfigurasi = () => {
     if (reloadPageSnap.target === "rekonfigurasi") {
       getRekonfigurasiList();
     }
-  }, [reloadPageSnap.target]);
+  }, [reloadPageSnap.id]);
 
   return (
     <>
