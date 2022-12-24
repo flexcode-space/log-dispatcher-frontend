@@ -1,15 +1,34 @@
 import { useState } from "react";
-import { Grid, Typography, TextField, Button } from "@mui/material";
+import { useRouter } from "next/router";
+import { Grid, Typography, TextField, Button, IconButton } from "@mui/material";
 import DatePickerMui from "@mui/lab/DatePicker";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import PageHeader from "src/@core/components/page-header";
 import { WrapperFilter } from "src/components/filter";
 import { openModal } from "src/state/modal";
-import { TablePiket, TablePembangkit, TableGangguan } from "./table-laporan";
+import { TablePiket, TableGangguan } from "./table-laporan";
+import { TableList } from "../catatan-pembangkitan/table-list";
+import { ArrowRight } from "mdi-material-ui";
 
 const LaporanPekerjaan = () => {
+  const router = useRouter();
+
   const [search, setSearch] = useState<string>("");
+
+  const ButtonEdit = () => (
+    <Button
+      variant="outlined"
+      size="small"
+      sx={{ height: "40px" }}
+      onClick={() => router.push("/catatan-pembangkitan")}
+    >
+      Edit Data
+      <IconButton>
+        <ArrowRight color="primary" />
+      </IconButton>
+    </Button>
+  );
 
   return (
     <>
@@ -54,8 +73,18 @@ const LaporanPekerjaan = () => {
           </WrapperFilter>
         </Grid>
         <TablePiket />
-        <TablePembangkit title="Pembangkit Derating" />
-        <TablePembangkit title="Pembangkit Outage" />
+        <TableList
+          title="Pembangkit Derating"
+          type="derating"
+          showAction={false}
+          actionCard={<ButtonEdit />}
+        />
+        <TableList
+          title="Pembangkit Outage"
+          type="outage"
+          showAction={false}
+          actionCard={<ButtonEdit />}
+        />
         <TableGangguan />
       </Grid>
     </>
