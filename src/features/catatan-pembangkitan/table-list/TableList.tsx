@@ -13,9 +13,16 @@ import { CatatanPembangkitanList } from "../types";
 type TableListProps = {
   type: string;
   title: string;
+  actionCard?: React.ReactNode;
+  showAction?: boolean;
 };
 
-const TableList = ({ type, title }: TableListProps) => {
+const TableList = ({
+  type,
+  title,
+  actionCard,
+  showAction = true,
+}: TableListProps) => {
   const modalSnapshot = useSnapshot(modal);
 
   const { getCatatanPembangkitanList, catatanPembangkitanList } =
@@ -23,25 +30,29 @@ const TableList = ({ type, title }: TableListProps) => {
 
   const columns = [
     ...defaultColumns,
-    {
-      flex: 0.15,
-      minWidth: 100,
-      sortable: false,
-      field: "actions",
-      headerName: "Aksi",
-      renderCell: ({ row }: CellType) => {
-        return (
-          <IconButton
-            onClick={() => {
-              openModal("modal-catatan-pembangkit");
-              selectData(row as CatatanPembangkitanList);
-            }}
-          >
-            <PencilOutline />
-          </IconButton>
-        );
-      },
-    },
+    ...(showAction
+      ? [
+          {
+            flex: 0.15,
+            minWidth: 100,
+            sortable: false,
+            field: "actions",
+            headerName: "Aksi",
+            renderCell: ({ row }: CellType) => {
+              return (
+                <IconButton
+                  onClick={() => {
+                    openModal("modal-catatan-pembangkit");
+                    selectData(row as CatatanPembangkitanList);
+                  }}
+                >
+                  <PencilOutline />
+                </IconButton>
+              );
+            },
+          },
+        ]
+      : []),
   ];
 
   useEffect(() => {
@@ -57,7 +68,7 @@ const TableList = ({ type, title }: TableListProps) => {
   return (
     <Grid item xs={12}>
       <Card>
-        <CardHeader title={title} />
+        <CardHeader title={title} action={actionCard} />
         <CardContent>
           <DataGrid
             autoHeight
