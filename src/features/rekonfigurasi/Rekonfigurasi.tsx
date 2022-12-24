@@ -1,8 +1,7 @@
-import { useState } from "react";
+import { useEffect } from "react";
 import {
   Grid,
   Typography,
-  TextField,
   Button,
   Card,
   CardContent,
@@ -21,12 +20,32 @@ import {
   TableContainer,
 } from "src/components/table";
 import FilterGreenIcon from "src/assets/icons/filter-green-icon.svg";
+import { ModalAdd } from "./modal";
+import { openModal } from "src/state/modal";
+import { rekonfigurasiApi } from "src/api/rekonfigurasi";
+import { RekonfigurasiList } from "./types";
+import { selectData } from "./state/rekonfigurasi";
+import { useSnapshot } from "valtio";
+import { reloadPage } from "src/state/reloadPage";
 
 const Rekonfigurasi = () => {
-  const [search, setSearch] = useState<string>("");
+  const reloadPageSnap = useSnapshot(reloadPage);
+
+  const { getRekonfigurasiList, rekonfigurasiList } = rekonfigurasiApi();
+
+  useEffect(() => {
+    getRekonfigurasiList();
+  }, []);
+
+  useEffect(() => {
+    if (reloadPageSnap.target === "rekonfigurasi") {
+      getRekonfigurasiList();
+    }
+  }, [reloadPageSnap.target]);
 
   return (
     <>
+      <ModalAdd />
       <Grid container spacing={6}>
         <Grid item xs={12}>
           <PageHeader
@@ -53,6 +72,7 @@ const Rekonfigurasi = () => {
                     variant="contained"
                     size="small"
                     sx={{ height: "40px" }}
+                    onClick={() => openModal("modal-rekonfigurasi")}
                   >
                     Tambah Data
                   </Button>
@@ -68,25 +88,35 @@ const Rekonfigurasi = () => {
                       <TableCellHead>Waktu</TableCellHead>
                       <TableCellHead>Subsistem Awal</TableCellHead>
                       <TableCellHead>Subsistem Akhir</TableCellHead>
-                      <TableCellHead>Alasan Rekonfigurasi</TableCellHead>
-                      <TableCellHead>Keterangan</TableCellHead>
+                      <TableCellHead minWidth="300px">
+                        Alasan Rekonfigurasi
+                      </TableCellHead>
+                      <TableCellHead minWidth="300px">Keterangan</TableCellHead>
                       <TableCellHead>Aksi</TableCellHead>
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    <TableRow hover>
-                      <TableCell>GI Ungaran</TableCell>
-                      <TableCell>02 Januari 2022, 23.04</TableCell>
-                      <TableCell>Ungaran</TableCell>
-                      <TableCell>Tanjung Jati</TableCell>
-                      <TableCell>Pekerjaan ROH</TableCell>
-                      <TableCell>Beban puncak terjadi pukul 21.30</TableCell>
-                      <TableCell>
-                        <IconButton>
-                          <Pencil />
-                        </IconButton>
-                      </TableCell>
-                    </TableRow>
+                    {rekonfigurasiList.length > 0 &&
+                      rekonfigurasiList.map((list: RekonfigurasiList) => (
+                        <TableRow hover key={list.id}>
+                          <TableCell>{list.gi}</TableCell>
+                          <TableCell>{list.waktu}</TableCell>
+                          <TableCell>{list.sub_sistem_awal.nama}</TableCell>
+                          <TableCell>{list.sub_sistem_akhir.nama}</TableCell>
+                          <TableCell>{list.alasan_rekonfigurasi}</TableCell>
+                          <TableCell>{list.keterangan}</TableCell>
+                          <TableCell>
+                            <IconButton
+                              onClick={() => {
+                                openModal("modal-rekonfigurasi", list.id);
+                                selectData(list);
+                              }}
+                            >
+                              <Pencil />
+                            </IconButton>
+                          </TableCell>
+                        </TableRow>
+                      ))}
                   </TableBody>
                 </Table>
               </TableContainer>
