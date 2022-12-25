@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
 import { useForm, FormProvider } from "react-hook-form";
 import {
   Button,
@@ -17,6 +18,18 @@ import { StyledForm } from "src/components/form";
 import { modal, closeModal } from "src/state/modal";
 
 import AddCicleIcon from "src/assets/icons/add-cicle-icon.svg";
+import { useModalAdd } from "./useModalAdd";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { initialValues, validationSchema } from "./ModalAddManuver.constant";
+import { TimePicker } from "src/components/date-picker";
+import { PayloadManuver } from "./types";
+import dayjs from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat";
+import { manuverApi } from "src/api/manuver";
+import { manuver, removeData } from "../state/manuver";
+import { setReloadPage } from "src/state/reloadPage";
+
+dayjs.extend(customParseFormat);
 
 const defaultValue = {
   jurusan: "",
@@ -27,15 +40,22 @@ type DefaultValueProps = {
 }[];
 
 const ModalAddManuver = () => {
+  const router = useRouter();
+  const gangguanId = router.query.id as string;
+
   const modalSnapshot = useSnapshot(modal);
+  const { data } = useSnapshot(manuver);
   const [fields, setFields] = useState<DefaultValueProps>([defaultValue]);
+
+  const { garduIndukOptions } = useModalAdd();
+  const { createManuver, updateManuver } = manuverApi();
 
   const isOpen =
     modalSnapshot.isOpen && modalSnapshot.target === "modal-add-manuver";
 
   const formMethods = useForm({
-    // resolver: yupResolver(validationSchema),
-    // defaultValues: initialValues,
+    resolver: yupResolver(validationSchema),
+    defaultValues: initialValues,
     mode: "onSubmit",
   });
 
@@ -43,21 +63,53 @@ const ModalAddManuver = () => {
     event?.preventDefault();
 
     formMethods.handleSubmit(async (values) => {
-      //  TODO: handle submit
+      let payload: PayloadManuver[] = [];
+
+      values.gardu_induk.forEach((value, index: number) => {
+        payload.push({
+          gangguan_id: gangguanId,
+          gardu_induk_id: value.id,
+          jurusan: values.jurusan[index].value,
+          buka: dayjs(values.buka[index].value).format("HH:mm"),
+          tutup: dayjs(values.tutup[index].value).format("HH:mm"),
+          keterangan: values.keterangan,
+        });
+      });
+
+      if (modalSnapshot.id) {
+        await updateManuver({ ...payload[0], id: modalSnapshot.id });
+      } else {
+        await createManuver(payload);
+      }
+      handleCloseModal();
+      setReloadPage("manuver");
     })();
   };
 
-  const onClickCloseModal = () => {
+  const handleCloseModal = () => {
     closeModal();
     setFields([defaultValue]);
-    // formMethods.reset({ ...initialValues });
+    removeData();
+    formMethods.reset({ ...initialValues });
   };
+
+  useEffect(() => {
+    if (modalSnapshot.id) {
+      formMethods.reset({
+        gardu_induk: [{ id: data.gardu_induk.id }],
+        jurusan: [{ value: data.jurusan }],
+        buka: [{ value: dayjs(data.buka, "HH:mm") }],
+        tutup: [{ value: dayjs(data.tutup, "HH:mm") }],
+        keterangan: data.keterangan,
+      });
+    }
+  }, [modalSnapshot.isOpen]);
 
   return (
     <Dialog
       open={isOpen}
       fullWidth
-      onClose={onClickCloseModal}
+      onClose={handleCloseModal}
       maxWidth="sm"
       scroll="body"
     >
@@ -91,16 +143,26 @@ const ModalAddManuver = () => {
                       </Grid>
                     )}
                     <Grid item xs={12} sm={12}>
-                      <SelectInput label="Lokasi" name="lokasi" options={[]} />
+                      <SelectInput
+                        label="Lokasi"
+                        name={`gardu_induk[${index}].id`}
+                        options={garduIndukOptions}
+                      />
                     </Grid>
                     <Grid item xs={12} sm={6}>
-                      <InputField name="jurusan" label="Jurusan" />
+                      <InputField
+                        name={`jurusan[${index}].value`}
+                        label="Jurusan"
+                      />
                     </Grid>
                     <Grid item xs={12} sm={3}>
-                      <InputField name="buka" label="Buka" />
+                      <TimePicker name={`buka[${index}].value`} label="Buka" />
                     </Grid>
                     <Grid item xs={12} sm={3}>
-                      <InputField name="tutup" label="Tutup" />
+                      <TimePicker
+                        name={`tutup[${index}].value`}
+                        label="Tutup"
+                      />
                     </Grid>
                     <Grid item xs={12} sm={12}>
                       <InputField name="keterangan" label="Keterangan" />
@@ -108,25 +170,27 @@ const ModalAddManuver = () => {
                   </>
                 );
               })}
-              <Grid item xs={12} sm={12} mb="12px">
-                <Button
-                  style={{ height: "30px" }}
-                  sx={{ mb: 2 }}
-                  onClick={() =>
-                    setFields((prevState) => [...prevState, defaultValue])
-                  }
-                  variant="outlined"
-                >
-                  <IconButton>
-                    <AddCicleIcon />
-                  </IconButton>
-                  Tambah Jurusan lain
-                </Button>
-              </Grid>
+              {!modalSnapshot.id && (
+                <Grid item xs={12} sm={12} mb="12px">
+                  <Button
+                    style={{ height: "30px" }}
+                    sx={{ mb: 2 }}
+                    onClick={() =>
+                      setFields((prevState) => [...prevState, defaultValue])
+                    }
+                    variant="outlined"
+                  >
+                    <IconButton>
+                      <AddCicleIcon />
+                    </IconButton>
+                    Tambah Jurusan lain
+                  </Button>
+                </Grid>
+              )}
             </Grid>
           </DialogContent>
           <DialogActions className="dialog-actions-dense">
-            <Button variant="outlined" onClick={onClickCloseModal}>
+            <Button variant="outlined" onClick={handleCloseModal}>
               Batal
             </Button>
             <Button variant="contained" type="submit">

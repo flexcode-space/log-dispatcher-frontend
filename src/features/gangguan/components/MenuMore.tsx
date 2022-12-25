@@ -16,7 +16,11 @@ import DataPadamIcon from "src/assets/icons/data-padam-icon.svg";
 import FilePendukungIcon from "src/assets/icons/file-pendukung-icon.svg";
 import HapusIcon from "src/assets/icons/hapus-icon.svg";
 
-const MenuMore = () => {
+type MenuMoreProps = {
+  gangguanId: string;
+};
+
+const MenuMore = ({ gangguanId }: MenuMoreProps) => {
   const router = useRouter();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -62,7 +66,9 @@ const MenuMore = () => {
           </ListItemIcon>
           <Typography variant="inherit">Lihat Keterangan</Typography>
         </MenuItem>
-        <MenuItem onClick={() => router.push("/gangguan/manuver")}>
+        <MenuItem
+          onClick={() => router.push(`/gangguan/manuver/${gangguanId}`)}
+        >
           <IconButton>
             <TambahManuverIcon />
           </IconButton>

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Grid,
   Typography,
@@ -7,8 +7,6 @@ import {
   Card,
   CardContent,
   IconButton,
-  Menu,
-  MenuItem,
   Box,
 } from "@mui/material";
 import DatePickerMui from "@mui/lab/DatePicker";
@@ -38,11 +36,15 @@ import {
   ModalKeteranganGangguan,
   ModalDataPadam,
 } from "./modal";
+import { gangguanApi } from "src/api/gangguan";
+import { GangguanList } from "./types";
 
 const Gangguan = () => {
   const [search, setSearch] = useState<string>("");
   const [page, setPage] = useState<number>(0);
   const [rowsPerPage, setRowsPerPage] = useState<number>(10);
+
+  const { getGangguanList, gangguanList } = gangguanApi();
 
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
@@ -54,6 +56,12 @@ const Gangguan = () => {
     setRowsPerPage(+event.target.value);
     setPage(0);
   };
+
+  console.log("gangguanList", gangguanList);
+
+  useEffect(() => {
+    getGangguanList();
+  }, []);
 
   return (
     <>
@@ -172,33 +180,33 @@ const Gangguan = () => {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    <TableRow hover>
-                      <TableCell>1</TableCell>
-                      <TableCell>22 November 2022</TableCell>
-                      <TableCell>GITET KSGHN</TableCell>
-                      <TableCell>PMT 7AB4</TableCell>
-                      <TableCell>Hujan Petir</TableCell>
-                      <TableCell>-</TableCell>
-                      <TableCell>13:42</TableCell>
-                      <TableCell>13:42</TableCell>
-                      <TableCell>13:42</TableCell>
-                      <TableCell>13:42</TableCell>
-                      <TableCell>13:42</TableCell>
-                      <TableCell>Distance Z1 Fasa T </TableCell>
-                      <TableCell>Distance Z1 Operated</TableCell>
-                      <TableCell>
-                        Diperkirakan sambaran petir di 73,8 km dari GITET
-                        KESUGIHAN sekitar tower 178-179
-                      </TableCell>
-                      <TableCell>
-                        <Box display="flex">
-                          <IconButton>
-                            <Pencil />
-                          </IconButton>
-                          <MenuMore />
-                        </Box>
-                      </TableCell>
-                    </TableRow>
+                    {gangguanList.length > 0 &&
+                      gangguanList.map((list: GangguanList, index: number) => (
+                        <TableRow key={list.id} hover>
+                          <TableCell>{index + 1}</TableCell>
+                          <TableCell>{list.tanggal}</TableCell>
+                          <TableCell>{list.gardu_induk.nama}</TableCell>
+                          <TableCell>{list.peralatan.nama}</TableCell>
+                          <TableCell>{list.gangguan_jenis.nama}</TableCell>
+                          <TableCell>{list.trip}</TableCell>
+                          <TableCell>{list.reclose}</TableCell>
+                          <TableCell>{list.buka}</TableCell>
+                          <TableCell>{list.tutup}</TableCell>
+                          <TableCell>{list.sms_kinerja}</TableCell>
+                          <TableCell>{list.siap_op}</TableCell>
+                          <TableCell>{list.rele}</TableCell>
+                          <TableCell>{list.announciator}</TableCell>
+                          <TableCell>{list.penyebab}</TableCell>
+                          <TableCell>
+                            <Box display="flex">
+                              <IconButton>
+                                <Pencil />
+                              </IconButton>
+                              <MenuMore gangguanId={list.id} />
+                            </Box>
+                          </TableCell>
+                        </TableRow>
+                      ))}
                   </TableBody>
                 </Table>
               </TableContainer>

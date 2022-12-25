@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
 import {
   Grid,
   Typography,
@@ -12,6 +13,7 @@ import {
 } from "@mui/material";
 import TablePagination from "@mui/material/TablePagination";
 import { Pencil } from "mdi-material-ui";
+import { useSnapshot } from "valtio";
 import PageHeader from "src/@core/components/page-header";
 import { WrapperFilter } from "src/components/filter";
 import { openModal } from "src/state/modal";
@@ -28,11 +30,22 @@ import {
 import FilterGreenIcon from "src/assets/icons/filter-green-icon.svg";
 import DownloadGreenIcon from "src/assets/icons/download-green-icon.svg";
 import { ModalAddManuver } from "./modal";
+import { manuverApi } from "src/api/manuver";
+import { ManuverList } from "./types";
+import { selectData } from "./state/manuver";
+import { reloadPage } from "src/state/reloadPage";
 
 const Manuver = () => {
+  const router = useRouter();
+  const gangguanId = router.query.id as string;
+
+  const reloadPageSnap = useSnapshot(reloadPage);
+
   const [search, setSearch] = useState<string>("");
   const [page, setPage] = useState<number>(0);
   const [rowsPerPage, setRowsPerPage] = useState<number>(10);
+
+  const { getManuverList, manuverList } = manuverApi();
 
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
@@ -44,6 +57,16 @@ const Manuver = () => {
     setRowsPerPage(+event.target.value);
     setPage(0);
   };
+
+  useEffect(() => {
+    getManuverList({ gangguan_id: gangguanId });
+  }, [gangguanId]);
+
+  useEffect(() => {
+    if (reloadPageSnap.target === "manuver") {
+      getManuverList({ gangguan_id: gangguanId });
+    }
+  }, [reloadPageSnap.id]);
 
   return (
     <>
@@ -62,7 +85,7 @@ const Manuver = () => {
           <Card>
             <WrapperFilter></WrapperFilter>
             <CardHeader
-              title="KSGHN - 23 Oktober 2022"
+              title=""
               action={
                 <div style={{ display: "flex", gap: "10px" }}>
                   <Button
@@ -89,7 +112,7 @@ const Manuver = () => {
                     variant="contained"
                     size="small"
                     sx={{ height: "40px" }}
-                    onClick={() => openModal("", "modal-add-manuver")}
+                    onClick={() => openModal("modal-add-manuver")}
                   >
                     Tambah Manuver
                   </Button>
@@ -118,21 +141,31 @@ const Manuver = () => {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    <TableRow hover>
-                      <TableCell size="small">1</TableCell>
-                      <TableCell size="small">KSGHN</TableCell>
-                      <TableCell size="small">Bagoes - Chiba</TableCell>
-                      <TableCell size="small">07:02</TableCell>
-                      <TableCell size="small">07:02</TableCell>
-                      <TableCell size="small">200 MW</TableCell>
-                      <TableCell size="small">
-                        <Box display="flex">
-                          <IconButton>
-                            <Pencil />
-                          </IconButton>
-                        </Box>
-                      </TableCell>
-                    </TableRow>
+                    {manuverList.length > 0 &&
+                      manuverList.map((list: ManuverList, index: number) => (
+                        <TableRow key={list.id} hover>
+                          <TableCell size="small">{index + 1}</TableCell>
+                          <TableCell size="small">
+                            {list.gardu_induk.nama}
+                          </TableCell>
+                          <TableCell size="small">{list.jurusan}</TableCell>
+                          <TableCell size="small">{list.buka}</TableCell>
+                          <TableCell size="small">{list.tutup}</TableCell>
+                          <TableCell size="small">{list.keterangan}</TableCell>
+                          <TableCell size="small">
+                            <Box display="flex">
+                              <IconButton
+                                onClick={() => {
+                                  openModal("modal-add-manuver", list.id);
+                                  selectData(list);
+                                }}
+                              >
+                                <Pencil />
+                              </IconButton>
+                            </Box>
+                          </TableCell>
+                        </TableRow>
+                      ))}
                   </TableBody>
                 </Table>
               </TableContainer>
