@@ -1,3 +1,3 @@
 export * from './ModalAddGangguan'
 export * from './ModalKeteranganGangguan'
-export * from './ModalDataPadam'
+export * from './modal-data-padam/ModalDataPadam'

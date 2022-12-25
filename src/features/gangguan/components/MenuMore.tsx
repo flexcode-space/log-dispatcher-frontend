@@ -15,6 +15,7 @@ import TambahManuverIcon from "src/assets/icons/tambah-manuver-icon.svg";
 import DataPadamIcon from "src/assets/icons/data-padam-icon.svg";
 import FilePendukungIcon from "src/assets/icons/file-pendukung-icon.svg";
 import HapusIcon from "src/assets/icons/hapus-icon.svg";
+import { setGangguanID } from "../state/gangguan";
 
 type MenuMoreProps = {
   gangguanId: string;
@@ -58,7 +59,7 @@ const MenuMore = ({ gangguanId }: MenuMoreProps) => {
           },
         }}
       >
-        <MenuItem onClick={() => openModal("", "modal-keterangan-gangguan")}>
+        <MenuItem onClick={() => openModal("modal-keterangan-gangguan")}>
           <ListItemIcon>
             <IconButton>
               <LihatKeteranganIcon />
@@ -74,7 +75,12 @@ const MenuMore = ({ gangguanId }: MenuMoreProps) => {
           </IconButton>
           <Typography variant="inherit">Tambah Manuver</Typography>
         </MenuItem>
-        <MenuItem onClick={() => openModal("", "modal-data-padam")}>
+        <MenuItem
+          onClick={() => {
+            openModal("modal-data-padam");
+            setGangguanID(gangguanId);
+          }}
+        >
           <IconButton>
             <DataPadamIcon />
           </IconButton>
