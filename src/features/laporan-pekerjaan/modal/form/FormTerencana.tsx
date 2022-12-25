@@ -3,7 +3,7 @@ import { DatePicker, TimePicker } from "src/components/date-picker";
 import { SelectInput } from "src/components/select-input";
 import { TextArea } from "src/components/input-field";
 
-const FormTerencana = () => {
+export const FormTerencana = () => {
   return (
     <>
       <Box sx={{ mb: 8 }}>
@@ -47,5 +47,3 @@ const FormTerencana = () => {
     </>
   );
 };
-
-export default FormTerencana;

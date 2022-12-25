@@ -1,34 +1,31 @@
 import { useState } from "react";
 import { useForm, FormProvider } from "react-hook-form";
-import {
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-} from "@mui/material";
+import { Button, Dialog, DialogActions, DialogContent } from "@mui/material";
 // import Plus from "mdi-material-ui/Plus";
-// import { yupResolver } from "@hookform/resolvers/yup";
+import { yupResolver } from "@hookform/resolvers/yup";
 import { useSnapshot } from "valtio";
 import { StyledForm } from "src/components/form";
 import { modal, closeModal } from "src/state/modal";
 import { useModalAdd } from "./useModalAdd";
-import FormLainLain from "./form/FormLainLain";
+import { Form } from "./form";
+import { initialValues, validationSchema } from "./Modal.constant";
+// import { Default, FormTerencana } from "./form";
 
 const ModalAdd = () => {
   const [isNextPage, setIsNextPage] = useState<boolean>(false);
 
   const modalSnapshot = useSnapshot(modal);
 
-  const { jenisPekerjaanOptions } = useModalAdd();
-
   const isOpen =
     modalSnapshot.isOpen && modalSnapshot.target === "modal-laporan-pekerjaan";
 
   const formMethods = useForm({
-    // resolver: yupResolver(validationSchema),
-    // defaultValues: initialValues,
+    resolver: yupResolver(validationSchema),
+    defaultValues: initialValues,
     mode: "onSubmit",
   });
+
+  const jenisForm = formMethods.watch("jenis");
 
   const onSubmit = (event?: React.FormEvent<HTMLFormElement>) => {
     event?.preventDefault();
@@ -61,7 +58,7 @@ const ModalAdd = () => {
               position: "relative",
             }}
           >
-            <FormLainLain />
+            {Form[jenisForm]()}
           </DialogContent>
           <DialogActions className="dialog-actions-dense">
             <Button
