@@ -15,8 +15,14 @@ import TambahManuverIcon from "src/assets/icons/tambah-manuver-icon.svg";
 import DataPadamIcon from "src/assets/icons/data-padam-icon.svg";
 import FilePendukungIcon from "src/assets/icons/file-pendukung-icon.svg";
 import HapusIcon from "src/assets/icons/hapus-icon.svg";
+import { selectData, setGangguanID } from "../state/gangguan";
+import { GangguanList } from "../types";
 
-const MenuMore = () => {
+type MenuMoreProps = {
+  data: GangguanList;
+};
+
+const MenuMore = ({ data }: MenuMoreProps) => {
   const router = useRouter();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -54,7 +60,12 @@ const MenuMore = () => {
           },
         }}
       >
-        <MenuItem onClick={() => openModal("", "modal-keterangan-gangguan")}>
+        <MenuItem
+          onClick={() => {
+            openModal("modal-keterangan-gangguan");
+            selectData(data);
+          }}
+        >
           <ListItemIcon>
             <IconButton>
               <LihatKeteranganIcon />
@@ -62,13 +73,18 @@ const MenuMore = () => {
           </ListItemIcon>
           <Typography variant="inherit">Lihat Keterangan</Typography>
         </MenuItem>
-        <MenuItem onClick={() => router.push("/gangguan/manuver")}>
+        <MenuItem onClick={() => router.push(`/gangguan/manuver/${data.id}`)}>
           <IconButton>
             <TambahManuverIcon />
           </IconButton>
           <Typography variant="inherit">Tambah Manuver</Typography>
         </MenuItem>
-        <MenuItem onClick={() => openModal("", "modal-data-padam")}>
+        <MenuItem
+          onClick={() => {
+            openModal("modal-data-padam");
+            setGangguanID(data.id);
+          }}
+        >
           <IconButton>
             <DataPadamIcon />
           </IconButton>
@@ -80,7 +96,12 @@ const MenuMore = () => {
           </IconButton>
           <Typography variant="inherit">File Pendukung</Typography>
         </MenuItem>
-        <MenuItem>
+        <MenuItem
+          onClick={() => {
+            openModal("modal-confirmation-delete");
+            selectData(data);
+          }}
+        >
           <IconButton>
             <HapusIcon />
           </IconButton>

@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import {
   Button,
@@ -8,26 +8,38 @@ import {
   Grid,
   Typography,
   Box,
-  IconButton,
 } from "@mui/material";
+import { yupResolver } from "@hookform/resolvers/yup";
 import { PlusCircleOutline } from "mdi-material-ui";
 import { useSnapshot } from "valtio";
 import { InputField } from "src/components/input-field";
 import { StyledForm } from "src/components/form";
 import { DataGrid } from "@mui/x-data-grid";
 import { modal, closeModal } from "src/state/modal";
+import {
+  columns,
+  validationSchema,
+  initialValues,
+} from "./ModalDataPadam.constant";
+import { dataPadamApi } from "src/api/data-padam";
+import { gangguan, removeGangguanID } from "../../state/gangguan";
+import { reloadPage, setReloadPage } from "src/state/reloadPage";
 
 export const ModalDataPadam = () => {
   const modalSnapshot = useSnapshot(modal);
+  const gangguanSnap = useSnapshot(gangguan);
+  const reloadPageSnap = useSnapshot(reloadPage);
 
   const [isAddDataPadam, setIsAddDataPadam] = useState<boolean>(false);
+
+  const { getDataPadamList, dataPadamList, createDataPadam } = dataPadamApi();
 
   const isOpen =
     modalSnapshot.isOpen && modalSnapshot.target === "modal-data-padam";
 
   const formMethods = useForm({
-    // resolver: yupResolver(validationSchema),
-    // defaultValues: initialValues,
+    resolver: yupResolver(validationSchema),
+    defaultValues: initialValues,
     mode: "onSubmit",
   });
 
@@ -35,62 +47,39 @@ export const ModalDataPadam = () => {
     event?.preventDefault();
 
     formMethods.handleSubmit(async (values) => {
-      //  TODO: handle submit
+      await createDataPadam({
+        ...values,
+        gangguan_id: gangguanSnap.gangguanId,
+      });
+      setIsAddDataPadam(false);
+      setReloadPage("data-padam");
     })();
   };
 
-  const onClickCloseModal = () => {
+  const handleCloseModal = () => {
     closeModal();
-    // formMethods.reset({ ...initialValues });
+    removeGangguanID();
+    formMethods.reset({ ...initialValues });
   };
 
-  const columns = [
-    {
-      flex: 0.25,
-      minWidth: 100,
-      field: "penyulang",
-      headerName: "Penyulang",
-    },
-    {
-      flex: 0.25,
-      minWidth: 100,
-      field: "kw",
-      headerName: "KW",
-    },
-    {
-      flex: 0.25,
-      minWidth: 100,
-      field: "menit",
-      headerName: "Menit",
-    },
-    {
-      flex: 0.25,
-      minWidth: 100,
-      field: "kwh",
-      headerName: "kwh",
-    },
-    {
-      flex: 0.25,
-      minWidth: 100,
-      field: "keterangan",
-      headerName: "Keterangan",
-    },
-    {
-      flex: 0.25,
-      minWidth: 100,
-      field: "aksi",
-      headerName: "Aksi",
-    },
-  ];
+  useEffect(() => {
+    if (modalSnapshot.isOpen) {
+      getDataPadamList({ gangguan_id: gangguanSnap.gangguanId });
+    }
+  }, [modalSnapshot.isOpen]);
 
-  const dataMock = [{ id: 1, penyulang: "Penyulang 1", kw: 0 }];
+  useEffect(() => {
+    if (reloadPageSnap.target === "data-padam") {
+      getDataPadamList({ gangguan_id: gangguanSnap.gangguanId });
+    }
+  }, [reloadPageSnap.id]);
 
   return (
     <>
       <Dialog
         open={isOpen}
         fullWidth
-        onClose={onClickCloseModal}
+        onClose={handleCloseModal}
         maxWidth="md"
         scroll="body"
       >
@@ -117,7 +106,7 @@ export const ModalDataPadam = () => {
                     hideFooter
                     autoHeight
                     columns={columns}
-                    rows={dataMock}
+                    rows={dataPadamList}
                   />
                 </Grid>
                 <Grid item xs={12}>
@@ -132,10 +121,10 @@ export const ModalDataPadam = () => {
                         <InputField name="penyulang" label="Penyulang" />
                       </Grid>
                       <Grid item xs={3}>
-                        <InputField name="kw" label="KW" />
+                        <InputField type="number" name="kw" label="KW" />
                       </Grid>
                       <Grid item xs={3}>
-                        <InputField name="menit" label="Menit" />
+                        <InputField type="number" name="menit" label="Menit" />
                       </Grid>
                       <Grid item xs={3}>
                         <InputField name="keterangan" label="Keterangan" />
@@ -147,7 +136,9 @@ export const ModalDataPadam = () => {
                         >
                           Batal
                         </Button>
-                        <Button variant="outlined">Simpan</Button>
+                        <Button type="submit" variant="outlined">
+                          Simpan
+                        </Button>
                       </Grid>
                     </Grid>
                   )}
@@ -167,7 +158,7 @@ export const ModalDataPadam = () => {
               </Grid>
             </DialogContent>
             <DialogActions className="dialog-actions-dense">
-              <Button variant="contained" onClick={onClickCloseModal}>
+              <Button variant="contained" onClick={handleCloseModal}>
                 Tutup
               </Button>
             </DialogActions>

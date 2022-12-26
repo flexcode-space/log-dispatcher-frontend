@@ -1,24 +1,24 @@
 import { useEffect } from 'react'
-import { useSnapshot } from 'valtio'
+import { gangguanApi } from 'src/api/gangguan'
 import { garduIndukApi } from 'src/api/gardu-induk'
 import { peralatanApi } from 'src/api/peralatan'
-import { modal } from 'src/state/modal'
-import { optionJenisPeralatan } from './ModalAdd.contant'
+import { optionJenisPeralatan } from './ModalAddGangguan.constant'
 
-export const useModalAdd = (jenisPeralatan: string) => {
-  const modalSnap = useSnapshot(modal)
+export const useModalAddGangguan = (jenisPeralatan: string) => {
   const { getGarduIndukList, garduIndukList } = garduIndukApi()
+  const { getJenisGangguanList, jenisGangguanList, getReleGangguanList, releGangguanList } = gangguanApi()
   const { getPeralatanByPath, peralatanList } = peralatanApi()
 
   const garduIndukOptions = garduIndukList.map(({ id, nama }) => ({ value: id, label: nama }))
+  const jenisGangguanOptions = jenisGangguanList.map(({ id, name }) => ({ value: id, label: name }))
+  const releOptions = releGangguanList.map(({ id, name }) => ({ value: id, label: name }))
   const peratanOptions = peralatanList.map(({ id, nama }) => ({ value: id, label: nama }))
 
-
   useEffect(() => {
-    if (modalSnap.isOpen && modalSnap.target === "modal-energize-peralatan") {
-      getGarduIndukList()
-    }
-  }, [modalSnap.isOpen])
+    getGarduIndukList()
+    getJenisGangguanList()
+    getReleGangguanList()
+  }, [])
 
   useEffect(() => {
     if (!!jenisPeralatan) {
@@ -27,8 +27,10 @@ export const useModalAdd = (jenisPeralatan: string) => {
   }, [jenisPeralatan])
 
   return {
-    garduIndukOptions,
     optionJenisPeralatan,
+    garduIndukOptions,
+    jenisGangguanOptions,
+    releOptions,
     peratanOptions
   }
 }
