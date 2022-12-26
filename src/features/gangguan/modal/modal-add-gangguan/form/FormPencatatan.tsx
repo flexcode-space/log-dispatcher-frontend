@@ -1,3 +1,4 @@
+import { ChangeEvent } from "react";
 import {
   DialogContent,
   DialogActions,
@@ -6,22 +7,29 @@ import {
   Typography,
   Button,
 } from "@mui/material";
-import { DatePicker } from "src/components/date-picker";
+import { DatePicker, TimePicker } from "src/components/date-picker";
 import { InputField } from "src/components/input-field";
 import { SelectInput } from "src/components/select-input";
 import { UploadFile } from "src/components/upload-file";
 import { useModalAddGangguan } from "../useModalAddGangguan";
+import { FieldPath } from "react-hook-form";
+import { UploadDocumentType } from "../types";
 
 type FormPencatatanProps = {
   onCloseModal: () => void;
   onClickNextPage: () => void;
   jenisPeralatan: string;
+  handleFileUpload: (
+    e: ChangeEvent<HTMLInputElement>,
+    name: FieldPath<UploadDocumentType>
+  ) => void;
 };
 
 export const FormPencatatan = ({
   onCloseModal,
   onClickNextPage,
   jenisPeralatan,
+  handleFileUpload,
 }: FormPencatatanProps) => {
   const {
     optionJenisPeralatan,
@@ -87,22 +95,22 @@ export const FormPencatatan = ({
             <DatePicker label="Tanggal" name="tanggal" />
           </Grid>
           <Grid item xs={12} sm={3}>
-            <InputField name="trip" label="Trip" />
+            <TimePicker name="trip" label="Trip" />
           </Grid>
           <Grid item xs={12} sm={3}>
-            <InputField name="reclose" label="Reclose" />
+            <TimePicker name="reclose" label="Reclose" />
           </Grid>
           <Grid item xs={12} sm={3}>
-            <InputField name="buka" label="Buka" />
+            <TimePicker name="buka" label="Buka" />
           </Grid>
           <Grid item xs={12} sm={3}>
-            <InputField name="tutup" label="Tutup" />
+            <TimePicker name="tutup" label="Tutup" />
           </Grid>
           <Grid item xs={12} sm={6}>
-            <InputField name="sms" label="SMS Kinerja" />
+            <TimePicker name="sms" label="SMS Kinerja" />
           </Grid>
           <Grid item xs={12} sm={6}>
-            <InputField name="pmt" label="Siap Op. PMT" />
+            <TimePicker name="pmt" label="Siap Op. PMT" />
           </Grid>
           <Grid item xs={12} sm={6}>
             <SelectInput label="Rele" name="rele" options={releOptions} />
@@ -123,25 +131,45 @@ export const FormPencatatan = ({
             </Typography>
           </Grid>
           <Grid item xs={6}>
-            <UploadFile name="dfr" label="DFR" onChange={() => null} />
+            <UploadFile
+              name="dfr"
+              label="DFR"
+              onChange={(e) => handleFileUpload(e, "dfr")}
+            />
           </Grid>
           <Grid item xs={6}>
-            <UploadFile name="pqm" label="PQM" onChange={() => null} />
+            <UploadFile
+              name="pqm"
+              label="PQM"
+              onChange={(e) => handleFileUpload(e, "pqm")}
+            />
           </Grid>
           <Grid item xs={6}>
-            <UploadFile name="vaisala" label="VAISALA" onChange={() => null} />
+            <UploadFile
+              name="vaisala"
+              label="VAISALA"
+              onChange={(e) => handleFileUpload(e, "vaisala")}
+            />
           </Grid>
           <Grid item xs={6}>
-            <UploadFile name="sld" label="SLD" onChange={() => null} />
+            <UploadFile
+              name="sld"
+              label="SLD"
+              onChange={(e) => handleFileUpload(e, "sld")}
+            />
           </Grid>
           <Grid item xs={6}>
-            <UploadFile name="gensum" label="Gensum" onChange={() => null} />
+            <UploadFile
+              name="gensum"
+              label="Gensum"
+              onChange={(e) => handleFileUpload(e, "gensum")}
+            />
           </Grid>
           <Grid item xs={6}>
             <UploadFile
               name="lap"
               label="Lap. Gangguan"
-              onChange={() => null}
+              onChange={(e) => handleFileUpload(e, "lap")}
             />
           </Grid>
         </Grid>

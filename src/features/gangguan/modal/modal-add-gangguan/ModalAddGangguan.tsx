@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useForm, FormProvider } from "react-hook-form";
+import { ChangeEvent, useState } from "react";
+import { useForm, FormProvider, FieldPath } from "react-hook-form";
 import { Dialog } from "@mui/material";
 import { useSnapshot } from "valtio";
 import { StyledForm } from "src/components/form";
@@ -7,6 +7,8 @@ import { modal, closeModal } from "src/state/modal";
 import { FormKeterangan, FormPencatatan } from "./form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { initialValues, validationSchema } from "./ModalAddGangguan.constant";
+import { Axios } from "src/api/axios";
+import { UploadDocumentType } from "./types";
 
 const defaultValue = {
   jurusan: "",
@@ -47,6 +49,24 @@ const ModalAddGangguan = () => {
     // formMethods.reset({ ...initialValues });
   };
 
+  const handleFileUpload = (
+    e: ChangeEvent<HTMLInputElement>,
+    name: FieldPath<UploadDocumentType>
+  ) => {
+    if (!e.target.files) {
+      return;
+    }
+
+    const file = e.target.files[0];
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    Axios.post("/laporan/upload", formData).then(({ data }) => {
+      formMethods.setValue(name, data.nama);
+    });
+  };
+
   return (
     <>
       <Dialog
@@ -63,6 +83,7 @@ const ModalAddGangguan = () => {
                 onCloseModal={onCloseModal}
                 onClickNextPage={() => setShowNextForm(true)}
                 jenisPeralatan={jenisPeralatan}
+                handleFileUpload={handleFileUpload}
               />
             ) : (
               <FormKeterangan
