@@ -21,8 +21,8 @@ import { modal, reloadPage } from "src/state/modal";
 import UploadFile from "./components/UploadFile";
 import { Axios } from "src/api/axios";
 import { unggahLaporanApi } from "src/api/unggah-laporan";
-import { convertDate } from "src/utils/date";
 import { FieldValues } from "../types";
+import dayjs from "dayjs";
 
 type ModalAddProps = {
   handleClose: () => void;
@@ -54,12 +54,14 @@ const ModalUnggahLaporan = ({ handleClose }: ModalAddProps) => {
             }
           : {};
 
-      await unggahLaporan({
+      const payload = {
         ...rest,
         tipe,
-        tanggal: convertDate(tanggal),
+        tanggal: dayjs(tanggal).format("YYYY-MM-DD"),
         ...jenis,
-      });
+      };
+
+      await unggahLaporan(payload);
       handleClose();
       reloadPage();
     })();

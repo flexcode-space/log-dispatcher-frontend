@@ -1,9 +1,11 @@
 import { Box, Typography, Grid } from "@mui/material";
-import { DatePicker, TimePicker } from "src/components/date-picker";
 import { SelectInput } from "src/components/select-input";
-import { TextArea } from "src/components/input-field";
+import { InputField, TextArea } from "src/components/input-field";
+import { useModalAdd } from "../useModalAdd";
 
 export const FormTidakTerpenuhi = () => {
+  const { garduIndukOptions } = useModalAdd();
+
   return (
     <>
       <Box sx={{ mb: 8 }}>
@@ -13,20 +15,20 @@ export const FormTidakTerpenuhi = () => {
       </Box>
       <Grid container spacing={1} mt={1}>
         <Grid item xs={12} sm={6}>
-          <SelectInput label="Gardu Induk" name="gardu_induk_id" options={[]} />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <SelectInput label="Bay" name="bay" options={[]} />
-        </Grid>
-        <Grid item xs={12} sm={6}>
           <SelectInput
-            label="Unit Pelaksana"
-            name="unit_pelaksana"
-            options={[]}
+            label="Gardu Induk"
+            name="gardu_induk_id"
+            options={garduIndukOptions}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
-          <SelectInput label="Progress" name="progress" options={[]} />
+          <InputField label="Bay" name="bay" />
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <InputField label="Unit Pelaksana" name="unit_pelaksana" />
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <InputField label="Progress" name="progress" />
         </Grid>
         <Grid item xs={12}>
           <TextArea label="Kontingensi" name="kontingensi" />

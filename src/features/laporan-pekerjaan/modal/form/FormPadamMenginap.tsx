@@ -1,9 +1,12 @@
 import { Box, Typography, Grid } from "@mui/material";
 import { DatePicker, TimePicker } from "src/components/date-picker";
 import { SelectInput } from "src/components/select-input";
-import { TextArea } from "src/components/input-field";
+import { InputField, TextArea } from "src/components/input-field";
+import { useModalAdd } from "../useModalAdd";
 
 export const FormPadamMenginap = () => {
+  const { garduIndukOptions } = useModalAdd();
+
   return (
     <>
       <Box sx={{ mb: 8 }}>
@@ -13,17 +16,17 @@ export const FormPadamMenginap = () => {
       </Box>
       <Grid container spacing={1} mt={1}>
         <Grid item xs={12} sm={6}>
-          <SelectInput label="Gardu Induk" name="gardu_induk_id" options={[]} />
+          <SelectInput
+            label="Gardu Induk"
+            name="gardu_induk_id"
+            options={garduIndukOptions}
+          />
         </Grid>
         <Grid item xs={12} sm={6}>
-          <SelectInput label="Bay" name="bay" options={[]} />
+          <InputField label="Bay" name="bay" />
         </Grid>
         <Grid item xs={12} sm={12}>
-          <SelectInput
-            label="Unit Pelaksana"
-            name="unit_pelaksana"
-            options={[]}
-          />
+          <InputField label="Unit Pelaksana" name="unit_pelaksana" />
         </Grid>
         <Grid item xs={12} sm={6}>
           <DatePicker label="Tanggal Mulai" name="tanggal_mulai" />

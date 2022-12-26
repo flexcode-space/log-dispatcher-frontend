@@ -3,7 +3,7 @@ import * as yup from 'yup'
 export const initialValues = {
   tipe: "",
   scada: "",
-  tanggal: "",
+  tanggal: new Date(),
   pembangkit: {
     w: "",
     var: ""

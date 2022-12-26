@@ -17,7 +17,7 @@ export const Default = () => {
         <Grid item xs={12} sm={12}>
           <SelectInput
             label="Jenis Pekerjaan"
-            name="jenis"
+            name="tipe"
             options={jenisPekerjaanOptions}
           />
         </Grid>

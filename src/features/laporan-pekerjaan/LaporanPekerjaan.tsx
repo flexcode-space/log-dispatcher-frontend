@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Grid, Typography, TextField, Button } from "@mui/material";
 // import { DataGrid, gridClasses } from "@mui/x-data-grid";
 import DatePickerMui from "@mui/lab/DatePicker";
@@ -66,7 +66,11 @@ const LaporanPekerjaan = () => {
           </WrapperFilter>
         </Grid>
         {laporanPekerjaanList.map((value, index) => (
-          <TableLaporan key={`table-${index}`} title={value.title} />
+          <TableLaporan
+            key={`table-${index}`}
+            title={value.title}
+            type={value.type}
+          />
         ))}
         <TableLain />
       </Grid>
