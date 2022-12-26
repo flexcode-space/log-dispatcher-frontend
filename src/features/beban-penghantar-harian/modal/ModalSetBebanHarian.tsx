@@ -67,7 +67,7 @@ const ModalSetBebanHarian = () => {
             <Grid container spacing={1} mt={1}>
               <Grid item xs={12} sm={6}>
                 <SelectInput
-                  label="Pulih Jenis Peralatan"
+                  label="Pilih Jenis Peralatan"
                   name="peralatan"
                   options={[]}
                 />
