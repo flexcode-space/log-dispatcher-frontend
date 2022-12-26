@@ -15,13 +15,14 @@ import TambahManuverIcon from "src/assets/icons/tambah-manuver-icon.svg";
 import DataPadamIcon from "src/assets/icons/data-padam-icon.svg";
 import FilePendukungIcon from "src/assets/icons/file-pendukung-icon.svg";
 import HapusIcon from "src/assets/icons/hapus-icon.svg";
-import { setGangguanID } from "../state/gangguan";
+import { selectData, setGangguanID } from "../state/gangguan";
+import { GangguanList } from "../types";
 
 type MenuMoreProps = {
-  gangguanId: string;
+  data: GangguanList;
 };
 
-const MenuMore = ({ gangguanId }: MenuMoreProps) => {
+const MenuMore = ({ data }: MenuMoreProps) => {
   const router = useRouter();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -59,7 +60,12 @@ const MenuMore = ({ gangguanId }: MenuMoreProps) => {
           },
         }}
       >
-        <MenuItem onClick={() => openModal("modal-keterangan-gangguan")}>
+        <MenuItem
+          onClick={() => {
+            openModal("modal-keterangan-gangguan");
+            selectData(data);
+          }}
+        >
           <ListItemIcon>
             <IconButton>
               <LihatKeteranganIcon />
@@ -67,9 +73,7 @@ const MenuMore = ({ gangguanId }: MenuMoreProps) => {
           </ListItemIcon>
           <Typography variant="inherit">Lihat Keterangan</Typography>
         </MenuItem>
-        <MenuItem
-          onClick={() => router.push(`/gangguan/manuver/${gangguanId}`)}
-        >
+        <MenuItem onClick={() => router.push(`/gangguan/manuver/${data.id}`)}>
           <IconButton>
             <TambahManuverIcon />
           </IconButton>
@@ -78,7 +82,7 @@ const MenuMore = ({ gangguanId }: MenuMoreProps) => {
         <MenuItem
           onClick={() => {
             openModal("modal-data-padam");
-            setGangguanID(gangguanId);
+            setGangguanID(data.id);
           }}
         >
           <IconButton>
@@ -92,7 +96,12 @@ const MenuMore = ({ gangguanId }: MenuMoreProps) => {
           </IconButton>
           <Typography variant="inherit">File Pendukung</Typography>
         </MenuItem>
-        <MenuItem>
+        <MenuItem
+          onClick={() => {
+            openModal("modal-confirmation-delete");
+            selectData(data);
+          }}
+        >
           <IconButton>
             <HapusIcon />
           </IconButton>

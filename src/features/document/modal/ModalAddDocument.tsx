@@ -42,8 +42,6 @@ const ModalAddDocument = () => {
     event?.preventDefault();
 
     formMethods.handleSubmit(async (values) => {
-      // TODO
-      console.log("values", values);
       await createDocument(values);
 
       closeModal();

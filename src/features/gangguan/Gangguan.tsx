@@ -35,11 +35,16 @@ import {
   ModalAddGangguan,
   ModalKeteranganGangguan,
   ModalDataPadam,
+  ModalConfirmationDelete,
 } from "./modal";
 import { gangguanApi } from "src/api/gangguan";
 import { GangguanList } from "./types";
+import { useSnapshot } from "valtio";
+import { reloadPage } from "src/state/reloadPage";
 
 const Gangguan = () => {
+  const reloadPageSnap = useSnapshot(reloadPage);
+
   const [search, setSearch] = useState<string>("");
   const [page, setPage] = useState<number>(0);
   const [rowsPerPage, setRowsPerPage] = useState<number>(10);
@@ -57,17 +62,22 @@ const Gangguan = () => {
     setPage(0);
   };
 
-  console.log("gangguanList", gangguanList);
-
   useEffect(() => {
     getGangguanList();
   }, []);
+
+  useEffect(() => {
+    if (reloadPageSnap.target === "gangguan") {
+      getGangguanList();
+    }
+  }, [reloadPageSnap.id]);
 
   return (
     <>
       <ModalDataPadam />
       <ModalAddGangguan />
       <ModalKeteranganGangguan />
+      <ModalConfirmationDelete />
       <Grid container spacing={6}>
         <Grid item xs={12}>
           <WrapperFilter>
@@ -199,10 +209,14 @@ const Gangguan = () => {
                           <TableCell>{list.penyebab}</TableCell>
                           <TableCell>
                             <Box display="flex">
-                              <IconButton>
+                              <IconButton
+                                onClick={() =>
+                                  openModal("modal-add-gangguan", list.id)
+                                }
+                              >
                                 <Pencil />
                               </IconButton>
-                              <MenuMore gangguanId={list.id} />
+                              <MenuMore data={list} />
                             </Box>
                           </TableCell>
                         </TableRow>

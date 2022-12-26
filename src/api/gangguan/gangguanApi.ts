@@ -53,9 +53,9 @@ const gangguanApi = () => {
 
     try {
       await Axios.post(endpoint, payload)
-      toast.success('Berhasil menambahkan Gangguan')
+      toast.success('Berhasil menambahkan Laporan Gangguan')
     } catch (error) {
-      toast.error('Gagal menambahkan Gangguan')
+      toast.error('Gagal menambahkan Laporan Gangguan')
     } finally {
       setLoading(false)
     }
@@ -66,9 +66,21 @@ const gangguanApi = () => {
 
     try {
       await Axios.put(endpoint, payload)
-      toast.success('Berhasil mengubah Gangguan')
+      toast.success('Berhasil mengubah Laporan Gangguan')
     } catch (error) {
-      toast.error('Gagal mengubah Gangguan')
+      toast.error('Gagal mengubah Laporan Gangguan')
+    } finally {
+      setLoading(false)
+    }
+  }, [])
+
+  const deleteGangguan = useCallback(async (payload: any) => {
+    setLoading(true)
+    try {
+      await Axios.delete(endpoint, { data: payload })
+      toast.success('Berhasil menghapus Laporan Gangguan')
+    } catch (error) {
+      toast.error('Gagal menghapus Laporan Gangguan')
     } finally {
       setLoading(false)
     }
@@ -84,7 +96,8 @@ const gangguanApi = () => {
     getJenisGangguanList,
     getReleGangguanList,
     createGangguan,
-    updateGangguan
+    updateGangguan,
+    deleteGangguan
   }
 }
 

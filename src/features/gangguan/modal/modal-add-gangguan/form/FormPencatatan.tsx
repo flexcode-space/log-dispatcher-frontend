@@ -65,7 +65,7 @@ export const FormPencatatan = ({
           <Grid item xs={12} sm={6}>
             <SelectInput
               label="Jenis Gangguan"
-              name="jenis"
+              name="gangguan_jenis_id"
               options={jenisGangguanOptions}
             />
           </Grid>
@@ -110,7 +110,7 @@ export const FormPencatatan = ({
             <TimePicker name="sms" label="SMS Kinerja" />
           </Grid>
           <Grid item xs={12} sm={6}>
-            <TimePicker name="pmt" label="Siap Op. PMT" />
+            <TimePicker name="siap_op" label="Siap Op. PMT" />
           </Grid>
           <Grid item xs={12} sm={6}>
             <SelectInput label="Rele" name="rele" options={releOptions} />

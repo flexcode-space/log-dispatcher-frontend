@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import {
   Button,
@@ -9,14 +9,17 @@ import {
   Typography,
   Box,
 } from "@mui/material";
-import { Pencil } from "mdi-material-ui";
+// import { Pencil } from "mdi-material-ui";
 import { useSnapshot } from "valtio";
 import { InputField } from "src/components/input-field";
 import { StyledForm } from "src/components/form";
 import { modal, closeModal } from "src/state/modal";
+import { gangguan } from "../../state/gangguan";
+import { initialValues } from "./ModalKeteranganGangguan.constant";
 
-export const ModalKeteranganGangguan = () => {
+const ModalKeteranganGangguan = () => {
   const modalSnapshot = useSnapshot(modal);
+  const { data } = useSnapshot(gangguan);
 
   const isOpen =
     modalSnapshot.isOpen &&
@@ -24,7 +27,7 @@ export const ModalKeteranganGangguan = () => {
 
   const formMethods = useForm({
     // resolver: yupResolver(validationSchema),
-    // defaultValues: initialValues,
+    defaultValues: initialValues,
     mode: "onSubmit",
   });
 
@@ -41,29 +44,34 @@ export const ModalKeteranganGangguan = () => {
     // formMethods.reset({ ...initialValues });
   };
 
+  useEffect(() => {
+    formMethods.reset({ ...data });
+  }, []);
+
   const fieldsRender = useMemo((): React.ReactNode => {
     const fieldsMap = [
-      { label: "Beban Sistem" },
-      { label: "Beban Sebelumnya" },
-      { label: "Cuaca" },
-      { label: "FL" },
-      { label: "Counter PMT" },
-      { label: "Counter LA" },
-      { label: "Arus Ganggung" },
-      { label: "Lain-Lain" },
+      { label: "Penyebab Gangguan", name: "penyebab" },
+      { label: "Akibat Gangguan", name: "akibat" },
+      { label: "Beban Sistem", name: "beban" },
+      { label: "Cuaca", name: "cuaca" },
+      { label: "FL", name: "fl" },
+      { label: "Counter PMT", name: "pmt" },
+      { label: "Counter LA", name: "la" },
+      { label: "Arus Gangguan", name: "arus" },
+      { label: "Lain-Lain", name: "lain" },
     ];
 
-    return fieldsMap.map(({ label }) => (
+    return fieldsMap.map(({ label, name }) => (
       <Grid item xs={12} key={label}>
         <Grid container spacing={2} alignItems="center">
-          <Grid item xs={11}>
-            <InputField name="nama" label={label} />
+          <Grid item xs={12}>
+            <InputField disabled name={name} label={label} />
           </Grid>
-          <Grid item xs={1}>
+          {/* <Grid item xs={1}>
             <Button fullWidth sx={{ mb: 3 }} size="medium" variant="outlined">
               <Pencil />
             </Button>
-          </Grid>
+          </Grid> */}
         </Grid>
       </Grid>
     ));
@@ -108,3 +116,5 @@ export const ModalKeteranganGangguan = () => {
     </>
   );
 };
+
+export default ModalKeteranganGangguan;
