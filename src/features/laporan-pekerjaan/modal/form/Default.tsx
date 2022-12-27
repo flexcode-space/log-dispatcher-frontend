@@ -1,15 +1,11 @@
-import { Box, Typography, Grid } from "@mui/material";
+import { Box, Grid, Typography } from "@mui/material";
 import { DatePicker } from "src/components/date-picker";
 import { SelectInput } from "src/components/select-input";
+import { useModalAdd } from "../useModalAdd";
 
-type Props = {
-  jenisPekerjaanOptions?: {
-    value: string;
-    label: string;
-  }[];
-};
+export const Default = () => {
+  const { jenisPekerjaanOptions } = useModalAdd();
 
-export const Index = ({ jenisPekerjaanOptions }: Props) => {
   return (
     <>
       <Box sx={{ mb: 8 }}>
@@ -21,7 +17,7 @@ export const Index = ({ jenisPekerjaanOptions }: Props) => {
         <Grid item xs={12} sm={12}>
           <SelectInput
             label="Jenis Pekerjaan"
-            name="jenis"
+            name="tipe"
             options={jenisPekerjaanOptions}
           />
         </Grid>

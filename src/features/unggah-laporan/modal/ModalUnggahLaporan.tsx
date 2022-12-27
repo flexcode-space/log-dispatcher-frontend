@@ -13,7 +13,7 @@ import { useSnapshot } from "valtio";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { StyledForm } from "src/components/form";
 import { OutlinedInputField } from "src/components/input-field";
-import { DatePicker } from "src/components/date-picker";
+import { DatePicker, TimePicker } from "src/components/date-picker";
 import { SelectInput } from "src/components/select-input";
 import { initialValues, validationSchema } from "./ModalUnggahLaporan.constant";
 import { tipeLaporanOptions } from "../UnggahLaporan.constant";
@@ -21,8 +21,8 @@ import { modal, reloadPage } from "src/state/modal";
 import UploadFile from "./components/UploadFile";
 import { Axios } from "src/api/axios";
 import { unggahLaporanApi } from "src/api/unggah-laporan";
-import { convertDate } from "src/utils/date";
 import { FieldValues } from "../types";
+import dayjs from "dayjs";
 
 type ModalAddProps = {
   handleClose: () => void;
@@ -45,7 +45,7 @@ const ModalUnggahLaporan = ({ handleClose }: ModalAddProps) => {
     event?.preventDefault();
 
     formMethods.handleSubmit(async (values) => {
-      const { tanggal, tipe, ...rest } = values;
+      const { tanggal, jam, tipe, ...rest } = values;
 
       const jenis =
         tipe === "amr"
@@ -54,18 +54,23 @@ const ModalUnggahLaporan = ({ handleClose }: ModalAddProps) => {
             }
           : {};
 
-      await unggahLaporan({
+      const date = dayjs(tanggal).format("YYYY-MM-DD");
+      const time = dayjs(jam).format("HH:mm");
+
+      const payload = {
         ...rest,
         tipe,
-        tanggal: convertDate(tanggal),
+        tanggal: `${date} ${time}`,
         ...jenis,
-      });
-      handleClose();
+      };
+
+      await unggahLaporan(payload);
+      onCloseModal();
       reloadPage();
     })();
   };
 
-  const onClickCloseModal = () => {
+  const onCloseModal = () => {
     handleClose();
     formMethods.reset({ ...initialValues });
   };
@@ -92,7 +97,7 @@ const ModalUnggahLaporan = ({ handleClose }: ModalAddProps) => {
     <Dialog
       open={modalSnapshot.isOpen}
       fullWidth
-      onClose={onClickCloseModal}
+      onClose={onCloseModal}
       maxWidth="sm"
       scroll="body"
     >
@@ -119,8 +124,11 @@ const ModalUnggahLaporan = ({ handleClose }: ModalAddProps) => {
                   options={tipeLaporanOptions}
                 />
               </Grid>
-              <Grid item xs={12} sm={12}>
+              <Grid item xs={12} sm={6}>
                 <DatePicker label="Tanggal" name="tanggal" />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TimePicker label="Jam" name="jam" />
               </Grid>
               {tipe === "scada" && (
                 <Grid item xs={12} sm={12}>
@@ -167,7 +175,7 @@ const ModalUnggahLaporan = ({ handleClose }: ModalAddProps) => {
             </Grid>
           </DialogContent>
           <DialogActions className="dialog-actions-dense">
-            <Button variant="outlined" onClick={onClickCloseModal}>
+            <Button variant="outlined" onClick={onCloseModal}>
               Batal
             </Button>
             <Button variant="contained" type="submit">

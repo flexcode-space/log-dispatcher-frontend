@@ -5,7 +5,7 @@ export const laporanPekerjaanList = [
   },
   {
     title: "Pekerjaan Yang Menyebabkan N-1-1 tidak Terpenuhi",
-    type: "tidak-tepenuhi",
+    type: "tidak-terpenuhi",
   },
   {
     title: "Pekerjaan Padam Menginap / Belum Normal",

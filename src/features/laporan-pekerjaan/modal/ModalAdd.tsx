@@ -1,53 +1,76 @@
 import { useState } from "react";
 import { useForm, FormProvider } from "react-hook-form";
-import {
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-} from "@mui/material";
-// import Plus from "mdi-material-ui/Plus";
-// import { yupResolver } from "@hookform/resolvers/yup";
+import { Button, Dialog, DialogActions, DialogContent } from "@mui/material";
+import { yupResolver } from "@hookform/resolvers/yup";
 import { useSnapshot } from "valtio";
 import { StyledForm } from "src/components/form";
 import { modal, closeModal } from "src/state/modal";
-import { useModalAdd } from "./useModalAdd";
-import FormLainLain from "./form/FormLainLain";
+import { Form } from "./form";
+import { initialValues, validationSchema } from "./ModalAdd.constant";
+import dayjs from "dayjs";
+import { laporanPekerjaanApi } from "src/api/laporan-pekerjaan";
+import { setReloadPage } from "src/state/reloadPage";
 
 const ModalAdd = () => {
   const [isNextPage, setIsNextPage] = useState<boolean>(false);
 
   const modalSnapshot = useSnapshot(modal);
-
-  const { jenisPekerjaanOptions } = useModalAdd();
+  const { createLaporanPekerjaan } = laporanPekerjaanApi();
 
   const isOpen =
     modalSnapshot.isOpen && modalSnapshot.target === "modal-laporan-pekerjaan";
 
   const formMethods = useForm({
-    // resolver: yupResolver(validationSchema),
-    // defaultValues: initialValues,
+    resolver: yupResolver(validationSchema),
+    defaultValues: initialValues,
     mode: "onSubmit",
   });
+
+  const jenisForm = formMethods.watch("tipe");
+
+  console.log("jenisForm", jenisForm);
 
   const onSubmit = (event?: React.FormEvent<HTMLFormElement>) => {
     event?.preventDefault();
 
     formMethods.handleSubmit(async (values) => {
-      //  TODO: handle submit
+      const {
+        tanggal,
+        tanggal_akhir,
+        tanggal_awal,
+        waktu_akhir,
+        waktu_awal,
+        ...rest
+      } = values;
+
+      const startDate = dayjs(tanggal_awal).format("YYYY-MM-DD");
+      const startTime = dayjs(waktu_awal).format("HH:mm");
+      const endDate = dayjs(tanggal_akhir).format("YYYY-MM-DD");
+      const endTime = dayjs(waktu_akhir).format("HH:mm");
+
+      const payload = {
+        ...rest,
+        tanggal: dayjs(tanggal).format("YYYY-MM-DD"),
+        waktu_mulai: `${startDate} ${startTime}`,
+        waktu_akhir: `${endDate} ${endTime}`,
+      };
+
+      await createLaporanPekerjaan(payload);
+      setReloadPage('laporan-pekerjaan')
     })();
   };
 
-  const onClickCloseModal = () => {
+  const onCloseModal = () => {
     closeModal();
-    // formMethods.reset({ ...initialValues });
+    setIsNextPage(false);
+    formMethods.reset({ ...initialValues });
   };
 
   return (
     <Dialog
       open={isOpen}
       fullWidth
-      onClose={onClickCloseModal}
+      onClose={onCloseModal}
       maxWidth="sm"
       scroll="body"
     >
@@ -61,12 +84,12 @@ const ModalAdd = () => {
               position: "relative",
             }}
           >
-            <FormLainLain />
+            {isNextPage ? Form[jenisForm]() : Form["DEFAULT"]()}
           </DialogContent>
           <DialogActions className="dialog-actions-dense">
             <Button
               variant={isNextPage ? "text" : "outlined"}
-              onClick={onClickCloseModal}
+              onClick={onCloseModal}
             >
               Batal
             </Button>
