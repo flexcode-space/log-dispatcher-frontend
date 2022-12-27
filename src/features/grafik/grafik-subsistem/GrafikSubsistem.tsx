@@ -77,6 +77,7 @@ const GrafikSubsistem = ({ id, name }: GrafikSubsistemProps): JSX.Element => {
                 <Tooltip content={CustomTooltip} />
                 <Line dataKey="beban" stroke="#4AA1B9" strokeWidth={3} />
                 <Line dataKey="rencana" stroke="#ff9f43" strokeWidth={3} />
+                <Line dataKey="selisih" stroke="none" />
               </LineChart>
             </ResponsiveContainer>
           </Box>
