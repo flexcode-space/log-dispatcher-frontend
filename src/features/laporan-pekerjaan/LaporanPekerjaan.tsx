@@ -11,9 +11,13 @@ import { TableLaporan, TableLain } from "./table-laporan";
 
 import { laporanPekerjaanList } from "./LaporanPekerjaan.constant";
 import { ModalAdd } from "./modal";
+import dayjs, { Dayjs } from "dayjs";
 
 const LaporanPekerjaan = () => {
   const [search, setSearch] = useState<string>("");
+  const [date, setDate] = useState<Dayjs | null>(null);
+
+  const filterDate = date ? dayjs(date).format("YYYY-MM-DD") : "";
 
   return (
     <>
@@ -36,9 +40,10 @@ const LaporanPekerjaan = () => {
               />
               <LocalizationProvider dateAdapter={AdapterDateFns}>
                 <DatePickerMui
-                  value={null}
+                  value={date}
                   label="Pilih Tanggal"
-                  onChange={() => null}
+                  inputFormat="dd/M/yyyy"
+                  onChange={setDate}
                   renderInput={(params) => (
                     <TextField
                       size="small"
@@ -65,14 +70,18 @@ const LaporanPekerjaan = () => {
             </div>
           </WrapperFilter>
         </Grid>
-        {laporanPekerjaanList.map((value, index) => (
-          <TableLaporan
-            key={`table-${index}`}
-            title={value.title}
-            type={value.type}
-          />
-        ))}
-        <TableLain />
+        {laporanPekerjaanList.map((value, index) =>
+          value.type !== "lain" ? (
+            <TableLaporan
+              key={`table-${index}`}
+              title={value.title}
+              type={value.type}
+              filter={{ date: filterDate }}
+            />
+          ) : (
+            <TableLain filter={{ date: filterDate }} />
+          )
+        )}
       </Grid>
     </>
   );
