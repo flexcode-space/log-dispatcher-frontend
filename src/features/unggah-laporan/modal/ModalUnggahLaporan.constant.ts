@@ -4,6 +4,7 @@ export const initialValues = {
   tipe: "",
   scada: "",
   tanggal: new Date(),
+  jam: new Date(),
   pembangkit: {
     w: "",
     var: ""
