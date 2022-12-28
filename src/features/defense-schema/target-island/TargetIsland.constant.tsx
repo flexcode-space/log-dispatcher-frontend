@@ -1,9 +1,5 @@
 import { Typography, Chip } from "@mui/material";
-import { array } from "yup";
-
-export interface CellType {
-  row: any;
-}
+import { CellType } from "src/types";
 
 export const defaultColumns = [
   {
@@ -17,6 +13,18 @@ export const defaultColumns = [
     minWidth: 100,
     field: "tahap",
     headerName: "Tahap",
+    renderCell: ({ row }: CellType) => {
+      const { tahap } = row;
+      return (
+        <Typography
+          variant="subtitle2"
+          noWrap
+          sx={{ textTransform: "capitalize" }}
+        >
+          {tahap.value}
+        </Typography>
+      );
+    },
   },
   {
     flex: 0.25,
@@ -27,14 +35,20 @@ export const defaultColumns = [
   {
     flex: 0.25,
     minWidth: 200,
-    field: "app",
-    headerName: "APP",
-  },
-  {
-    flex: 0.25,
-    minWidth: 200,
     field: "gardu_induk",
     headerName: "Gardu Induk",
+    renderCell: ({ row }: CellType) => {
+      const { gardu_induk } = row;
+      return (
+        <Typography
+          variant="subtitle2"
+          noWrap
+          sx={{ textTransform: "capitalize" }}
+        >
+          {gardu_induk.nama}
+        </Typography>
+      );
+    },
   },
   {
     flex: 0.25,
@@ -45,7 +59,7 @@ export const defaultColumns = [
   {
     flex: 0.25,
     minWidth: 200,
-    field: "tanggal_aktif",
+    field: "tanggal",
     headerName: "Tanggal Aktif",
   },
   {
@@ -55,31 +69,12 @@ export const defaultColumns = [
     headerName: "Status",
     renderCell: ({ row }: CellType) => {
       const { status } = row;
-      return <Chip label={status} color="success" />;
+      return (
+        <Chip
+          label={status ? "ON" : "OFF"}
+          color={status ? "success" : "error"}
+        />
+      );
     },
   },
 ];
-
-export const dataMock = () => {
-  const data = {
-    island: "RDRUT - KRAPK",
-    tahap: 1,
-    frekuensi: "48,3",
-    app: "Semarang",
-    gardu_induk: "Ungaran",
-    target_trip: "PMT 150 kV IBT 3",
-    tanggal_aktif: "18 Jan 2020",
-    status: "Aktif",
-  };
-
-  const arr = [];
-
-  for (let i = 0; i < 5; i++) {
-    arr.push({
-      id: i,
-      ...data,
-    });
-  }
-
-  return arr;
-};
