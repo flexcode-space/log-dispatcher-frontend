@@ -24,7 +24,7 @@ import FilterIcon from "src/assets/icons/filter-green-icon.svg";
 import { ModalAddUFR } from "../modal";
 
 import { WrapperFilter } from "src/components/filter";
-import defenseUFRApi from "src/api/defense-ufr/defenseUFRApi";
+import { defenseUFRApi } from "src/api/defense-ufr";
 import { DefenseUFRList } from "./types";
 import { selectData } from "./state/ufr";
 import { reloadPage } from "src/state/reloadPage";

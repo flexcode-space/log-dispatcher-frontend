@@ -1,1 +1,1 @@
-export { default as catatanPembangkitan } from './catatanPembangkitanApi'
+export { default as defenseUFRApi } from './defenseUFRApi'

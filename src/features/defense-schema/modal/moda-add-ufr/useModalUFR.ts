@@ -4,7 +4,7 @@ import { modal } from 'src/state/modal'
 import { garduIndukApi } from 'src/api/gardu-induk'
 import { subsistemApi } from 'src/api/subsistem'
 import { trafoApi } from 'src/api/trafo'
-import defenseUFRApi from 'src/api/defense-ufr/defenseUFRApi'
+import { defenseUFRApi } from 'src/api/defense-ufr'
 
 export const useModalUFR = () => {
   const modalSnap = useSnapshot(modal)

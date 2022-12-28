@@ -19,7 +19,7 @@ import { StyledForm } from "src/components/form";
 import { modal, reloadPage, closeModal } from "src/state/modal";
 import { useModalUFR } from "./useModalUFR";
 import { initialValues, validationSchema } from "./ModalAddUFR.constant";
-import defenseUFRApi from "src/api/defense-ufr/defenseUFRApi";
+import { defenseUFRApi } from "src/api/defense-ufr";
 import dayjs from "dayjs";
 import { removeData, ufr } from "../../ufr/state/ufr";
 import { setReloadPage } from "src/state/reloadPage";
