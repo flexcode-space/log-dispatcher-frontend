@@ -4,14 +4,14 @@ import { modal } from "src/state/modal";
 import { garduIndukApi } from "src/api/gardu-induk";
 import { subsistemApi } from "src/api/subsistem";
 import { trafoApi } from "src/api/trafo";
-import { defenseUFRApi } from "src/api/defense-ufr";
+import { defenseApi } from "src/api/defense";
 
 export const useModalAdd = () => {
   const modalSnap = useSnapshot(modal);
   const { getGarduIndukList, garduIndukList } = garduIndukApi();
   const { getSubsistemList, subsistemList } = subsistemApi();
   const { getTrafoList, trafoList } = trafoApi();
-  const { getTahapList, tahapList } = defenseUFRApi();
+  const { getTahapList, tahapList } = defenseApi();
 
   const garduIndukOptions = garduIndukList.map(({ id, nama }) => ({
     value: id,
