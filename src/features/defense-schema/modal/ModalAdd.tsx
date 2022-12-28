@@ -17,6 +17,8 @@ import { SelectInput } from "src/components/select-input";
 import { DatePicker } from "src/components/date-picker";
 import { StyledForm } from "src/components/form";
 import { modal, reloadPage, closeModal } from "src/state/modal";
+import { useModalAdd } from "./useModalAdd";
+import { laporanNeracaDaya } from "../state/laporanNeracaDaya";
 
 type ModalAddProps = {
   name: string;
@@ -32,7 +34,12 @@ type DefaultValueProps = {
 
 const ModalAdd = ({ name }: ModalAddProps) => {
   const modalSnapshot = useSnapshot(modal);
+  const { data } = useSnapshot(laporanNeracaDaya);
   const [fields, setFields] = useState<DefaultValueProps>([defaultValue]);
+
+  const { subsistemOptions } = useModalAdd();
+
+  console.log("b :", subsistemOptions);
 
   const formMethods = useForm({
     // resolver: yupResolver(validationSchema),
@@ -42,7 +49,7 @@ const ModalAdd = ({ name }: ModalAddProps) => {
 
   const onSubmit = (event?: React.FormEvent<HTMLFormElement>) => {
     event?.preventDefault();
-
+    console.log("tes");
     formMethods.handleSubmit(async (values) => {
       //  TODO: handle submit
     })();
@@ -98,7 +105,7 @@ const ModalAdd = ({ name }: ModalAddProps) => {
                 <InputField name="detik" label="Detik" />
               </Grid>
               <Grid item xs={12} sm={4}>
-                <SelectInput label="MW" name="mw" options={[]} />
+                <InputField label="MW" name="mw" />
               </Grid>
               <Typography variant="subtitle1" sx={{ fontWeight: 500 }}>
                 Setting

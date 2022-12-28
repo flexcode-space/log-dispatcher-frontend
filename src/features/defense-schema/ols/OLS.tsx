@@ -1,4 +1,4 @@
-import { useState, ChangeEvent } from "react";
+import { useState, ChangeEvent, useEffect } from "react";
 import {
   Box,
   Card,
@@ -24,8 +24,23 @@ import DownloadIcon from "src/assets/icons/download-icon.svg";
 import { openModal } from "src/state/modal";
 import { WrapperFilter } from "src/components/filter";
 import ModalAdd from "../modal/ModalAdd";
+import { defenseSchemeOlsApi } from "src/api/defense-scheme";
+import { useSnapshot } from "valtio";
+import { reloadPage } from "src/state/reloadPage";
+import { defenseScheme } from "./types";
 
 const OLS = () => {
+  const reloadPageSnap = useSnapshot(reloadPage);
+  const { getDefenseSchemeList, defenseScheme } = defenseSchemeOlsApi();
+  useEffect(() => {
+    getDefenseSchemeList();
+  }, []);
+
+  useEffect(() => {
+    if (reloadPageSnap.target === "laporan-posko") {
+      getDefenseSchemeList();
+    }
+  }, [reloadPageSnap]);
   // ** States
   const [page, setPage] = useState<number>(0);
   const [rowsPerPage, setRowsPerPage] = useState<number>(10);
@@ -180,41 +195,54 @@ const OLS = () => {
                         Subsistem Tanjungjati
                       </TableCell>
                     </TableRow>
-                    {[0, 1, 3, 4, 5].map((index) => (
-                      <TableRow>
-                        <TableCell size="small">RDRUT - KRAPK</TableCell>
-                        <TableCell size="small">1</TableCell>
-                        <TableCell size="small" sx={{ background: "#d6ebf0" }}>
-                          960
-                        </TableCell>
-                        <TableCell size="small" sx={{ background: "#d6ebf0" }}>
-                          4,5
-                        </TableCell>
-                        <TableCell size="small" sx={{ background: "#d6ebf0" }}>
-                          200
-                        </TableCell>
-                        <TableCell size="small">GI WLERI : Trafo 2</TableCell>
-                        <TableCell size="small">
-                          Berdasarkan BA OLS 18-01-14
-                        </TableCell>
-                        <TableCell size="small">291</TableCell>
-                        <TableCell size="small">29</TableCell>
-                        <TableCell size="small">291</TableCell>
-                        <TableCell size="small">29</TableCell>
-                        <TableCell size="small">291</TableCell>
-                        <TableCell size="small">29</TableCell>
-                        <TableCell size="small">
-                          <Chip label="ON" color="success" />
-                        </TableCell>
-                        <TableCell size="small">
-                          <Box sx={{ display: "flex", alignItems: "center" }}>
-                            <IconButton onClick={() => null}>
-                              <PencilOutline />
-                            </IconButton>
-                          </Box>
-                        </TableCell>
-                      </TableRow>
-                    ))}
+                    {/* {[0, 1, 3, 4, 5].map((index) => ( */}
+                    {defenseScheme.length > 0 &&
+                      defenseScheme.map((list: defenseScheme) => (
+                        <TableRow key={list.id}>
+                          <TableCell size="small">
+                            {list.gardu_induk.nama}
+                          </TableCell>
+                          <TableCell size="small">{list.tahap.value}</TableCell>
+                          <TableCell
+                            size="small"
+                            sx={{ background: "#d6ebf0" }}
+                          >
+                            {list.amp.value}
+                          </TableCell>
+                          <TableCell
+                            size="small"
+                            sx={{ background: "#d6ebf0" }}
+                          >
+                            {list.detik}
+                          </TableCell>
+                          <TableCell
+                            size="small"
+                            sx={{ background: "#d6ebf0" }}
+                          >
+                            {list.mw}
+                          </TableCell>
+                          <TableCell size="small">
+                            {list.peralatan_target.nama}
+                          </TableCell>
+                          <TableCell size="small">{list.keterangan}</TableCell>
+                          <TableCell size="small">{list.real_ia}</TableCell>
+                          <TableCell size="small">{list.real_ols}</TableCell>
+                          <TableCell size="small">{list.target_ia}</TableCell>
+                          <TableCell size="small">{list.target_ols}</TableCell>
+                          <TableCell size="small">{list.set_ia}</TableCell>
+                          <TableCell size="small">{list.set_ols}</TableCell>
+                          <TableCell size="small">
+                            <Chip label="ON" color="success" />
+                          </TableCell>
+                          <TableCell size="small">
+                            <Box sx={{ display: "flex", alignItems: "center" }}>
+                              <IconButton onClick={() => null}>
+                                <PencilOutline />
+                              </IconButton>
+                            </Box>
+                          </TableCell>
+                        </TableRow>
+                      ))}
                   </TableBody>
                 </Table>
               </TableContainer>
@@ -231,6 +259,12 @@ const OLS = () => {
           </Card>
         </Grid>
       </Grid>
+      {/* {defenseScheme.length > 0 &&
+        defenseScheme.map((list: defenseScheme) => (
+          <TableRow key={list.amp_id} hover>
+            <TableCell size="small">{list.jenis_peralatan}</TableCell>
+          </TableRow>
+        ))} */}
     </>
   );
 };
