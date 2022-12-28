@@ -17,13 +17,6 @@ export const admindefaultColumns = [
     field: "jabatan",
     headerName: "Jabatan",
   },
-
-  // {
-  //   flex: 0.25,
-  //   minWidth: 150,
-  //   field: "unit",
-  //   headerName: "Unit",
-  // },
 ];
 export const userdefaultColumns = [
   {
@@ -50,12 +43,6 @@ export const userdefaultColumns = [
     field: "hakakses",
     headerName: "hak akses",
   },
-  // {
-  //   flex: 0.25,
-  //   minWidth: 150,
-  //   field: "unit",
-  //   headerName: "Unit",
-  // },
 ];
 
 export const datamock = [
