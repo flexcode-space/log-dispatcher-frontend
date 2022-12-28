@@ -1,6 +1,6 @@
 import * as yup from 'yup'
 
-type TypeUnion =
+export type TypeUnion =
   "emergency"
   | "terencana"
   | "lain"

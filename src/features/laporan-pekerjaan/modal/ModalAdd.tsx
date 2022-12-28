@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import { Button, Dialog, DialogActions, DialogContent } from "@mui/material";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -6,16 +6,23 @@ import { useSnapshot } from "valtio";
 import { StyledForm } from "src/components/form";
 import { modal, closeModal } from "src/state/modal";
 import { Form } from "./form";
-import { initialValues, validationSchema } from "./ModalAdd.constant";
+import {
+  initialValues,
+  TypeUnion,
+  validationSchema,
+} from "./ModalAdd.constant";
 import dayjs from "dayjs";
 import { laporanPekerjaanApi } from "src/api/laporan-pekerjaan";
 import { setReloadPage } from "src/state/reloadPage";
+import { laporanPekerjaan } from "../state/laporanPekerjaan";
 
 const ModalAdd = () => {
   const [isNextPage, setIsNextPage] = useState<boolean>(false);
 
   const modalSnapshot = useSnapshot(modal);
-  const { createLaporanPekerjaan } = laporanPekerjaanApi();
+  const { data } = useSnapshot(laporanPekerjaan);
+  const { createLaporanPekerjaan, updateLaporanPekerjaan } =
+    laporanPekerjaanApi();
 
   const isOpen =
     modalSnapshot.isOpen && modalSnapshot.target === "modal-laporan-pekerjaan";
@@ -27,8 +34,6 @@ const ModalAdd = () => {
   });
 
   const jenisForm = formMethods.watch("tipe");
-
-  console.log("jenisForm", jenisForm);
 
   const onSubmit = (event?: React.FormEvent<HTMLFormElement>) => {
     event?.preventDefault();
@@ -55,8 +60,13 @@ const ModalAdd = () => {
         waktu_akhir: `${endDate} ${endTime}`,
       };
 
-      await createLaporanPekerjaan(payload);
-      setReloadPage('laporan-pekerjaan')
+      if (modalSnapshot.id) {
+        updateLaporanPekerjaan({ ...payload, id: data.id });
+      } else {
+        await createLaporanPekerjaan(payload);
+      }
+      onCloseModal();
+      setReloadPage("laporan-pekerjaan");
     })();
   };
 
@@ -65,6 +75,19 @@ const ModalAdd = () => {
     setIsNextPage(false);
     formMethods.reset({ ...initialValues });
   };
+
+  useEffect(() => {
+    if (modalSnapshot.id) {
+      const { tipe, gardu_induk, ...rest } = data;
+
+      setIsNextPage(true);
+      formMethods.reset({
+        ...rest,
+        tipe: data.tipe as TypeUnion,
+        gardu_induk_id: gardu_induk.id,
+      });
+    }
+  }, [modalSnapshot.isOpen]);
 
   return (
     <Dialog
@@ -95,9 +118,14 @@ const ModalAdd = () => {
             </Button>
             {isNextPage ? (
               <>
-                <Button variant="outlined" onClick={() => setIsNextPage(false)}>
-                  Sebelumnya
-                </Button>
+                {!modalSnapshot.id && (
+                  <Button
+                    variant="outlined"
+                    onClick={() => setIsNextPage(false)}
+                  >
+                    Sebelumnya
+                  </Button>
+                )}
                 <Button variant="contained" type="submit">
                   Tambah
                 </Button>

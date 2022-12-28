@@ -15,26 +15,37 @@ import { laporanPekerjaanApi } from "src/api/laporan-pekerjaan";
 import { useSnapshot } from "valtio";
 import { reloadPage } from "src/state/reloadPage";
 import { LaporanPekerjaanList } from "../types";
+import { openModal } from "src/state/modal";
+import { selectData } from "../state/laporanPekerjaan";
 
 type TableLaporanProps = {
   title: string;
   type: string;
+  filter?: {
+    date?: string;
+  };
 };
 
-export const TableLaporan = ({ title, type }: TableLaporanProps) => {
+type TableLainProps = {
+  filter?: {
+    date?: string;
+  };
+};
+
+export const TableLaporan = ({ title, type, filter }: TableLaporanProps) => {
   const reloadPageSnap = useSnapshot(reloadPage);
   const { getLaporanPekerjaanList, laporanPekerjaanList } =
     laporanPekerjaanApi();
 
   useEffect(() => {
-    getLaporanPekerjaanList({ tipe: type });
-  }, []);
+    getLaporanPekerjaanList({ tipe: type, ...filter });
+  }, [filter]);
 
   useEffect(() => {
     if (reloadPageSnap.target === "laporan-pekerjaan") {
-      getLaporanPekerjaanList({ tipe: type });
+      getLaporanPekerjaanList({ tipe: type, ...filter });
     }
-  }, [reloadPageSnap.id]);
+  }, [reloadPageSnap.id, filter]);
 
   return (
     <Grid item xs={12}>
@@ -72,7 +83,12 @@ export const TableLaporan = ({ title, type }: TableLaporanProps) => {
                       <TableCell>{list.uraian_pekerjaan}</TableCell>
                       <TableCell>
                         <Box sx={{ display: "flex", alignItems: "center" }}>
-                          <IconButton onClick={() => null}>
+                          <IconButton
+                            onClick={() => {
+                              openModal("modal-laporan-pekerjaan", list.id);
+                              selectData(list);
+                            }}
+                          >
                             <Pencil />
                           </IconButton>
                         </Box>
@@ -88,7 +104,21 @@ export const TableLaporan = ({ title, type }: TableLaporanProps) => {
   );
 };
 
-export const TableLain = () => {
+export const TableLain = ({ filter }: TableLainProps) => {
+  const reloadPageSnap = useSnapshot(reloadPage);
+  const { getLaporanPekerjaanList, laporanPekerjaanList } =
+    laporanPekerjaanApi();
+
+  useEffect(() => {
+    getLaporanPekerjaanList({ tipe: "lain", ...filter });
+  }, [filter]);
+
+  useEffect(() => {
+    if (reloadPageSnap.target === "laporan-pekerjaan") {
+      getLaporanPekerjaanList({ tipe: "lain", ...filter });
+    }
+  }, [reloadPageSnap.id, filter]);
+
   return (
     <Grid item xs={12}>
       <Card>
@@ -98,28 +128,31 @@ export const TableLain = () => {
             <Table>
               <TableHead>
                 <TableRow>
-                  <TableCellHead>Tagar</TableCellHead>
-                  <TableCellHead>Keterangan</TableCellHead>
+                  <TableCellHead minWidth="300px">Tagar</TableCellHead>
+                  <TableCellHead minWidth="600px">Keterangan</TableCellHead>
                   <TableCellHead>Aksi</TableCellHead>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {[0, 1].map(() => (
-                  <TableRow hover>
-                    <TableCell>Pelepasan Penghantar</TableCell>
-                    <TableCell>
-                      Pembersihan Isolator T.281, 296, 329, 339-342, 364, 369,
-                      372, 380, 382, 396, 399, 404, 423, 444, 454{" "}
-                    </TableCell>
-                    <TableCell>
-                      <Box sx={{ display: "flex", alignItems: "center" }}>
-                        <IconButton onClick={() => null}>
-                          <Pencil />
-                        </IconButton>
-                      </Box>
-                    </TableCell>
-                  </TableRow>
-                ))}
+                {laporanPekerjaanList.length > 0 &&
+                  laporanPekerjaanList.map((list: LaporanPekerjaanList) => (
+                    <TableRow hover>
+                      <TableCell>{list.tagar}</TableCell>
+                      <TableCell>{list.keterangan}</TableCell>
+                      <TableCell>
+                        <Box sx={{ display: "flex", alignItems: "center" }}>
+                          <IconButton
+                            onClick={() => {
+                              openModal("modal-laporan-pekerjaan", list.id);
+                              selectData(list);
+                            }}
+                          >
+                            <Pencil />
+                          </IconButton>
+                        </Box>
+                      </TableCell>
+                    </TableRow>
+                  ))}
               </TableBody>
             </Table>
           </TableContainer>
