@@ -19,16 +19,16 @@ import { StyledForm } from "src/components/form";
 import { modal, reloadPage, closeModal } from "src/state/modal";
 import { useModalUFR } from "./useModalUFR";
 import { initialValues, validationSchema } from "./ModalAddUFR.constant";
-import { defenseUFRApi } from "src/api/defense-ufr";
 import dayjs from "dayjs";
 import { removeData, ufr } from "../../ufr/state/ufr";
 import { setReloadPage } from "src/state/reloadPage";
+import { defenseApi } from "src/api/defense";
 
 const ModalAddUFR = () => {
   const modalSnapshot = useSnapshot(modal);
   const { data } = useSnapshot(ufr);
 
-  const { createDefenseUFR, updateDefenseUFR } = defenseUFRApi();
+  const { createDefense, updateDefense } = defenseApi();
   const {
     trafoOptions,
     garduIndukOptions,
@@ -59,9 +59,9 @@ const ModalAddUFR = () => {
       };
 
       if (modalSnapshot.id) {
-        await updateDefenseUFR([{ ...payload, id: modalSnapshot.id }]);
+        await updateDefense("ufr", [{ ...payload, id: modalSnapshot.id }]);
       } else {
-        await createDefenseUFR([payload]);
+        await createDefense("ufr", [payload]);
       }
       onCloseModal();
       setReloadPage("ufr");

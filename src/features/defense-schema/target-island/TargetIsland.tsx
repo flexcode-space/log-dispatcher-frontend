@@ -1,22 +1,44 @@
-import { useState, ChangeEvent } from "react";
-import { Card, CardContent, Grid, TextField, Button, IconButton } from "@mui/material";
+import { useState, ChangeEvent, useEffect } from "react";
+import {
+  Card,
+  CardContent,
+  Grid,
+  TextField,
+  Button,
+  IconButton,
+  Box,
+} from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import Plus from "mdi-material-ui/Plus";
 import DatePicker from "@mui/lab/DatePicker";
-import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
+import dayjs, { Dayjs } from "dayjs";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import { openModal } from "src/state/modal";
 import DownloadIcon from "src/assets/icons/download-green-icon.svg";
-import { defaultColumns, dataMock } from "./TargetIsland.constant";
-import ModalAddTargetIsland from "../modal/ModalAddTargetIsland";
+import { defaultColumns } from "./TargetIsland.constant";
+import { ModalAddTargetIsland } from "../modal";
 
 import { WrapperFilter } from "src/components/filter";
+import { defenseApi } from "src/api/defense";
+import { useSnapshot } from "valtio";
+import { reloadPage } from "src/state/reloadPage";
+import { Pencil } from "mdi-material-ui";
+import { CellType } from "src/types";
+import { selectData } from "./state/targetIsland";
+import { TargetIslandList } from "./types";
 
 const TargetIsland = () => {
+  const reloadPageSnap = useSnapshot(reloadPage);
+
+  const [date, setDate] = useState<Dayjs | null>(null);
   const [limit, setLimit] = useState<number>(10);
   const [page, setPage] = useState<number>(1);
   const [rowsPerPage, setRowsPerPage] = useState<number>(10);
+
+  const filterDate = date ? dayjs(date).format("YYYY-MM-DD") : "";
+
+  const { getDefenseList, defenseList } = defenseApi();
 
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
@@ -26,6 +48,39 @@ const TargetIsland = () => {
     setRowsPerPage(+event.target.value);
     setPage(0);
   };
+
+  const columns = [
+    ...defaultColumns,
+    {
+      flex: 0.15,
+      minWidth: 100,
+      sortable: false,
+      field: "actions",
+      headerName: "Aksi",
+      renderCell: ({ row }: CellType) => (
+        <Box sx={{ display: "flex", alignItems: "center" }}>
+          <IconButton
+            onClick={() => {
+              openModal("modal-add-target-island", row.id);
+              selectData(row as TargetIslandList);
+            }}
+          >
+            <Pencil />
+          </IconButton>
+        </Box>
+      ),
+    },
+  ];
+
+  useEffect(() => {
+    getDefenseList("target-island", { date: filterDate });
+  }, [date]);
+
+  useEffect(() => {
+    if (reloadPage.target === "target-island") {
+      getDefenseList("target-island", { date: filterDate });
+    }
+  }, [reloadPageSnap.id, date]);
 
   return (
     <>
@@ -46,9 +101,10 @@ const TargetIsland = () => {
                 <div style={{ display: "flex", gap: "10px" }}>
                   <LocalizationProvider dateAdapter={AdapterDateFns}>
                     <DatePicker
-                      value={null}
+                      value={date}
                       label="Tanggal"
-                      onChange={() => null}
+                      inputFormat="dd/M/yyyy"
+                      onChange={setDate}
                       renderInput={(params) => (
                         <TextField
                           size="small"
@@ -68,7 +124,7 @@ const TargetIsland = () => {
                     sx={{ mb: 2 }}
                     size="small"
                     variant="contained"
-                    onClick={() => openModal()}
+                    onClick={() => openModal("modal-add-target-island")}
                   >
                     <IconButton>
                       <Plus />
@@ -82,8 +138,8 @@ const TargetIsland = () => {
                 rowsPerPageOptions={[10, 20, 25, 50]}
                 pageSize={limit}
                 // loading={loading}
-                rows={dataMock()}
-                columns={defaultColumns}
+                rows={defenseList}
+                columns={columns}
                 rowCount={10}
                 onPageSizeChange={(newPageSize) => setLimit(newPageSize)}
                 onPageChange={(currentPage) => setPage(currentPage + 1)}
