@@ -103,7 +103,7 @@ const ModalAddUFR = () => {
       open={isOpen}
       fullWidth
       onClose={onCloseModal}
-      maxWidth="md"
+      maxWidth="sm"
       scroll="body"
     >
       <FormProvider {...formMethods}>
@@ -198,40 +198,28 @@ const ModalAddUFR = () => {
                   UFR Kerja
                 </Typography>
               </Grid>
-              <Grid item xs={12} sm={2.4}>
+              <Grid item xs={12} sm={4}>
                 <InputField name="ufr_trip" label="Trip" />
               </Grid>
-              <Grid item xs={12} sm={2.4}>
+              <Grid item xs={12} sm={4}>
                 <InputField name="ufr_masuk" label="Masuk" />
               </Grid>
-              <Grid item xs={12} sm={2.4}>
+              <Grid item xs={12} sm={4}>
                 <InputField type="number" name="ufr_kw" label="KW" />
-              </Grid>
-              <Grid item xs={12} sm={2.4}>
-                <InputField name="lama" label="Lama" />
-              </Grid>
-              <Grid item xs={12} sm={2.4}>
-                <InputField name="kwh" label="KWH" />
               </Grid>
               <Grid item xs={12}>
                 <Typography variant="subtitle1" sx={{ fontWeight: 500 }}>
                   Penyulang Pengganti
                 </Typography>
               </Grid>
-              <Grid item xs={12} sm={2.4}>
+              <Grid item xs={12} sm={4}>
                 <InputField name="penyulang_buka" label="Dibuka" />
               </Grid>
-              <Grid item xs={12} sm={2.4}>
+              <Grid item xs={12} sm={4}>
                 <InputField name="penyulang_tutup" label="Ditutup" />
               </Grid>
-              <Grid item xs={12} sm={2.4}>
+              <Grid item xs={12} sm={4}>
                 <InputField type="number" name="penyulang_kw" label="KW" />
-              </Grid>
-              <Grid item xs={12} sm={2.4}>
-                <InputField name="lama" label="Lama" />
-              </Grid>
-              <Grid item xs={12} sm={2.4}>
-                <InputField name="kwh" label="KWH" />
               </Grid>
             </Grid>
           </DialogContent>
