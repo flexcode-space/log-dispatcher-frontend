@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import {
   Button,
@@ -17,24 +17,12 @@ import { DatePicker } from "src/components/date-picker";
 import { StyledForm } from "src/components/form";
 import { modal, closeModal } from "src/state/modal";
 import { useModalAdd } from "./useModalAdd";
-import { initialValues, validationSchema } from "./ModalAddOLS.constant";
+import { initialValues, validationSchema } from "./ModalAddDS.constant";
 import dayjs from "dayjs";
-import { defenseSchema, removeData } from "../../state/defenseSchema";
 import { setReloadPage } from "src/state/reloadPage";
 import { usePeralatan } from "./usePeralatan";
 import { defenseApi } from "src/api/defense";
-
-// type ModalAddProps = {
-//   name: string;
-// };
-
-// const defaultValue = {
-//   target: "",
-// };
-
-// type DefaultValueProps = {
-//   target: string;
-// }[];
+import { defenseSchema, removeData } from "../../state/defenseSchema";
 
 const ModalAdd = () => {
   const modalSnapshot = useSnapshot(modal);
@@ -50,7 +38,7 @@ const ModalAdd = () => {
     mode: "onSubmit",
   });
   const isOpen =
-    modalSnapshot.isOpen && modalSnapshot.target === "modal-add-ols";
+    modalSnapshot.isOpen && modalSnapshot.target === "modal-add-ds";
   const onSubmit = (event?: React.FormEvent<HTMLFormElement>) => {
     event?.preventDefault();
 
@@ -64,12 +52,12 @@ const ModalAdd = () => {
       };
 
       if (modalSnapshot.id) {
-        await updateDefense("ols", { ...payload, id: modalSnapshot.id });
+        await updateDefense("ds", { ...payload, id: modalSnapshot.id });
       } else {
-        await createDefense("ols", [payload]);
+        await createDefense("ds", [payload]);
       }
       onCloseModal();
-      setReloadPage("ols");
+      setReloadPage("ds");
     })();
   };
 
@@ -141,7 +129,7 @@ const ModalAdd = () => {
           >
             <Box sx={{ mb: 8 }}>
               <Typography variant="h5" sx={{ mb: 3, lineHeight: "2rem" }}>
-                {`Tambah OLS`}
+                Tambah OGS
               </Typography>
             </Box>
             <Grid container spacing={1} mt={1}>

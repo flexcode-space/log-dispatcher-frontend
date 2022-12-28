@@ -1,1 +1,1 @@
-export { default as ModalAddols } from "./ModalAddOls";
+export { default as ModalAddOLS } from "./ModalAddOls";

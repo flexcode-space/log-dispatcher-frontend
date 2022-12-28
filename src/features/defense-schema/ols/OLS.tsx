@@ -23,24 +23,17 @@ import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import DownloadIcon from "src/assets/icons/download-icon.svg";
 import { openModal } from "src/state/modal";
 import { WrapperFilter } from "src/components/filter";
-import ModalAdd from "../modal/ModalAdd";
-import { defenseSchemeOlsApi } from "src/api/defense-ols";
+import { ModalAddOLS } from "../modal";
+import { defenseApi } from "src/api/defense";
 import { useSnapshot } from "valtio";
 import { reloadPage } from "src/state/reloadPage";
-import { defenseScheme } from "./types";
+import { selectData } from "../state/defenseSchema";
+import { DefenseSchemaList } from "../types";
 
 const OLS = () => {
   const reloadPageSnap = useSnapshot(reloadPage);
-  const { getDefenseSchemeList, defenseScheme } = defenseSchemeOlsApi();
-  useEffect(() => {
-    getDefenseSchemeList();
-  }, []);
+  const { getDefenseList, defenseList } = defenseApi();
 
-  useEffect(() => {
-    if (reloadPageSnap.target === "laporan-posko") {
-      getDefenseSchemeList();
-    }
-  }, [reloadPageSnap]);
   // ** States
   const [page, setPage] = useState<number>(0);
   const [rowsPerPage, setRowsPerPage] = useState<number>(10);
@@ -54,9 +47,19 @@ const OLS = () => {
     setPage(0);
   };
 
+  useEffect(() => {
+    getDefenseList("ols");
+  }, []);
+
+  useEffect(() => {
+    if (reloadPageSnap.target === "ols") {
+      getDefenseList("ols");
+    }
+  }, [reloadPageSnap]);
+
   return (
     <>
-      <ModalAdd name="OLS" />
+      <ModalAddOLS />
       <Grid container spacing={6}>
         <Grid item xs={12}>
           <Card>
@@ -89,7 +92,7 @@ const OLS = () => {
                   <Button
                     sx={{ mb: 2 }}
                     variant="contained"
-                    onClick={() => openModal()}
+                    onClick={() => openModal("modal-add-ols")}
                     size="small"
                   >
                     <IconButton>
@@ -182,66 +185,83 @@ const OLS = () => {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    <TableRow>
-                      <TableCell
-                        sx={{
-                          background: "#d6ebf0",
-                          fontWeight: 500,
-                          fontSize: "20px",
-                        }}
-                        size="small"
-                        colSpan={20}
-                      >
-                        Subsistem Tanjungjati
-                      </TableCell>
-                    </TableRow>
-                    {/* {[0, 1, 3, 4, 5].map((index) => ( */}
-                    {defenseScheme.length > 0 &&
-                      defenseScheme.map((list: defenseScheme) => (
-                        <TableRow key={list.id}>
-                          <TableCell size="small">
-                            {list.gardu_induk.nama}
-                          </TableCell>
-                          <TableCell size="small">{list.tahap.value}</TableCell>
-                          <TableCell
-                            size="small"
-                            sx={{ background: "#d6ebf0" }}
-                          >
-                            {list.amp.value}
-                          </TableCell>
-                          <TableCell
-                            size="small"
-                            sx={{ background: "#d6ebf0" }}
-                          >
-                            {list.detik}
-                          </TableCell>
-                          <TableCell
-                            size="small"
-                            sx={{ background: "#d6ebf0" }}
-                          >
-                            {list.mw}
-                          </TableCell>
-                          <TableCell size="small">
-                            {list.peralatan_target.nama}
-                          </TableCell>
-                          <TableCell size="small">{list.keterangan}</TableCell>
-                          <TableCell size="small">{list.real_ia}</TableCell>
-                          <TableCell size="small">{list.real_ols}</TableCell>
-                          <TableCell size="small">{list.target_ia}</TableCell>
-                          <TableCell size="small">{list.target_ols}</TableCell>
-                          <TableCell size="small">{list.set_ia}</TableCell>
-                          <TableCell size="small">{list.set_ols}</TableCell>
-                          <TableCell size="small">
-                            <Chip label="ON" color="success" />
-                          </TableCell>
-                          <TableCell size="small">
-                            <Box sx={{ display: "flex", alignItems: "center" }}>
-                              <IconButton onClick={() => null}>
-                                <PencilOutline />
-                              </IconButton>
-                            </Box>
-                          </TableCell>
-                        </TableRow>
+                    {defenseList.length > 0 &&
+                      defenseList.map((list: DefenseSchemaList) => (
+                        <>
+                          <TableRow>
+                            <TableCell
+                              sx={{
+                                background: "#d6ebf0",
+                                fontWeight: 500,
+                                fontSize: "20px",
+                              }}
+                              size="small"
+                              colSpan={20}
+                            >
+                              {list.sub_sistem.nama}
+                            </TableCell>
+                          </TableRow>
+                          <TableRow key={list.id}>
+                            <TableCell size="small">
+                              {list.gardu_induk.nama}
+                            </TableCell>
+                            <TableCell size="small">
+                              {list.tahap.value}
+                            </TableCell>
+                            <TableCell
+                              size="small"
+                              sx={{ background: "#d6ebf0" }}
+                            >
+                              {list.amp.value}
+                            </TableCell>
+                            <TableCell
+                              size="small"
+                              sx={{ background: "#d6ebf0" }}
+                            >
+                              {list.detik}
+                            </TableCell>
+                            <TableCell
+                              size="small"
+                              sx={{ background: "#d6ebf0" }}
+                            >
+                              {list.mw}
+                            </TableCell>
+                            <TableCell size="small">
+                              {list.peralatan_target.nama}
+                            </TableCell>
+                            <TableCell size="small">
+                              {list.keterangan}
+                            </TableCell>
+                            <TableCell size="small">{list.real_ia}</TableCell>
+                            <TableCell size="small">{list.real_ols}</TableCell>
+                            <TableCell size="small">{list.target_ia}</TableCell>
+                            <TableCell size="small">
+                              {list.target_ols}
+                            </TableCell>
+                            <TableCell size="small">{list.set_ia}</TableCell>
+                            <TableCell size="small">{list.set_ols}</TableCell>
+                            <TableCell size="small">
+                              <Chip
+                                label={list.status ? "ON" : "OFF"}
+                                color={list.status ? "success" : "error"}
+                              />
+                            </TableCell>
+                            <TableCell size="small">
+                              <Box
+                                sx={{ display: "flex", alignItems: "center" }}
+                              >
+                                <IconButton
+                                  onClick={() => {
+                                    openModal("modal-add-ols", list.id);
+                                    selectData(list);
+                                  }}
+                                >
+                                  <PencilOutline />
+                                </IconButton>
+                              </Box>
+                            </TableCell>
+                          </TableRow>
+                        </>
                       ))}
                   </TableBody>
                 </Table>
@@ -259,12 +279,6 @@ const OLS = () => {
           </Card>
         </Grid>
       </Grid>
-      {/* {defenseScheme.length > 0 &&
-        defenseScheme.map((list: defenseScheme) => (
-          <TableRow key={list.amp_id} hover>
-            <TableCell size="small">{list.jenis_peralatan}</TableCell>
-          </TableRow>
-        ))} */}
     </>
   );
 };

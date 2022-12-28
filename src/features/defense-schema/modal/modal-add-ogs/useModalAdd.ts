@@ -5,7 +5,7 @@ import { garduIndukApi } from "src/api/gardu-induk";
 import { subsistemApi } from "src/api/subsistem";
 import { trafoApi } from "src/api/trafo";
 import { defenseApi } from "src/api/defense";
-import { optionJenisPeralatan } from './ModalAddOLS.constant'
+import { optionJenisPeralatan } from './ModalAddOGS.constant'
 import { peralatanApi } from "src/api/peralatan";
 
 export const useModalAdd = (jenisPeralatan: string) => {
@@ -26,7 +26,7 @@ export const useModalAdd = (jenisPeralatan: string) => {
   ];
 
   useEffect(() => {
-    if (modalSnap.isOpen && modalSnap.target === "modal-add-ols") {
+    if (modalSnap.isOpen && modalSnap.target === "modal-add-ogs") {
       getGarduIndukList();
       getSubsistemList();
       getTahapList();
