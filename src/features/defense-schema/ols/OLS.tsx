@@ -24,7 +24,7 @@ import DownloadIcon from "src/assets/icons/download-icon.svg";
 import { openModal } from "src/state/modal";
 import { WrapperFilter } from "src/components/filter";
 import ModalAdd from "../modal/ModalAdd";
-import { defenseSchemeOlsApi } from "src/api/defense-scheme";
+import { defenseSchemeOlsApi } from "src/api/defense-ols";
 import { useSnapshot } from "valtio";
 import { reloadPage } from "src/state/reloadPage";
 import { defenseScheme } from "./types";

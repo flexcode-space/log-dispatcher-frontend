@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import {
   Button,
@@ -17,6 +17,13 @@ import { SelectInput } from "src/components/select-input";
 import { DatePicker } from "src/components/date-picker";
 import { StyledForm } from "src/components/form";
 import { modal, reloadPage, closeModal } from "src/state/modal";
+import { useModalAdd } from "./useModalAdd";
+import { initialValues } from "./ModalAddOLS.constant";
+import { defenseSchemeOlsApi } from "src/api/defense-ols";
+import dayjs from "dayjs";
+import { ols, removeData } from "../../ols/state/ols";
+import { setReloadPage } from "src/state/reloadPage";
+// import { laporanNeracaDaya } from "../state/laporanNeracaDaya";
 
 type ModalAddProps = {
   name: string;
@@ -32,32 +39,66 @@ type DefaultValueProps = {
 
 const ModalAdd = ({ name }: ModalAddProps) => {
   const modalSnapshot = useSnapshot(modal);
-
+  const { data } = useSnapshot(ols);
+  // const { data } = useSnapshot(laporanNeracaDaya);
   const [fields, setFields] = useState<DefaultValueProps>([defaultValue]);
+
+  const { createDefenseScheme } = defenseSchemeOlsApi();
+
+  const { subsistemOptions } = useModalAdd();
 
   const formMethods = useForm({
     // resolver: yupResolver(validationSchema),
-    // defaultValues: initialValues,
+    defaultValues: initialValues,
     mode: "onSubmit",
   });
-
+  const isOpen =
+    modalSnapshot.isOpen && modalSnapshot.target === "modal-add-ols";
   const onSubmit = (event?: React.FormEvent<HTMLFormElement>) => {
     event?.preventDefault();
 
     formMethods.handleSubmit(async (values) => {
-      //  TODO: handle submit
+      const { tanggal, status, ...rest } = values;
+
+      const payload = {
+        ...rest,
+        status: status === "true",
+        tanggal: dayjs(tanggal).format("YYYY-MM-DD"),
+      };
+
+      if (modalSnapshot.id) {
+        // await updateDefenseUFR([{ ...payload, id: modalSnapshot.id }]);
+        console.log("tes");
+      } else {
+        await createDefenseScheme([payload]);
+      }
+      onClickCloseModal();
+      setReloadPage("ufr");
     })();
   };
 
   const onClickCloseModal = () => {
     closeModal();
-    setFields([defaultValue]);
+    removeData();
+    formMethods.reset({ ...initialValues });
     // formMethods.reset({ ...initialValues });
   };
+  useEffect(() => {
+    if (modalSnapshot.id) {
+      const {
+        tanggal,
+        status,
+        gardu_induk,
 
+        sub_sistem,
+        tahap,
+        ...rest
+      } = data;
+    }
+  }, [modalSnapshot.isOpen]);
   return (
     <Dialog
-      open={modalSnapshot.isOpen}
+      open={isOpen}
       fullWidth
       onClose={onClickCloseModal}
       maxWidth="sm"
@@ -86,7 +127,7 @@ const ModalAdd = ({ name }: ModalAddProps) => {
                 <SelectInput
                   label="Subsistem"
                   name="sub_sistem_id"
-                  options={[]}
+                  options={subsistemOptions}
                 />
               </Grid>
               <Grid item xs={12} sm={12}>
