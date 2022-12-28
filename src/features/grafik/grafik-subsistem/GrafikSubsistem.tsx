@@ -28,7 +28,7 @@ type GrafikSubsistemProps = {
 };
 
 const GrafikSubsistem = ({ id, name }: GrafikSubsistemProps): JSX.Element => {
-  const [date, setDate] = useState<any>(null);
+  const [date, setDate] = useState<any>(new Date());
   const { getGrafikSubsistem, grafikSubsistem } = grafikApi();
 
   const direction = "ltr";
