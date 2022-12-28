@@ -28,7 +28,7 @@ type GrafikPembangkitProps = {
 };
 
 const GrafikPembangkit = ({ id, name }: GrafikPembangkitProps): JSX.Element => {
-  const [date, setDate] = useState<any>(null);
+  const [date, setDate] = useState<any>(new Date());
   const { getGrafikPembangkit, grafikPembangkit } = grafikApi();
 
   const direction = "ltr";
