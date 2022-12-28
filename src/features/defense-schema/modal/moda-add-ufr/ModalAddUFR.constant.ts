@@ -1,0 +1,41 @@
+import * as yup from 'yup'
+
+export const initialValues = {
+  beban_malam: 0,
+  beban_siang: 0,
+  defense_tahap_id: '',
+  gardu_induk_id: '',
+  keterangan: '',
+  penyulang: '',
+  penyulang_buka: '',
+  penyulang_kw: 0,
+  penyulang_tutup: '',
+  set: 0,
+  status: '',
+  sub_sistem_id: '',
+  tanggal: new Date(),
+  trafo_id: '',
+  ufr_kw: 0,
+  ufr_masuk: '',
+  ufr_trip: '',
+}
+
+export const validationSchema = yup.object({
+  beban_malam: yup.number().required('This field is required'),
+  beban_siang: yup.number().required('This field is required'),
+  defense_tahap_id: yup.string().required('This field is required'),
+  gardu_induk_id: yup.string().required('This field is required'),
+  keterangan: yup.string().required('This field is required'),
+  penyulang: yup.string().required('This field is required'),
+  penyulang_buka: yup.string().required('This field is required'),
+  penyulang_kw: yup.number().required('This field is required'),
+  penyulang_tutup: yup.string().required('This field is required'),
+  set: yup.number().required('This field is required'),
+  status: yup.string().required('This field is required'),
+  sub_sistem_id: yup.string().required('This field is required'),
+  tanggal: yup.string().required('This field is required'),
+  trafo_id: yup.string().required('This field is required'),
+  ufr_kw: yup.number().required('This field is required'),
+  ufr_masuk: yup.string().required('This field is required'),
+  ufr_trip: yup.string().required('This field is required'),
+})

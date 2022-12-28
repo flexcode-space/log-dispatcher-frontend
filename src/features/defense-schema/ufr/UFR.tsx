@@ -1,4 +1,4 @@
-import { useState, ChangeEvent } from "react";
+import { useState, ChangeEvent, useEffect } from "react";
 import {
   Box,
   Card,
@@ -21,14 +21,22 @@ import { PencilOutline } from "mdi-material-ui";
 import { openModal } from "src/state/modal";
 import DownloadIcon from "src/assets/icons/download-green-icon.svg";
 import FilterIcon from "src/assets/icons/filter-green-icon.svg";
-import ModalAddUFR from "../modal/ModalAddUFR";
+import { ModalAddUFR } from "../modal";
 
 import { WrapperFilter } from "src/components/filter";
+import defenseUFRApi from "src/api/defense-ufr/defenseUFRApi";
+import { DefenseUFRList } from "./types";
+import { selectData } from "./state/ufr";
+import { reloadPage } from "src/state/reloadPage";
+import { useSnapshot } from "valtio";
 
 const UfrComponent = () => {
-  // ** States
+  const reloadPageSnap = useSnapshot(reloadPage);
+
   const [page, setPage] = useState<number>(0);
   const [rowsPerPage, setRowsPerPage] = useState<number>(10);
+
+  const { getDefenseUFRList, defenseUFRList } = defenseUFRApi();
 
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
@@ -38,6 +46,15 @@ const UfrComponent = () => {
     setRowsPerPage(+event.target.value);
     setPage(0);
   };
+
+  useEffect(() => {
+    getDefenseUFRList();
+  }, []);
+  useEffect(() => {
+    if (reloadPageSnap.target === "ufr") {
+      getDefenseUFRList();
+    }
+  }, [reloadPageSnap.id]);
 
   return (
     <>
@@ -74,7 +91,7 @@ const UfrComponent = () => {
                     sx={{ mb: 2 }}
                     size="small"
                     variant="contained"
-                    onClick={() => openModal()}
+                    onClick={() => openModal("modal-add-ufr")}
                   >
                     <IconButton>
                       <Plus />
@@ -90,9 +107,9 @@ const UfrComponent = () => {
                       <TableCell align="center" size="small" colSpan={2}>
                         UFR
                       </TableCell>
-                      <TableCell size="small" rowSpan={2}>
+                      {/* <TableCell size="small" rowSpan={2}>
                         UPT
-                      </TableCell>
+                      </TableCell> */}
                       <TableCell size="small" rowSpan={2}>
                         Subsistem
                       </TableCell>
@@ -140,40 +157,74 @@ const UfrComponent = () => {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {[0, 1, 3, 4, 5].map((index) => (
-                      <TableRow>
-                        <TableCell size="small">1</TableCell>
-                        <TableCell size="small">49</TableCell>
-                        <TableCell size="small">Semarang</TableCell>
-                        <TableCell size="small">Ungaran</TableCell>
-                        <TableCell size="small">WLERI</TableCell>
-                        <TableCell size="small">2</TableCell>
-                        <TableCell size="small">WLI.03</TableCell>
-                        <TableCell size="small">6,1</TableCell>
-                        <TableCell size="small">150 KV</TableCell>
-                        <TableCell size="small">Weleri 1</TableCell>
-                        <TableCell size="small">07:02</TableCell>
-                        <TableCell size="small">07:02</TableCell>
-                        <TableCell size="small">07:02</TableCell>
-                        <TableCell size="small">07:02</TableCell>
-                        <TableCell size="small">07:02</TableCell>
-                        <TableCell size="small">07:02</TableCell>
-                        <TableCell size="small">07:02</TableCell>
-                        <TableCell size="small">07:02</TableCell>
-                        <TableCell size="small">07:02</TableCell>
-                        <TableCell size="small">07:02</TableCell>
-                        <TableCell size="small">
-                          <Box sx={{ display: "flex", alignItems: "center" }}>
-                            <IconButton onClick={() => null}>
-                              <PencilOutline />
-                            </IconButton>
-                          </Box>
-                        </TableCell>
-                        <TableCell size="small">
-                          <Chip label="ON" color="success" />
-                        </TableCell>
-                      </TableRow>
-                    ))}
+                    {defenseUFRList.length &&
+                      defenseUFRList.map(
+                        (list: DefenseUFRList, index: number) => (
+                          <TableRow>
+                            <TableCell size="small">
+                              {list.tahap.value}
+                            </TableCell>
+                            <TableCell size="small">{list.set}</TableCell>
+                            <TableCell size="small">
+                              {list.sub_sistem.nama}
+                            </TableCell>
+                            <TableCell size="small">
+                              {list.gardu_induk.nama}
+                            </TableCell>
+                            <TableCell size="small">
+                              {list.trafo.nama}
+                            </TableCell>
+                            <TableCell size="small">{list.penyulang}</TableCell>
+                            <TableCell size="small">
+                              {list.beban_siang}
+                            </TableCell>
+                            <TableCell size="small">
+                              {list.beban_malam}
+                            </TableCell>
+                            <TableCell size="small">
+                              {list.keterangan}
+                            </TableCell>
+                            <TableCell size="small">{list.ufr_trip}</TableCell>
+                            <TableCell size="small">{list.ufr_masuk}</TableCell>
+                            <TableCell size="small">{list.ufr_kw}</TableCell>
+                            <TableCell size="small"></TableCell>
+                            <TableCell size="small">{list.ufr_kwh}</TableCell>
+                            <TableCell size="small">
+                              {list.penyulang_buka}
+                            </TableCell>
+                            <TableCell size="small">
+                              {list.penyulang_tutup}
+                            </TableCell>
+                            <TableCell size="small">
+                              {list.penyulang_kw}
+                            </TableCell>
+                            <TableCell size="small"></TableCell>
+                            <TableCell size="small">
+                              {list.penyulang_kwh}
+                            </TableCell>
+                            <TableCell size="small">
+                              <Box
+                                sx={{ display: "flex", alignItems: "center" }}
+                              >
+                                <IconButton
+                                  onClick={() => {
+                                    openModal("modal-add-ufr", list.id);
+                                    selectData(list);
+                                  }}
+                                >
+                                  <PencilOutline />
+                                </IconButton>
+                              </Box>
+                            </TableCell>
+                            <TableCell size="small">
+                              <Chip
+                                label={list.status ? "ON" : "OFF"}
+                                color={list.status ? "success" : "error"}
+                              />
+                            </TableCell>
+                          </TableRow>
+                        )
+                      )}
                   </TableBody>
                 </Table>
               </TableContainer>
