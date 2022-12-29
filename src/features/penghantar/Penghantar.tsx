@@ -22,8 +22,11 @@ import { CellType } from "./types";
 import { ModalAddPenghantar } from "./modal";
 import { WrapperFilter } from "src/components/filter";
 import { penghantarApi } from "src/api/penghantar";
-import { openModal, closeModal, modal, reloadPage } from "src/state/modal";
+import { openModal, modal, reloadPage } from "src/state/modal";
 import { useDebounce } from "src/hooks/useDebounce";
+import { ModalDelete } from "src/components/modal";
+import MoreMenuIcon from "src/assets/icons/more-menu-icon.svg";
+import { MenuMore } from "src/components/menu-more";
 
 const Penghantar = () => {
   const modalSnapshot = useSnapshot(modal);
@@ -31,6 +34,8 @@ const Penghantar = () => {
   const [limit, setLimit] = useState<number>(10);
   const [page, setPage] = useState<number>(1);
   const [search, setSearch] = useState<string>("");
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
 
   const debouncedSearch = useDebounce(search, 500);
 
@@ -45,16 +50,20 @@ const Penghantar = () => {
   const id = router.query.id as string;
   const path = router.pathname.split("/")[2];
 
-  const onClickDelete = async (id: string) => {
-    await deletePenghantar({ id });
+  const onClickDelete = async () => {
+    await deletePenghantar({ id: modalSnapshot.id });
     reloadPage();
+  };
+
+  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
   };
 
   const columns = [
     ...defaultColumns,
     {
       flex: 0.15,
-      minWidth: 100,
+      minWidth: 130,
       sortable: false,
       field: "actions",
       headerName: "Aksi",
@@ -66,8 +75,11 @@ const Penghantar = () => {
               <PencilOutline />
             </IconButton>
             <IconButton>
-              <DeleteOutline onClick={() => onClickDelete(id)} />
+              <DeleteOutline
+                onClick={() => openModal("modal-delete", row.id)}
+              />
             </IconButton>
+            <MenuMore />
           </Box>
         );
       },
@@ -94,6 +106,7 @@ const Penghantar = () => {
 
   return (
     <>
+      <ModalDelete onClickDelete={onClickDelete} />
       <ModalAddPenghantar />
       <Grid container spacing={6}>
         {!id && (

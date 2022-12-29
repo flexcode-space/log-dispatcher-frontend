@@ -25,6 +25,7 @@ import { WrapperFilter } from "src/components/filter";
 import { ibtApi } from "src/api/ibt";
 import { openModal, closeModal, modal, reloadPage } from "src/state/modal";
 import { useDebounce } from "src/hooks/useDebounce";
+import { ModalDelete } from "src/components/modal";
 
 const IBT = () => {
   const modalSnapshot = useSnapshot(modal);
@@ -40,8 +41,8 @@ const IBT = () => {
   const id = router.query.id as string;
   const path = router.pathname.split("/")[2];
 
-  const onClickDelete = async (id: string) => {
-    await deleteIbt({ id });
+  const onClickDelete = async () => {
+    await deleteIbt({ id: modalSnapshot.id });
     reloadPage();
   };
 
@@ -61,7 +62,9 @@ const IBT = () => {
               <PencilOutline />
             </IconButton>
             <IconButton>
-              <DeleteOutline onClick={() => onClickDelete(id)} />
+              <DeleteOutline
+                onClick={() => openModal("modal-delete", row.id)}
+              />
             </IconButton>
           </Box>
         );
@@ -89,6 +92,7 @@ const IBT = () => {
 
   return (
     <>
+      <ModalDelete onClickDelete={onClickDelete} />
       <ModalAddIBT />
       <Grid container spacing={6}>
         {!id && (

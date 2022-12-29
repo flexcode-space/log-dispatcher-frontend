@@ -25,6 +25,7 @@ import { WrapperFilter } from "src/components/filter";
 import { subsistemApi } from "src/api/subsistem";
 import { useDebounce } from "src/hooks/useDebounce";
 import { openModal, modal, reloadPage } from "src/state/modal";
+import { ModalDelete } from "src/components/modal";
 
 const Subsistem = () => {
   const modalSnapshot = useSnapshot(modal);
@@ -42,8 +43,8 @@ const Subsistem = () => {
     totalData,
   } = subsistemApi();
 
-  const onClickDelete = async (id: string) => {
-    await deleteSubsistem({ id });
+  const onClickDelete = async () => {
+    await deleteSubsistem({ id: modalSnapshot.id });
     reloadPage();
   };
 
@@ -61,7 +62,11 @@ const Subsistem = () => {
             <PencilOutline />
           </IconButton>
           <IconButton>
-            <DeleteOutline onClick={() => onClickDelete(row.id)} />
+            <DeleteOutline
+              onClick={() => {
+                openModal("modal-delete", row.id);
+              }}
+            />
           </IconButton>
         </Box>
       ),
@@ -88,6 +93,7 @@ const Subsistem = () => {
 
   return (
     <>
+      <ModalDelete onClickDelete={onClickDelete} />
       <ModalAddSubsistem />
       <Grid container spacing={6}>
         <Grid item xs={12}>
