@@ -140,4 +140,22 @@ export const defaultColumns = [
       );
     },
   },
+  {
+    flex: 0.25,
+    minWidth: 200,
+    field: "kof_sym",
+    headerName: "Koefisien",
+    renderCell: ({ row }: CellType) => {
+      const { kof_sym, kof_num } = row;
+      return (
+        <Typography
+          variant="subtitle2"
+          noWrap
+          sx={{ textTransform: "capitalize" }}
+        >
+          {`${kof_sym} ( ${kof_num} ) `}
+        </Typography>
+      );
+    },
+  },
 ];

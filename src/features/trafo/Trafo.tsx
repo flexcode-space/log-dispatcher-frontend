@@ -27,6 +27,7 @@ import { WrapperFilter } from "src/components/filter";
 import { trafoApi } from "src/api/trafo";
 import { openModal, modal, reloadPage } from "src/state/modal";
 import { useDebounce } from "src/hooks/useDebounce";
+import { ModalDelete } from "src/components/modal";
 
 const Trafo = () => {
   const modalSnapshot = useSnapshot(modal);
@@ -38,11 +39,10 @@ const Trafo = () => {
 
   const debouncedSearch = useDebounce(search, 500);
 
-  const { getTrafoList, trafoList, totalData, loading, deleteTrafo } =
-    trafoApi();
+  const { getTrafoList, trafoList, totalData, deleteTrafo } = trafoApi();
 
-  const onClickDelete = async (id: string) => {
-    await deleteTrafo({ id });
+  const onClickDelete = async () => {
+    await deleteTrafo({ id: modalSnapshot.id });
     reloadPage();
   };
 
@@ -63,7 +63,7 @@ const Trafo = () => {
             <PencilOutline />
           </IconButton>
           <IconButton>
-            <DeleteOutline onClick={() => onClickDelete(row.id)} />
+            <DeleteOutline onClick={() => openModal("modal-delete", row.id)} />
           </IconButton>
         </Box>
       ),
@@ -90,6 +90,7 @@ const Trafo = () => {
 
   return (
     <>
+      <ModalDelete onClickDelete={onClickDelete} />
       <ModalAddTrafo />
       <Grid container spacing={6}>
         {!id && (

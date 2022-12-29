@@ -25,6 +25,7 @@ import { WrapperFilter } from "src/components/filter";
 import { pembangkitApi } from "src/api/pembangkit";
 import { openModal, closeModal, modal, reloadPage } from "src/state/modal";
 import { useDebounce } from "src/hooks/useDebounce";
+import { ModalDelete } from "src/components/modal";
 
 const Pembangkit = () => {
   const modalSnapshot = useSnapshot(modal);
@@ -44,8 +45,8 @@ const Pembangkit = () => {
     deletePembangkit,
   } = pembangkitApi();
 
-  const onClickDelete = async (id: string) => {
-    await deletePembangkit({ id });
+  const onClickDelete = async () => {
+    await deletePembangkit({ id: modalSnapshot.id });
     reloadPage();
   };
 
@@ -68,7 +69,9 @@ const Pembangkit = () => {
               <PencilOutline />
             </IconButton>
             <IconButton>
-              <DeleteOutline onClick={() => onClickDelete(id)} />
+              <DeleteOutline
+                onClick={() => openModal("modal-delete", row.id)}
+              />
             </IconButton>
           </Box>
         );
@@ -96,6 +99,7 @@ const Pembangkit = () => {
 
   return (
     <>
+      <ModalDelete onClickDelete={onClickDelete} />
       <ModalAddPembangkit />
       <Grid container spacing={6}>
         {!id && (
