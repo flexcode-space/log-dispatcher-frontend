@@ -10,6 +10,7 @@ import { openModal } from "src/state/modal";
 import { TablePiket, TableGangguan } from "./table-laporan";
 import { TableList } from "../catatan-pembangkitan/table-list";
 import { ArrowRight } from "mdi-material-ui";
+import { ModalGenerateLaporan } from "./modal";
 
 const LaporanPekerjaan = () => {
   const router = useRouter();
@@ -32,6 +33,7 @@ const LaporanPekerjaan = () => {
 
   return (
     <>
+      <ModalGenerateLaporan />
       <Grid container spacing={6}>
         <Grid item xs={12}>
           <WrapperFilter>
@@ -64,7 +66,7 @@ const LaporanPekerjaan = () => {
               </LocalizationProvider>
               <Button
                 sx={{ mb: 2 }}
-                onClick={() => openModal()}
+                onClick={() => openModal("modal-generate-laporan")}
                 variant="contained"
               >
                 Generate Laporan

@@ -18,6 +18,7 @@ import { DataGrid } from "@mui/x-data-grid";
 import { openModal } from "src/state/modal";
 import { TIME } from "src/constants/time";
 import { TableVerifikasi } from "./table-verifikasi";
+import { ModalGenerateLaporan } from "./modal";
 
 const LaporanFreeGov = () => {
   const generateColumsTime = () => {
@@ -53,6 +54,7 @@ const LaporanFreeGov = () => {
 
   return (
     <>
+      <ModalGenerateLaporan />
       <Grid container spacing={6}>
         <Grid item xs={12}>
           <WrapperFilter>
@@ -78,7 +80,7 @@ const LaporanFreeGov = () => {
               </LocalizationProvider>
               <Button
                 sx={{ mb: 2 }}
-                onClick={() => openModal()}
+                onClick={() => openModal("modal-generate-laporan")}
                 variant="contained"
               >
                 Generate Laporan
