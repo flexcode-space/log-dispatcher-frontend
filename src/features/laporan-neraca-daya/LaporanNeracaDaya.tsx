@@ -27,6 +27,7 @@ import {
   TableContainer,
 } from "src/components/table";
 import { ModalAdd } from "./modal";
+import { ModalGenerateLaporan } from "./modal/modal-generate-laporan";
 import { laporanNeracaDayaApi } from "src/api/laporan-neraca-daya";
 import { LaporanNeracaDayaList } from "./types";
 import { useSnapshot } from "valtio";
@@ -57,6 +58,7 @@ const LaporanNeracaDaya = () => {
   return (
     <>
       <ModalAdd />
+      <ModalGenerateLaporan />
       <Grid container spacing={6}>
         <Grid item xs={12}>
           <WrapperFilter>
@@ -92,7 +94,7 @@ const LaporanNeracaDaya = () => {
               </LocalizationProvider>
               <Button
                 sx={{ mb: 2 }}
-                onClick={() => openModal()}
+                onClick={() => openModal("modal-generate-laporan")}
                 variant="contained"
               >
                 Generate Laporan
