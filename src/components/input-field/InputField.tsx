@@ -7,7 +7,7 @@ import OutlinedInput from "@mui/material/OutlinedInput";
 import InputAdornment from "@mui/material/InputAdornment";
 
 type InputFieldProps = {
-  label: string;
+  label?: string;
   name: string;
   placeholder?: string;
   type?: string;
