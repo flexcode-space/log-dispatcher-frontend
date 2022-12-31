@@ -1,6 +1,5 @@
 import { Typography, Card, CardContent } from "@mui/material";
 import Grid from "@mui/material/Grid";
-
 import { Chart } from "./components/Chart";
 import { Shortcut } from "./components/Shortcut";
 import Grafik from "./components/Grafik";
@@ -11,8 +10,19 @@ import { MonitoringPenghantar } from "./components/MonitoringPenghantar";
 import { TeganganSubsistem } from "./components/TeganganSubsistem";
 import JadwalShift from "./components/JadwalShift";
 import { pengaturanSubsistem } from "./Home.constant";
+import { berandaApi } from "src/api/beranda";
+import { useEffect } from "react";
+import { useRouter } from "next/router";
 
 const Home = () => {
+  const router = useRouter();
+
+  const { getPengaturanSistem, pengaturanSistem } = berandaApi();
+
+  useEffect(() => {
+    getPengaturanSistem();
+  }, []);
+
   return (
     <>
       <Grid container spacing={6} height="auto">
@@ -22,7 +32,12 @@ const Home = () => {
               <Typography variant="h6">Pengaturan Sistem</Typography>
               <Grid container spacing={4} mt="24px">
                 {pengaturanSubsistem.map((value) => (
-                  <Shortcut key={value} title={value} />
+                  <Shortcut
+                    key={value.type}
+                    title={value.name}
+                    count={(pengaturanSistem as any)[value.type]}
+                    onClick={() => router.push(value.path)}
+                  />
                 ))}
               </Grid>
             </CardContent>
