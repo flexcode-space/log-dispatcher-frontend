@@ -25,6 +25,7 @@ import { WrapperFilter } from "src/components/filter";
 import { busbarApi } from "src/api/busbar";
 import { openModal, closeModal, modal, reloadPage } from "src/state/modal";
 import { useDebounce } from "src/hooks/useDebounce";
+import { ModalDelete } from "src/components/modal";
 
 const Busbar = () => {
   const modalSnapshot = useSnapshot(modal);
@@ -39,8 +40,8 @@ const Busbar = () => {
   const { getBusbarList, busbarList, loading, totalData, deleteBusbar } =
     busbarApi();
 
-  const onClickDelete = async (id: string) => {
-    await deleteBusbar({ id });
+  const onClickDelete = async () => {
+    await deleteBusbar({ id: modalSnapshot.id });
     reloadPage();
   };
 
@@ -63,7 +64,9 @@ const Busbar = () => {
               <PencilOutline />
             </IconButton>
             <IconButton>
-              <DeleteOutline onClick={() => onClickDelete(id)} />
+              <DeleteOutline
+                onClick={() => openModal("modal-delete", row.id)}
+              />
             </IconButton>
           </Box>
         );
@@ -95,6 +98,7 @@ const Busbar = () => {
 
   return (
     <>
+      <ModalDelete onClickDelete={onClickDelete} />
       <ModalAddBusbar handleClose={handleClose} />
       <Grid container spacing={6}>
         {!id && (

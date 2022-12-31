@@ -11,7 +11,9 @@ import { TableLaporan, TableLain } from "./table-laporan";
 
 import { laporanPekerjaanList } from "./LaporanPekerjaan.constant";
 import { ModalAdd } from "./modal";
+import { ModalGenerateLaporan } from "./modal/modal-generate-laporan";
 import dayjs, { Dayjs } from "dayjs";
+import { ModalAddBusbar } from "../busbar/modal";
 
 const LaporanPekerjaan = () => {
   const [search, setSearch] = useState<string>("");
@@ -22,6 +24,7 @@ const LaporanPekerjaan = () => {
   return (
     <>
       <ModalAdd />
+      <ModalGenerateLaporan />
       <Grid container spacing={6}>
         <Grid item xs={12}>
           <WrapperFilter>
@@ -62,7 +65,7 @@ const LaporanPekerjaan = () => {
               </Button>
               <Button
                 sx={{ mb: 2 }}
-                onClick={() => openModal()}
+                onClick={() => openModal("modal-generate-laporan")}
                 variant="contained"
               >
                 Generate Laporan

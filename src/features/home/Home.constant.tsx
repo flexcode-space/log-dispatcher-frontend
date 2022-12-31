@@ -32,12 +32,16 @@ export const DATA = [
 ];
 
 export const pengaturanSubsistem = [
-  "Subsistem",
-  "Gardu Induk",
-  "Pembangkit",
-  "IBT",
-  "Trafo",
-  "Busbar",
-  "Penghantar",
-  "Reaktor",
+  { path: "/master-data/busbar", type: "busbar", name: "Busbar" },
+  {
+    path: "/master-data/gardu-induk",
+    type: "gardu_induk",
+    name: "Gardu Induk",
+  },
+  { path: "/master-data/ibt", type: "ibt", name: "IBT" },
+  { path: "/master-data/pembangkit", type: "pembangkit", name: "Pembangkit" },
+  { path: "/master-data/penghantar", type: "penghantar", name: "Penghantar" },
+  { path: "/master-data/reaktor", type: "reaktor", name: "Reaktor" },
+  { path: "/master-data/sub-sistem", type: "subsistem", name: "Subsistem" },
+  { path: "/master-data/trafo", type: "trafo", name: "Trafo" },
 ];

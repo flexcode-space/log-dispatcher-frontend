@@ -12,6 +12,7 @@ const endpoint = '/defense'
 const defenseApi = () => {
   const [defenseList, setDefenseList] = useState<[]>([])
   const [tahapList, setTahapList] = useState<[]>([])
+  const [ampList, setAmpList] = useState<[]>([])
   const [loading, setLoading] = useState<boolean>(false);
 
   const getDefenseList = useCallback(async (path: string, params: Params = {}) => {
@@ -31,6 +32,17 @@ const defenseApi = () => {
     try {
       const { data } = await Axios.get(`${endpoint}/tahap`)
       setTahapList(data || [])
+    } finally {
+      setLoading(false)
+    }
+  }, [])
+
+  const getAmpList = useCallback(async () => {
+    setLoading(true)
+
+    try {
+      const { data } = await Axios.get(`${endpoint}/amp`)
+      setAmpList(data || [])
     } finally {
       setLoading(false)
     }
@@ -66,11 +78,13 @@ const defenseApi = () => {
   return {
     defenseList,
     tahapList,
+    ampList,
     loading,
     getDefenseList,
     createDefense,
     updateDefense,
-    getTahapList
+    getTahapList,
+    getAmpList
   }
 }
 

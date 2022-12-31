@@ -26,6 +26,7 @@ import { WrapperFilter } from "src/components/filter";
 import { garduIndukApi } from "src/api/gardu-induk";
 import { useDebounce } from "src/hooks/useDebounce";
 import { openModal, closeModal, modal, reloadPage } from "src/state/modal";
+import { ModalDelete } from "src/components/modal";
 
 const GarduInduk = () => {
   const modalSnapshot = useSnapshot(modal);
@@ -43,8 +44,8 @@ const GarduInduk = () => {
     totalData,
   } = garduIndukApi();
 
-  const onClickDelete = async (id: string) => {
-    await deleteGarduInduk({ id });
+  const onClickDelete = async () => {
+    await deleteGarduInduk({ id: modalSnapshot.id });
     reloadPage();
   };
 
@@ -62,7 +63,7 @@ const GarduInduk = () => {
             <PencilOutline />
           </IconButton>
           <IconButton>
-            <DeleteOutline onClick={() => onClickDelete(row.id)} />
+            <DeleteOutline onClick={() => openModal("modal-delete", row.id)} />
           </IconButton>
         </Box>
       ),
@@ -93,6 +94,7 @@ const GarduInduk = () => {
 
   return (
     <>
+      <ModalDelete onClickDelete={onClickDelete} />
       <ModalAddGarduInduk handleClose={handleClose} />
       <ModallAddUPT />
       <Grid container spacing={6}>

@@ -79,6 +79,7 @@ export const Chart = () => {
           <LocalizationProvider dateAdapter={AdapterDateFns}>
             <DatePicker
               label="Tanggal"
+              inputFormat="dd/M/yyyy"
               value={new Date()}
               onChange={() => null}
               renderInput={(params) => <TextField {...params} />}

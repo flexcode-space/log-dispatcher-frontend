@@ -1,9 +1,8 @@
-// ** MUI Imports
-import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import CardContent from "@mui/material/CardContent";
+import { formatDecimalNumber } from "src/utils/number";
 
 type CardProps = {
   title: string;
@@ -37,7 +36,7 @@ const CardStatsCharacter = ({
                 variant="subtitle2"
                 sx={{ fontSize: "24px", fontWeight: 500 }}
               >
-                {value}
+                {value ? formatDecimalNumber(value as number, 2) + " kWh" : "-"}
               </Typography>
             </Grid>
             <Grid item>
