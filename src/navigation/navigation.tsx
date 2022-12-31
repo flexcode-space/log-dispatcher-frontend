@@ -131,12 +131,12 @@ export const navigation = (): HorizontalNavItemsType => [
         path: "/energi-primer/air",
       },
       {
-        title: "Gas & HSD",
+        title: "Gas",
         icon: PembangkitIcon,
         path: "/energi-primer/gas-dan-hsd",
       },
       {
-        title: "Batubara",
+        title: "Batubara & HSD",
         icon: PenghantarIcon,
         path: "/energi-primer/batubara",
       },
