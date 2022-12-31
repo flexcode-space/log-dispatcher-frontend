@@ -29,7 +29,7 @@ import NeracaDayaIcon from "../assets/icons/neraca-daya-icon.svg";
 import PoskoApdIcon from "../assets/icons/posko-apd-icon.svg";
 import SubReportIcon from "../assets/icons/sub-report-icon.svg";
 import GangguanIcon from "../assets/icons/gangguan-icon.svg";
-
+import PengaturanUserIcon from "../assets/icons/pengaturan-user-icon.svg";
 // ** Type import
 import { HorizontalNavItemsType } from "src/@core/layouts/types";
 
@@ -274,6 +274,11 @@ export const navigation = (): HorizontalNavItemsType => [
             path: "/laporan/scada",
           },
         ],
+      },
+      {
+        title: "Pengaturan User",
+        icon: PengaturanUserIcon,
+        path: "/pengaturan-user",
       },
     ],
   },
