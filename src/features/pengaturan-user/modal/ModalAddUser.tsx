@@ -14,6 +14,9 @@ import { InputField } from "src/components/input-field";
 import { SelectInput } from "src/components/select-input";
 import { StyledForm } from "src/components/form";
 import { modal, closeModal } from "src/state/modal";
+import { UploadFile } from "src/components/upload-file";
+import { HAK_AKSES } from "./useModalAdd";
+import { columns } from "src/features/home/components/StatusPembangkit";
 
 const ModalAddUser = () => {
   const modalSnapshot = useSnapshot(modal);
@@ -60,9 +63,33 @@ const ModalAddUser = () => {
                 Tambah Akun
               </Typography>
             </Box>
-            <Grid container spacing={1} mt={1}>
+            <Grid container spacing={1} mb={5}>
+              <Grid
+                item
+                xs={12}
+                sm={3}
+                sx={{
+                  display: "flex",
+                  alignItems: "flex-start",
+                  justifyContent: "flex-start",
+                }}
+              >
+                <img
+                  src="/images/profil-tambah-akun.png"
+                  alt="contoh foto"
+                  height={120}
+                />
+              </Grid>
+              <Grid item xs={12} sm={9}>
+                <UploadFile
+                  name="Pilih-Foto"
+                  label="Pilih Foto"
+                  onChange={() => {}}
+                />
+                <p>Support file: .jpg, png maximum 5 MB</p>
+              </Grid>
               <Grid item xs={12} sm={12}>
-                <InputField label="Jenis Akun" name="" />
+                <SelectInput label="Hak Akses" name="" options={HAK_AKSES} />
               </Grid>
               <Grid item xs={12} sm={6}>
                 <InputField name="nama" label="Nama" />
