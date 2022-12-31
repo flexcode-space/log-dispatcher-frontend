@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { StyledForm } from "src/components/form";
 import { InputField } from "src/components/input-field";
@@ -20,17 +20,34 @@ import DatePickerMui from "@mui/lab/DatePicker";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import dayjs, { Dayjs } from "dayjs";
 import { pemakaianAir } from "./TableInflow.constant";
+import { airApi } from "src/api/airApi";
+
+type ListType = {
+  id: string;
+  nama: string;
+  tipe: string;
+  data: [];
+};
 
 const TableInflow = () => {
-  const [date, setDate] = useState<Dayjs | null>(dayjs());
+  const [date, setDate] = useState<Dayjs | null>(dayjs("2022-12-29"));
   const [search, setSearch] = useState<string>("");
   const [isEdit, setIsEdit] = useState<boolean>(false);
+
+  const { getAirList, airList } = airApi();
 
   const formMethods = useForm({
     // resolver: yupResolver(validationSchema),
     // defaultValues: initialValues,
     mode: "onSubmit",
   });
+
+  const filterValueByName = (name: string): ListType =>
+    airList.filter((list: ListType) => list.nama === name)[0];
+
+  useEffect(() => {
+    getAirList({ tipe: "inflow", tanggal: dayjs(date).format("YYYY-MM-DD") });
+  }, []);
 
   return (
     <Card>
@@ -117,41 +134,52 @@ const TableInflow = () => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {pemakaianAir.map((list) => (
-                    <TableRow key={list}>
-                      <TableCell>{list}</TableCell>
-                      {TIME.map((value, index) => {
-                        if (index % 2) {
-                          return (
-                            <TableCell key={index} sx={{ p: "0 !important" }}>
-                              <Box
-                                display={isEdit ? "" : "none"}
-                                sx={{
-                                  "> .MuiFormControl-root": {
-                                    mb: 0,
-                                  },
-                                }}
-                              >
-                                <InputField
-                                  type="number"
-                                  name={`mw_${value}`}
-                                />
-                              </Box>
-                              <Box
-                                display={isEdit ? "none" : ""}
-                                sx={{ px: "1rem" }}
-                              >
-                                10
-                              </Box>
-                            </TableCell>
+                  {pemakaianAir.map((value) => {
+                    const list = filterValueByName(value);
+                    console.log("list", list?.data);
+                    return (
+                      <TableRow key={value}>
+                        <TableCell>{value}</TableCell>
+                        {TIME.map((time, index) => {
+                          const mw = "mw_" + time.replace(".", "");
+
+                          console.log(
+                            "time",
+                            list?.data ? (list.data as any)[mw] : "-"
                           );
-                        }
-                      })}
-                      <TableCell>10</TableCell>
-                      <TableCell>10</TableCell>
-                      <TableCell>10</TableCell>
-                    </TableRow>
-                  ))}
+
+                          if (index % 2) {
+                            return (
+                              <TableCell key={index} sx={{ p: "0 !important" }}>
+                                <Box
+                                  display={isEdit ? "" : "none"}
+                                  sx={{
+                                    "> .MuiFormControl-root": {
+                                      mb: 0,
+                                    },
+                                  }}
+                                >
+                                  <InputField
+                                    type="number"
+                                    name={`mw_${time}`}
+                                  />
+                                </Box>
+                                <Box
+                                  display={isEdit ? "none" : ""}
+                                  sx={{ px: "1rem" }}
+                                >
+                                  {list?.data ? (list.data as any)[mw] : null}
+                                </Box>
+                              </TableCell>
+                            );
+                          }
+                        })}
+                        <TableCell>-</TableCell>
+                        <TableCell>-</TableCell>
+                        <TableCell>-</TableCell>
+                      </TableRow>
+                    );
+                  })}
                 </TableBody>
               </Table>
             </TableContainer>
