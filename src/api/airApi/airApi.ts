@@ -55,7 +55,7 @@ const airApi = () => {
   return {
     airList,
     loading,
-    getairList,
+    getAirList,
     createBatubara,
     updateBatubara
   }
