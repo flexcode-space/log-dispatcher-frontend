@@ -21,6 +21,8 @@ import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import dayjs, { Dayjs } from "dayjs";
 import { pemakaianAir } from "./TableInflow.constant";
 import { airApi } from "src/api/airApi";
+import { useSnapshot } from "valtio";
+import { reloadPage, setReloadPage } from "src/state/reloadPage";
 
 type ListType = {
   id: string;
@@ -30,6 +32,8 @@ type ListType = {
 };
 
 const TableInflow = () => {
+  const reloadPageSnap = useSnapshot(reloadPage);
+
   const [date, setDate] = useState<Dayjs | null>(dayjs());
   const [search, setSearch] = useState<string>("");
   const [isEdit, setIsEdit] = useState<boolean>(false);
@@ -44,15 +48,11 @@ const TableInflow = () => {
     event?.preventDefault();
 
     formMethods.handleSubmit(async (values) => {
-      // const payload: PayloadAir[] = [];
 
       Object.values(values).map(async (value, index) => {
-        // payload.push({
-        //   nama: pemakaianAir[index],
-        //   tanggal: dayjs(date).format("YYYY-MM-DD"),
-        //   tipe: "inflow",
-        //   data: value,
-        // });
+        Object.keys(value).map((key) => {
+          value[key] = value[key] ? parseFloat(value[key]) : 0;
+        });
 
         await createAir({
           nama: pemakaianAir[index],
@@ -63,6 +63,7 @@ const TableInflow = () => {
       });
 
       setIsEdit(false);
+      setReloadPage("inflow");
     })();
   };
 
@@ -70,8 +71,14 @@ const TableInflow = () => {
     airList.filter((list: ListType) => list.nama === name)[0];
 
   useEffect(() => {
-    getAirList({ tipe: "garung", tanggal: dayjs(date).format("YYYY-MM-DD") });
+    getAirList({ tipe: "inflow", tanggal: dayjs(date).format("YYYY-MM-DD") });
   }, [date]);
+
+  useEffect(() => {
+    if (reloadPageSnap.target === "inflow") {
+      getAirList({ tipe: "inflow", tanggal: dayjs(date).format("YYYY-MM-DD") });
+    }
+  }, [date, reloadPageSnap.id]);
 
   return (
     <Card>

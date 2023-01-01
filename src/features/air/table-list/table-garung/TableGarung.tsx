@@ -20,6 +20,8 @@ import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import dayjs, { Dayjs } from "dayjs";
 import { pemakaianAir, time_garung } from "./TableGarung.constant";
 import { airApi } from "src/api/airApi";
+import { reloadPage, setReloadPage } from "src/state/reloadPage";
+import { useSnapshot } from "valtio";
 
 type ListType = {
   id: string;
@@ -29,6 +31,8 @@ type ListType = {
 };
 
 const TableGarung = () => {
+  const reloadPageSnap = useSnapshot(reloadPage);
+
   const [date, setDate] = useState<Dayjs | null>(dayjs());
   const [search, setSearch] = useState<string>("");
   const [isEdit, setIsEdit] = useState<boolean>(false);
@@ -43,15 +47,10 @@ const TableGarung = () => {
     event?.preventDefault();
 
     formMethods.handleSubmit(async (values) => {
-      // const payload: PayloadAir[] = [];
-
       Object.values(values).map(async (value, index) => {
-        // payload.push({
-        //   nama: pemakaianAir[index],
-        //   tanggal: dayjs(date).format("YYYY-MM-DD"),
-        //   tipe: "inflow",
-        //   data: value,
-        // });
+        Object.keys(value).map((key) => {
+          value[key] = value[key] ? parseFloat(value[key]) : 0;
+        });
 
         await createAir({
           nama: pemakaianAir[index],
@@ -62,6 +61,7 @@ const TableGarung = () => {
       });
 
       setIsEdit(false);
+      setReloadPage("garung");
     })();
   };
 
@@ -69,8 +69,14 @@ const TableGarung = () => {
     airList.filter((list: ListType) => list.nama === name)[0];
 
   useEffect(() => {
-    getAirList({ tipe: "inflow", tanggal: dayjs(date).format("YYYY-MM-DD") });
+    getAirList({ tipe: "garung", tanggal: dayjs(date).format("YYYY-MM-DD") });
   }, [date]);
+
+  useEffect(() => {
+    if (reloadPageSnap.target === "garung") {
+      getAirList({ tipe: "garung", tanggal: dayjs(date).format("YYYY-MM-DD") });
+    }
+  }, [date, reloadPageSnap.id]);
 
   return (
     <Card>
@@ -139,13 +145,11 @@ const TableGarung = () => {
                       Keadaan Air
                     </TableCellHead>
                     {time_garung.map((value, index) => {
-                      if (index % 2) {
-                        return (
-                          <TableCellHead minWidth="150px" key={index}>
-                            {value}
-                          </TableCellHead>
-                        );
-                      }
+                      return (
+                        <TableCellHead minWidth="150px" key={index}>
+                          {value}
+                        </TableCellHead>
+                      );
                     })}
                     <TableCellHead minWidth="150px">Rata - Rata</TableCellHead>
                   </TableRow>
@@ -161,34 +165,32 @@ const TableGarung = () => {
 
                           const name = `[${indexAir}].${mw}`;
 
-                          if (index % 2) {
-                            formMethods.setValue(
-                              name,
-                              list?.data ? (list.data as any)[mw] : "",
-                              { shouldDirty: true }
-                            );
+                          formMethods.setValue(
+                            name,
+                            list?.data ? (list.data as any)[mw] : "",
+                            { shouldDirty: true }
+                          );
 
-                            return (
-                              <TableCell key={index} sx={{ p: "0 !important" }}>
-                                <Box
-                                  display={isEdit ? "" : "none"}
-                                  sx={{
-                                    "> .MuiFormControl-root": {
-                                      mb: 0,
-                                    },
-                                  }}
-                                >
-                                  <InputField type="number" name={name} />
-                                </Box>
-                                <Box
-                                  display={isEdit ? "none" : ""}
-                                  sx={{ px: "1rem" }}
-                                >
-                                  {list?.data ? (list.data as any)[mw] : null}
-                                </Box>
-                              </TableCell>
-                            );
-                          }
+                          return (
+                            <TableCell key={index} sx={{ p: "0 !important" }}>
+                              <Box
+                                display={isEdit ? "" : "none"}
+                                sx={{
+                                  "> .MuiFormControl-root": {
+                                    mb: 0,
+                                  },
+                                }}
+                              >
+                                <InputField type="number" name={name} />
+                              </Box>
+                              <Box
+                                display={isEdit ? "none" : ""}
+                                sx={{ px: "1rem" }}
+                              >
+                                {list?.data ? (list.data as any)[mw] : null}
+                              </Box>
+                            </TableCell>
+                          );
                         })}
                         <TableCell>-</TableCell>
                       </TableRow>
