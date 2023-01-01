@@ -1,6 +1,7 @@
 import { Grid, Typography } from "@mui/material";
 import PageHeader from "src/@core/components/page-header";
 import { TableInflow } from "./table-list";
+import { TableGarung } from "./table-list/table-garung";
 
 const Air = () => {
   return (
@@ -10,6 +11,9 @@ const Air = () => {
       </Grid>
       <Grid item xs={12}>
         <TableInflow />
+      </Grid>
+      <Grid item xs={12}>
+        <TableGarung />
       </Grid>
     </Grid>
   );

@@ -11,7 +11,6 @@ import {
   Table,
   TableBody,
 } from "src/components/table";
-import { TIME } from "src/constants/time";
 import { CardHeader } from "src/components/card";
 import { WrapperFilter } from "src/components/filter";
 import { LocalizationProvider } from "@mui/lab";
@@ -19,7 +18,7 @@ import { Box, Card, CardContent, Button, TextField } from "@mui/material";
 import DatePickerMui from "@mui/lab/DatePicker";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import dayjs, { Dayjs } from "dayjs";
-import { pemakaianAir } from "./TableInflow.constant";
+import { pemakaianAir, time_garung } from "./TableGarung.constant";
 import { airApi } from "src/api/airApi";
 
 type ListType = {
@@ -29,7 +28,7 @@ type ListType = {
   data: [];
 };
 
-const TableInflow = () => {
+const TableGarung = () => {
   const [date, setDate] = useState<Dayjs | null>(dayjs());
   const [search, setSearch] = useState<string>("");
   const [isEdit, setIsEdit] = useState<boolean>(false);
@@ -57,7 +56,7 @@ const TableInflow = () => {
         await createAir({
           nama: pemakaianAir[index],
           tanggal: dayjs(date).format("YYYY-MM-DD"),
-          tipe: "inflow",
+          tipe: "garung",
           data: value,
         });
       });
@@ -70,7 +69,7 @@ const TableInflow = () => {
     airList.filter((list: ListType) => list.nama === name)[0];
 
   useEffect(() => {
-    getAirList({ tipe: "garung", tanggal: dayjs(date).format("YYYY-MM-DD") });
+    getAirList({ tipe: "inflow", tanggal: dayjs(date).format("YYYY-MM-DD") });
   }, [date]);
 
   return (
@@ -78,7 +77,7 @@ const TableInflow = () => {
       <FormProvider {...formMethods}>
         <StyledForm sx={{ width: "100%" }} noValidate onSubmit={onSubmit}>
           <CardHeader
-            title="Inflow & Elevasi MRICA"
+            title="Garung"
             action={
               <WrapperFilter>
                 <TextField
@@ -139,7 +138,7 @@ const TableInflow = () => {
                     <TableCellHead size="small" minWidth="300px" rowSpan={2}>
                       Keadaan Air
                     </TableCellHead>
-                    {TIME.map((value, index) => {
+                    {time_garung.map((value, index) => {
                       if (index % 2) {
                         return (
                           <TableCellHead minWidth="150px" key={index}>
@@ -149,8 +148,6 @@ const TableInflow = () => {
                       }
                     })}
                     <TableCellHead minWidth="150px">Rata - Rata</TableCellHead>
-                    <TableCellHead minWidth="150px">Max</TableCellHead>
-                    <TableCellHead minWidth="150px">Min</TableCellHead>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -159,7 +156,7 @@ const TableInflow = () => {
                     return (
                       <TableRow key={value}>
                         <TableCell>{value}</TableCell>
-                        {TIME.map((time, index) => {
+                        {time_garung.map((time, index) => {
                           const mw = "mw_" + time.replace(".", "");
 
                           const name = `[${indexAir}].${mw}`;
@@ -194,8 +191,6 @@ const TableInflow = () => {
                           }
                         })}
                         <TableCell>-</TableCell>
-                        <TableCell>-</TableCell>
-                        <TableCell>-</TableCell>
                       </TableRow>
                     );
                   })}
@@ -209,4 +204,4 @@ const TableInflow = () => {
   );
 };
 
-export default TableInflow;
+export default TableGarung;

@@ -25,27 +25,27 @@ const airApi = () => {
     }
   }, [])
 
-  const createBatubara = useCallback(async (payload: any) => {
+  const createAir = useCallback(async (payload: any) => {
     setLoading(true)
 
     try {
       await Axios.post(endpoint, payload)
-      toast.success('Berhasil menambahkan batubara dan hsd')
+      toast.success('Berhasil menambahkan Energi Primer Air')
     } catch (error) {
-      toast.error('Gagal menambahkan batubara dan hsd')
+      toast.error('Gagal menambahkan Energi Primer Air')
     } finally {
       setLoading(false)
     }
   }, [])
 
-  const updateBatubara = useCallback(async (payload: any) => {
+  const updateAir = useCallback(async (payload: any) => {
     setLoading(true)
 
     try {
       await Axios.put(endpoint, payload)
-      toast.success('Berhasil mengubah batubara dan hsd')
+      toast.success('Berhasil mengubah Energi Primer Air')
     } catch (error) {
-      toast.error('Gagal mengubah batubara dan hsd')
+      toast.error('Gagal mengubah Energi Primer Air')
     } finally {
       setLoading(false)
     }
@@ -56,8 +56,8 @@ const airApi = () => {
     airList,
     loading,
     getAirList,
-    createBatubara,
-    updateBatubara
+    createAir,
+    updateAir
   }
 }
 
