@@ -15,9 +15,7 @@ const TableVerifikasi = () => {
   return (
     <Grid item xs={12}>
       <Card>
-        <CardHeader
-          title="Verifikasi FreeGov Harian"
-        />
+        <CardHeader title="Verifikasi FreeGov Harian" />
         <CardContent>
           <TableContainer>
             <Table>
