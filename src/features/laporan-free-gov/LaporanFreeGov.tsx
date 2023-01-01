@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { GridColumns } from "@mui/x-data-grid";
 import {
   Grid,
@@ -19,17 +20,37 @@ import { openModal } from "src/state/modal";
 import { TIME } from "src/constants/time";
 import { TableVerifikasi } from "./table-verifikasi";
 import { ModalGenerateLaporan } from "./modal";
+import { laporanFreegovApi } from "src/api/laporan-freegov";
+import dayjs, { Dayjs } from "dayjs";
+import { CellType } from "src/types";
 
 const LaporanFreeGov = () => {
+  const [date, setDate] = useState<Dayjs | null>(dayjs());
+
+  const { getLaporanFreegovList, laporanFreegovList } = laporanFreegovApi();
+
   const generateColumsTime = () => {
     const arrayTime: GridColumns<any> = [];
 
-    TIME.map((value, index) => {
+    TIME.map((value: string) => {
+      const mw = "mw_" + value.replace(".", "");
+
       arrayTime.push({
         flex: 0.25,
         minWidth: 80,
-        field: `mw_${value}`,
+        field: mw,
         headerName: value,
+        renderCell: ({ row }: CellType) => {
+          return (
+            <Typography
+              variant="subtitle2"
+              noWrap
+              sx={{ textTransform: "capitalize" }}
+            >
+              {row[mw] ? "ON" : "OFF"}
+            </Typography>
+          );
+        },
       });
     });
     return arrayTime;
@@ -39,7 +60,7 @@ const LaporanFreeGov = () => {
     {
       flex: 0.25,
       minWidth: 200,
-      field: "pembangkit",
+      field: "nama",
       headerName: "Pembangkit",
     },
     ...generateColumsTime(),
@@ -51,6 +72,10 @@ const LaporanFreeGov = () => {
       pembangkit: "PLTU Tambalorok U1",
     },
   ];
+
+  useEffect(() => {
+    getLaporanFreegovList({ tanggal: dayjs(date).format("YYYY-MM-DD") });
+  }, [date]);
 
   return (
     <>
@@ -66,9 +91,10 @@ const LaporanFreeGov = () => {
             <div style={{ display: "flex", gap: "10px" }}>
               <LocalizationProvider dateAdapter={AdapterDateFns}>
                 <DatePickerMui
-                  value={null}
+                  value={date}
                   label="Pilih Tanggal"
-                  onChange={() => null}
+                  inputFormat="dd/M/yyyy"
+                  onChange={(e) => setDate(e)}
                   renderInput={(params) => (
                     <TextField
                       size="small"
@@ -97,13 +123,13 @@ const LaporanFreeGov = () => {
                 hideFooter
                 autoHeight
                 columns={columns}
-                rows={dataMock}
+                rows={laporanFreegovList?.combo || []}
               />
             </CardContent>
           </Card>
         </Grid>
 
-        <TableVerifikasi />
+        {/* <TableVerifikasi /> */}
       </Grid>
     </>
   );

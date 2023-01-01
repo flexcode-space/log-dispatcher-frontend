@@ -17,13 +17,6 @@ const TableVerifikasi = () => {
       <Card>
         <CardHeader
           title="Verifikasi FreeGov Harian"
-          action={
-            <div style={{ display: "flex", gap: "10px" }}>
-              <Button variant="outlined" size="small" sx={{ height: "40px" }}>
-                Generate Verifikasi Freegov
-              </Button>
-            </div>
-          }
         />
         <CardContent>
           <TableContainer>
