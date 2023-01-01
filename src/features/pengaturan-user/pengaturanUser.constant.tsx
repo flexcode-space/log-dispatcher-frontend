@@ -60,18 +60,18 @@ export const userdefaultColumns = [
 export const datamock = [
   {
     id: "c836c745-e1db-4777-9699-e40fffaa302d",
-    nama: "PLTU CILACAP",
+    nama: "Chris Glasser",
     email: "EddieLLake@hotmail.com",
-    username: "8.000.332",
-    jabatan: "Ton",
+    username: "patricia651",
+    jabatan: "Pimpinan",
     hakakses: "1",
   },
   {
     id: "42424-e1db-4777-9699-e40fffaa302d",
-    nama: "PLTU TAMBAKLOROK",
+    nama: "John Dukes",
     email: "EddieLLake@hotmail.com",
-    username: "8.000.332",
-    jabatan: "Ton",
+    username: "alex941",
+    jabatan: "Pimpinan",
     hakakses: "1",
   },
 ];
