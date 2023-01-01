@@ -77,11 +77,14 @@ const Gas = () => {
                 <TableHead>
                   <TableRow>
                     <TableCellHead rowSpan={2}>Jam</TableCellHead>
-                    <TableCellHead align="center" colSpan={3}>
+                    <TableCellHead align="center" colSpan={2}>
                       SPP
                     </TableCellHead>
-                    <TableCellHead align="center" colSpan={3}>
+                    <TableCellHead align="center" colSpan={4}>
                       KJG
+                    </TableCellHead>
+                    <TableCellHead align="center" colSpan={4}>
+                      JTB
                     </TableCellHead>
                     <TableCellHead rowSpan={2}>Stock CNG</TableCellHead>
                     <TableCellHead rowSpan={2}>Compressor</TableCellHead>
@@ -97,6 +100,10 @@ const Gas = () => {
                     <TableCellHead>Flow Sumur</TableCellHead>
                     <TableCellHead>Flow Serap</TableCellHead>
                     <TableCellHead>Akumulasi</TableCellHead>
+                    <TableCellHead>Tekanan (PSI)</TableCellHead>
+                    <TableCellHead>Flow Sumur</TableCellHead>
+                    <TableCellHead>Flow Serap</TableCellHead>
+                    <TableCellHead>Akumulasi</TableCellHead>
                     <TableCellHead>Habis (Jam)</TableCellHead>
                     <TableCellHead>Daily Rate (Jam)</TableCellHead>
                   </TableRow>
@@ -105,6 +112,10 @@ const Gas = () => {
                   {[0, 1, 2, 3, 4, 5].map(() => (
                     <TableRow hover>
                       <TableCell>06.00</TableCell>
+                      <TableCell>324</TableCell>
+                      <TableCell>324</TableCell>
+                      <TableCell>324</TableCell>
+                      <TableCell>324</TableCell>
                       <TableCell>324</TableCell>
                       <TableCell>324</TableCell>
                       <TableCell>324</TableCell>
