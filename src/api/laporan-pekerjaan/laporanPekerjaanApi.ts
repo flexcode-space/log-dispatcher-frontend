@@ -1,64 +1,82 @@
-import { useCallback, useState } from 'react'
-import { toast } from 'src/components/toast'
-import { Axios } from '../axios'
+import { useCallback, useState } from "react";
+import { toast } from "src/components/toast";
+import { Axios } from "../axios";
 
 export type Params = {
   search?: string;
-  tanggal?: string
-  tipe: string
-}
+  tanggal?: string;
+  tipe: string;
+};
 
-const endpoint = '/report/laporan-pekerjaan'
+const endpoint = "/report/laporan-pekerjaan";
 
 const laporanPekerjaanApi = () => {
-  const [laporanPekerjaanList, setLaporanPekerjaanList] = useState<[]>([])
+  const [laporanPekerjaanList, setLaporanPekerjaanList] = useState<[]>([]);
+  const [laporanPekerjaanGenerateList, setLaporanPekerjaanGenerateList] =
+    useState<[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
 
   const getLaporanPekerjaanList = useCallback(async (params: Params) => {
-    setLoading(true)
+    setLoading(true);
 
     try {
-      const { data: { data } } = await Axios.get(endpoint, { params })
-      setLaporanPekerjaanList(data || [])
+      const {
+        data: { data },
+      } = await Axios.get(endpoint, { params });
+      setLaporanPekerjaanList(data || []);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }, [])
+  }, []);
 
   const createLaporanPekerjaan = useCallback(async (payload: any) => {
-    setLoading(true)
+    setLoading(true);
 
     try {
-      await Axios.post(endpoint, payload)
-      toast.success('Berhasil menambahkan Laporan Pekerjaan APD')
+      await Axios.post(endpoint, payload);
+      toast.success("Berhasil menambahkan Laporan Pekerjaan APD");
     } catch (error) {
-      toast.error('Gagal menambahkan Laporan Pekerjaan APD')
+      toast.error("Gagal menambahkan Laporan Pekerjaan APD");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }, [])
+  }, []);
 
   const updateLaporanPekerjaan = useCallback(async (payload: any) => {
-    setLoading(true)
+    setLoading(true);
 
     try {
-      await Axios.put(endpoint, payload)
-      toast.success('Berhasil mengubah Laporan Pekerjaan')
+      await Axios.put(endpoint, payload);
+      toast.success("Berhasil mengubah Laporan Pekerjaan");
     } catch (error) {
-      toast.error('Gagal mengubah Laporan Pekerjaan')
+      toast.error("Gagal mengubah Laporan Pekerjaan");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }, [])
+  }, []);
 
+  const getLaporanPekerjaanGenerate = useCallback(async (params: Params) => {
+    setLoading(true);
+
+    try {
+      const {
+        data: { result },
+      } = await Axios.get(`${endpoint}/generate`, { params });
+      setLaporanPekerjaanGenerateList(result || []);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
   return {
     laporanPekerjaanList,
+    laporanPekerjaanGenerateList,
     loading,
     getLaporanPekerjaanList,
+    getLaporanPekerjaanGenerate,
     createLaporanPekerjaan,
-    updateLaporanPekerjaan
-  }
-}
+    updateLaporanPekerjaan,
+  };
+};
 
-export default laporanPekerjaanApi
+export default laporanPekerjaanApi;

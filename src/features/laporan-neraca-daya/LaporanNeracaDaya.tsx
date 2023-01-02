@@ -7,6 +7,7 @@ import {
   Card,
   CardContent,
   IconButton,
+  filledInputClasses,
 } from "@mui/material";
 import DatePickerMui from "@mui/lab/DatePicker";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
@@ -41,12 +42,20 @@ const LaporanNeracaDaya = () => {
   const [date, setDate] = useState<Dayjs | null>(null);
 
   const filterDate = date ? dayjs(date).format("YYYY-MM-DD") : "";
-
-  const { getLaporanNeracaDayaList, laporanNeracaDayaList } =
-    laporanNeracaDayaApi();
+  const {
+    getLaporanNeracaDayaList,
+    laporanNeracaDayaList,
+    getLaporanNeracaDayaGenerate,
+    laporanNeracaDayaGenerateList,
+  } = laporanNeracaDayaApi();
+  console.log("date :", laporanNeracaDayaGenerateList);
 
   useEffect(() => {
     getLaporanNeracaDayaList({ tanggal: filterDate });
+  }, [date]);
+
+  useEffect(() => {
+    getLaporanNeracaDayaGenerate({ tanggal: filterDate });
   }, [date]);
 
   useEffect(() => {
@@ -58,7 +67,7 @@ const LaporanNeracaDaya = () => {
   return (
     <>
       <ModalAdd />
-      <ModalGenerateLaporan />
+      <ModalGenerateLaporan Data={laporanNeracaDayaGenerateList} />
       <Grid container spacing={6}>
         <Grid item xs={12}>
           <WrapperFilter>

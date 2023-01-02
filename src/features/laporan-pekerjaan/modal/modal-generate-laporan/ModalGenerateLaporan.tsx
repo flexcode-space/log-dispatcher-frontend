@@ -19,7 +19,10 @@ import { modal, closeModal } from "src/state/modal";
 import { setReloadPage } from "src/state/reloadPage";
 import { useEffect } from "react";
 
-const ModalGenerateLaporan = () => {
+type ModalAddProps = {
+  Data?: { value: string | number; label: string }[];
+};
+const ModalGenerateLaporan = ({ Data }: ModalAddProps) => {
   const modalSnapshot = useSnapshot(modal);
   let text = document.querySelector("#textLaporan");
 
@@ -83,22 +86,10 @@ const ModalGenerateLaporan = () => {
                 padding: 5,
               }}
             >
-              <p id="textLaporan">
-                UPDATE SISTEM UP2B JATENG & DIY Kamis 27-08-2022 Pukul 17.00
-                (jam terakhir yang datanya ada di tanggal itu) <br /> <br />
-                #Renc beban: 4,269 MW, Real: 4,138 MW #Ekskursi teg = NIHIL; Teg
-                Terendah (Busbar) GI WATES : 142 kV ; Tertinggi NBTNG : 152 kV
-                (dari jam 00 - jam 17) #Transfer ke barat: 3,074 MW (Penghantar
-                yang Transfer Barat) #Padam akibat ggn KIT&LUR : NIHIL (Dari
-                Gangguan Data Padam) #Pek Terencana: 1) GI UNGAR: SUTT BAWEN 2
-                pkl 07.55 - 16.21 wib dilaks SLO Pusertif, HAR OFF Prog 100%.
-                #Pekerjaan Menginap : 1) GI NBTNG: SUTT WLERI 1&2, Pekerjaan
-                Rekonduktoring, rencana padam menginap s.d tgl 26-11-2022.
-                #Gangguan KIT/LUR : Nihil #Pelepasan Penghantar Pembersihan
-                Isolator T.281, 296, 329, 339-342, 364, 369, 372, 380, 382, 396,
-                399, 404, 423, 444, 454 #Energize Peralatan #RTU Block Serondol
-                Terima Kasih Dispa UP2B JTD
-              </p>
+              <div id="textLaporan">
+                {/* @ts-ignore */}
+                <p dangerouslySetInnerHTML={{ __html: Data }} />
+              </div>
             </Box>
           </DialogContent>
           <DialogActions className="dialog-actions-dense">

@@ -14,6 +14,7 @@ import { ModalAdd } from "./modal";
 import { ModalGenerateLaporan } from "./modal/modal-generate-laporan";
 import dayjs, { Dayjs } from "dayjs";
 import { ModalAddBusbar } from "../busbar/modal";
+import { laporanPekerjaanApi } from "src/api/laporan-pekerjaan";
 
 const LaporanPekerjaan = () => {
   const [search, setSearch] = useState<string>("");
@@ -21,10 +22,17 @@ const LaporanPekerjaan = () => {
 
   const filterDate = date ? dayjs(date).format("YYYY-MM-DD") : "";
 
+  const { getLaporanPekerjaanGenerate, laporanPekerjaanGenerateList } =
+    laporanPekerjaanApi();
+
+  useEffect(() => {
+    getLaporanPekerjaanGenerate({ tanggal: filterDate });
+  }, [date]);
+
   return (
     <>
       <ModalAdd />
-      <ModalGenerateLaporan />
+      <ModalGenerateLaporan Data={laporanPekerjaanGenerateList} />
       <Grid container spacing={6}>
         <Grid item xs={12}>
           <WrapperFilter>

@@ -19,7 +19,10 @@ import { modal, closeModal } from "src/state/modal";
 import { setReloadPage } from "src/state/reloadPage";
 import { useEffect } from "react";
 
-const ModalGenerateLaporan = () => {
+type ModalAddProps = {
+  Data?: { value: string | number; label: string }[];
+};
+const ModalGenerateLaporan = ({ Data }: ModalAddProps) => {
   const modalSnapshot = useSnapshot(modal);
   let text = document.querySelector("#textLaporan");
 
@@ -33,7 +36,6 @@ const ModalGenerateLaporan = () => {
       closeModal();
     }
   }
-
   const isOpen =
     modalSnapshot.isOpen && modalSnapshot.target === "modal-generate-laporan";
 
@@ -83,22 +85,10 @@ const ModalGenerateLaporan = () => {
                 padding: 4,
               }}
             >
-              <p id="textLaporan">
-                Kecukupan Daya UP2B Jateng & DIY <br />
-                Jumat 26-08-2022
-                <br />
-                <br />
-                BP Tertinggi UP2B JTD (Yang pernah tercapai di Sistem)
-                (Realisasi) <br />
-                Siang: 4,600 MW, Tanggal 11-09-2022, Pukul 16:00 WIB (00.00 -
-                16.00) <br />
-                Malam: 4,851 MW, Tanggal 13-05-2022, Pukul 18:00 WIB (16.30 -
-                23.30) <br />
-                Prakiraan BP hari ini (ROH) Siang: 4,360 MW, Pukul 13:30 WIB
-                Malam: 4,812 MW, Pukul 18:00 WIB Total Mampu Pasok: 7,106 MW
-                (Total Semua Subsistem) 1. SS UNGAR a DM PASOK : 1,204 MW - IBT
-                UNGAR 1-2: 800 MW (07.00) - KIT TBROK :
-              </p>
+              <div id="textLaporan">
+                {/* @ts-ignore */}
+                <p dangerouslySetInnerHTML={{ __html: Data }} />
+              </div>
             </Box>
           </DialogContent>
           <DialogActions className="dialog-actions-dense">

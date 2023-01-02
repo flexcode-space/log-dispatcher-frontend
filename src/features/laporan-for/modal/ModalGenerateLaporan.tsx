@@ -12,12 +12,14 @@ import { useSnapshot } from "valtio";
 import { StyledForm } from "src/components/form";
 import { modal, closeModal } from "src/state/modal";
 import { useEffect } from "react";
-
-const ModalGenerateLaporan = () => {
+type ModalAddProps = {
+  Data?: { value: string | number; label: string }[];
+};
+const ModalGenerateLaporan = ({ Data }: ModalAddProps) => {
   const modalSnapshot = useSnapshot(modal);
   let text = document.querySelector("#textLaporan");
+
   function copyFunction() {
-    console.log("text :", text);
     let copyText = text?.textContent;
     if (copyText === undefined) {
       alert("laporan gagal di salin");
@@ -77,28 +79,10 @@ const ModalGenerateLaporan = () => {
                 padding: 4,
               }}
             >
-              <p id="textLaporan">
-                LAPORAN HARIAN OPERASI SISTEM UP2B JATENG & DIY <br /> Jumat
-                26-08-2022 <br />
-                <br /> - Piket Pimpinan : IRAWAN SURYA DARMA <br /> - Piket Bid
-                Fasop : REZA ILHAM S, YOGI SAPUTRO, DWIATMA <br /> - Piket
-                Dispatcher : ARIS SETYAWAN, RILO PAMBUDI, AZIF FUAD FAHRUDDIN
-                <br />
-                <br />
-                Gangguan Hari/Tanggal: Kamis, 25-08-2022 <br /> 1. PLTU CLCAP #2
-                : FD1, Pkl 12.26 <br /> - 18.47 derating di beban 198 MW kendala
-                vaccum condensor <br /> - Beban padam : Nihil <br /> - System
-                Recovery Time (SRT) : Nihil <br /> - Defense Scheme : Nihil{" "}
-                <br /> 2. PLTU CLCAP #1 : FD1, Pkl 13.23 - 15.01 WIB derating
-                dibeban 263 MW, kendala coal flow maximum <br /> - Beban padam :
-                Nihil <br />- System Recovery Time (SRT) : Nihil - Defense
-                Scheme : Nihil <br /> 3. PLTU RBANG #1 : FD1, Pkl 20.15-00.07
-                WIB derating dibeban 213 MW kendala gangguan Mill E; Pkl
-                22.50-00.07 WIB derating dibeban 180 MW kendala gangguan Mill E
-                <br /> - Beban padam : Nihil <br /> - System Recovery Time (SRT)
-                : Nihil <br /> - Defense Scheme : Nihil <br />
-                <br /> Terima kasih <br /> Dispa UP2B JTD
-              </p>
+              <div id="textLaporan">
+                {/* @ts-ignore */}
+                <p dangerouslySetInnerHTML={{ __html: Data }} />
+              </div>
             </Box>
           </DialogContent>
           <DialogActions className="dialog-actions-dense">
