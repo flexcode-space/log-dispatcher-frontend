@@ -75,11 +75,13 @@ const ModalAddTrafo = () => {
   useEffect(() => {
     if (modalSnapshot.id) {
       getTrafoDetail(modalSnapshot.id).then((data: any) => {
-        const { gardu_induk, scada, sub_sistem, rasio_tegangan, ...rest } =
+        const { gardu_induk, scada, sub_sistem, rasio_tegangan, mva, ...rest } =
           data;
+          
         formMethods.reset({
           ...rest,
           ...scada,
+          mva_id: mva.id,
           gardu_induk_id: gardu_induk.id,
           sub_sistem_id: sub_sistem.id,
           rasio_tegangan_id: rasio_tegangan.id,

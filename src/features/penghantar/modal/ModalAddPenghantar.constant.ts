@@ -14,6 +14,8 @@ export const initialValues = {
   b3: '',
   sub_sistem_id: '',
   tegangan_id: '',
+  kof_sym: 'x',
+  kof_num: 1
 }
 
 export const validationSchema = yup.object({
@@ -30,6 +32,8 @@ export const validationSchema = yup.object({
   b3: yup.string().required('This field is required'),
   sub_sistem_id: yup.string().required('This field is required'),
   tegangan_id: yup.string().required('This field is required'),
+  kof_sym: yup.string(),
+  kof_num: yup.number()
 })
 
 export const jenisPenghantarOptions = [

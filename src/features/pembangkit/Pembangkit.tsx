@@ -26,6 +26,8 @@ import { pembangkitApi } from "src/api/pembangkit";
 import { openModal, closeModal, modal, reloadPage } from "src/state/modal";
 import { useDebounce } from "src/hooks/useDebounce";
 import { ModalDelete } from "src/components/modal";
+import { MenuMore } from "src/components/menu-more";
+import { ModalKoefisien } from "./modal/modal-koefisien";
 
 const Pembangkit = () => {
   const modalSnapshot = useSnapshot(modal);
@@ -57,7 +59,7 @@ const Pembangkit = () => {
     ...defaultColumns,
     {
       flex: 0.15,
-      minWidth: 100,
+      minWidth: 130,
       sortable: false,
       field: "actions",
       headerName: "Aksi",
@@ -73,6 +75,9 @@ const Pembangkit = () => {
                 onClick={() => openModal("modal-delete", row.id)}
               />
             </IconButton>
+            <MenuMore
+              onClickKoefisien={() => openModal("modal-koefisien", row.id)}
+            />
           </Box>
         );
       },
@@ -99,6 +104,7 @@ const Pembangkit = () => {
 
   return (
     <>
+      <ModalKoefisien />
       <ModalDelete onClickDelete={onClickDelete} />
       <ModalAddPembangkit />
       <Grid container spacing={6}>

@@ -48,8 +48,6 @@ const BlankLayout = ({ children }: BlankLayoutProps) => {
               <Link target="_blank" href="https://flexcode.co.id/">
                 Flexcode
               </Link>
-              &nbsp; Concept by: &nbsp;
-              <Link href="#">Teuku Ridha Muhammad Saputra</Link>
             </Typography>
           </Box>
         </Box>
