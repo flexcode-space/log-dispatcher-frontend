@@ -5,7 +5,7 @@ import { Axios } from "../axios";
 export type Params = {
   search?: string;
   tanggal?: string;
-  tipe: string;
+  tipe?: string;
 };
 
 const endpoint = "/report/laporan-pekerjaan";
