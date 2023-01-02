@@ -51,7 +51,7 @@ export const validationSchema = yup.object({
   sop: yup.string().required('This field is required'),
   tanggal: yup.array().of(
     yup.object().shape({
-      value: yup.date().required('This field is required')
+      value: yup.date()
     })
   ),
   close: yup.array().of(

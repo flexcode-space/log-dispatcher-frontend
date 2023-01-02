@@ -36,7 +36,7 @@ const TableMonitoring = ({ title, type }: TableMonitoringProps) => {
     if (reloadPageSnap.target === "laporan-scada") {
       getLaporanScadaList({ tipe: type });
     }
-  }, [reloadPage.target]);
+  }, [reloadPage.id]);
 
   return (
     <Card>
