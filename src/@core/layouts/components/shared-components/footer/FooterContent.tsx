@@ -27,8 +27,6 @@ const FooterContent = () => {
         <Link target="_blank" href="https://flexcode.co.id/">
           Flexcode
         </Link>
-        &nbsp; Concept by:&nbsp;
-        <Link href="#">Teuku Ridha Muhammad Saputra</Link>
       </Typography>
       {hidden ? null : (
         <Box
@@ -39,9 +37,9 @@ const FooterContent = () => {
             "& :not(:last-child)": { mr: 4 },
           }}
         >
-          <Link target="_blank" href="#">
+          {/* <Link target="_blank" href="#">
             Support
-          </Link>
+          </Link> */}
         </Box>
       )}
     </Box>

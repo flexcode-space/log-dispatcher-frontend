@@ -1,33 +1,18 @@
-import { useEffect, useState } from "react";
 import {
   Box,
   Grid,
   Typography,
-  TextField,
   Button,
   Card,
   CardContent,
   IconButton,
 } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
-import DatePickerMui from "@mui/lab/DatePicker";
-import AdapterDateFns from "@mui/lab/AdapterDateFns";
-import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import { Pencil } from "mdi-material-ui";
-import dayjs, { Dayjs } from "dayjs";
 import PageHeader from "src/@core/components/page-header";
 import { WrapperFilter } from "src/components/filter";
 import { openModal } from "src/state/modal";
 import { CardHeader } from "src/components/card";
-import {
-  Table,
-  TableHead,
-  TableRow,
-  TableCell,
-  TableBody,
-  TableCellHead,
-  TableContainer,
-} from "src/components/table";
 import {
   admindefaultColumns,
   userdefaultColumns,
@@ -97,31 +82,6 @@ const PengaturanUser = () => {
           <Card>
             <CardHeader title="Super Admin" action={[]} />
             <CardContent>
-              {/* <WrapperFilter>
-                <div style={{ display: "flex", gap: "10px" }}>
-                  <LocalizationProvider dateAdapter={AdapterDateFns}>
-                    <DatePickerMui
-                      value={null}
-                      label="Pilih Tanggal"
-                      onChange={() => null}
-                      renderInput={(params) => (
-                        <TextField
-                          size="small"
-                          {...params}
-                          sx={{ width: "200px" }}
-                        />
-                      )}
-                    />
-                  </LocalizationProvider>
-                  <Button
-                    sx={{ mb: 2 }}
-                    onClick={() => openModal()}
-                    variant="outlined"
-                  >
-                    Tambah Data
-                  </Button>
-                </div>
-              </WrapperFilter> */}
               <DataGrid
                 hideFooter
                 autoHeight

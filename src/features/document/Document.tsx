@@ -53,7 +53,7 @@ const Document = () => {
               </LocalizationProvider>
               <Button
                 sx={{ mb: 2 }}
-                onClick={() => openModal("", "modal-add-document")}
+                onClick={() => openModal("modal-add-document")}
                 variant="contained"
               >
                 Unggah Dokumen
