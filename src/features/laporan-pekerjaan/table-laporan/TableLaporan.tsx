@@ -136,7 +136,7 @@ export const TableLain = ({ filter }: TableLainProps) => {
               <TableBody>
                 {laporanPekerjaanList.length > 0 &&
                   laporanPekerjaanList.map((list: LaporanPekerjaanList) => (
-                    <TableRow hover>
+                    <TableRow hover key={list.id}>
                       <TableCell>{list.tagar}</TableCell>
                       <TableCell>{list.keterangan}</TableCell>
                       <TableCell>

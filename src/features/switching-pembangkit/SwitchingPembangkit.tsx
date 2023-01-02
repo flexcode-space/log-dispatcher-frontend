@@ -149,7 +149,7 @@ const SwitchingPembangkit = () => {
                     <TableRow>
                       <TableCellHead>Perintah</TableCellHead>
                       <TableCellHead>Real</TableCellHead>
-                      <TableCellHead>BPOS</TableCellHead>
+                      <TableCellHead>BOPS</TableCellHead>
                       <TableCellHead>ACC</TableCellHead>
                       <TableCellHead>Pembangkit</TableCellHead>
                     </TableRow>

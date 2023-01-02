@@ -1,4 +1,4 @@
-import { Grid, Button, Card, CardContent, IconButton } from "@mui/material";
+import { Grid, Card, CardContent, IconButton } from "@mui/material";
 import { Pencil } from "mdi-material-ui";
 import { CardHeader } from "src/components/card";
 import {
@@ -11,7 +11,16 @@ import {
   TableContainer,
 } from "src/components/table";
 
-const TableVerifikasi = () => {
+type TableVerifikasiProps = {
+  combo: {
+    id: string;
+    nama: string;
+    jumlah_off: number;
+    jumlah_on: number;
+  }[];
+};
+
+const TableVerifikasi = ({ combo }: TableVerifikasiProps) => {
   return (
     <Grid item xs={12}>
       <Card>
@@ -29,19 +38,21 @@ const TableVerifikasi = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                <TableRow hover>
-                  <TableCell size="small">PLTU Tambalorok U1</TableCell>
-                  <TableCell size="small">10</TableCell>
-                  <TableCell size="small">38</TableCell>
-                  <TableCell size="small">
-                    Tegangan berubah-berubah tidak stabil
-                  </TableCell>
-                  <TableCell size="small">
-                    <IconButton>
-                      <Pencil />
-                    </IconButton>
-                  </TableCell>
-                </TableRow>
+                {combo.map((value) => {
+                  return (
+                    <TableRow hover>
+                      <TableCell size="small">{value?.nama}</TableCell>
+                      <TableCell size="small">{value?.jumlah_on}</TableCell>
+                      <TableCell size="small">{value?.jumlah_off}</TableCell>
+                      <TableCell size="small"></TableCell>
+                      <TableCell size="small">
+                        <IconButton>
+                          <Pencil />
+                        </IconButton>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
               </TableBody>
             </Table>
           </TableContainer>
