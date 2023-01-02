@@ -59,7 +59,9 @@ const GarduInduk = () => {
       headerName: "Aksi",
       renderCell: ({ row }: CellType) => (
         <Box sx={{ display: "flex", alignItems: "center" }}>
-          <IconButton onClick={() => openModal("modal-gardu-induk", row.id)}>
+          <IconButton
+            onClick={() => openModal("modal-add-gardu-induk", row.id)}
+          >
             <PencilOutline />
           </IconButton>
           <IconButton>

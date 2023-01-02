@@ -66,13 +66,6 @@ const LaporanFreeGov = () => {
     ...generateColumsTime(),
   ];
 
-  const dataMock = [
-    {
-      id: 1,
-      pembangkit: "PLTU Tambalorok U1",
-    },
-  ];
-
   useEffect(() => {
     getLaporanFreegovList({ tanggal: dayjs(date).format("YYYY-MM-DD") });
   }, [date]);
@@ -129,7 +122,7 @@ const LaporanFreeGov = () => {
           </Card>
         </Grid>
 
-        {/* <TableVerifikasi /> */}
+        <TableVerifikasi combo={laporanFreegovList?.combo || []} />
       </Grid>
     </>
   );

@@ -87,7 +87,7 @@ const ModalAdd = () => {
         gardu_induk_id: gardu_induk.id,
       });
     }
-  }, [modalSnapshot.isOpen]);
+  }, [modalSnapshot.isOpen, data]);
 
   return (
     <Dialog

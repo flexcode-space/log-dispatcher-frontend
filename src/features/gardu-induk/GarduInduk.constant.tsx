@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { CellType } from "./types";
 import { StyledLink } from "src/components/link";
+import { Typography } from "@mui/material";
 
 const url = "/master-data/gardu-induk";
 
@@ -9,13 +10,22 @@ export const defaultColumns = [
     flex: 0.25,
     minWidth: 150,
     field: "nama",
-    headerName: "Subsistem",
+    headerName: "Nama",
   },
   {
     flex: 0.25,
     minWidth: 200,
     field: "nama_upt",
     headerName: "UPT",
+    renderCell: ({ row }: CellType) => (
+      <Typography
+        variant="subtitle2"
+        noWrap
+        sx={{ textTransform: "capitalize" }}
+      >
+        {row.nama}
+      </Typography>
+    ),
   },
   {
     flex: 0.35,
