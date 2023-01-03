@@ -42,26 +42,12 @@ const laporanFreegovApi = () => {
     }
   }, [])
 
-  const updateLaporanFreegov = useCallback(async (payload: any) => {
-    setLoading(true)
-
-    try {
-      await Axios.put(endpoint, payload)
-      toast.success('Berhasil mengubah Laporan Free Gov')
-    } catch (error) {
-      toast.error('Gagal mengubah Laporan Free Gov')
-    } finally {
-      setLoading(false)
-    }
-  }, [])
-
 
   return {
     laporanFreegovList,
     loading,
     getLaporanFreegovList,
     createLaporanFreegov,
-    updateLaporanFreegov
   }
 }
 
