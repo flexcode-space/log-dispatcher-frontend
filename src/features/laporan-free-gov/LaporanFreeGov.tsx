@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { GridColumns } from "@mui/x-data-grid";
 import {
   Grid,
@@ -19,13 +19,19 @@ import { DataGrid } from "@mui/x-data-grid";
 import { openModal } from "src/state/modal";
 import { TIME } from "src/constants/time";
 import { TableVerifikasi } from "./table-verifikasi";
-import { ModalGenerateLaporan } from "./modal";
+import { ModalAddCatatan, ModalGenerateLaporan } from "./modal";
 import { laporanFreegovApi } from "src/api/laporan-freegov";
 import dayjs, { Dayjs } from "dayjs";
 import { CellType } from "src/types";
+import { useSnapshot } from "valtio";
+import { reloadPage } from "src/state/reloadPage";
 
 const LaporanFreeGov = () => {
+  const reloadPageSnap = useSnapshot(reloadPage);
+
   const [date, setDate] = useState<Dayjs | null>(dayjs());
+
+  const formatDate = dayjs(date).format("YYYY-MM-DD");
 
   const { getLaporanFreegovList, laporanFreegovList } = laporanFreegovApi();
 
@@ -56,22 +62,32 @@ const LaporanFreeGov = () => {
     return arrayTime;
   };
 
-  const columns = [
-    {
-      flex: 0.25,
-      minWidth: 200,
-      field: "nama",
-      headerName: "Pembangkit",
-    },
-    ...generateColumsTime(),
-  ];
+  const columns = useMemo(
+    () => [
+      {
+        flex: 0.25,
+        minWidth: 200,
+        field: "nama",
+        headerName: "Pembangkit",
+      },
+      ...generateColumsTime(),
+    ],
+    []
+  );
 
   useEffect(() => {
-    getLaporanFreegovList({ tanggal: dayjs(date).format("YYYY-MM-DD") });
+    getLaporanFreegovList({ tanggal: formatDate });
   }, [date]);
+
+  useEffect(() => {
+    if (reloadPageSnap.target === "laporan-freegov") {
+      getLaporanFreegovList({ tanggal: formatDate });
+    }
+  }, [date, reloadPageSnap.id]);
 
   return (
     <>
+      <ModalAddCatatan date={formatDate} />
       <ModalGenerateLaporan />
       <Grid container spacing={6}>
         <Grid item xs={12}>
@@ -122,7 +138,10 @@ const LaporanFreeGov = () => {
           </Card>
         </Grid>
 
-        <TableVerifikasi combo={laporanFreegovList?.combo || []} />
+        <TableVerifikasi
+          combo={laporanFreegovList?.combo || []}
+          catatan={laporanFreegovList.catatan || []}
+        />
       </Grid>
     </>
   );
