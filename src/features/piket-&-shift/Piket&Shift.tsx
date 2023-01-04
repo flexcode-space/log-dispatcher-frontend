@@ -1,11 +1,9 @@
-import { useState } from "react";
 import { useRouter } from "next/router";
 import {
   Grid,
   Typography,
   TextField,
   Button,
-  IconButton,
   Box,
   CardContent,
 } from "@mui/material";
@@ -15,34 +13,15 @@ import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import PageHeader from "src/@core/components/page-header";
 import { WrapperFilter } from "src/components/filter";
 import { openModal } from "src/state/modal";
-import { TableList } from "../catatan-pembangkitan/table-list";
-import { ArrowRight } from "mdi-material-ui";
+
 import CardPiket from "src/@core/components/card-piket/card-piket-img";
 import CardPiketFasop from "src/@core/components/card-piket/card-piket-fasop";
+import { ModalAddPiketDanShift } from "./modal";
 
-import { red } from "@mui/material/colors";
-
-const PiketAndShift = () => {
-  const router = useRouter();
-
-  const [search, setSearch] = useState<string>("");
-
-  const ButtonEdit = () => (
-    <Button
-      variant="outlined"
-      size="small"
-      sx={{ height: "40px" }}
-      onClick={() => router.push("/catatan-pembangkitan")}
-    >
-      Edit Data
-      <IconButton>
-        <ArrowRight color="primary" />
-      </IconButton>
-    </Button>
-  );
-
+const PiketDanShift = () => {
   return (
     <>
+      <ModalAddPiketDanShift />
       <Grid container spacing={6}>
         <Grid item xs={12}>
           <WrapperFilter>
@@ -71,7 +50,7 @@ const PiketAndShift = () => {
               </Button>
               <Button
                 sx={{ mb: 2 }}
-                onClick={() => openModal("modal-generate-laporan")}
+                onClick={() => openModal()}
                 variant="contained"
               >
                 Tambah
@@ -231,4 +210,4 @@ const PiketAndShift = () => {
   );
 };
 
-export default PiketAndShift;
+export default PiketDanShift;
