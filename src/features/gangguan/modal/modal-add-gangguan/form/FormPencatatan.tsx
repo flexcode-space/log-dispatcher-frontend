@@ -19,6 +19,7 @@ type FormPencatatanProps = {
   onCloseModal: () => void;
   onClickNextPage: () => void;
   jenisPeralatan: string;
+  garduIndukId: string;
   handleFileUpload: (
     e: ChangeEvent<HTMLInputElement>,
     name: FieldPath<UploadDocumentType>
@@ -29,6 +30,7 @@ export const FormPencatatan = ({
   onCloseModal,
   onClickNextPage,
   jenisPeralatan,
+  garduIndukId,
   handleFileUpload,
 }: FormPencatatanProps) => {
   const {
@@ -37,7 +39,7 @@ export const FormPencatatan = ({
     jenisGangguanOptions,
     releOptions,
     peratanOptions,
-  } = useModalAddGangguan(jenisPeralatan);
+  } = useModalAddGangguan(jenisPeralatan, garduIndukId);
 
   return (
     <>
