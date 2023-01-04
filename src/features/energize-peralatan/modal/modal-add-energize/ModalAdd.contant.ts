@@ -36,7 +36,7 @@ export const initialValues = {
 }
 
 export const validationSchema = yup.object({
-  ba_ptp: yup.string().required('This field is required'),
+  ba_ptp: yup.string(),
   gardu_induk_id: yup.string().required('This field is required'),
   jenis_peralatan: yup.string().required('This field is required'),
   keterangan: yup.string(),
@@ -46,9 +46,9 @@ export const validationSchema = yup.object({
     })
   ),
   peralatan_id: yup.string().required('This field is required'),
-  permohonan: yup.string().required('This field is required'),
-  rlb: yup.string().required('This field is required'),
-  sop: yup.string().required('This field is required'),
+  permohonan: yup.string(),
+  rlb: yup.string(),
+  sop: yup.string(),
   tanggal: yup.array().of(
     yup.object().shape({
       value: yup.date()

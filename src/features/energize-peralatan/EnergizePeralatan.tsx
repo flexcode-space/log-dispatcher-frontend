@@ -28,12 +28,15 @@ import { energizePeralatanApi } from "src/api/energize-peralatan";
 import { CellType } from "src/types";
 import { EnergizeList } from "./types";
 import { selectData } from "src/state/energizePeralatan";
+import dayjs, { Dayjs } from "dayjs";
 
 const EnergizePeralatan = () => {
   const modalSnapshot = useSnapshot(modal);
+  const [date, setDate] = useState<Dayjs | null>(null);
   const [search, setSearch] = useState<string>("");
 
   const debouncedSearch = useDebounce(search, 500);
+  const formatDate = date ? dayjs(date).format("YYYY-MM-DD") : "";
 
   const { getEnergizePeralatanList, energizePeralatanList } =
     energizePeralatanApi();
@@ -73,15 +76,15 @@ const EnergizePeralatan = () => {
 
   const getEnergize = () => {
     if (debouncedSearch) {
-      getEnergizePeralatanList({ search });
+      getEnergizePeralatanList({ search, tanggal: formatDate });
     } else {
-      getEnergizePeralatanList({ search });
+      getEnergizePeralatanList({ search, tanggal: formatDate });
     }
   };
 
   useEffect(() => {
     getEnergize();
-  }, [debouncedSearch]);
+  }, [debouncedSearch, date]);
 
   useEffect(() => {
     if (modalSnapshot.isReloadData) {
@@ -115,14 +118,12 @@ const EnergizePeralatan = () => {
                 <div style={{ display: "flex", gap: "10px" }}>
                   <LocalizationProvider dateAdapter={AdapterDateFns}>
                     <DatePicketMui
-                      value={new Date()}
+                      value={date}
                       label="Pilih Tanggal"
-                      onChange={() => null}
+                      inputFormat="dd/M/yyyy"
+                      onChange={(e) => setDate(e)}
                       renderInput={(params) => (
-                        <TextField
-                          size="small"
-                          {...params}
-                        />
+                        <TextField size="small" {...params} />
                       )}
                     />
                   </LocalizationProvider>
