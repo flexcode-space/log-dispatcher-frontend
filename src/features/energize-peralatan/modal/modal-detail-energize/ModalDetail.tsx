@@ -33,6 +33,7 @@ const ModalDetail = () => {
   const ButtonDownload = ({ url }: { url: string }) => (
     <Button
       variant="outlined"
+      disabled={!url}
       onClick={() => window.open(url, "_blank", "noreferrer")}
     >
       Download

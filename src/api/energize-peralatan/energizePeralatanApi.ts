@@ -4,6 +4,7 @@ import { Axios } from '../axios'
 
 export type Params = {
   search?: string;
+  tanggal?: string
 }
 
 const endpoint = '/kit-lur/energize-peralatan'
