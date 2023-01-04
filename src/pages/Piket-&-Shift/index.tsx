@@ -1,15 +1,15 @@
 import Head from "next/head";
 import { PiketAndShift } from "src/features/piket-&-shift";
 
-const PetaJaringanPage = () => {
+const PiketShift = () => {
   return (
     <>
       <Head>
-        <title>Peta Jaringan</title>
+        <title>Piket & Shift</title>
       </Head>
       <PiketAndShift />
     </>
   );
 };
 
-export default PetaJaringanPage;
+export default PiketShift;
