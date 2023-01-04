@@ -41,6 +41,7 @@ import { gangguanApi } from "src/api/gangguan";
 import { GangguanList } from "./types";
 import { useSnapshot } from "valtio";
 import { reloadPage } from "src/state/reloadPage";
+import { selectData } from "./state/gangguan";
 
 const Gangguan = () => {
   const reloadPageSnap = useSnapshot(reloadPage);
@@ -210,9 +211,10 @@ const Gangguan = () => {
                           <TableCell>
                             <Box display="flex">
                               <IconButton
-                                onClick={() =>
-                                  openModal("modal-add-gangguan", list.id)
-                                }
+                                onClick={() => {
+                                  openModal("modal-add-gangguan", list.id);
+                                  selectData(list);
+                                }}
                               >
                                 <Pencil />
                               </IconButton>

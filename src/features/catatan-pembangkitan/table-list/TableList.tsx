@@ -3,18 +3,20 @@ import { PencilOutline } from "mdi-material-ui";
 import { useEffect } from "react";
 import catatanPembangkitanApi from "src/api/catatan-pembangkitan/catatanPembangkitanApi";
 import { DataGrid } from "@mui/x-data-grid";
-import { modal, openModal } from "src/state/modal";
+import { openModal } from "src/state/modal";
 import { CellType } from "src/types";
 import { useSnapshot } from "valtio";
 import { defaultColumns } from "../CatatanPembangkitan.constant";
 import { selectData } from "../state";
 import { CatatanPembangkitanList } from "../types";
+import { reloadPage } from "src/state/reloadPage";
 
 type TableListProps = {
   type: string;
   title: string;
   actionCard?: React.ReactNode;
   showAction?: boolean;
+  date?: string;
 };
 
 const TableList = ({
@@ -22,8 +24,9 @@ const TableList = ({
   title,
   actionCard,
   showAction = true,
+  date,
 }: TableListProps) => {
-  const modalSnapshot = useSnapshot(modal);
+  const reloadPageSnap = useSnapshot(reloadPage);
 
   const { getCatatanPembangkitanList, catatanPembangkitanList } =
     catatanPembangkitanApi();
@@ -56,14 +59,14 @@ const TableList = ({
   ];
 
   useEffect(() => {
-    getCatatanPembangkitanList({ tipe: type });
-  }, []);
+    getCatatanPembangkitanList({ tipe: type, tanggal: date });
+  }, [date]);
 
   useEffect(() => {
-    if (modalSnapshot.isReloadData) {
-      getCatatanPembangkitanList({ tipe: type });
+    if (reloadPage.target === "catatan-pembangkitan") {
+      getCatatanPembangkitanList({ tipe: type, tanggal: date });
     }
-  }, [modalSnapshot.isReloadData]);
+  }, [reloadPageSnap.id, date]);
 
   return (
     <Grid item xs={12}>

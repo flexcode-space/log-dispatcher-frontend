@@ -49,7 +49,9 @@ const ModalAdd = () => {
     mode: "onSubmit",
   });
 
-  const { garduIndukOptions, penghantarOptions } = useModalAdd();
+  const garduIndukId = formMethods.watch("gardu_induk_id");
+
+  const { garduIndukOptions, penghantarOptions } = useModalAdd(garduIndukId);
 
   const titleModal = !!modalSnapshot.id
     ? "Ubah Switching Lain"

@@ -4,6 +4,7 @@ import { Axios } from '../axios'
 
 export type Params = {
   search?: string;
+  tanggal?: string
   tipe: string
 }
 
@@ -50,13 +51,26 @@ const catatanPembangkitanApi = () => {
     }
   }, [])
 
+  const deleteCatatanPembangkitan = useCallback(async (payload: any) => {
+    setLoading(true)
+    try {
+      await Axios.delete(endpoint, { data: payload })
+      toast.success('Berhasil menghapus')
+    } catch (error) {
+      toast.error('Gagal menghapus')
+    } finally {
+      setLoading(false)
+    }
+  }, [])
+
 
   return {
     catatanPembangkitanList,
     loading,
     getCatatanPembangkitanList,
     createCatatanPembangkitan,
-    updateCatatanPembangkitan
+    updateCatatanPembangkitan,
+    deleteCatatanPembangkitan
   }
 }
 

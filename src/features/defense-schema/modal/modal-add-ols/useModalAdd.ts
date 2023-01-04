@@ -8,7 +8,7 @@ import { defenseApi } from "src/api/defense";
 import { optionJenisPeralatan } from './ModalAddOLS.constant'
 import { peralatanApi } from "src/api/peralatan";
 
-export const useModalAdd = (jenisPeralatan: string) => {
+export const useModalAdd = (jenisPeralatan: string, subsistemId: string) => {
   const modalSnap = useSnapshot(modal);
   const { getGarduIndukList, garduIndukList } = garduIndukApi();
   const { getSubsistemList, subsistemList } = subsistemApi();
@@ -36,7 +36,7 @@ export const useModalAdd = (jenisPeralatan: string) => {
 
   useEffect(() => {
     if (!!jenisPeralatan) {
-      getPeralatanByPath(jenisPeralatan)
+      getPeralatanByPath(`${jenisPeralatan}/sub-sistem/${subsistemId}`)
     }
   }, [jenisPeralatan])
 

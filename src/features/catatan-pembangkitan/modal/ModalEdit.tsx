@@ -27,12 +27,14 @@ import {
 } from "../CatatanPembangkitan.constant";
 import { catatanPembangkitan, removeData } from "../state";
 import catatanPembangkitanApi from "src/api/catatan-pembangkitan/catatanPembangkitanApi";
+import { setReloadPage } from "src/state/reloadPage";
 
 const ModalFilter = () => {
   const modalSnapshot = useSnapshot(modal);
   const { data } = useSnapshot(catatanPembangkitan);
   const { pembangkitOptions, statusOptions } = useCatatanPembangkitan();
-  const { updateCatatanPembangkitan } = catatanPembangkitanApi();
+  const { updateCatatanPembangkitan, deleteCatatanPembangkitan } =
+    catatanPembangkitanApi();
 
   const isOpen =
     modalSnapshot.isOpen && modalSnapshot.target === "modal-catatan-pembangkit";
@@ -70,7 +72,7 @@ const ModalFilter = () => {
 
       await updateCatatanPembangkitan(payload);
       closeModal();
-      reloadPage();
+      setReloadPage("catatan-pembangkitan");
     })();
   };
 
@@ -78,6 +80,14 @@ const ModalFilter = () => {
     closeModal();
     removeData();
     formMethods.reset({ ...initialValues });
+  };
+
+  const onClickDelete = async () => {
+    if (confirm("Hapus Data ini ?")) {
+      await deleteCatatanPembangkitan({ id: data.id });
+      closeModal();
+      setReloadPage("catatan-pembangkitan");
+    }
   };
 
   useEffect(() => {
@@ -155,7 +165,7 @@ const ModalFilter = () => {
               justifyContent="space-between"
             >
               <Box>
-                <Button variant="text" onClick={onClickCloseModal}>
+                <Button variant="text" onClick={onClickDelete}>
                   <IconButton>
                     <TrashCanOutline />
                   </IconButton>

@@ -4,7 +4,7 @@ import { garduIndukApi } from 'src/api/gardu-induk'
 import { penghantarApi } from 'src/api/penghantar'
 import { modal } from 'src/state/modal'
 
-export const useModalAdd = () => {
+export const useModalAdd = (garduIndukId: string) => {
   const modalSnap = useSnapshot(modal)
   const { getGarduIndukList, garduIndukList } = garduIndukApi()
   const { getPenghantarList, penghantarList } = penghantarApi()
@@ -16,9 +16,14 @@ export const useModalAdd = () => {
   useEffect(() => {
     if (modalSnap.isOpen && modalSnap.target === "modal-switching-luar-rencana") {
       getGarduIndukList()
-      getPenghantarList()
     }
   }, [modalSnap.isOpen])
+
+  useEffect(() => {
+    if (!!garduIndukId) {
+      getPenghantarList(garduIndukId, { path: 'gardu-induk' })
+    }
+  }, [garduIndukId])
 
   return {
     garduIndukOptions,

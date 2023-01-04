@@ -1,4 +1,4 @@
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { useForm, FormProvider, FieldPath } from "react-hook-form";
 import { Dialog } from "@mui/material";
 import { useSnapshot } from "valtio";
@@ -10,11 +10,17 @@ import { initialValues, validationSchema } from "./ModalAddGangguan.constant";
 import { Axios } from "src/api/axios";
 import { PayloadGangguan, UploadDocumentType } from "./types";
 import dayjs from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat";
 import { gangguanApi } from "src/api/gangguan";
 import { setReloadPage } from "src/state/reloadPage";
+import { gangguan, removeData } from "../../state/gangguan";
+
+dayjs.extend(customParseFormat);
 
 const ModalAddGangguan = () => {
   const modalSnapshot = useSnapshot(modal);
+  const { data } = useSnapshot(gangguan);
+
   const [showNextForm, setShowNextForm] = useState<boolean>(false);
 
   const isOpen =
@@ -29,6 +35,7 @@ const ModalAddGangguan = () => {
   const { createGangguan, updateGangguan } = gangguanApi();
 
   const jenisPeralatan = formMethods.watch("jenis_peralatan");
+  const garduIndukId = formMethods.watch("gardu_induk_id");
 
   const onSubmit = (event?: React.FormEvent<HTMLFormElement>) => {
     event?.preventDefault();
@@ -60,6 +67,7 @@ const ModalAddGangguan = () => {
   const onCloseModal = () => {
     closeModal();
     setShowNextForm(false);
+    removeData();
     formMethods.reset({ ...initialValues });
   };
 
@@ -81,6 +89,34 @@ const ModalAddGangguan = () => {
     });
   };
 
+  useEffect(() => {
+    if (modalSnapshot.id) {
+      const {
+        tanggal,
+        gardu_induk,
+        gangguan_jenis,
+        peralatan,
+        announciator,
+        ...rest
+      } = data;
+
+      formMethods.reset({
+        ...rest,
+        tanggal: dayjs(tanggal),
+        announciator: announciator?.[0] ?? "",
+        rele: rest.rele?.[0] ?? "",
+        gardu_induk_id: gardu_induk?.id,
+        gangguan_jenis_id: gangguan_jenis?.id,
+        peralatan_id: peralatan.id,
+        trip: dayjs(rest?.trip, "HH:mm"),
+        reclose: dayjs(rest?.reclose, "HH:mm"),
+        buka: dayjs(rest?.buka, "HH:mm"),
+        tutup: dayjs(rest?.tutup, "HH:mm"),
+        siap_op: dayjs(rest?.siap_op, "HH:mm"),
+      });
+    }
+  }, [modalSnapshot.isOpen, data]);
+
   return (
     <>
       <Dialog
@@ -97,6 +133,7 @@ const ModalAddGangguan = () => {
                 onCloseModal={onCloseModal}
                 onClickNextPage={() => setShowNextForm(true)}
                 jenisPeralatan={jenisPeralatan}
+                garduIndukId={garduIndukId}
                 handleFileUpload={handleFileUpload}
               />
             ) : (
