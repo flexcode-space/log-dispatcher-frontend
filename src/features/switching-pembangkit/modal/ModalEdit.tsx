@@ -54,6 +54,8 @@ const ModalFilter = () => {
     mode: "onSubmit",
   });
 
+  const jenis = formMethods.watch("jenis");
+
   const onSubmit = (event?: React.FormEvent<HTMLFormElement>) => {
     event?.preventDefault();
 
@@ -88,7 +90,10 @@ const ModalFilter = () => {
       pembangkit_id: data.pembangkit?.id,
       tanggal: dayjs(data.tanggal),
       waktu_perintah: dayjs(data.waktu_perintah, "HH: mm"),
-      waktu_real: dayjs(data.waktu_real, "HH:mm"),
+      // @ts-ignore
+      waktu_real: dayjs(data.waktu_real, "HH:mm", true).isValid()
+        ? dayjs(data.waktu_real, "HH:mm")
+        : null,
     });
   }, [modalSnapshot.isOpen]);
 
@@ -124,13 +129,16 @@ const ModalFilter = () => {
                 />
               </Grid>
               <Grid item xs={6}>
+                <InputField name="tipe" label="Dispatch" />
+              </Grid>
+              <Grid item xs={6}>
                 <SelectInput
                   label="Pembangkit"
                   name="pembangkit_id"
                   options={pembangkitOptions}
                 />
               </Grid>
-              <Grid item xs={4}>
+              <Grid item xs={6}>
                 <DatePicker label="Tanggal" name="tanggal" />
               </Grid>
               <Grid item xs={4}>
@@ -167,13 +175,15 @@ const ModalFilter = () => {
                   options={energiPrimerOptions}
                 />
               </Grid>
-              <Grid item xs={12}>
-                <SelectInput
-                  label="Status"
-                  name="status"
-                  options={statusOptions}
-                />
-              </Grid>
+              {jenis !== "change-over" ? (
+                <Grid item xs={12}>
+                  <SelectInput
+                    label="Status"
+                    name="status"
+                    options={statusOptions}
+                  />
+                </Grid>
+              ) : null}
 
               <Grid item xs={12}>
                 <InputField name="keterangan" label="Keterangan" />

@@ -40,6 +40,8 @@ const AddLaporan = () => {
     mode: "onChange",
   });
 
+  const jenis = formMethods.watch("jenis");
+
   const onSubmit = (event?: React.FormEvent<HTMLFormElement>) => {
     event?.preventDefault();
 
@@ -79,6 +81,9 @@ const AddLaporan = () => {
                   name="jenis"
                   options={jenisSwitchingOptions}
                 />
+              </Grid>
+              <Grid item xs={12}>
+                <InputField name="tipe" label="Dispatch" />
               </Grid>
               <Grid item xs={12}>
                 <SelectInput
@@ -124,13 +129,15 @@ const AddLaporan = () => {
                   options={energiPrimerOptions}
                 />
               </Grid>
-              <Grid item xs={12}>
-                <SelectInput
-                  label="Status"
-                  name="status"
-                  options={statusOptions}
-                />
-              </Grid>
+              {jenis !== "change-over" ? (
+                <Grid item xs={12}>
+                  <SelectInput
+                    label="Status"
+                    name="status"
+                    options={statusOptions}
+                  />
+                </Grid>
+              ) : null}
 
               <Grid item xs={12}>
                 <InputField name="keterangan" label="Keterangan" />
