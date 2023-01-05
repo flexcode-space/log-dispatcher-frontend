@@ -54,6 +54,8 @@ const ModalFilter = () => {
     mode: "onSubmit",
   });
 
+  const jenis = formMethods.watch("jenis");
+
   const onSubmit = (event?: React.FormEvent<HTMLFormElement>) => {
     event?.preventDefault();
 
@@ -126,7 +128,7 @@ const ModalFilter = () => {
                   options={jenisSwitchingOptions}
                 />
               </Grid>
-              <Grid item xs={12}>
+              <Grid item xs={6}>
                 <InputField name="tipe" label="Dispatch" />
               </Grid>
               <Grid item xs={6}>
@@ -136,7 +138,7 @@ const ModalFilter = () => {
                   options={pembangkitOptions}
                 />
               </Grid>
-              <Grid item xs={4}>
+              <Grid item xs={6}>
                 <DatePicker label="Tanggal" name="tanggal" />
               </Grid>
               <Grid item xs={4}>
@@ -173,13 +175,15 @@ const ModalFilter = () => {
                   options={energiPrimerOptions}
                 />
               </Grid>
-              <Grid item xs={12}>
-                <SelectInput
-                  label="Status"
-                  name="status"
-                  options={statusOptions}
-                />
-              </Grid>
+              {jenis !== "change-over" ? (
+                <Grid item xs={12}>
+                  <SelectInput
+                    label="Status"
+                    name="status"
+                    options={statusOptions}
+                  />
+                </Grid>
+              ) : null}
 
               <Grid item xs={12}>
                 <InputField name="keterangan" label="Keterangan" />
