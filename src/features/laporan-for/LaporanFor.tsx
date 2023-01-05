@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { Grid, Typography, TextField, Button, IconButton } from "@mui/material";
 import DatePickerMui from "@mui/lab/DatePicker";
@@ -11,12 +11,18 @@ import { TablePiket, TableGangguan } from "./table-laporan";
 import { TableList } from "../catatan-pembangkitan/table-list";
 import { ArrowRight } from "mdi-material-ui";
 import { ModalGenerateLaporan } from "./modal";
+import { laporanForGenerate } from "src/api/laporan-for-generate";
+import dayjs, { Dayjs } from "dayjs";
+import { setDate } from "date-fns";
 
 const LaporanPekerjaan = () => {
   const router = useRouter();
-
+  const [date, setDate] = useState<Dayjs | null>(null);
+  const filterDate = date ? dayjs(date).format("YYYY-MM-DD") : "";
   const [search, setSearch] = useState<string>("");
-
+  const [generateList, setGeneratelist] = useState<[]>([]);
+  const { laporanForGenerateList, loading, getLaporanForGenerate } =
+    laporanForGenerate();
   const ButtonEdit = () => (
     <Button
       variant="outlined"
@@ -30,10 +36,19 @@ const LaporanPekerjaan = () => {
       </IconButton>
     </Button>
   );
+  // const getForGenerate = () => {
+  //   getLaporanForGenerate({ tanggal: convertDate(date) });
+  //   console.log("getLaporanForGenerate :", getLaporanForGenerate);
+  // };
 
+  useEffect(() => {
+    getLaporanForGenerate({ tanggal: filterDate });
+  }, [date]);
+
+  const data = laporanForGenerateList;
   return (
     <>
-      <ModalGenerateLaporan />
+      <ModalGenerateLaporan Data={data} />
       <Grid container spacing={6}>
         <Grid item xs={12}>
           <WrapperFilter>
@@ -52,9 +67,9 @@ const LaporanPekerjaan = () => {
               />
               <LocalizationProvider dateAdapter={AdapterDateFns}>
                 <DatePickerMui
-                  value={null}
+                  value={date}
                   label="Pilih Tanggal"
-                  onChange={() => null}
+                  onChange={setDate}
                   renderInput={(params) => (
                     <TextField
                       size="small"
