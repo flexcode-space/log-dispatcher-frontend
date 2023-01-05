@@ -88,7 +88,10 @@ const ModalFilter = () => {
       pembangkit_id: data.pembangkit?.id,
       tanggal: dayjs(data.tanggal),
       waktu_perintah: dayjs(data.waktu_perintah, "HH: mm"),
-      waktu_real: dayjs(data.waktu_real, "HH:mm"),
+      // @ts-ignore
+      waktu_real: dayjs(data.waktu_real, "HH:mm", true).isValid()
+        ? dayjs(data.waktu_real, "HH:mm")
+        : null,
     });
   }, [modalSnapshot.isOpen]);
 
@@ -122,6 +125,9 @@ const ModalFilter = () => {
                   name="jenis"
                   options={jenisSwitchingOptions}
                 />
+              </Grid>
+              <Grid item xs={12}>
+                <InputField name="tipe" label="Dispatch" />
               </Grid>
               <Grid item xs={6}>
                 <SelectInput

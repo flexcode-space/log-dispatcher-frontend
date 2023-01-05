@@ -81,6 +81,9 @@ const AddLaporan = () => {
                 />
               </Grid>
               <Grid item xs={12}>
+                <InputField name="tipe" label="Dispatch" />
+              </Grid>
+              <Grid item xs={12}>
                 <SelectInput
                   label="Pembangkit"
                   name="pembangkit_id"

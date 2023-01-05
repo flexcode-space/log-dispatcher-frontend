@@ -36,9 +36,9 @@ export const initialValues = {
   status: "",
   tanggal: new Date(),
   // tegangan: 0,
-  // tipe: "",
+  tipe: "",
   waktu_perintah: new Date(),
-  waktu_real: new Date(),
+  waktu_real: null,
 };
 
 export const validationSchema = yup.object({
@@ -52,7 +52,7 @@ export const validationSchema = yup.object({
   status: yup.string().required("This field is required"),
   tanggal: yup.string().required("This field is required"),
   // tegangan: yup.number().required("This field is required"),
-  // tipe: yup.string().required("This field is required"),
+  tipe: yup.string().required("This field is required"),
   waktu_perintah: yup.string().required("This field is required"),
-  waktu_real: yup.string().required("This field is required"),
+  waktu_real: yup.string().nullable(true),
 });
