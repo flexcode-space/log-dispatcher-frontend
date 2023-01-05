@@ -20,19 +20,28 @@ import {
 import ModalAdduser from "./modal/ModalAddUser";
 import { pengaturanUserApi } from "src/api/pengaturan-user";
 import { useEffect } from "react";
-
-
-
+import { CellType } from "src/types";
+import { selectData } from "./state/pengaturanUser";
+import { useSnapshot } from "valtio";
+import { reloadPage } from "src/state/reloadPage";
+import { UserList } from "./types";
 
 const PengaturanUser = () => {
-  const { pengaturanUserList, loading, getPengaturanUser } =pengaturanUserApi();
-  //  @ts-ignore 
-  const superAdmin = pengaturanUserList.filter((obj) =>  obj.hak === 1);
-  //  @ts-ignore 
-  const user = pengaturanUserList.filter((obj) =>  obj.hak !== 1);
+  const reloadPageSnap = useSnapshot(reloadPage);
 
+  const { pengaturanUserList, loading, getPengaturanUser } =
+    pengaturanUserApi();
 
+  const superAdmin: UserList[] = [];
+  const user: UserList[] = [];
 
+  pengaturanUserList.forEach((list: UserList) => {
+    if (list.hak === 1) {
+      superAdmin.push(list);
+    } else {
+      user.push(list);
+    }
+  });
 
   const admincolumns = [
     ...admindefaultColumns,
@@ -42,9 +51,14 @@ const PengaturanUser = () => {
       sortable: false,
       field: "actions",
       headerName: "Aksi",
-      renderCell: () => (
+      renderCell: ({ row }: CellType) => (
         <Box sx={{ display: "flex", alignItems: "center" }}>
-          <IconButton onClick={() => null}>
+          <IconButton
+            onClick={() => {
+              openModal("modal-add-user", row.id);
+              selectData(row);
+            }}
+          >
             <Pencil />
           </IconButton>
         </Box>
@@ -59,9 +73,14 @@ const PengaturanUser = () => {
       sortable: false,
       field: "actions",
       headerName: "Aksi",
-      renderCell: () => (
+      renderCell: ({ row }: CellType) => (
         <Box sx={{ display: "flex", alignItems: "center" }}>
-          <IconButton onClick={() => null}>
+          <IconButton
+            onClick={() => {
+              openModal("modal-add-user", row.id);
+              selectData(row);
+            }}
+          >
             <Pencil />
           </IconButton>
         </Box>
@@ -69,9 +88,9 @@ const PengaturanUser = () => {
     },
   ];
 
-    useEffect(() => {
-    getPengaturanUser()
-  }, []);
+  useEffect(() => {
+    getPengaturanUser();
+  }, [reloadPageSnap.id]);
 
   return (
     <>
@@ -87,7 +106,7 @@ const PengaturanUser = () => {
             <div style={{ display: "flex", gap: "10px" }}>
               <Button
                 sx={{ mb: 2 }}
-                onClick={() => openModal()}
+                onClick={() => openModal("modal-add-user")}
                 variant="contained"
               >
                 Tambah
