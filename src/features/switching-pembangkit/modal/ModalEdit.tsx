@@ -15,7 +15,7 @@ import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import { SelectInput } from "src/components/select-input";
 import { StyledForm } from "src/components/form";
-import { closeModal, modal, reloadPage } from "src/state/modal";
+import { closeModal, modal } from "src/state/modal";
 import { InputField } from "src/components/input-field";
 import { DatePicker, TimePicker } from "src/components/date-picker";
 import { useSwitchingPembengkit } from "../useSwitchingPembangkit";
@@ -141,7 +141,7 @@ const ModalFilter = () => {
               </Grid>
               <Grid item xs={4}>
                 <SelectInput
-                  label="BPOS"
+                  label="BOPS"
                   name="operator_bops_id"
                   options={personOptions}
                 />
@@ -155,7 +155,7 @@ const ModalFilter = () => {
               </Grid>
               <Grid item xs={4}>
                 <SelectInput
-                  label="Operator Pembengkit"
+                  label="Operator Pembangkit"
                   name="operator_pembangkit_id"
                   options={personOptions}
                 />

@@ -2,12 +2,15 @@ import { useState } from "react";
 import { IconButton, Menu, MenuItem, Typography } from "@mui/material";
 import MoreMenuIcon from "src/assets/icons/more-menu-icon.svg";
 
-const MenuMore = () => {
+type MenuMoreProps = {
+  onClickKoefisien: () => void;
+};
+
+const MenuMore = ({ onClickKoefisien }: MenuMoreProps) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
-    console.log("klik ini");
     setAnchorEl(event.currentTarget);
   };
 
@@ -45,7 +48,7 @@ const MenuMore = () => {
             Lainnya
           </Typography>
         </MenuItem>
-        <MenuItem>
+        <MenuItem onClick={onClickKoefisien}>
           <Typography variant="inherit">1x Koefisien</Typography>
         </MenuItem>
       </Menu>

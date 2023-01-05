@@ -1,4 +1,4 @@
-import { Grid, Button, Card, CardContent, IconButton } from "@mui/material";
+import { Grid, Card, CardContent, IconButton } from "@mui/material";
 import { Pencil } from "mdi-material-ui";
 import { CardHeader } from "src/components/card";
 import {
@@ -10,21 +10,18 @@ import {
   TableCellHead,
   TableContainer,
 } from "src/components/table";
+import { openModal } from "src/state/modal";
+import { selectData } from "../state/laporanFreeGov";
+import { Catatan, TableVerifikasiProps } from "../types";
 
-const TableVerifikasi = () => {
+const TableVerifikasi = ({ combo, catatan }: TableVerifikasiProps) => {
+  const filterValueById = (id: string): Catatan =>
+    catatan.filter((list: Catatan) => list.id === id)[0];
+
   return (
     <Grid item xs={12}>
       <Card>
-        <CardHeader
-          title="Verifikasi FreeGov Harian"
-          action={
-            <div style={{ display: "flex", gap: "10px" }}>
-              <Button variant="outlined" size="small" sx={{ height: "40px" }}>
-                Generate Verifikasi Freegov
-              </Button>
-            </div>
-          }
-        />
+        <CardHeader title="Verifikasi FreeGov Harian" />
         <CardContent>
           <TableContainer>
             <Table>
@@ -33,24 +30,34 @@ const TableVerifikasi = () => {
                   <TableCellHead>Lokasi</TableCellHead>
                   <TableCellHead>Jumlah ON</TableCellHead>
                   <TableCellHead>Jumlah Off</TableCellHead>
-                  <TableCellHead>Catatan</TableCellHead>
+                  <TableCellHead minWidth="500px">Catatan</TableCellHead>
                   <TableCellHead>Aksi</TableCellHead>
                 </TableRow>
               </TableHead>
               <TableBody>
-                <TableRow hover>
-                  <TableCell size="small">PLTU Tambalorok U1</TableCell>
-                  <TableCell size="small">10</TableCell>
-                  <TableCell size="small">38</TableCell>
-                  <TableCell size="small">
-                    Tegangan berubah-berubah tidak stabil
-                  </TableCell>
-                  <TableCell size="small">
-                    <IconButton>
-                      <Pencil />
-                    </IconButton>
-                  </TableCell>
-                </TableRow>
+                {combo.length &&
+                  combo.map((value) => {
+                    const catatan = filterValueById(value?.id);
+
+                    return (
+                      <TableRow hover>
+                        <TableCell size="small">{value?.nama}</TableCell>
+                        <TableCell size="small">{value?.jumlah_on}</TableCell>
+                        <TableCell size="small">{value?.jumlah_off}</TableCell>
+                        <TableCell size="small">{catatan?.catatan}</TableCell>
+                        <TableCell size="small">
+                          <IconButton
+                            onClick={() => {
+                              openModal("modal-laporan-freegov", value.id);
+                              selectData(catatan);
+                            }}
+                          >
+                            <Pencil />
+                          </IconButton>
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
               </TableBody>
             </Table>
           </TableContainer>

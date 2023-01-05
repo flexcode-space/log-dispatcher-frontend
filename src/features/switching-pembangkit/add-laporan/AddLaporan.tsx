@@ -55,7 +55,7 @@ const AddLaporan = () => {
 
       await createSwitchingPembangkit(payload);
       formMethods.reset({ ...initialValues });
-      setReloadPage('switching-pembangkit')
+      setReloadPage("switching-pembangkit");
     })();
   };
 
@@ -98,7 +98,7 @@ const AddLaporan = () => {
               </Grid>
               <Grid item xs={12}>
                 <SelectInput
-                  label="BPOS"
+                  label="BOPS"
                   name="operator_bops_id"
                   options={personOptions}
                 />
@@ -112,7 +112,7 @@ const AddLaporan = () => {
               </Grid>
               <Grid item xs={12}>
                 <SelectInput
-                  label="Operator Pembengkit"
+                  label="Operator Pembangkit"
                   name="operator_pembangkit_id"
                   options={personOptions}
                 />

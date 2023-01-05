@@ -9,13 +9,13 @@ import {
   Typography,
   Box,
 } from "@mui/material";
-// import { Pencil } from "mdi-material-ui";
 import { useSnapshot } from "valtio";
 import { InputField } from "src/components/input-field";
 import { StyledForm } from "src/components/form";
 import { modal, closeModal } from "src/state/modal";
 import { gangguan } from "../../state/gangguan";
 import { initialValues } from "./ModalKeteranganGangguan.constant";
+import { removeData } from "src/state/energizePeralatan";
 
 const ModalKeteranganGangguan = () => {
   const modalSnapshot = useSnapshot(modal);
@@ -41,12 +41,13 @@ const ModalKeteranganGangguan = () => {
 
   const onClickCloseModal = () => {
     closeModal();
-    // formMethods.reset({ ...initialValues });
+    removeData();
+    formMethods.reset({ ...initialValues });
   };
 
   useEffect(() => {
     formMethods.reset({ ...data });
-  }, []);
+  }, [data]);
 
   const fieldsRender = useMemo((): React.ReactNode => {
     const fieldsMap = [

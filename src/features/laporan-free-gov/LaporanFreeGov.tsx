@@ -1,3 +1,4 @@
+import { useState, useEffect, useMemo } from "react";
 import { GridColumns } from "@mui/x-data-grid";
 import {
   Grid,
@@ -18,42 +19,75 @@ import { DataGrid } from "@mui/x-data-grid";
 import { openModal } from "src/state/modal";
 import { TIME } from "src/constants/time";
 import { TableVerifikasi } from "./table-verifikasi";
-import { ModalGenerateLaporan } from "./modal";
+import { ModalAddCatatan, ModalGenerateLaporan } from "./modal";
+import { laporanFreegovApi } from "src/api/laporan-freegov";
+import dayjs, { Dayjs } from "dayjs";
+import { CellType } from "src/types";
+import { useSnapshot } from "valtio";
+import { reloadPage } from "src/state/reloadPage";
 
 const LaporanFreeGov = () => {
+  const reloadPageSnap = useSnapshot(reloadPage);
+
+  const [date, setDate] = useState<Dayjs | null>(dayjs());
+
+  const formatDate = dayjs(date).format("YYYY-MM-DD");
+
+  const { getLaporanFreegovList, laporanFreegovList } = laporanFreegovApi();
+
   const generateColumsTime = () => {
     const arrayTime: GridColumns<any> = [];
 
-    TIME.map((value, index) => {
+    TIME.map((value: string) => {
+      const mw = "mw_" + value.replace(".", "");
+
       arrayTime.push({
         flex: 0.25,
         minWidth: 80,
-        field: `mw_${value}`,
+        field: mw,
         headerName: value,
+        renderCell: ({ row }: CellType) => {
+          return (
+            <Typography
+              variant="subtitle2"
+              noWrap
+              sx={{ textTransform: "capitalize" }}
+            >
+              {row[mw] ? "ON" : "OFF"}
+            </Typography>
+          );
+        },
       });
     });
     return arrayTime;
   };
 
-  const columns = [
-    {
-      flex: 0.25,
-      minWidth: 200,
-      field: "pembangkit",
-      headerName: "Pembangkit",
-    },
-    ...generateColumsTime(),
-  ];
+  const columns = useMemo(
+    () => [
+      {
+        flex: 0.25,
+        minWidth: 200,
+        field: "nama",
+        headerName: "Pembangkit",
+      },
+      ...generateColumsTime(),
+    ],
+    []
+  );
 
-  const dataMock = [
-    {
-      id: 1,
-      pembangkit: "PLTU Tambalorok U1",
-    },
-  ];
+  useEffect(() => {
+    getLaporanFreegovList({ tanggal: formatDate });
+  }, [date]);
+
+  useEffect(() => {
+    if (reloadPageSnap.target === "laporan-freegov") {
+      getLaporanFreegovList({ tanggal: formatDate });
+    }
+  }, [date, reloadPageSnap.id]);
 
   return (
     <>
+      <ModalAddCatatan date={formatDate} />
       <ModalGenerateLaporan />
       <Grid container spacing={6}>
         <Grid item xs={12}>
@@ -66,9 +100,10 @@ const LaporanFreeGov = () => {
             <div style={{ display: "flex", gap: "10px" }}>
               <LocalizationProvider dateAdapter={AdapterDateFns}>
                 <DatePickerMui
-                  value={null}
+                  value={date}
                   label="Pilih Tanggal"
-                  onChange={() => null}
+                  inputFormat="dd/M/yyyy"
+                  onChange={(e) => setDate(e)}
                   renderInput={(params) => (
                     <TextField
                       size="small"
@@ -97,13 +132,16 @@ const LaporanFreeGov = () => {
                 hideFooter
                 autoHeight
                 columns={columns}
-                rows={dataMock}
+                rows={laporanFreegovList?.combo || []}
               />
             </CardContent>
           </Card>
         </Grid>
 
-        <TableVerifikasi />
+        <TableVerifikasi
+          combo={laporanFreegovList?.combo || []}
+          catatan={laporanFreegovList.catatan || []}
+        />
       </Grid>
     </>
   );

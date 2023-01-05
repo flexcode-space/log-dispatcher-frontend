@@ -1,6 +1,5 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Grid, Typography, TextField, Button } from "@mui/material";
-// import { DataGrid, gridClasses } from "@mui/x-data-grid";
 import DatePickerMui from "@mui/lab/DatePicker";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
@@ -13,7 +12,6 @@ import { laporanPekerjaanList } from "./LaporanPekerjaan.constant";
 import { ModalAdd } from "./modal";
 import { ModalGenerateLaporan } from "./modal/modal-generate-laporan";
 import dayjs, { Dayjs } from "dayjs";
-import { ModalAddBusbar } from "../busbar/modal";
 import { laporanPekerjaanApi } from "src/api/laporan-pekerjaan";
 
 const LaporanPekerjaan = () => {
@@ -90,7 +88,7 @@ const LaporanPekerjaan = () => {
               filter={{ date: filterDate }}
             />
           ) : (
-            <TableLain filter={{ date: filterDate }} />
+            <TableLain key={`table-${index}`} filter={{ date: filterDate }} />
           )
         )}
       </Grid>

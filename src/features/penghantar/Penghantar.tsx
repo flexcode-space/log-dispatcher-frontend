@@ -25,8 +25,8 @@ import { penghantarApi } from "src/api/penghantar";
 import { openModal, modal, reloadPage } from "src/state/modal";
 import { useDebounce } from "src/hooks/useDebounce";
 import { ModalDelete } from "src/components/modal";
-import MoreMenuIcon from "src/assets/icons/more-menu-icon.svg";
 import { MenuMore } from "src/components/menu-more";
+import { ModalKoefisien } from "./modal/modal-koenfisien";
 
 const Penghantar = () => {
   const modalSnapshot = useSnapshot(modal);
@@ -34,8 +34,6 @@ const Penghantar = () => {
   const [limit, setLimit] = useState<number>(10);
   const [page, setPage] = useState<number>(1);
   const [search, setSearch] = useState<string>("");
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const open = Boolean(anchorEl);
 
   const debouncedSearch = useDebounce(search, 500);
 
@@ -53,10 +51,6 @@ const Penghantar = () => {
   const onClickDelete = async () => {
     await deletePenghantar({ id: modalSnapshot.id });
     reloadPage();
-  };
-
-  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
   };
 
   const columns = [
@@ -79,7 +73,9 @@ const Penghantar = () => {
                 onClick={() => openModal("modal-delete", row.id)}
               />
             </IconButton>
-            <MenuMore />
+            <MenuMore
+              onClickKoefisien={() => openModal("modal-koefisien", row.id)}
+            />
           </Box>
         );
       },
@@ -106,6 +102,7 @@ const Penghantar = () => {
 
   return (
     <>
+      <ModalKoefisien />
       <ModalDelete onClickDelete={onClickDelete} />
       <ModalAddPenghantar />
       <Grid container spacing={6}>

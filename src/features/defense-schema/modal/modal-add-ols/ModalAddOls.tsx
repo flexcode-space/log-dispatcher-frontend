@@ -24,23 +24,9 @@ import { setReloadPage } from "src/state/reloadPage";
 import { usePeralatan } from "./usePeralatan";
 import { defenseApi } from "src/api/defense";
 
-// type ModalAddProps = {
-//   name: string;
-// };
-
-// const defaultValue = {
-//   target: "",
-// };
-
-// type DefaultValueProps = {
-//   target: string;
-// }[];
-
 const ModalAdd = () => {
   const modalSnapshot = useSnapshot(modal);
   const { data } = useSnapshot(defenseSchema);
-
-  // const [fields, setFields] = useState<DefaultValueProps>([defaultValue]);
 
   const { createDefense, updateDefense } = defenseApi();
 
@@ -74,6 +60,8 @@ const ModalAdd = () => {
   };
 
   const jenisPeralatan = formMethods.watch("jenis_peralatan");
+  const subsistemId = formMethods.watch("sub_sistem_id");
+  const garduIndukId = formMethods.watch("gardu_induk_id");
   const jenisPeralatanTarget = formMethods.watch("jenis_peralatan_target");
 
   const {
@@ -84,10 +72,12 @@ const ModalAdd = () => {
     optionJenisPeralatan,
     peratanOptions,
     ampOptions,
-  } = useModalAdd(jenisPeralatan);
+  } = useModalAdd(jenisPeralatan, subsistemId);
 
-  const { jenisPeralatanTargetOptions, peralatantargetOptions } =
-    usePeralatan(jenisPeralatanTarget);
+  const { jenisPeralatanTargetOptions, peralatantargetOptions } = usePeralatan(
+    jenisPeralatanTarget,
+    garduIndukId
+  );
 
   const onCloseModal = () => {
     closeModal();

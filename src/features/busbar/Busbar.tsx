@@ -26,6 +26,8 @@ import { busbarApi } from "src/api/busbar";
 import { openModal, closeModal, modal, reloadPage } from "src/state/modal";
 import { useDebounce } from "src/hooks/useDebounce";
 import { ModalDelete } from "src/components/modal";
+import { MenuMore } from "src/components/menu-more";
+import { ModalKoefisien } from "./modal/modal-koefisien";
 
 const Busbar = () => {
   const modalSnapshot = useSnapshot(modal);
@@ -52,7 +54,7 @@ const Busbar = () => {
     ...defaultColumns,
     {
       flex: 0.15,
-      minWidth: 100,
+      minWidth: 130,
       sortable: false,
       field: "actions",
       headerName: "Aksi",
@@ -68,6 +70,9 @@ const Busbar = () => {
                 onClick={() => openModal("modal-delete", row.id)}
               />
             </IconButton>
+            <MenuMore
+              onClickKoefisien={() => openModal("modal-koefisien", row.id)}
+            />
           </Box>
         );
       },
@@ -98,6 +103,7 @@ const Busbar = () => {
 
   return (
     <>
+      <ModalKoefisien />
       <ModalDelete onClickDelete={onClickDelete} />
       <ModalAddBusbar handleClose={handleClose} />
       <Grid container spacing={6}>

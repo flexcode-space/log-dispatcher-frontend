@@ -8,6 +8,12 @@ export const admindefaultColumns = [
   {
     flex: 0.25,
     minWidth: 300,
+    field: "email",
+    headerName: "Email",
+  },
+  {
+    flex: 0.25,
+    minWidth: 300,
     field: "username",
     headerName: "UserName",
   },
@@ -24,6 +30,12 @@ export const userdefaultColumns = [
     minWidth: 300,
     field: "nama",
     headerName: "Nama",
+  },
+  {
+    flex: 0.25,
+    minWidth: 300,
+    field: "email",
+    headerName: "Email",
   },
   {
     flex: 0.25,
@@ -48,16 +60,18 @@ export const userdefaultColumns = [
 export const datamock = [
   {
     id: "c836c745-e1db-4777-9699-e40fffaa302d",
-    nama: "PLTU CILACAP",
-    username: "8.000.332",
-    jabatan: "Ton",
+    nama: "Chris Glasser",
+    email: "EddieLLake@hotmail.com",
+    username: "patricia651",
+    jabatan: "Pimpinan",
     hakakses: "1",
   },
   {
     id: "42424-e1db-4777-9699-e40fffaa302d",
-    nama: "PLTU TAMBAKLOROK",
-    username: "8.000.332",
-    jabatan: "Ton",
+    nama: "John Dukes",
+    email: "EddieLLake@hotmail.com",
+    username: "alex941",
+    jabatan: "Pimpinan",
     hakakses: "1",
   },
 ];

@@ -2,16 +2,21 @@ import { Grid, Typography, TextField, Button, IconButton } from "@mui/material";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import DatePicketMui from "@mui/lab/DatePicker";
+import dayjs, { Dayjs } from "dayjs";
 import PageHeader from "src/@core/components/page-header";
 import FilterIcon from "src/assets/icons/filter-green-icon.svg";
 
 import { WrapperFilter } from "src/components/filter";
 import { AddData } from "./add-data";
-import { openModal, closeModal } from "src/state/modal";
 import { ModalEdit } from "./modal";
 import { TableList } from "./table-list";
+import { useState } from "react";
 
 const CatatanPembangkitan = () => {
+  const [date, setDate] = useState<Dayjs | null>(null);
+
+  const formatDate = date ? dayjs(date).format("YYYY-MM-DD") : "";
+
   return (
     <>
       <ModalEdit />
@@ -47,24 +52,29 @@ const CatatanPembangkitan = () => {
               </Button>
               <LocalizationProvider dateAdapter={AdapterDateFns}>
                 <DatePicketMui
-                  value={new Date()}
+                  value={date}
                   label="Pilih Tanggal"
-                  onChange={() => null}
+                  inputFormat="dd/M/yyyy"
+                  onChange={(e) => setDate(e)}
                   renderInput={(params) => (
-                    <TextField
-                      size="small"
-                      {...params}
-                      fullWidth
-                    />
+                    <TextField size="small" {...params} fullWidth />
                   )}
                 />
               </LocalizationProvider>
             </div>
           </WrapperFilter>
         </Grid>
-        <TableList title="Pembangkit Derating" type="derating" />
-        <TableList title="Pembangkit Outage" type="outage" />
-        <TableList title="Pembangkit RS, NC, Dll" type="lain" />
+        <TableList
+          title="Pembangkit Derating"
+          type="derating"
+          date={formatDate}
+        />
+        <TableList title="Pembangkit Outage" type="outage" date={formatDate} />
+        <TableList
+          title="Pembangkit RS, NC, Dll"
+          type="lain"
+          date={formatDate}
+        />
       </Grid>
     </>
   );
