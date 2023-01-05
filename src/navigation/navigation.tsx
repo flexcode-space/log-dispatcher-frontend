@@ -276,6 +276,11 @@ export const navigation = (): HorizontalNavItemsType => [
         ],
       },
       {
+        title: "Piket & Shift",
+        icon: PengaturanUserIcon,
+        path: "/Piket-&-Shift",
+      },
+      {
         title: "Pengaturan User",
         icon: PengaturanUserIcon,
         path: "/pengaturan-user",
