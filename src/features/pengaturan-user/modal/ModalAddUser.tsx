@@ -17,6 +17,8 @@ import { modal, closeModal } from "src/state/modal";
 import { UploadFile } from "src/components/upload-file";
 import { HAK_AKSES } from "./useModalAdd";
 import { columns } from "src/features/home/components/StatusPembangkit";
+import { pengaturanUserApi } from "src/api/pengaturan-user";
+
 
 const ModalAddUser = () => {
   const modalSnapshot = useSnapshot(modal);

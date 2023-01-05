@@ -16,11 +16,24 @@ import { CardHeader } from "src/components/card";
 import {
   admindefaultColumns,
   userdefaultColumns,
-  datamock,
 } from "./pengaturanUser.constant";
 import ModalAdduser from "./modal/ModalAddUser";
+import { pengaturanUserApi } from "src/api/pengaturan-user";
+import { useEffect } from "react";
+
+
+
 
 const PengaturanUser = () => {
+  const { pengaturanUserList, loading, getPengaturanUser } =pengaturanUserApi();
+  //  @ts-ignore 
+  const superAdmin = pengaturanUserList.filter((obj) =>  obj.hak === 1);
+  //  @ts-ignore 
+  const user = pengaturanUserList.filter((obj) =>  obj.hak !== 1);
+
+
+
+
   const admincolumns = [
     ...admindefaultColumns,
     {
@@ -55,6 +68,11 @@ const PengaturanUser = () => {
       ),
     },
   ];
+
+    useEffect(() => {
+    getPengaturanUser()
+  }, []);
+
   return (
     <>
       <ModalAdduser />
@@ -86,7 +104,7 @@ const PengaturanUser = () => {
                 hideFooter
                 autoHeight
                 columns={admincolumns}
-                rows={datamock}
+                rows={superAdmin}
               />
             </CardContent>
           </Card>
@@ -100,7 +118,7 @@ const PengaturanUser = () => {
                 hideFooter
                 autoHeight
                 columns={usercolumns}
-                rows={datamock}
+                rows={user}
               />
             </CardContent>
           </Card>
