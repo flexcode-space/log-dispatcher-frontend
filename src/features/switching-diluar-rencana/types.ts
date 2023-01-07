@@ -16,8 +16,8 @@ export interface SwitchingLuarRencanaList {
 
 export interface InitialValuesSwitching {
   gardu_induk_id: string;
-  jam_buka: Array<{ value: Date }>;
-  jam_tutup: Array<{ value: Date }>;
+  jam_buka: Array<{ value: Date | null }>;
+  jam_tutup: Array<{ value: Date | null }>;
   keterangan: string;
   penghantar: Array<{ id: string }>;
   tanggal: Date;

@@ -24,6 +24,7 @@ import { validationSchema, initialValues } from "./ModalAddSwitching.contant";
 import { switchingDiluarRencana, removeData } from "../state";
 import { PayloadSwitchingLuarRencana } from "../types";
 import { switchingLuarRencanaApi } from "src/api/switchingDiluarRencanaApi";
+import { setReloadPage } from "src/state/reloadPage";
 
 dayjs.extend(customParseFormat);
 
@@ -64,13 +65,18 @@ const ModalAdd = () => {
     event?.preventDefault();
 
     formMethods.handleSubmit(async (values) => {
+      console.log("values", values);
       let payload: PayloadSwitchingLuarRencana[] = [];
 
       values.penghantar.forEach((value, index: number) => {
         payload.push({
           gardu_induk_id: values.gardu_induk_id,
-          jam_buka: dayjs(values.jam_buka[index].value).format("HH:mm"),
-          jam_tutup: dayjs(values.jam_tutup[index].value).format("HH:mm"),
+          jam_buka: values.jam_buka[index].value
+            ? dayjs(values.jam_buka[index].value).format("HH:mm")
+            : "-",
+          jam_tutup: values.jam_tutup[index].value
+            ? dayjs(values.jam_tutup[index].value).format("HH:mm")
+            : "-",
           penghantar_id: value.id,
           tanggal: dayjs(values.tanggal).format("YYYY-MM-DD"),
           keterangan: values.keterangan,
@@ -83,6 +89,7 @@ const ModalAdd = () => {
         createSwitchingLuarRencana(payload);
       }
       onCloseModal();
+      setReloadPage("switching-luar-rencana")
     })();
   };
 
@@ -98,8 +105,20 @@ const ModalAdd = () => {
       formMethods.reset({
         ...data,
         gardu_induk_id: data?.gardu_induk?.id,
-        jam_buka: [{ value: dayjs(data.jam_buka, "HH:mm") }],
-        jam_tutup: [{ value: dayjs(data.jam_tutup, "HH:mm") }],
+        jam_buka: [
+          {
+            value: dayjs(data.jam_buka, "HH:mm").isValid()
+              ? dayjs(data.jam_buka, "HH:mm")
+              : null,
+          },
+        ],
+        jam_tutup: [
+          {
+            value: dayjs(data.jam_tutup, "HH:mm").isValid()
+              ? dayjs(data.jam_tutup, "HH:mm")
+              : null,
+          },
+        ],
         penghantar: [{ id: data.penghantar.id }],
       });
     }
