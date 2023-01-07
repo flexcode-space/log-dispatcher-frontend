@@ -10,7 +10,7 @@ export const initialValues: InitialValuesSwitching = {
   ],
   jam_tutup: [
     {
-      value: new Date()
+      value: null
     }
   ],
   keterangan: '',
@@ -26,12 +26,12 @@ export const validationSchema = yup.object({
   gardu_induk_id: yup.string().required('This field is required'),
   jam_buka: yup.array().of(
     yup.object().shape({
-      value: yup.date(),
+      value: yup.string().nullable(true),
     })
   ),
   jam_tutup: yup.array().of(
     yup.object().shape({
-      value: yup.date(),
+      value: yup.string().nullable(true),
     })
   ),
   penghantar: yup.array().of(

@@ -29,8 +29,12 @@ import { ModalAddSwitching } from "./modal";
 import { SwitchingLuarRencanaList } from "./types";
 import { openModal } from "src/state/modal";
 import { selectData } from "./state";
+import { useSnapshot } from "valtio";
+import { reloadPage } from "src/state/reloadPage";
 
 const SwitchingDiluarRencana = () => {
+  const reloadPageSnap = useSnapshot(reloadPage);
+
   const { getSwitchingLuarRencanaList, switchingLuarRencana } =
     switchingLuarRencanaApi();
 
@@ -49,6 +53,12 @@ const SwitchingDiluarRencana = () => {
   useEffect(() => {
     getSwitchingLuarRencanaList();
   }, []);
+
+  useEffect(() => {
+    if (reloadPageSnap.target === "switching-luar-rencana") {
+      getSwitchingLuarRencanaList();
+    }
+  }, [reloadPageSnap.id]);
 
   return (
     <>

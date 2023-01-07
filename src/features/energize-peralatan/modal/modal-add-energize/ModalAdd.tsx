@@ -46,9 +46,10 @@ const ModalAdd = () => {
   });
 
   const jenisPeralatan = formMethods.watch("jenis_peralatan");
+  const garduIndukId = formMethods.watch("gardu_induk_id");
 
   const { garduIndukOptions, optionJenisPeralatan, peratanOptions } =
-    useModalAdd(jenisPeralatan);
+    useModalAdd(jenisPeralatan, garduIndukId);
 
   const { createEnergizePeralatan, updateEnergizePeralatan } =
     energizePeralatanApi();

@@ -5,7 +5,7 @@ import { peralatanApi } from 'src/api/peralatan'
 import { modal } from 'src/state/modal'
 import { optionJenisPeralatan } from './ModalAdd.contant'
 
-export const useModalAdd = (jenisPeralatan: string) => {
+export const useModalAdd = (jenisPeralatan: string, garduIndukId: string) => {
   const modalSnap = useSnapshot(modal)
   const { getGarduIndukList, garduIndukList } = garduIndukApi()
   const { getPeralatanByPath, peralatanList } = peralatanApi()
@@ -22,7 +22,7 @@ export const useModalAdd = (jenisPeralatan: string) => {
 
   useEffect(() => {
     if (!!jenisPeralatan) {
-      getPeralatanByPath(jenisPeralatan)
+      getPeralatanByPath(`${jenisPeralatan}/gardu-induk/${garduIndukId}`)
     }
   }, [jenisPeralatan])
 
