@@ -13,14 +13,38 @@ import { pengaturanSubsistem } from "./Home.constant";
 import { berandaApi } from "src/api/beranda";
 import { useEffect } from "react";
 import { useRouter } from "next/router";
+import dayjs from "dayjs";
+import { formatDecimalNumber } from "src/utils/number";
 
 const Home = () => {
   const router = useRouter();
 
-  const { getPengaturanSistem, pengaturanSistem } = berandaApi();
+  // const date = dayjs("2022-12-30").format("YYYY-MM-DD");
+  const date = dayjs().format("YYYY-MM-DD");
+
+  const {
+    getMonitoringIBT,
+    getPengaturanSistem,
+    getMonitoringPenghantar,
+    ibtList,
+    penghantarList,
+    pengaturanSistem,
+  } = berandaApi();
+
+  const dataPenghantar = penghantarList?.map((value, index) => ({
+    id: index,
+    ...(value as Object),
+  }));
+
+  const dataIbt = ibtList?.map((value, index) => ({
+    id: index,
+    ...(value as Object),
+  }));
 
   useEffect(() => {
     getPengaturanSistem();
+    getMonitoringPenghantar({ tanggal: date, limit: 10 });
+    getMonitoringIBT({ tanggal: date });
   }, []);
 
   return (
@@ -71,10 +95,10 @@ const Home = () => {
         <Grid item xs={5}>
           <Grid container spacing={6}>
             <Grid item xs={12}>
-              <MonitoringIBT />
+              <MonitoringIBT data={(dataIbt as []) || []} />
             </Grid>
             <Grid item xs={12}>
-              <MonitoringPenghantar />
+              <MonitoringPenghantar data={(dataPenghantar as []) || []} />
             </Grid>
           </Grid>
         </Grid>

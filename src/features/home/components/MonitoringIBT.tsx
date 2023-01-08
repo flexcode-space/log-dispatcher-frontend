@@ -1,63 +1,40 @@
 import { Card, CardContent } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { CardHeader } from "src/components/card";
-
-export interface CellType {
-  row: any;
-}
+import { RenderCell } from "src/components/table";
+import { CellType } from "src/types";
+import { formatDecimalNumber } from "src/utils/number";
 
 export const columns = [
   {
     flex: 0.35,
     field: "subsistem",
+    maxWidth: 300,
     headerName: "Subsistem",
   },
   {
     flex: 0.25,
-    field: "ibt",
-    maxWidth: 100,
+    field: "nama",
+    maxWidth: 300,
     headerName: "IBT",
   },
   {
     flex: 0.25,
-    field: "beban",
+    field: "percentage",
     headerName: "Beban",
+    renderCell: ({ row }: CellType) => {
+      const { percentage } = row;
+      return <RenderCell>{`${formatDecimalNumber(percentage)} %`}</RenderCell>;
+    },
   },
 ];
 
-export const dataMock = [
-  {
-    id: 1,
-    subsistem: "Ungaran",
-    ibt: "IBT-1",
-    beban: "55%",
-  },
-  {
-    id: 2,
-    subsistem: "Ungaran",
-    ibt: "IBT-1",
-    beban: "55%",
-  },
-  {
-    id: 3,
-    subsistem: "Ungaran",
-    ibt: "IBT-1",
-    beban: "55%",
-  },
-  {
-    id: 4,
-    subsistem: "Ungaran",
-    ibt: "IBT-1",
-    beban: "55%",
-  },
-];
-
-export const MonitoringIBT = () => {
+export const MonitoringIBT = ({ data = [] }: { data: [] }) => {
   return (
     <Card sx={{}}>
       <CardHeader title="Monitoring IBT" />
       <CardContent>
-        <DataGrid autoHeight hideFooter rows={dataMock} columns={columns} />
+        <DataGrid autoHeight hideFooter rows={data} columns={columns} />
       </CardContent>
     </Card>
   );
