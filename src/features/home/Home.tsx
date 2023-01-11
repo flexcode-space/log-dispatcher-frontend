@@ -13,14 +13,59 @@ import { pengaturanSubsistem } from "./Home.constant";
 import { berandaApi } from "src/api/beranda";
 import { useEffect } from "react";
 import { useRouter } from "next/router";
+import dayjs from "dayjs";
+import { formatDecimalNumber } from "src/utils/number";
 
 const Home = () => {
   const router = useRouter();
 
-  const { getPengaturanSistem, pengaturanSistem } = berandaApi();
+  const date = dayjs().format("YYYY-MM-DD");
+
+  const {
+    getMonitoringIBT,
+    getPengaturanSistem,
+    getMonitoringPenghantar,
+    getStatusPembangkitan,
+    getMonitorAnalisaBeban,
+    ibtList,
+    penghantarList,
+    pengaturanSistem,
+    statusPembangkitanList,
+    monitorAnalisaBeban,
+  } = berandaApi();
+
+  const dataPenghantar = penghantarList?.map((value, index) => ({
+    id: index,
+    ...(value as Object),
+  }));
+
+  const dataIbt = ibtList?.map((value, index) => ({
+    id: index,
+    ...(value as Object),
+  }));
+
+  const statusPembangkitan = statusPembangkitanList?.map((value, index) => ({
+    id: index,
+    ...(value as Object),
+  }));
+
+  const getValueById = (id: string) => {
+    monitorAnalisaBeban?.terendah?.filter((value) => value.id === id);
+  };
+
+  const tegangganSubsistem = monitorAnalisaBeban?.tertinggi?.map(
+    (value, index) => ({
+      ...value,
+      tegangan_terendah: monitorAnalisaBeban?.terendah?.[index].tegangan,
+    })
+  );
 
   useEffect(() => {
     getPengaturanSistem();
+    getMonitoringPenghantar({ tanggal: date, limit: 10 });
+    getMonitoringIBT({ tanggal: date });
+    getStatusPembangkitan({ tanggal: date });
+    getMonitorAnalisaBeban({ tanggal: date });
   }, []);
 
   return (
@@ -56,7 +101,7 @@ const Home = () => {
           <NeracaDaya />
         </Grid>
         <Grid item xs={5}>
-          <StatusPembangkit />
+          <StatusPembangkit data={(statusPembangkitan as []) || []} />
         </Grid>
         <Grid item xs={7}>
           <Grid container spacing={6}>
@@ -64,17 +109,17 @@ const Home = () => {
               <JadwalShift />
             </Grid>
             <Grid item xs={12}>
-              <TeganganSubsistem />
+              <TeganganSubsistem data={(tegangganSubsistem as []) || []} />
             </Grid>
           </Grid>
         </Grid>
         <Grid item xs={5}>
           <Grid container spacing={6}>
             <Grid item xs={12}>
-              <MonitoringIBT />
+              <MonitoringIBT data={(dataIbt as []) || []} />
             </Grid>
             <Grid item xs={12}>
-              <MonitoringPenghantar />
+              <MonitoringPenghantar data={(dataPenghantar as []) || []} />
             </Grid>
           </Grid>
         </Grid>

@@ -2,10 +2,7 @@ import { Card, CardContent } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { CardHeader } from "src/components/card";
 import CustomChip from "src/@core/components/mui/chip";
-
-export interface CellType {
-  row: any;
-}
+import { CellType } from "src/types";
 
 export const columns = [
   {
@@ -34,51 +31,12 @@ export const columns = [
   },
 ];
 
-export const dataMock = [
-  {
-    id: 1,
-    pembangkit: "Ungaran",
-    status: "PO",
-    waktu: "22 Januari 2022, 01.43 WIB",
-  },
-  {
-    id: 2,
-    pembangkit: "PLTU",
-    status: "PO",
-    waktu: "22 Januari 2022, 01.43 WIB",
-  },
-  {
-    id: 3,
-    pembangkit: "PLTGU",
-    status: "PO",
-    waktu: "22 Januari 2022, 01.43 WIB",
-  },
-  {
-    id: 4,
-    pembangkit: "IBT 1 -2",
-    status: "PO",
-    waktu: "22 Januari 2022, 01.43 WIB",
-  },
-  {
-    id: 5,
-    pembangkit: "Rencana",
-    status: "PO",
-    waktu: "22 Januari 2022, 01.43 WIB",
-  },
-  {
-    id: 6,
-    pembangkit: "Margin",
-    status: "PO",
-    waktu: "22 Januari 2022, 01.43 WIB",
-  },
-];
-
-export const StatusPembangkit = () => {
+export const StatusPembangkit = ({ data = [] }: { data: [] }) => {
   return (
     <Card sx={{ height: "500px" }}>
       <CardHeader title="Status Pembangkitan" />
       <CardContent>
-        <DataGrid autoHeight hideFooter rows={dataMock} columns={columns} />
+        <DataGrid autoHeight hideFooter rows={data} columns={columns} />
       </CardContent>
     </Card>
   );

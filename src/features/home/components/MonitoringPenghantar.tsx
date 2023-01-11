@@ -1,63 +1,40 @@
 import { Card, CardContent } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { CardHeader } from "src/components/card";
-
-export interface CellType {
-  row: any;
-}
+import { RenderCell } from "src/components/table";
+import { CellType } from "src/types";
+import { formatDecimalNumber } from "src/utils/number";
 
 export const columns = [
   {
     flex: 0.35,
     field: "subsistem",
+    maxWidth: 350,
     headerName: "Subsistem",
   },
   {
     flex: 0.25,
-    field: "penghantar",
-    maxWidth: 100,
+    field: "nama",
+    maxWidth: 300,
     headerName: "Penghantar",
   },
   {
     flex: 0.25,
-    field: "beban",
+    field: "percentage",
     headerName: "Beban",
+    renderCell: ({ row }: CellType) => {
+      const { percentage } = row;
+      return <RenderCell>{`${formatDecimalNumber(percentage)} %`}</RenderCell>;
+    },
   },
 ];
 
-export const dataMock = [
-  {
-    id: 1,
-    subsistem: "Ungaran",
-    penghantar: "Penghantar 1",
-    beban: "55%",
-  },
-  {
-    id: 2,
-    subsistem: "Ungaran",
-    penghantar: "Penghantar 1",
-    beban: "55%",
-  },
-  {
-    id: 3,
-    subsistem: "Ungaran",
-    penghantar: "Penghantar 1",
-    beban: "55%",
-  },
-  {
-    id: 4,
-    subsistem: "Ungaran",
-    penghantar: "Penghantar 1",
-    beban: "55%",
-  },
-];
-
-export const MonitoringPenghantar = () => {
+export const MonitoringPenghantar = ({ data = [] }: { data: [] }) => {
   return (
     <Card sx={{}}>
       <CardHeader title="Monitoring Penghantar" />
       <CardContent>
-        <DataGrid autoHeight hideFooter rows={dataMock} columns={columns} />
+        <DataGrid autoHeight hideFooter rows={data} columns={columns} />
       </CardContent>
     </Card>
   );
