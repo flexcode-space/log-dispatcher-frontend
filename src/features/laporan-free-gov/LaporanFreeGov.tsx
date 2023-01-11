@@ -7,7 +7,6 @@ import {
   Button,
   Card,
   CardContent,
-  IconButton,
 } from "@mui/material";
 import DatePickerMui from "@mui/lab/DatePicker";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
@@ -16,10 +15,11 @@ import PageHeader from "src/@core/components/page-header";
 import { WrapperFilter } from "src/components/filter";
 import { CardHeader } from "src/components/card";
 import { DataGrid } from "@mui/x-data-grid";
-import { openModal } from "src/state/modal";
+import { modal, openModal } from "src/state/modal";
 import { TIME } from "src/constants/time";
 import { TableVerifikasi } from "./table-verifikasi";
-import { ModalAddCatatan, ModalGenerateLaporan } from "./modal";
+import { ModalGenerateLaporan } from "src/components/modal";
+import { ModalAddCatatan } from "./modal";
 import { laporanFreegovApi } from "src/api/laporan-freegov";
 import dayjs, { Dayjs } from "dayjs";
 import { CellType } from "src/types";
@@ -28,12 +28,18 @@ import { reloadPage } from "src/state/reloadPage";
 
 const LaporanFreeGov = () => {
   const reloadPageSnap = useSnapshot(reloadPage);
+  const modalSnapshot = useSnapshot(modal);
 
   const [date, setDate] = useState<Dayjs | null>(dayjs());
 
   const formatDate = dayjs(date).format("YYYY-MM-DD");
 
-  const { getLaporanFreegovList, laporanFreegovList } = laporanFreegovApi();
+  const {
+    getLaporanFreegovList,
+    laporanFreegovList,
+    getLaporanFreegovGenerate,
+    laporanFreegovGenerate,
+  } = laporanFreegovApi();
 
   const generateColumsTime = () => {
     const arrayTime: GridColumns<any> = [];
@@ -85,10 +91,19 @@ const LaporanFreeGov = () => {
     }
   }, [date, reloadPageSnap.id]);
 
+  useEffect(() => {
+    if (modalSnapshot.target === "modal-generate-laporan") {
+      getLaporanFreegovGenerate({ tanggal: formatDate });
+    }
+  }, [modalSnapshot.isOpen]);
+
   return (
     <>
       <ModalAddCatatan date={formatDate} />
-      <ModalGenerateLaporan />
+      <ModalGenerateLaporan
+        value={laporanFreegovGenerate}
+        title="Laporan FreeGov"
+      />
       <Grid container spacing={6}>
         <Grid item xs={12}>
           <WrapperFilter>

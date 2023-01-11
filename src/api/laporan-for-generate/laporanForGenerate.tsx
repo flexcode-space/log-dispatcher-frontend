@@ -8,9 +8,12 @@ interface ParamsLaporanForGenerate extends Params {
 }
 
 const endpoint = "/report/laporan-for/generate";
+
 const laporanForGenerate = () => {
-  const [laporanForGenerateList, setLaporanForGenerateList] = useState<[]>([]);
+  const [laporanForGenerateList, setLaporanForGenerateList] =
+    useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
+
   const getLaporanForGenerate = useCallback(
     async (params: ParamsLaporanForGenerate = {}) => {
       setLoading(true);
@@ -18,11 +21,10 @@ const laporanForGenerate = () => {
         const {
           data: { result },
         } = await Axios.get(endpoint, { params });
-        setLaporanForGenerateList(result || []);
+        setLaporanForGenerateList(result || "");
       } finally {
         setLoading(false);
       }
-      console.log("params :", laporanForGenerateList);
     },
     []
   );
