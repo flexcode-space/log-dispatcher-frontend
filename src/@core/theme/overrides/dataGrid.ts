@@ -43,7 +43,8 @@ const DataGrid = (theme: Theme) => {
         columnHeaderTitle: {
           fontSize: '0.75rem',
           letterSpacing: '0.17px',
-          textTransform: 'uppercase'
+          textTransform: 'uppercase',
+          color: '#fff', //custom color
         },
         columnSeparator: {
           color: theme.palette.divider

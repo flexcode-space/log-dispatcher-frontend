@@ -14,7 +14,6 @@ import { berandaApi } from "src/api/beranda";
 import { useEffect } from "react";
 import { useRouter } from "next/router";
 import dayjs from "dayjs";
-import { formatDecimalNumber } from "src/utils/number";
 
 const Home = () => {
   const router = useRouter();
@@ -48,10 +47,6 @@ const Home = () => {
     id: index,
     ...(value as Object),
   }));
-
-  const getValueById = (id: string) => {
-    monitorAnalisaBeban?.terendah?.filter((value) => value.id === id);
-  };
 
   const tegangganSubsistem = monitorAnalisaBeban?.tertinggi?.map(
     (value, index) => ({
@@ -106,7 +101,7 @@ const Home = () => {
         <Grid item xs={7}>
           <Grid container spacing={6}>
             <Grid item xs={12}>
-              <JadwalShift />
+              <JadwalShift onClick={() => router.push("/Piket-&-Shift")} />
             </Grid>
             <Grid item xs={12}>
               <TeganganSubsistem data={(tegangganSubsistem as []) || []} />
