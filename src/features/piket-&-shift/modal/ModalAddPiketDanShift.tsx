@@ -11,20 +11,31 @@ import {
 import { useSnapshot } from "valtio";
 import { StyledForm } from "src/components/form";
 import { modal, closeModal } from "src/state/modal";
-import { SelectInput } from "src/components/select-input";
+import { SelectInput, SelectMultipleInput } from "src/components/select-input";
 import { DatePicker } from "src/components/date-picker";
+import { yupResolver } from "@hookform/resolvers/yup";
+import {
+  initialValues,
+  validationSchema,
+} from "./ModalAddPiketDanShift.constant";
+import { useModal } from "./useModal";
 
 const ModalAddPiketDanShift = () => {
   const modalSnapshot = useSnapshot(modal);
 
+  const { userOptions } = useModal();
+
   const formMethods = useForm({
-    //     resolver: yupResolver(validationSchema),
-    //     defaultValues: initialValues,
-    //     mode: "onSubmit",
+    resolver: yupResolver(validationSchema),
+    defaultValues: initialValues,
+    mode: "onSubmit",
   });
 
   const onSubmit = (event?: React.FormEvent<HTMLFormElement>) => {
     event?.preventDefault();
+    formMethods.handleSubmit(async (values) => {
+      console.log("values", values);
+    })();
   };
 
   const hanleCloseModal = () => {
@@ -40,7 +51,7 @@ const ModalAddPiketDanShift = () => {
       scroll="body"
     >
       <FormProvider {...formMethods}>
-        <StyledForm noValidate onSubmit={onSubmit}>
+        <StyledForm noValidate onSubmit={onSubmit} sx={{ maxWidth: "100%" }}>
           <DialogContent
             sx={{
               pb: 6,
@@ -60,19 +71,40 @@ const ModalAddPiketDanShift = () => {
               </Grid>
 
               <Grid item xs={12} sm={12}>
-                <SelectInput label="Piket Pimpinan" name="" options={[]} />
+                <SelectInput
+                  label="Piket Pimpinan"
+                  name=""
+                  options={userOptions}
+                />
+              </Grid>
+
+              <Grid item xs={12} sm={12}>
+                <SelectMultipleInput
+                  label="Shift Pagi"
+                  name="shift_pagi"
+                  options={userOptions}
+                />
               </Grid>
               <Grid item xs={12} sm={12}>
-                <SelectInput label="Shift Pagi" name="" options={[]} />
+                <SelectMultipleInput
+                  label="Shift Siang"
+                  name="shift_siang"
+                  options={userOptions}
+                />
               </Grid>
               <Grid item xs={12} sm={12}>
-                <SelectInput label="Shift Siang" name="" options={[]} />
+                <SelectMultipleInput
+                  label="Shift Malam"
+                  name="shift_malam"
+                  options={userOptions}
+                />
               </Grid>
               <Grid item xs={12} sm={12}>
-                <SelectInput label="Shift Malam" name="" options={[]} />
-              </Grid>
-              <Grid item xs={12} sm={12}>
-                <SelectInput label="Piket BID FASOP" name="" options={[]} />
+                <SelectMultipleInput
+                  label="Piket BID FASOP"
+                  name="bid_fasop"
+                  options={userOptions}
+                />
               </Grid>
             </Grid>
           </DialogContent>

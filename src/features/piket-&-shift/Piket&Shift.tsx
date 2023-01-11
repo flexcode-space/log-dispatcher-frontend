@@ -79,7 +79,7 @@ const PiketDanShift = () => {
               variant="subtitle1"
               sx={{ mb: "10px", fontWeight: 700 }}
             >
-              PIKET PIMPINAM
+              PIKET PIMPINAN
             </Typography>
             <CardPiket
               data={{
