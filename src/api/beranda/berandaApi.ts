@@ -3,9 +3,23 @@ import { Axios } from '../axios'
 
 const endpoint = '/beranda'
 
+type MonitorList = {
+  id: string,
+  gardu_induk: string,
+  jam: string,
+  peralatan: string,
+  tegangan: number,
+  subsistem: string
+}
+
 const berandaApi = () => {
   const [pengaturanSistem, setPengaturanSistem] = useState<{}>({})
   const [penghantarList, setPenghantarList] = useState<[]>([])
+  const [statusPembangkitanList, setStatusPembangkitanList] = useState<[]>([])
+  const [monitorAnalisaBeban, setMonitorAnalisaBeban] = useState<{
+    tertinggi: MonitorList[],
+    terendah: MonitorList[]
+  }>({ tertinggi: [], terendah: [] })
   const [ibtList, setIbtList] = useState<[]>([])
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -42,15 +56,44 @@ const berandaApi = () => {
     }
   }, [])
 
+  const getStatusPembangkitan = useCallback(async (params: { tanggal: string }) => {
+    setLoading(true)
+
+    try {
+      const { data } = await Axios.get('/beranda/status-pembangkitan', { params })
+      setStatusPembangkitanList(data ? data.slice(0, 20) : [])
+    } finally {
+      setLoading(false)
+    }
+  }, [])
+
+  const getMonitorAnalisaBeban = useCallback(async (params: { tanggal: string }) => {
+    setLoading(true)
+
+    try {
+      const { data } = await Axios.get('/beban/analisa/monitor/busbar', { params })
+      const tertinggi = data?.tertinggi ? [...data?.tertinggi.slice(0, 20)] : []
+      const terendah = data?.terendah ? [...data?.terendah.slice(0, 20)] : []
+
+      setMonitorAnalisaBeban({ tertinggi, terendah } || {})
+    } finally {
+      setLoading(false)
+    }
+  }, [])
+
 
   return {
     loading,
     ibtList,
     pengaturanSistem,
     penghantarList,
+    statusPembangkitanList,
+    monitorAnalisaBeban,
     getMonitoringIBT,
     getPengaturanSistem,
     getMonitoringPenghantar,
+    getStatusPembangkitan,
+    getMonitorAnalisaBeban
   }
 }
 

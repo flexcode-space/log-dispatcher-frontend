@@ -19,16 +19,19 @@ import { formatDecimalNumber } from "src/utils/number";
 const Home = () => {
   const router = useRouter();
 
-  // const date = dayjs("2022-12-30").format("YYYY-MM-DD");
   const date = dayjs().format("YYYY-MM-DD");
 
   const {
     getMonitoringIBT,
     getPengaturanSistem,
     getMonitoringPenghantar,
+    getStatusPembangkitan,
+    getMonitorAnalisaBeban,
     ibtList,
     penghantarList,
     pengaturanSistem,
+    statusPembangkitanList,
+    monitorAnalisaBeban,
   } = berandaApi();
 
   const dataPenghantar = penghantarList?.map((value, index) => ({
@@ -41,10 +44,28 @@ const Home = () => {
     ...(value as Object),
   }));
 
+  const statusPembangkitan = statusPembangkitanList?.map((value, index) => ({
+    id: index,
+    ...(value as Object),
+  }));
+
+  const getValueById = (id: string) => {
+    monitorAnalisaBeban?.terendah?.filter((value) => value.id === id);
+  };
+
+  const tegangganSubsistem = monitorAnalisaBeban?.tertinggi?.map(
+    (value, index) => ({
+      ...value,
+      tegangan_terendah: monitorAnalisaBeban?.terendah?.[index].tegangan,
+    })
+  );
+
   useEffect(() => {
     getPengaturanSistem();
     getMonitoringPenghantar({ tanggal: date, limit: 10 });
     getMonitoringIBT({ tanggal: date });
+    getStatusPembangkitan({ tanggal: date });
+    getMonitorAnalisaBeban({ tanggal: date });
   }, []);
 
   return (
@@ -80,7 +101,7 @@ const Home = () => {
           <NeracaDaya />
         </Grid>
         <Grid item xs={5}>
-          <StatusPembangkit />
+          <StatusPembangkit data={(statusPembangkitan as []) || []} />
         </Grid>
         <Grid item xs={7}>
           <Grid container spacing={6}>
@@ -88,7 +109,7 @@ const Home = () => {
               <JadwalShift />
             </Grid>
             <Grid item xs={12}>
-              <TeganganSubsistem />
+              <TeganganSubsistem data={(tegangganSubsistem as []) || []} />
             </Grid>
           </Grid>
         </Grid>
