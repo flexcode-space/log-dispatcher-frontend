@@ -128,7 +128,7 @@ const Gangguan = () => {
                       )}
                     />
                   </LocalizationProvider>
-                  <Button
+                  {/* <Button
                     variant="outlined"
                     size="small"
                     sx={{ height: "40px" }}
@@ -137,7 +137,7 @@ const Gangguan = () => {
                       <FilterGreenIcon />
                     </IconButton>
                     Filter
-                  </Button>
+                  </Button> */}
                   <Button
                     variant="contained"
                     size="small"

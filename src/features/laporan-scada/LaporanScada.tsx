@@ -12,12 +12,12 @@ const LaporanScada = () => {
         <Grid item xs={12} display="flex" justifyContent="space-between">
           <Typography variant="h5">Laporan SCADA</Typography>
           <div style={{ display: "flex", gap: "10px" }}>
-            <Button variant="outlined" size="small" sx={{ height: "40px" }}>
+            {/* <Button variant="outlined" size="small" sx={{ height: "40px" }}>
               <IconButton>
                 <FilterGreenIcon />
               </IconButton>
               Filter
-            </Button>
+            </Button> */}
             <Button
               variant="contained"
               size="small"

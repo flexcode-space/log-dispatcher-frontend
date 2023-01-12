@@ -84,12 +84,12 @@ const SwitchingDiluarRencana = () => {
                 />
 
                 <div style={{ display: "flex", gap: "10px" }}>
-                  <Button size="small" sx={{ mb: 2 }} variant="outlined">
+                  {/* <Button size="small" sx={{ mb: 2 }} variant="outlined">
                     <IconButton>
                       <FilterIcon />
                     </IconButton>
                     Filter
-                  </Button>
+                  </Button> */}
                   <Button size="small" sx={{ mb: 2 }} variant="outlined">
                     <IconButton>
                       <DownloadIcon />
