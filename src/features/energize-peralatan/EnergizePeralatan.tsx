@@ -127,12 +127,12 @@ const EnergizePeralatan = () => {
                       )}
                     />
                   </LocalizationProvider>
-                  <Button sx={{ mb: 2 }} variant="outlined">
+                  {/* <Button sx={{ mb: 2 }} variant="outlined">
                     <IconButton>
                       <FilterIcon />
                     </IconButton>
                     Filter
-                  </Button>
+                  </Button> */}
                   <Button
                     sx={{ mb: 2 }}
                     variant="contained"

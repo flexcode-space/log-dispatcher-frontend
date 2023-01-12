@@ -63,7 +63,7 @@ const LaporanPoskoApd = () => {
               title="Kondisi Sistem Kelistrikan"
               action={
                 <div style={{ display: "flex", gap: "10px" }}>
-                  <Button
+                  {/* <Button
                     variant="outlined"
                     size="small"
                     sx={{ height: "40px" }}
@@ -72,7 +72,7 @@ const LaporanPoskoApd = () => {
                       <FilterGreenIcon />
                     </IconButton>
                     Filter
-                  </Button>
+                  </Button> */}
                   <Button
                     variant="contained"
                     size="small"

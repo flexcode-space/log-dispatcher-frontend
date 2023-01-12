@@ -40,7 +40,7 @@ const CatatanPembangkitan = () => {
             />
 
             <div style={{ display: "flex", gap: "10px" }}>
-              <Button
+              {/* <Button
                 sx={{ mb: 2 }}
                 variant="outlined"
                 // onClick={() => openModal()}
@@ -49,7 +49,7 @@ const CatatanPembangkitan = () => {
                   <FilterIcon />
                 </IconButton>
                 Filter
-              </Button>
+              </Button> */}
               <LocalizationProvider dateAdapter={AdapterDateFns}>
                 <DatePicketMui
                   value={date}
