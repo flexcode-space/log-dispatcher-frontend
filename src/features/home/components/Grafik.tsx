@@ -24,13 +24,15 @@ import Circle from "mdi-material-ui/Circle";
 import { useEffect, useState } from "react";
 import dayjs, { Dayjs } from "dayjs";
 import { MenuItem, Select, TextField } from "@mui/material";
-import { DATA } from "../Home.constant";
 import { subsistemApi } from "src/api/subsistem";
+import { grafikApi } from "src/api/grafik";
 
 const Grafik: React.FC<{ title: string }> = ({ title }) => {
   const [date, setDate] = useState<Dayjs | null>(dayjs());
+  const [subsitemId, setSubsistemId] = useState<string>("");
 
   const { getSubsistemList, subsistemList } = subsistemApi();
+  const { getGrafikSubsistem, grafikSubsistem } = grafikApi();
 
   const subsitemOptions = subsistemList.map(({ id, nama }) => ({
     value: id,
@@ -40,8 +42,20 @@ const Grafik: React.FC<{ title: string }> = ({ title }) => {
   const direction = "ltr";
 
   useEffect(() => {
-    getSubsistemList();
+    getSubsistemList().then();
   }, []);
+
+  const getAllDataGrafik = () => {
+    getGrafikSubsistem(subsitemId, {
+      tanggal: dayjs(date).format("YYYY-MM-DD"),
+    });
+  };
+
+  useEffect(() => {
+    if (subsitemId && date) {
+      getAllDataGrafik();
+    }
+  }, [subsitemId, date]);
 
   const CustomTooltip = (data: TooltipProps<any, any>) => {
     // ** Props
@@ -81,7 +95,13 @@ const Grafik: React.FC<{ title: string }> = ({ title }) => {
           title={title}
           action={
             <>
-              <Select size="small" sx={{ marginRight: "10px", width: 200 }}>
+              <Select
+                name="subsistem_id"
+                value={subsitemId}
+                onChange={(e) => setSubsistemId(e.target.value as string)}
+                size="small"
+                sx={{ marginRight: "10px", width: 200 }}
+              >
                 {subsitemOptions?.map(({ value, label }) => (
                   <MenuItem key={value} value={value}>
                     {label}
@@ -107,11 +127,11 @@ const Grafik: React.FC<{ title: string }> = ({ title }) => {
         />
         <Divider />
         <CardContent>
-          <Box sx={{ height: 300 }}>
+          <Box sx={{ height: 350 }}>
             <ResponsiveContainer>
               <LineChart
-                height={300}
-                data={DATA}
+                height={350}
+                data={grafikSubsistem}
                 style={{ direction }}
                 margin={{ left: -20 }}
               >
@@ -119,8 +139,9 @@ const Grafik: React.FC<{ title: string }> = ({ title }) => {
                 <XAxis dataKey="name" reversed={false} />
                 <YAxis orientation="left" />
                 <Tooltip content={CustomTooltip} />
-                <Line dataKey="tanggal_1" stroke="#4AA1B9" strokeWidth={3} />
-                <Line dataKey="tanggal_2" stroke="#ff9f43" strokeWidth={3} />
+                <Line dataKey="beban" stroke="#4AA1B9" strokeWidth={3} />
+                <Line dataKey="rencana" stroke="#ff9f43" strokeWidth={3} />
+                <Line dataKey="selisih" stroke="none" />
               </LineChart>
             </ResponsiveContainer>
           </Box>
