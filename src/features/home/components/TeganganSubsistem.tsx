@@ -1,12 +1,18 @@
 import { Card, CardContent } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { CardHeader } from "src/components/card";
+import { RenderCell } from "src/components/table";
+import { CellType } from "src/types";
 
 export const columns = [
   {
     flex: 0.35,
     field: "subsistem",
     headerName: "Subsistem",
+    renderCell: ({ row }: CellType) => {
+      const { subsistem } = row;
+      return <RenderCell>{subsistem?.nama}</RenderCell>;
+    },
   },
   {
     flex: 0.25,
