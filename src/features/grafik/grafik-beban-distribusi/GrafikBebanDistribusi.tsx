@@ -22,39 +22,29 @@ import { grafikApi } from "src/api/grafik";
 import { convertDate } from "src/utils/date";
 import CustomTooltip from "../components/CustomTooltips";
 
-const GrafikBebanDistribusi = (): JSX.Element => {
+type GrafikBebanDistribusiProps = {
+  title?: string;
+  path?: string;
+};
+
+const GrafikBebanDistribusi = ({
+  title = "Grafik Beban Distribusi",
+  path,
+}: GrafikBebanDistribusiProps): JSX.Element => {
   const [date, setDate] = useState<any>(new Date());
-  const [grafikSubsistem, setGrafikSubsistem] = useState<[]>([]);
-  const { getGrafik } = grafikApi();
+  const { getGrafik, grafikBeban } = grafikApi();
 
   const direction = "ltr";
 
-  const getAllDataGrafik = () => {
-    getGrafik({ tanggal: convertDate(date) }).then((response) => {
-      // const keyTanggal = `tanggal_${index + 1}`;
-      // @ts-ignore
-      const tempArray = [];
-      response.map((value) => {
-        tempArray.push({
-          time: value.time,
-          tanggal: value.value,
-        });
-      });
-
-      // @ts-ignore
-      setGrafikSubsistem(tempArray);
-    });
-  };
-
   useEffect(() => {
-    getAllDataGrafik();
+    getGrafik({ tanggal: convertDate(date) }, path);
   }, [date]);
 
   return (
     <RechartsWrapper>
       <Card>
         <CardHeader
-          title="Grafik Beban Distribusi"
+          title={title}
           action={
             <LocalizationProvider dateAdapter={AdapterDateFns}>
               <DatePickerMui
@@ -74,7 +64,7 @@ const GrafikBebanDistribusi = (): JSX.Element => {
             <ResponsiveContainer>
               <LineChart
                 height={350}
-                data={grafikSubsistem}
+                data={grafikBeban}
                 style={{ direction }}
                 // margin={{ left: -20 }}
               >
@@ -82,12 +72,9 @@ const GrafikBebanDistribusi = (): JSX.Element => {
                 <XAxis dataKey="time" reversed={false} />
                 <YAxis orientation="left" />
                 <Tooltip content={CustomTooltip} />
-                <Line dataKey="tanggal" stroke="#4AA1B9" strokeWidth={3} />
-                {/* <Line
-                      dataKey="tanggal_2"
-                      stroke="#ff9f43"
-                      strokeWidth={3}
-                    /> */}
+                <Line dataKey="beban" stroke="#4AA1B9" strokeWidth={3} />
+                <Line dataKey="rencana" stroke="#ff9f43" strokeWidth={3} />
+                <Line dataKey="selisih" stroke="none" />
               </LineChart>
             </ResponsiveContainer>
           </Box>

@@ -16,6 +16,8 @@ const endpoint = '/report/laporan-freegov'
 
 const laporanFreegovApi = () => {
   const [laporanFreegovList, setLaporanFreegovList] = useState<LaporanFreegovlist>({} as LaporanFreegovlist)
+  const [laporanFreegovGenerate, setLaporanFreegovGenerate] =
+    useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
 
   const getLaporanFreegovList = useCallback(async (params: Params = {}) => {
@@ -42,12 +44,28 @@ const laporanFreegovApi = () => {
     }
   }, [])
 
+  const getLaporanFreegovGenerate = useCallback(async (params: { tanggal: string }) => {
+    setLoading(true);
+    try {
+      const {
+        data: { result },
+      } = await Axios.get(`${endpoint}/generate`, { params });
+      setLaporanFreegovGenerate(result || "");
+    } finally {
+      setLoading(false);
+    }
+  },
+    []
+  );
+
 
   return {
     laporanFreegovList,
     loading,
+    laporanFreegovGenerate,
     getLaporanFreegovList,
     createLaporanFreegov,
+    getLaporanFreegovGenerate
   }
 }
 

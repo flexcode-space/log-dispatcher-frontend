@@ -1,9 +1,11 @@
 import { Button, Card, CardContent, CardHeader, Grid } from "@mui/material";
-import { DataGrid } from "@mui/x-data-grid";
-import CustomChip from "src/@core/components/mui/chip";
 import CardStatisticsCharacter from "src/@core/components/card-statistics/card-stats-with-image";
 
-const JadwalShift = () => {
+type JadwalShiftProps = {
+  onClick: () => void;
+};
+
+const JadwalShift = ({ onClick }: JadwalShiftProps) => {
   return (
     <Card>
       <CardHeader
@@ -19,7 +21,11 @@ const JadwalShift = () => {
           "& .MuiCardHeader-action": { mb: 0 },
           "& .MuiCardHeader-content": { mb: [2, 0] },
         }}
-        action={<Button variant="outlined">Edit Shift</Button>}
+        action={
+          <Button variant="outlined" onClick={onClick}>
+            Edit Shift
+          </Button>
+        }
       />
       <CardContent>
         <Grid container spacing={2}>

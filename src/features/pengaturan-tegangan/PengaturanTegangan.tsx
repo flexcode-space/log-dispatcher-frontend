@@ -87,7 +87,7 @@ const PengaturanTegangan = () => {
               }
               action={
                 <div style={{ display: "flex", gap: "10px", height: "50px" }}>
-                  <Button
+                  {/* <Button
                     sx={{ mb: 2 }}
                     variant="outlined"
                     onClick={() =>
@@ -98,7 +98,7 @@ const PengaturanTegangan = () => {
                       <FilterIcon />
                     </IconButton>
                     Filter
-                  </Button>
+                  </Button> */}
                   <Button sx={{ mb: 2 }} variant="contained">
                     <IconButton>
                       <DownloadIcon />

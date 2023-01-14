@@ -15,13 +15,13 @@ export const TableProduksi: React.FC<{ title?: string; data: any }> = ({
         <WrapperFilter sx={{ alignItems: "baseline" }}>
           <Typography variant="h6">{title}</Typography>
 
-          <TextField
+          {/* <TextField
             size="small"
             value=""
             sx={{ mr: 6, mb: 2 }}
             placeholder="Cari"
             // onChange={(e) => setSearch(e.target.value)}
-          />
+          /> */}
         </WrapperFilter>
         <DataGrid
           sx={{
