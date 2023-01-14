@@ -9,7 +9,7 @@ import CardContent from "@mui/material/CardContent";
 import CustomChip from "src/@core/components/mui/chip";
 
 // ** Types Imports
-import { CardPiketProps } from "src/@core/components/card-piket/types";
+import { CardPiketProps } from "src/features/piket-and-shift/card-piket/types";
 
 interface Props {
   data: CardPiketProps;
@@ -17,7 +17,7 @@ interface Props {
 
 const cardPiketFasop = ({ data }: Props) => {
   // ** Vars
-  const { title, chipColor, chipText, src, stats, trend, trendNumber } = data;
+  const { title, chipColor, chipText, src } = data;
 
   return (
     <Card sx={{ overflow: "visible", position: "relative" }}>

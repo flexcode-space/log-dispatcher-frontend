@@ -1,5 +1,3 @@
-// ** MUI Imports
-import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
@@ -9,7 +7,7 @@ import CardContent from "@mui/material/CardContent";
 import CustomChip from "src/@core/components/mui/chip";
 
 // ** Types Imports
-import { CardPiketProps } from "src/@core/components/card-piket/types";
+import { CardPiketProps } from "src/features/piket-and-shift/card-piket/types";
 
 interface Props {
   data: CardPiketProps;
@@ -37,14 +35,6 @@ const CardPiket = ({ data }: Props) => {
               color={chipColor}
               sx={{ mb: 5.5, fontWeight: 500, fontSize: "0.75rem" }}
             />
-            {/* <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center' }}>
-              <Typography variant='h5' sx={{ mr: 1.5 }}>
-                {stats}
-              </Typography>
-              <Typography variant='caption' sx={{ color: trend === 'negative' ? 'error.main' : 'success.main' }}>
-                {trendNumber}
-              </Typography>
-            </Box> */}
           </Grid>
           <Grid
             item
@@ -55,7 +45,11 @@ const CardPiket = ({ data }: Props) => {
               justifyContent: "flex-end",
             }}
           >
-            <img src={src} alt={title} height={95} />
+            <img
+              src={src || "/images/card-stats-img-1.png"}
+              alt={title}
+              height={95}
+            />
           </Grid>
         </Grid>
       </CardContent>

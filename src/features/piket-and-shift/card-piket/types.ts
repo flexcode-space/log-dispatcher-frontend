@@ -7,9 +7,9 @@ import { ThemeColor } from "src/@core/layouts/types";
 export type CardPiketProps = {
   src: string;
   title: string;
-  stats: string;
+  stats?: string;
   chipText: string;
-  trendNumber: string;
+  trendNumber?: string;
   chipColor?: ThemeColor;
   trend?: "positive" | "negative";
 };
