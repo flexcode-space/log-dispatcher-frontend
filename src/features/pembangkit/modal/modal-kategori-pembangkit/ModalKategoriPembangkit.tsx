@@ -14,30 +14,43 @@ import { useSnapshot } from "valtio";
 import { StyledForm } from "src/components/form";
 import { closeModal, modal } from "src/state/modal";
 import { InputField } from "src/components/input-field";
-import { columns } from "./ModalPengaturanPembangkit.constant";
+import {
+  columns,
+  validationSchema,
+  initialValues,
+} from "./ModalKategoriPembangkit.constant";
 import { PlusCircleOutline } from "mdi-material-ui";
-import { SelectInput } from "src/components/select-input";
 import { pembangkitApi } from "src/api/pembangkit";
+import { yupResolver } from "@hookform/resolvers/yup";
 
-const ModalPengaturanPembangkit = () => {
+const ModalKategoriPembangkit = () => {
   const modalSnapshot = useSnapshot(modal);
 
   const [isAdddData, setIsAddData] = useState<boolean>(false);
 
-  const { getJenisPembangkit, jenisPembangkit } = pembangkitApi();
+  const {
+    getKategoriPembangkit,
+    kategoriPembangkit,
+    createKategoriPembangkit,
+  } = pembangkitApi();
 
   const isOpen =
     modalSnapshot.isOpen &&
-    modalSnapshot.target === "modal-pengaturan-pembangkit";
+    modalSnapshot.target === "modal-kategori-pembangkit";
 
-  const formMethods = useForm({});
+  const formMethods = useForm({
+    resolver: yupResolver(validationSchema),
+    defaultValues: initialValues,
+    mode: "onSubmit",
+  });
 
   const onSubmit = (event?: React.FormEvent<HTMLFormElement>) => {
     event?.preventDefault();
 
     formMethods.handleSubmit(async (values) => {
-      // TODO: handle save
-      console.log("values", values);
+      await createKategoriPembangkit(values);
+      setIsAddData(false);
+      getKategoriPembangkit();
     })();
   };
 
@@ -46,10 +59,9 @@ const ModalPengaturanPembangkit = () => {
     setIsAddData(false);
   };
 
-
   useEffect(() => {
     if (modalSnapshot.isOpen) {
-      getJenisPembangkit();
+      getKategoriPembangkit();
     }
   }, [modalSnapshot.isOpen]);
 
@@ -73,7 +85,7 @@ const ModalPengaturanPembangkit = () => {
           >
             <Box sx={{ mb: 8, width: 1000 }}>
               <Typography variant="h5" sx={{ mb: 3, lineHeight: "2rem" }}>
-                Jenis Pembangkit
+                Kategori
               </Typography>
             </Box>
             <Grid container spacing={2} mt={1}>
@@ -82,7 +94,7 @@ const ModalPengaturanPembangkit = () => {
                   hideFooter
                   autoHeight
                   columns={columns}
-                  rows={jenisPembangkit}
+                  rows={kategoriPembangkit}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -90,15 +102,8 @@ const ModalPengaturanPembangkit = () => {
                   <Grid container spacing={2}>
                     <Grid item xs={12}>
                       <Typography variant="subtitle1" fontWeight={500}>
-                        Jenis Pembangkit
+                        Kategori
                       </Typography>
-                    </Grid>
-                    <Grid item xs={3}>
-                      <SelectInput
-                        label="Tipe"
-                        name="tipe_jenis_pembangkit_id"
-                        options={[]}
-                      />
                     </Grid>
                     <Grid item xs={6}>
                       <InputField name="nama" label="Nama" />
@@ -142,4 +147,4 @@ const ModalPengaturanPembangkit = () => {
   );
 };
 
-export default ModalPengaturanPembangkit;
+export default ModalKategoriPembangkit;

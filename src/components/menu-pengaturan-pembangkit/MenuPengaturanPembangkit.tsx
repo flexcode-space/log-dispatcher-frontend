@@ -1,14 +1,9 @@
 import { useState } from "react";
 import { IconButton, Menu, MenuItem, Typography, Button } from "@mui/material";
 import Arrow from "src/assets/icons/arrow-pembangkit.svg";
+import { openModal } from "src/state/modal";
 
-import MoreMenuIcon from "src/assets/icons/more-menu-icon.svg";
-
-type MenuMoreProps = {
-  onClickKoefisien: () => void;
-};
-
-const MenuPengaturanPembangkit = ({ onClickKoefisien }: MenuMoreProps) => {
+const MenuPengaturanPembangkit = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
 
@@ -53,16 +48,25 @@ const MenuPengaturanPembangkit = ({ onClickKoefisien }: MenuMoreProps) => {
           },
         }}
       >
-        <MenuItem onClick={onClickKoefisien} sx={{ m: 2 }}>
+        <MenuItem
+          onClick={() => openModal("modal-jenis-pembangkit")}
+          sx={{ m: 2 }}
+        >
           <Typography variant="inherit">Jenis Pembangkit</Typography>
         </MenuItem>
-        <MenuItem sx={{ m: 2 }}>
+        <MenuItem
+          onClick={() => openModal("modal-kategori-pembangkit")}
+          sx={{ m: 2 }}
+        >
           <Typography variant="inherit">Kategori</Typography>
         </MenuItem>
-        <MenuItem sx={{ m: 2 }}>
+        <MenuItem onClick={() => openModal("modal-bahan-bakar")} sx={{ m: 2 }}>
           <Typography variant="inherit">Bahan Bakar</Typography>
         </MenuItem>
-        <MenuItem sx={{ m: 2 }}>
+        <MenuItem
+          onClick={() => openModal("modal-tipe-pembangkit")}
+          sx={{ m: 2 }}
+        >
           <Typography variant="inherit">Tipe Pembangkit</Typography>
         </MenuItem>
       </Menu>

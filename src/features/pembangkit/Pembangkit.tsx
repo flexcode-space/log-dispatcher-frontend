@@ -29,7 +29,10 @@ import { ModalDelete } from "src/components/modal";
 import { MenuMore } from "src/components/menu-more";
 import { MenuPengaturanPembangkit } from "src/components/menu-pengaturan-pembangkit";
 import { ModalKoefisien } from "./modal/modal-koefisien";
-import { ModalPengaturanPembangkit } from "./modal/modal-pengaturan-pembangkit";
+import { ModalJenisPembangkit } from "./modal/modal-jenis-pembangkit";
+import { ModalKategoriPembangkit } from "./modal/modal-kategori-pembangkit";
+import { ModalBahanBakar } from "./modal/modal-bahan-bakar";
+import { ModalTipePembangkit } from "./modal/modal-tipe-pembangkit";
 
 const Pembangkit = () => {
   const modalSnapshot = useSnapshot(modal);
@@ -107,7 +110,10 @@ const Pembangkit = () => {
   return (
     <>
       <ModalKoefisien />
-      <ModalPengaturanPembangkit />
+      <ModalJenisPembangkit />
+      <ModalKategoriPembangkit />
+      <ModalBahanBakar />
+      <ModalTipePembangkit />
       <ModalDelete onClickDelete={onClickDelete} />
       <ModalAddPembangkit />
       <Grid container spacing={6}>
@@ -130,11 +136,7 @@ const Pembangkit = () => {
                   onChange={(e) => setSearch(e.target.value)}
                 />
                 <div style={{ display: "flex", gap: "10px" }}>
-                  <MenuPengaturanPembangkit
-                    onClickKoefisien={() =>
-                      openModal("modal-pengaturan-pembangkit")
-                    }
-                  />
+                  <MenuPengaturanPembangkit />
                   <Button
                     sx={{ mb: 2, height: "45px" }}
                     onClick={() => openModal("modal-pembangkit")}

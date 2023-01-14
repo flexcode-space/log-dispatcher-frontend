@@ -1,0 +1,1 @@
+export { default as ModalTipePembangkit } from './ModalTipePembangkit'
