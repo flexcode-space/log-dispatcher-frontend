@@ -9,11 +9,13 @@ import {
   Box,
 } from "@mui/material";
 import { useSnapshot } from "valtio";
+import dayjs from "dayjs";
 import { StyledForm } from "src/components/form";
 import { modal, closeModal } from "src/state/modal";
+import { yupResolver } from "@hookform/resolvers/yup";
 import { SelectInput, SelectMultipleInput } from "src/components/select-input";
 import { DatePicker } from "src/components/date-picker";
-import { yupResolver } from "@hookform/resolvers/yup";
+import { piketApi } from "src/api/piket";
 import {
   initialValues,
   validationSchema,
@@ -25,6 +27,8 @@ const ModalAddPiketDanShift = () => {
 
   const { userOptions } = useModal();
 
+  const { createPiket } = piketApi();
+
   const formMethods = useForm({
     resolver: yupResolver(validationSchema),
     defaultValues: initialValues,
@@ -34,19 +38,78 @@ const ModalAddPiketDanShift = () => {
   const onSubmit = (event?: React.FormEvent<HTMLFormElement>) => {
     event?.preventDefault();
     formMethods.handleSubmit(async (values) => {
-      console.log("values", values);
+      const {
+        pimpinan,
+        shift_pagi,
+        shift_siang,
+        shift_malam,
+        bid_fasop,
+        tanggal,
+      } = values;
+
+      const data = [];
+      const date = dayjs(tanggal).format("YYYY-MM-DD");
+
+      data.push({
+        posisi: "Pimpinan",
+        shift: "-",
+        tanggal: date,
+        user_id: pimpinan,
+      });
+
+      shift_pagi?.map((value) => {
+        data.push({
+          posisi: "Shift Pagi",
+          shift: "-",
+          tanggal: date,
+          user_id: value,
+        });
+      });
+
+      shift_siang?.map((value) => {
+        data.push({
+          posisi: "Shift Siang",
+          shift: "-",
+          tanggal: date,
+          user_id: value,
+        });
+      });
+
+      shift_malam?.map((value) => {
+        data.push({
+          posisi: "Shift Malam",
+          shift: "-",
+          tanggal: date,
+          user_id: value,
+        });
+      });
+
+      bid_fasop?.map((value) => {
+        data.push({
+          posisi: "BID Fasop",
+          shift: "-",
+          tanggal: date,
+          user_id: value,
+        });
+      });
+
+      data.forEach(async (value) => {
+        await createPiket(value);
+      });
+      onCloseModal();
     })();
   };
 
-  const hanleCloseModal = () => {
+  const onCloseModal = () => {
     closeModal();
+    formMethods.reset({ ...initialValues });
   };
 
   return (
     <Dialog
       open={modalSnapshot.isOpen}
       fullWidth
-      onClose={hanleCloseModal}
+      onClose={onCloseModal}
       maxWidth="sm"
       scroll="body"
     >
@@ -73,7 +136,7 @@ const ModalAddPiketDanShift = () => {
               <Grid item xs={12} sm={12}>
                 <SelectInput
                   label="Piket Pimpinan"
-                  name=""
+                  name="pimpinan"
                   options={userOptions}
                 />
               </Grid>
@@ -109,7 +172,7 @@ const ModalAddPiketDanShift = () => {
             </Grid>
           </DialogContent>
           <DialogActions className="dialog-actions-dense">
-            <Button variant="outlined" onClick={hanleCloseModal}>
+            <Button variant="outlined" onClick={onCloseModal}>
               Batal
             </Button>
             <Button variant="contained" type="submit">

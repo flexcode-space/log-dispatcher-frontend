@@ -60,7 +60,6 @@ const SelectMultipleInput = ({
                 size={size}
                 value={values}
                 onChange={(event: SelectChangeEvent<string[]>) => {
-                  console.log("event.target", event.target);
                   setValues(event.target.value as string[]);
                   onChange(event);
                 }}
@@ -68,7 +67,6 @@ const SelectMultipleInput = ({
                 label={label}
                 placeholder={placeholder}
                 renderValue={(selected) => {
-                  console.log("selected", selected, options);
                   return (
                     selected
                       ?.map(
