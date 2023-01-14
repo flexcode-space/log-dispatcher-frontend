@@ -5,16 +5,18 @@ import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import PageHeader from "src/@core/components/page-header";
 import { WrapperFilter } from "src/components/filter";
-import { openModal } from "src/state/modal";
+import { modal, openModal } from "src/state/modal";
 import { TableLaporan, TableLain } from "./table-laporan";
 
 import { laporanPekerjaanList } from "./LaporanPekerjaan.constant";
 import { ModalAdd } from "./modal";
-import { ModalGenerateLaporan } from "./modal/modal-generate-laporan";
+import { ModalGenerateLaporan } from "src/components/modal";
 import dayjs, { Dayjs } from "dayjs";
 import { laporanPekerjaanApi } from "src/api/laporan-pekerjaan";
+import { useSnapshot } from "valtio";
 
 const LaporanPekerjaan = () => {
+  const modalSnapshot = useSnapshot(modal);
   const [search, setSearch] = useState<string>("");
   const [date, setDate] = useState<Dayjs | null>(null);
 
@@ -24,13 +26,20 @@ const LaporanPekerjaan = () => {
     laporanPekerjaanApi();
 
   useEffect(() => {
-    getLaporanPekerjaanGenerate({ tanggal: filterDate });
-  }, [date]);
+    if (modalSnapshot.target === "modal-generate-laporan") {
+      getLaporanPekerjaanGenerate({
+        tanggal: filterDate || dayjs().format("YYYY-MM-DD"),
+      });
+    }
+  }, [modalSnapshot.isOpen]);
 
   return (
     <>
       <ModalAdd />
-      <ModalGenerateLaporan Data={laporanPekerjaanGenerateList} />
+      <ModalGenerateLaporan
+        value={laporanPekerjaanGenerateList}
+        title="Laporan Pekerjaan"
+      />
       <Grid container spacing={6}>
         <Grid item xs={12}>
           <WrapperFilter>

@@ -6,23 +6,24 @@ import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import PageHeader from "src/@core/components/page-header";
 import { WrapperFilter } from "src/components/filter";
-import { openModal } from "src/state/modal";
+import { modal, openModal } from "src/state/modal";
 import { TablePiket, TableGangguan } from "./table-laporan";
 import { TableList } from "../catatan-pembangkitan/table-list";
 import { ArrowRight } from "mdi-material-ui";
-import { ModalGenerateLaporan } from "./modal";
+import { ModalGenerateLaporan } from "src/components/modal";
 import { laporanForGenerate } from "src/api/laporan-for-generate";
 import dayjs, { Dayjs } from "dayjs";
-import { setDate } from "date-fns";
+import { useSnapshot } from "valtio";
 
 const LaporanPekerjaan = () => {
+  const modalSnapshot = useSnapshot(modal);
   const router = useRouter();
   const [date, setDate] = useState<Dayjs | null>(null);
   const filterDate = date ? dayjs(date).format("YYYY-MM-DD") : "";
   const [search, setSearch] = useState<string>("");
-  const [generateList, setGeneratelist] = useState<[]>([]);
   const { laporanForGenerateList, loading, getLaporanForGenerate } =
     laporanForGenerate();
+
   const ButtonEdit = () => (
     <Button
       variant="outlined"
@@ -36,19 +37,21 @@ const LaporanPekerjaan = () => {
       </IconButton>
     </Button>
   );
-  // const getForGenerate = () => {
-  //   getLaporanForGenerate({ tanggal: convertDate(date) });
-  //   console.log("getLaporanForGenerate :", getLaporanForGenerate);
-  // };
 
   useEffect(() => {
-    getLaporanForGenerate({ tanggal: filterDate });
-  }, [date]);
+    if (modalSnapshot.target === "modal-generate-laporan") {
+      getLaporanForGenerate({
+        tanggal: filterDate || dayjs().format("YYYY-MM-DD"),
+      });
+    }
+  }, [modalSnapshot.isOpen]);
 
-  const data = laporanForGenerateList;
   return (
     <>
-      <ModalGenerateLaporan Data={data} />
+      <ModalGenerateLaporan
+        value={laporanForGenerateList}
+        title="Laporan FOR"
+      />
       <Grid container spacing={6}>
         <Grid item xs={12}>
           <WrapperFilter>

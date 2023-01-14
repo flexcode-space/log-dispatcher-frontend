@@ -13,14 +13,55 @@ import { pengaturanSubsistem } from "./Home.constant";
 import { berandaApi } from "src/api/beranda";
 import { useEffect } from "react";
 import { useRouter } from "next/router";
+import dayjs from "dayjs";
+import { GrafikBebanDistribusi } from "../grafik/grafik-beban-distribusi";
 
 const Home = () => {
   const router = useRouter();
 
-  const { getPengaturanSistem, pengaturanSistem } = berandaApi();
+  const date = dayjs().format("YYYY-MM-DD");
+
+  const {
+    getMonitoringIBT,
+    getPengaturanSistem,
+    getMonitoringPenghantar,
+    getStatusPembangkitan,
+    getMonitorAnalisaBeban,
+    ibtList,
+    penghantarList,
+    pengaturanSistem,
+    statusPembangkitanList,
+    monitorAnalisaBeban,
+  } = berandaApi();
+
+  const dataPenghantar = penghantarList?.map((value, index) => ({
+    id: index,
+    ...(value as Object),
+  }));
+
+  const dataIbt = ibtList?.map((value, index) => ({
+    id: index,
+    ...(value as Object),
+  }));
+
+  const statusPembangkitan = statusPembangkitanList?.map((value, index) => ({
+    id: index,
+    ...(value as Object),
+  }));
+
+  const tegangganSubsistem = monitorAnalisaBeban?.tertinggi?.map(
+    (value, index) => ({
+      ...value,
+      tegangan_terendah: monitorAnalisaBeban?.terendah?.[index].tegangan,
+    })
+  );
 
   useEffect(() => {
     getPengaturanSistem();
+    getMonitoringPenghantar({ tanggal: date, limit: 10 });
+    getMonitoringIBT({ tanggal: date });
+    getStatusPembangkitan({ tanggal: date });
+    getMonitorAnalisaBeban({ tanggal: date });
   }, []);
 
   return (
@@ -47,7 +88,10 @@ const Home = () => {
           <Chart />
         </Grid>
         <Grid item xs={6}>
-          <Grafik title="Pembebanan Sistem Jateng & DIY" />
+          <GrafikBebanDistribusi
+            title="Pembebanan Sistem Jateng & DIY"
+            path="total-pembangkit"
+          />
         </Grid>
         <Grid item xs={6}>
           <Grafik title="Beban Subsistem" />
@@ -56,25 +100,25 @@ const Home = () => {
           <NeracaDaya />
         </Grid>
         <Grid item xs={5}>
-          <StatusPembangkit />
+          <StatusPembangkit data={(statusPembangkitan as []) || []} />
         </Grid>
         <Grid item xs={7}>
           <Grid container spacing={6}>
             <Grid item xs={12}>
-              <JadwalShift />
+              <JadwalShift onClick={() => router.push("/Piket-&-Shift")} />
             </Grid>
             <Grid item xs={12}>
-              <TeganganSubsistem />
+              <TeganganSubsistem data={(tegangganSubsistem as []) || []} />
             </Grid>
           </Grid>
         </Grid>
         <Grid item xs={5}>
           <Grid container spacing={6}>
             <Grid item xs={12}>
-              <MonitoringIBT />
+              <MonitoringIBT data={(dataIbt as []) || []} />
             </Grid>
             <Grid item xs={12}>
-              <MonitoringPenghantar />
+              <MonitoringPenghantar data={(dataPenghantar as []) || []} />
             </Grid>
           </Grid>
         </Grid>

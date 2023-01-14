@@ -1,15 +1,10 @@
-import { useState } from "react";
 import Box from "@mui/material/Box";
-import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
-import CardHeader from "@mui/material/CardHeader";
 import Typography from "@mui/material/Typography";
 import CardContent from "@mui/material/CardContent";
 import Divider from "@mui/material/Divider";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
-import { useForm, FormProvider } from "react-hook-form";
-import { StyledForm } from "src/components/form";
 import {
   LineChart,
   Line,
@@ -21,30 +16,46 @@ import {
   TooltipProps,
 } from "recharts";
 import RechartsWrapper from "src/@core/styles/libs/recharts";
-import PageHeader from "src/@core/components/page-header";
-
-import { DatePicker } from "src/components/date-picker";
-// import DatePicker from "react-datepicker";
+import { CardHeader } from "src/components/card";
+import DatePickerMui from "@mui/lab/DatePicker";
 
 import Circle from "mdi-material-ui/Circle";
 
-import { DATA } from "../Home.constant";
-
-export type DateType = Date | null | undefined;
-
-interface PickerProps {
-  start: Date | number;
-  end: Date | number;
-}
+import { useEffect, useState } from "react";
+import dayjs, { Dayjs } from "dayjs";
+import { MenuItem, Select, TextField } from "@mui/material";
+import { subsistemApi } from "src/api/subsistem";
+import { grafikApi } from "src/api/grafik";
 
 const Grafik: React.FC<{ title: string }> = ({ title }) => {
+  const [date, setDate] = useState<Dayjs | null>(dayjs());
+  const [subsitemId, setSubsistemId] = useState<string>("");
+
+  const { getSubsistemList, subsistemList } = subsistemApi();
+  const { getGrafikSubsistem, grafikSubsistem } = grafikApi();
+
+  const subsitemOptions = subsistemList.map(({ id, nama }) => ({
+    value: id,
+    label: nama,
+  }));
+
   const direction = "ltr";
 
-  const formMethods = useForm({
-    // resolver: yupResolver(validationSchema),
-    // defaultValues: initialValues,
-    mode: "onChange",
-  });
+  useEffect(() => {
+    getSubsistemList().then();
+  }, []);
+
+  const getAllDataGrafik = () => {
+    getGrafikSubsistem(subsitemId, {
+      tanggal: dayjs(date).format("YYYY-MM-DD"),
+    });
+  };
+
+  useEffect(() => {
+    if (subsitemId && date) {
+      getAllDataGrafik();
+    }
+  }, [subsitemId, date]);
 
   const CustomTooltip = (data: TooltipProps<any, any>) => {
     // ** Props
@@ -82,34 +93,45 @@ const Grafik: React.FC<{ title: string }> = ({ title }) => {
       <Card>
         <CardHeader
           title={title}
-          titleTypographyProps={{ variant: "h6" }}
-          subheaderTypographyProps={{
-            variant: "caption",
-            sx: { color: "text.disabled" },
-          }}
-          sx={{
-            flexDirection: ["column", "row"],
-            alignItems: ["flex-start", "center"],
-            "& .MuiCardHeader-action": { mb: 0 },
-            "& .MuiCardHeader-content": { mb: [2, 0] },
-          }}
           action={
-            <FormProvider {...formMethods}>
-              <StyledForm noValidate onSubmit={() => null}>
-                <LocalizationProvider dateAdapter={AdapterDateFns}>
-                  <DatePicker label="Tanggal Laporan" name="tanggal" />
-                </LocalizationProvider>
-              </StyledForm>
-            </FormProvider>
+            <>
+              <Select
+                name="subsistem_id"
+                value={subsitemId}
+                onChange={(e) => setSubsistemId(e.target.value as string)}
+                size="small"
+                sx={{ marginRight: "10px", width: 200 }}
+              >
+                {subsitemOptions?.map(({ value, label }) => (
+                  <MenuItem key={value} value={value}>
+                    {label}
+                  </MenuItem>
+                ))}
+              </Select>
+              <LocalizationProvider dateAdapter={AdapterDateFns}>
+                <DatePickerMui
+                  value={date}
+                  inputFormat="dd/M/yyyy"
+                  onChange={(e) => setDate(e)}
+                  renderInput={(params) => (
+                    <TextField
+                      size="small"
+                      {...params}
+                      sx={{ width: "250px" }}
+                    />
+                  )}
+                />
+              </LocalizationProvider>
+            </>
           }
         />
         <Divider />
         <CardContent>
-          <Box sx={{ height: 300 }}>
+          <Box sx={{ height: 350 }}>
             <ResponsiveContainer>
               <LineChart
-                height={300}
-                data={DATA}
+                height={350}
+                data={grafikSubsistem}
                 style={{ direction }}
                 margin={{ left: -20 }}
               >
@@ -117,8 +139,9 @@ const Grafik: React.FC<{ title: string }> = ({ title }) => {
                 <XAxis dataKey="name" reversed={false} />
                 <YAxis orientation="left" />
                 <Tooltip content={CustomTooltip} />
-                <Line dataKey="tanggal_1" stroke="#4AA1B9" strokeWidth={3} />
-                <Line dataKey="tanggal_2" stroke="#ff9f43" strokeWidth={3} />
+                <Line dataKey="beban" stroke="#4AA1B9" strokeWidth={3} />
+                <Line dataKey="rencana" stroke="#ff9f43" strokeWidth={3} />
+                <Line dataKey="selisih" stroke="none" />
               </LineChart>
             </ResponsiveContainer>
           </Box>

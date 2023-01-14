@@ -17,6 +17,10 @@ type GrafikData = {
 }[];
 
 const grafikApi = () => {
+  const [grafikBeban, setGrafikBeban] = useState<GrafikData>(
+    [] as GrafikData
+  );
+
   const [grafikSubsistem, setGrafikSubsistem] = useState<GrafikData>(
     [] as GrafikData
   );
@@ -24,22 +28,27 @@ const grafikApi = () => {
     [] as GrafikData
   );
 
-  const getGrafik = useCallback(async (params: ParamsGrafik = {}) => {
+  const getGrafik = useCallback(async (params: ParamsGrafik = {}, path?: string) => {
+    const url = path ? `${endpoint}/${path}` : endpoint
     const {
-      data: { data },
-    } = await Axios.get(endpoint, { params });
+      data: { data, rencana, selisih },
+    } = await Axios.get(url, { params });
 
     if (data) {
-      return Object.values(TIME).map((time) => {
+      const result = Object.values(TIME).map((time) => {
         const mw = "mw_" + time.replace(".", "");
 
         return {
           time,
-          value: (data as any)[mw]! || 0,
+          beban: (data as any)[mw]! || 0,
+          rencana: rencana ? (rencana as any)[mw]! || 0 : [],
+          selisih: selisih ? (selisih as any)[mw]! || 0 : [],
         };
       });
+      setGrafikBeban(result);
+    } else {
+      setGrafikBeban([]);
     }
-    return [];
   }, []);
 
   const getGrafikSubsistem = useCallback(
@@ -93,6 +102,7 @@ const grafikApi = () => {
   );
 
   return {
+    grafikBeban,
     getGrafikSubsistem,
     getGrafikPembangkit,
     getGrafik,

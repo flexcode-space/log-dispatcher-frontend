@@ -12,7 +12,7 @@ const endpoint = "/report/laporan-neraca";
 const laporanNeracaDayaApi = () => {
   const [laporanNeracaDayaList, setLaporanNeracaDayaList] = useState<[]>([]);
   const [laporanNeracaDayaGenerateList, setLaporanNeracaDayaGenerateList] =
-    useState<[]>([]);
+    useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
 
   const getLaporanNeracaDayaList = useCallback(async (params: Params = {}) => {
@@ -61,7 +61,7 @@ const laporanNeracaDayaApi = () => {
         const {
           data: { result },
         } = await Axios.get(`${endpoint}/generate`, { params });
-        setLaporanNeracaDayaGenerateList(result || []);
+        setLaporanNeracaDayaGenerateList(result || "");
       } finally {
         setLoading(false);
       }

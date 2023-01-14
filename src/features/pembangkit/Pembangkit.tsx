@@ -23,11 +23,16 @@ import { CellType } from "./types";
 import { ModalAddPembangkit } from "./modal";
 import { WrapperFilter } from "src/components/filter";
 import { pembangkitApi } from "src/api/pembangkit";
-import { openModal, closeModal, modal, reloadPage } from "src/state/modal";
+import { openModal, modal, reloadPage } from "src/state/modal";
 import { useDebounce } from "src/hooks/useDebounce";
 import { ModalDelete } from "src/components/modal";
 import { MenuMore } from "src/components/menu-more";
+import { MenuPengaturanPembangkit } from "src/components/menu-pengaturan-pembangkit";
 import { ModalKoefisien } from "./modal/modal-koefisien";
+import { ModalJenisPembangkit } from "./modal/modal-jenis-pembangkit";
+import { ModalKategoriPembangkit } from "./modal/modal-kategori-pembangkit";
+import { ModalBahanBakar } from "./modal/modal-bahan-bakar";
+import { ModalTipePembangkit } from "./modal/modal-tipe-pembangkit";
 
 const Pembangkit = () => {
   const modalSnapshot = useSnapshot(modal);
@@ -105,6 +110,10 @@ const Pembangkit = () => {
   return (
     <>
       <ModalKoefisien />
+      <ModalJenisPembangkit />
+      <ModalKategoriPembangkit />
+      <ModalBahanBakar />
+      <ModalTipePembangkit />
       <ModalDelete onClickDelete={onClickDelete} />
       <ModalAddPembangkit />
       <Grid container spacing={6}>
@@ -126,14 +135,16 @@ const Pembangkit = () => {
                   placeholder="Cari"
                   onChange={(e) => setSearch(e.target.value)}
                 />
-
-                <Button
-                  sx={{ mb: 2 }}
-                  onClick={() => openModal("modal-pembangkit")}
-                  variant="contained"
-                >
-                  Tambah Pembangkit
-                </Button>
+                <div style={{ display: "flex", gap: "10px" }}>
+                  <MenuPengaturanPembangkit />
+                  <Button
+                    sx={{ mb: 2, height: "45px" }}
+                    onClick={() => openModal("modal-pembangkit")}
+                    variant="contained"
+                  >
+                    Tambah Pembangkit
+                  </Button>
+                </div>
               </WrapperFilter>
               <DataGrid
                 autoHeight

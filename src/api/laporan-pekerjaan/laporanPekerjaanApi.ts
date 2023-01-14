@@ -13,7 +13,7 @@ const endpoint = "/report/laporan-pekerjaan";
 const laporanPekerjaanApi = () => {
   const [laporanPekerjaanList, setLaporanPekerjaanList] = useState<[]>([]);
   const [laporanPekerjaanGenerateList, setLaporanPekerjaanGenerateList] =
-    useState<[]>([]);
+    useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
 
   const getLaporanPekerjaanList = useCallback(async (params: Params) => {
@@ -62,7 +62,7 @@ const laporanPekerjaanApi = () => {
       const {
         data: { result },
       } = await Axios.get(`${endpoint}/generate`, { params });
-      setLaporanPekerjaanGenerateList(result || []);
+      setLaporanPekerjaanGenerateList(result || "");
     } finally {
       setLoading(false);
     }

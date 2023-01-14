@@ -21,6 +21,7 @@ const Table = (theme: Theme) => {
             lineHeight: '1.959rem',
             letterSpacing: '0.17px',
             backgroundColor: theme.palette.customColors.tableHeaderBg,
+            color: '#fff', //custom color
             '&:last-of-type': {
               borderRight: `1px solid ${theme.palette.divider}`,
             }

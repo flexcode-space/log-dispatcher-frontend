@@ -11,6 +11,7 @@ const pembangkitApi = () => {
   const [jenisPembangkit, setJenisPembangkit] = useState<[]>([])
   const [bahanBakar, setBahanBakar] = useState<[]>([])
   const [kategoriPembangkit, setKategoriPembangkit] = useState<[]>([])
+  const [tipePembangkit, setTipePembangkit] = useState<[]>([])
   const [loading, setLoading] = useState<boolean>(false);
 
   const getPembangkitList = useCallback(async (id?: string, params: Params = {}) => {
@@ -39,7 +40,7 @@ const pembangkitApi = () => {
     }
   }, [])
 
-  const getBahanBakar = useCallback(async () => {
+  const getJenisPembangkit = useCallback(async () => {
     setLoading(true)
 
     try {
@@ -50,7 +51,40 @@ const pembangkitApi = () => {
     }
   }, [])
 
-  const getJenisPembangkit = useCallback(async () => {
+  const createJenisPembangkit = useCallback(async (payload: any) => {
+    setLoading(true)
+
+    try {
+      await Axios.post(`${endpoint}/jenis`, payload)
+      toast.success('Berhasil menambahkan jenis pembangkit')
+    } finally {
+      toast.success('Gagal menambahkan jenis pembangkit')
+    }
+  }, [])
+
+  const getTipeJenisPembangkit = useCallback(async () => {
+    setLoading(true)
+
+    try {
+      const { data } = await Axios.get(`${endpoint}/jenis/tipe`)
+      setTipePembangkit(data || [])
+    } finally {
+      setLoading(false)
+    }
+  }, [])
+
+  const createTipeJenisPembangkit = useCallback(async (payload: any) => {
+    setLoading(true)
+
+    try {
+      await Axios.post(`${endpoint}/jenis/tipe`, payload)
+      toast.success('Berhasil menambahkan jenis tipe pembangkit')
+    } finally {
+      toast.success('Gagal menambahkan jenis tipe pembangkit')
+    }
+  }, [])
+
+  const getBahanBakar = useCallback(async () => {
     setLoading(true)
 
     try {
@@ -58,6 +92,17 @@ const pembangkitApi = () => {
       setBahanBakar(data || [])
     } finally {
       setLoading(false)
+    }
+  }, [])
+
+  const createBahanBakar = useCallback(async (payload: any) => {
+    setLoading(true)
+
+    try {
+      await Axios.post(`${endpoint}/bahan-bakar`, payload)
+      toast.success('Berhasil menambahkan bahan bakar')
+    } finally {
+      toast.success('Gagal menambahkan bahan bakar')
     }
   }, [])
 
@@ -69,6 +114,17 @@ const pembangkitApi = () => {
       setKategoriPembangkit(data || [])
     } finally {
       setLoading(false)
+    }
+  }, [])
+
+  const createKategoriPembangkit = useCallback(async (payload: any) => {
+    setLoading(true)
+
+    try {
+      await Axios.post(`${endpoint}/kategori`, payload)
+      toast.success('Berhasil menambahkan kategori pembangkit')
+    } finally {
+      toast.error('Gagal menambahkan kategori pembangkit')
     }
   }, [])
 
@@ -115,6 +171,7 @@ const pembangkitApi = () => {
     bahanBakar,
     kategoriPembangkit,
     totalData,
+    tipePembangkit,
     getPembangkitList,
     getJenisPembangkit,
     getBahanBakar,
@@ -122,7 +179,12 @@ const pembangkitApi = () => {
     createPembangkit,
     updatePembangkit,
     deletePembangkit,
-    getPembangkitDetail
+    getPembangkitDetail,
+    getTipeJenisPembangkit,
+    createJenisPembangkit,
+    createKategoriPembangkit,
+    createBahanBakar,
+    createTipeJenisPembangkit
   }
 }
 

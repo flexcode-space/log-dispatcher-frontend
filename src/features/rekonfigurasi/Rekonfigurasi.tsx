@@ -58,7 +58,7 @@ const Rekonfigurasi = () => {
               title="Catatan Rekonfigurasi Antar Area & Antar Subsistem"
               action={
                 <div style={{ display: "flex", gap: "10px" }}>
-                  <Button
+                  {/* <Button
                     variant="outlined"
                     size="small"
                     sx={{ height: "40px" }}
@@ -67,7 +67,7 @@ const Rekonfigurasi = () => {
                       <FilterGreenIcon />
                     </IconButton>
                     Filter
-                  </Button>
+                  </Button> */}
                   <Button
                     variant="contained"
                     size="small"

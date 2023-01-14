@@ -7,7 +7,6 @@ import {
   Card,
   CardContent,
   IconButton,
-  filledInputClasses,
 } from "@mui/material";
 import DatePickerMui from "@mui/lab/DatePicker";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
@@ -16,7 +15,7 @@ import { Pencil } from "mdi-material-ui";
 import dayjs, { Dayjs } from "dayjs";
 import PageHeader from "src/@core/components/page-header";
 import { WrapperFilter } from "src/components/filter";
-import { openModal } from "src/state/modal";
+import { modal, openModal } from "src/state/modal";
 import { CardHeader } from "src/components/card";
 import {
   Table,
@@ -28,7 +27,7 @@ import {
   TableContainer,
 } from "src/components/table";
 import { ModalAdd } from "./modal";
-import { ModalGenerateLaporan } from "./modal/modal-generate-laporan";
+import { ModalGenerateLaporan } from "src/components/modal";
 import { laporanNeracaDayaApi } from "src/api/laporan-neraca-daya";
 import { LaporanNeracaDayaList } from "./types";
 import { useSnapshot } from "valtio";
@@ -36,6 +35,7 @@ import { reloadPage } from "src/state/reloadPage";
 import { selectData } from "./state/laporanNeracaDaya";
 
 const LaporanNeracaDaya = () => {
+  const modalSnapshot = useSnapshot(modal);
   const reloadPageSnap = useSnapshot(reloadPage);
 
   const [search, setSearch] = useState<string>("");
@@ -48,14 +48,9 @@ const LaporanNeracaDaya = () => {
     getLaporanNeracaDayaGenerate,
     laporanNeracaDayaGenerateList,
   } = laporanNeracaDayaApi();
-  console.log("date :", laporanNeracaDayaGenerateList);
 
   useEffect(() => {
     getLaporanNeracaDayaList({ tanggal: filterDate });
-  }, [date]);
-
-  useEffect(() => {
-    getLaporanNeracaDayaGenerate({ tanggal: filterDate });
   }, [date]);
 
   useEffect(() => {
@@ -64,10 +59,21 @@ const LaporanNeracaDaya = () => {
     }
   }, [reloadPageSnap.id]);
 
+  useEffect(() => {
+    if (modalSnapshot.target === "modal-generate-laporan") {
+      getLaporanNeracaDayaGenerate({
+        tanggal: filterDate || dayjs().format("YYYY-MM-DD"),
+      });
+    }
+  }, [modalSnapshot.isOpen]);
+
   return (
     <>
       <ModalAdd />
-      <ModalGenerateLaporan Data={laporanNeracaDayaGenerateList} />
+      <ModalGenerateLaporan
+        value={laporanNeracaDayaGenerateList}
+        title="Laporan Neraca Daya"
+      />
       <Grid container spacing={6}>
         <Grid item xs={12}>
           <WrapperFilter>
