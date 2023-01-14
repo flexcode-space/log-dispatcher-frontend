@@ -7,7 +7,7 @@ import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import PageHeader from "src/@core/components/page-header";
 import { WrapperFilter } from "src/components/filter";
 import { modal, openModal } from "src/state/modal";
-import { TablePiket, TableGangguan } from "./table-laporan";
+import { TableGangguan } from "./table-laporan";
 import { TableList } from "../catatan-pembangkitan/table-list";
 import { ArrowRight } from "mdi-material-ui";
 import { ModalGenerateLaporan } from "src/components/modal";
@@ -92,7 +92,7 @@ const LaporanPekerjaan = () => {
             </div>
           </WrapperFilter>
         </Grid>
-        <TablePiket />
+        {/* <TablePiket /> */}
         <TableList
           title="Pembangkit Derating"
           type="derating"
