@@ -14,6 +14,7 @@ import { berandaApi } from "src/api/beranda";
 import { useEffect } from "react";
 import { useRouter } from "next/router";
 import dayjs from "dayjs";
+import { GrafikBebanDistribusi } from "../grafik/grafik-beban-distribusi";
 
 const Home = () => {
   const router = useRouter();
@@ -87,7 +88,10 @@ const Home = () => {
           <Chart />
         </Grid>
         <Grid item xs={6}>
-          <Grafik title="Pembebanan Sistem Jateng & DIY" />
+          <GrafikBebanDistribusi
+            title="Pembebanan Sistem Jateng & DIY"
+            path="total-pembangkit"
+          />
         </Grid>
         <Grid item xs={6}>
           <Grafik title="Beban Subsistem" />
