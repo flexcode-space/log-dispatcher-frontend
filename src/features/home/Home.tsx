@@ -105,7 +105,7 @@ const Home = () => {
         <Grid item xs={7}>
           <Grid container spacing={6}>
             <Grid item xs={12}>
-              <JadwalShift onClick={() => router.push("/Piket-&-Shift")} />
+              <JadwalShift onClick={() => router.push("/piket-dan-shift")} />
             </Grid>
             <Grid item xs={12}>
               <TeganganSubsistem data={(tegangganSubsistem as []) || []} />

@@ -278,7 +278,7 @@ export const navigation = (): HorizontalNavItemsType => [
       {
         title: "Piket & Shift",
         icon: PengaturanUserIcon,
-        path: "/Piket-&-Shift",
+        path: "/piket-dan-shift",
       },
       {
         title: "Pengaturan User",

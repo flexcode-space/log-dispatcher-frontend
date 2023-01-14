@@ -17,8 +17,12 @@ import { openModal } from "src/state/modal";
 import CardPiket from "src/@core/components/card-piket/card-piket-img";
 import CardPiketFasop from "src/@core/components/card-piket/card-piket-fasop";
 import { ModalAddPiketDanShift } from "./modal";
+import { useState } from "react";
+import dayjs, { Dayjs } from "dayjs";
 
-const PiketDanShift = () => {
+const PiketAndShift = () => {
+  const [date, setDate] = useState<Dayjs | null>(dayjs());
+
   return (
     <>
       <ModalAddPiketDanShift />
@@ -33,9 +37,10 @@ const PiketDanShift = () => {
             <div style={{ display: "flex", gap: "10px" }}>
               <LocalizationProvider dateAdapter={AdapterDateFns}>
                 <DatePickerMui
-                  value={null}
+                  value={date}
                   label="Pilih Tanggal"
-                  onChange={() => null}
+                  inputFormat="dd/M/yyyy"
+                  onChange={(e) => setDate(e)}
                   renderInput={(params) => (
                     <TextField
                       size="small"
@@ -210,4 +215,4 @@ const PiketDanShift = () => {
   );
 };
 
-export default PiketDanShift;
+export default PiketAndShift;

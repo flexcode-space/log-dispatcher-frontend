@@ -1,5 +1,5 @@
 import Head from "next/head";
-import { PiketAndShift } from "src/features/piket-&-shift";
+import { PiketAndShift } from "src/features/piket-and-shift";
 
 const PiketShift = () => {
   return (
