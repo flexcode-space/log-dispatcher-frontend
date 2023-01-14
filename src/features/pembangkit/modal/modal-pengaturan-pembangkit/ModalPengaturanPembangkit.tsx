@@ -5,68 +5,53 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  CardContent,
   Grid,
-  Card,
   Typography,
   Box,
 } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
-import Plus from "mdi-material-ui/Plus";
 import { useSnapshot } from "valtio";
-import { yupResolver } from "@hookform/resolvers/yup";
 import { StyledForm } from "src/components/form";
-import { closeModal, modal, reloadPage } from "src/state/modal";
+import { closeModal, modal } from "src/state/modal";
 import { InputField } from "src/components/input-field";
+import { columns } from "./ModalPengaturanPembangkit.constant";
+import { PlusCircleOutline } from "mdi-material-ui";
 import { SelectInput } from "src/components/select-input";
-import { jenisPembangkitColumns, datajenisPembangkit } from "./ModalPengaturanPembangkit.constant"
-import { ibtApi } from "src/api/ibt";
-
 import { pembangkitApi } from "src/api/pembangkit";
-import { flip } from "@popperjs/core";
-import { Centos } from "mdi-material-ui";
-const defaultValue = {
-  manuver: "",
-};
-
-type DefaultValueProps = {
-  manuver: string;
-}[];
 
 const ModalPengaturanPembangkit = () => {
-  const [fields, setFields] = useState<DefaultValueProps>([]);
-
   const modalSnapshot = useSnapshot(modal);
 
+  const [isAdddData, setIsAddData] = useState<boolean>(false);
+
+  const { getJenisPembangkit, jenisPembangkit } = pembangkitApi();
+
   const isOpen =
-    modalSnapshot.isOpen && modalSnapshot.target === "modal-pengaturan-pembangkit";
+    modalSnapshot.isOpen &&
+    modalSnapshot.target === "modal-pengaturan-pembangkit";
 
-  const JenisPembangkit = [
-    ...jenisPembangkitColumns,
-    {
-      flex: 0.15,
-      minWidth: 5,
-      sortable: false,
-      field: "",
-    },
-  ];
-
-  const formMethods = useForm({
-
-  });
+  const formMethods = useForm({});
 
   const onSubmit = (event?: React.FormEvent<HTMLFormElement>) => {
     event?.preventDefault();
 
-
+    formMethods.handleSubmit(async (values) => {
+      // TODO: handle save
+      console.log("values", values);
+    })();
   };
 
   const onClickCloseModal = () => {
     closeModal();
-    setFields([defaultValue]);
+    setIsAddData(false);
   };
 
 
+  useEffect(() => {
+    if (modalSnapshot.isOpen) {
+      getJenisPembangkit();
+    }
+  }, [modalSnapshot.isOpen]);
 
   return (
     <Dialog
@@ -90,75 +75,64 @@ const ModalPengaturanPembangkit = () => {
               <Typography variant="h5" sx={{ mb: 3, lineHeight: "2rem" }}>
                 Jenis Pembangkit
               </Typography>
-              <DataGrid
-                hideFooter
-                autoHeight
-                columns={JenisPembangkit}
-                rows={datajenisPembangkit}
-              />
             </Box>
-
-            <Grid container spacing={1} mt={1} sx={{
-              display: "flex", alignItems: "center",
-            }}>
-              {fields.map((value, index) => {
-                return (
-                  <>
-
+            <Grid container spacing={2} mt={1}>
+              <Grid item xs={12}>
+                <DataGrid
+                  hideFooter
+                  autoHeight
+                  columns={columns}
+                  rows={jenisPembangkit}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                {isAdddData && (
+                  <Grid container spacing={2}>
                     <Grid item xs={12}>
-
-                      <Typography
-                        variant="subtitle1"
-                        sx={{ fontWeight: "500", fontSize: "14px", pb: "8px" }}
-                      >
-                        {`Tambah Jenis Pembangkit`}
+                      <Typography variant="subtitle1" fontWeight={500}>
+                        Jenis Pembangkit
                       </Typography>
                     </Grid>
-
-                    <Grid item xs={6}>
-                      <InputField
-                        label="Nama Jenis Pembangkit"
-                        name={`manuver[${index}].value`}
+                    <Grid item xs={3}>
+                      <SelectInput
+                        label="Tipe"
+                        name="tipe_jenis_pembangkit_id"
+                        options={[]}
                       />
                     </Grid>
-                  </>
-                );
-              })}
-
-              <Grid item xs={6}>
-                {fields.map((value,) => {
-                  return (
-                    <>
-
+                    <Grid item xs={6}>
+                      <InputField name="nama" label="Nama" />
+                    </Grid>
+                    <Grid item xs={3}>
                       <Button
-                        variant="outlined"
-                        sx={{ height: "40px", mb: 5, mr: 3, }}
-                        onClick={() =>
-                          setFields([])
-                        }
+                        variant="text"
+                        onClick={() => setIsAddData(false)}
                       >
-                        batal
+                        Batal
                       </Button>
-
-                    </>
-                  );
-                })}
-                <Button
-                  variant="outlined"
-                  sx={{ height: "40px", mb: 5, }}
-                  onClick={() =>
-                    setFields((prevState) => [...prevState, defaultValue])
-                  }
-                >
-                  <Plus />
-                  Tambah
-                </Button>
+                      <Button type="submit" variant="outlined">
+                        Simpan
+                      </Button>
+                    </Grid>
+                  </Grid>
+                )}
               </Grid>
+              {!isAdddData && (
+                <Grid item xs={12}>
+                  <Button
+                    onClick={() => setIsAddData(true)}
+                    sx={{ height: "30px" }}
+                    variant="outlined"
+                  >
+                    <PlusCircleOutline />
+                    Tambah
+                  </Button>
+                </Grid>
+              )}
             </Grid>
-
           </DialogContent>
           <DialogActions className="dialog-actions-dense">
-            <Button variant="contained" type="submit">
+            <Button variant="contained" onClick={onClickCloseModal}>
               Tutup
             </Button>
           </DialogActions>

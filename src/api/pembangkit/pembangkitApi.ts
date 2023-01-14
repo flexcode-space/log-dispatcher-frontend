@@ -39,7 +39,7 @@ const pembangkitApi = () => {
     }
   }, [])
 
-  const getBahanBakar = useCallback(async () => {
+  const getJenisPembangkit = useCallback(async () => {
     setLoading(true)
 
     try {
@@ -50,7 +50,7 @@ const pembangkitApi = () => {
     }
   }, [])
 
-  const getJenisPembangkit = useCallback(async () => {
+  const getBahanBakar = useCallback(async () => {
     setLoading(true)
 
     try {

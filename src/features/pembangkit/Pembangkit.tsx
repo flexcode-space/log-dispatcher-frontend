@@ -12,11 +12,10 @@ import {
   Button,
 } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
-import { PencilOutline, DeleteOutline, } from "mdi-material-ui";
+import { PencilOutline, DeleteOutline } from "mdi-material-ui";
 import { useSnapshot } from "valtio";
 
 import PageHeader from "src/@core/components/page-header";
-import Arrow from "src/assets/icons/arrow-pembangkit.svg"
 
 import { defaultColumns } from "./Pembangkit.constant";
 import { CellType } from "./types";
@@ -24,11 +23,11 @@ import { CellType } from "./types";
 import { ModalAddPembangkit } from "./modal";
 import { WrapperFilter } from "src/components/filter";
 import { pembangkitApi } from "src/api/pembangkit";
-import { openModal, closeModal, modal, reloadPage } from "src/state/modal";
+import { openModal, modal, reloadPage } from "src/state/modal";
 import { useDebounce } from "src/hooks/useDebounce";
 import { ModalDelete } from "src/components/modal";
 import { MenuMore } from "src/components/menu-more";
-import { MenuPengaturanPembangkit } from 'src/components/menu-pengaturan-pembangkit'
+import { MenuPengaturanPembangkit } from "src/components/menu-pengaturan-pembangkit";
 import { ModalKoefisien } from "./modal/modal-koefisien";
 import { ModalPengaturanPembangkit } from "./modal/modal-pengaturan-pembangkit";
 
@@ -131,9 +130,13 @@ const Pembangkit = () => {
                   onChange={(e) => setSearch(e.target.value)}
                 />
                 <div style={{ display: "flex", gap: "10px" }}>
-                  <MenuPengaturanPembangkit onClickKoefisien={() => openModal("modal-pengaturan-pembangkit")} />
+                  <MenuPengaturanPembangkit
+                    onClickKoefisien={() =>
+                      openModal("modal-pengaturan-pembangkit")
+                    }
+                  />
                   <Button
-                    sx={{ mb: 2 }}
+                    sx={{ mb: 2, height: "45px" }}
                     onClick={() => openModal("modal-pembangkit")}
                     variant="contained"
                   >

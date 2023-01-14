@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { IconButton, Menu, MenuItem, Typography, Button, } from "@mui/material";
-import Arrow from "src/assets/icons/arrow-pembangkit.svg"
+import { IconButton, Menu, MenuItem, Typography, Button } from "@mui/material";
+import Arrow from "src/assets/icons/arrow-pembangkit.svg";
 
 import MoreMenuIcon from "src/assets/icons/more-menu-icon.svg";
 
@@ -28,10 +28,11 @@ const MenuPengaturanPembangkit = ({ onClickKoefisien }: MenuMoreProps) => {
         aria-expanded={open ? "true" : undefined}
         aria-haspopup="true"
         onClick={handleClick}
-        sx={{ mb: 2 }} variant="outlined" >
+        sx={{ mb: 2, height: "45px" }}
+        variant="outlined"
+      >
         Pengaturan Pembangkit
-        <IconButton
-        >
+        <IconButton>
           <IconButton>
             <Arrow />
           </IconButton>
@@ -48,11 +49,10 @@ const MenuPengaturanPembangkit = ({ onClickKoefisien }: MenuMoreProps) => {
         PaperProps={{
           style: {
             width: "290px",
-            marginTop: "5px"
+            marginTop: "5px",
           },
         }}
       >
-
         <MenuItem onClick={onClickKoefisien} sx={{ m: 2 }}>
           <Typography variant="inherit">Jenis Pembangkit</Typography>
         </MenuItem>
