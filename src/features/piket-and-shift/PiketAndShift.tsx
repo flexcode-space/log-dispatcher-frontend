@@ -1,4 +1,3 @@
-import { useRouter } from "next/router";
 import {
   Grid,
   Typography,
@@ -14,14 +13,38 @@ import PageHeader from "src/@core/components/page-header";
 import { WrapperFilter } from "src/components/filter";
 import { openModal } from "src/state/modal";
 
-import CardPiket from "src/@core/components/card-piket/card-piket-img";
-import CardPiketFasop from "src/@core/components/card-piket/card-piket-fasop";
+import CardPiket from "src/features/piket-and-shift/card-piket/card-piket-img";
+import CardPiketFasop from "src/features/piket-and-shift/card-piket/card-piket-fasop";
 import { ModalAddPiketDanShift } from "./modal";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import dayjs, { Dayjs } from "dayjs";
+import { piketApi } from "src/api/piket";
 
 const PiketAndShift = () => {
   const [date, setDate] = useState<Dayjs | null>(dayjs());
+
+  const { getPiketList, piketList } = piketApi();
+
+  const pimpinan = piketList.filter((value) => value?.posisi === "Pimpinan")[0];
+  const shiftPagi = piketList.filter((value) => value?.posisi === "Shift Pagi");
+  const shiftSiang = piketList.filter(
+    (value) => value?.posisi === "Shift Siang"
+  );
+  const shiftMalam = piketList.filter(
+    (value) => value?.posisi === "Shift Malam"
+  );
+
+  const bidFasop = piketList.filter((value) => value?.posisi === "BID Fasop");
+
+  useEffect(() => {
+    getPiketList({ tanggal: dayjs(date).format("YYYY-MM-DD") });
+  }, [date]);
+
+  const TitlePiket = ({ title }: { title: string }) => (
+    <Typography variant="subtitle1" sx={{ mb: "10px", fontWeight: 700 }}>
+      {title}
+    </Typography>
+  );
 
   return (
     <>
@@ -50,8 +73,12 @@ const PiketAndShift = () => {
                   )}
                 />
               </LocalizationProvider>
-              <Button sx={{ mb: 2 }} variant="outlined">
-                ubah
+              <Button
+                sx={{ mb: 2 }}
+                onClick={() => openModal()}
+                variant="outlined"
+              >
+                Ubah
               </Button>
               <Button
                 sx={{ mb: 2 }}
@@ -74,142 +101,128 @@ const PiketAndShift = () => {
           textAlign: "center",
         }}
       >
-        <CardContent>
-          <Box
-            sx={{
-              width: "295px",
-            }}
-          >
-            <Typography
-              variant="subtitle1"
-              sx={{ mb: "10px", fontWeight: 700 }}
-            >
-              PIKET PIMPINAN
-            </Typography>
-            <CardPiket
-              data={{
-                stats: "8.14k",
-                title: "Andika Akhmad Widyato",
-                chipColor: "primary",
-                trendNumber: "+15.6%",
-                chipText: "Man II Opsis",
-                src: "/images/piket&shift-img.png",
+        {piketList.length === 0 && (
+          <Typography variant="h3">Tidak Ada Data Piket</Typography>
+        )}
+
+        {!!pimpinan && (
+          <CardContent>
+            <Box
+              sx={{
+                width: "295px",
               }}
-            />
-          </Box>
-        </CardContent>
+            >
+              <TitlePiket title="PIKET PIMPINAN" />
+              <CardPiket
+                data={{
+                  title: pimpinan?.user?.nama,
+                  chipText: pimpinan?.user?.jabatan || "-",
+                  src: pimpinan?.user?.photo,
+                }}
+              />
+            </Box>
+          </CardContent>
+        )}
 
-        <CardContent>
-          <Typography variant="subtitle1" sx={{ mb: "10px", fontWeight: 700 }}>
-            PIKET PAGI
-          </Typography>
-          <Grid container spacing={10}>
-            {[0, 1, 2].map((index) => (
-              <Grid item xs={4} key={index}>
-                <Box
-                  sx={{
-                    width: "295px",
-                  }}
-                >
-                  <CardPiket
-                    data={{
-                      stats: "8.14k",
-                      title: "Andika Akhmad Widyato",
-                      chipColor: "primary",
-                      trendNumber: "+15.6%",
-                      chipText: "Man II Opsis",
-                      src: "/images/piket&shift-img.png",
+        {shiftPagi.length > 0 && (
+          <CardContent>
+            <TitlePiket title="PIKET PAGI" />
+            <Grid container spacing={10}>
+              {shiftPagi.map((value) => (
+                <Grid item key={value.id}>
+                  <Box
+                    sx={{
+                      width: "295px",
                     }}
-                  />
-                </Box>
-              </Grid>
-            ))}
-          </Grid>
-        </CardContent>
+                  >
+                    <CardPiket
+                      data={{
+                        title: value?.user?.nama,
+                        chipText: value?.user?.jabatan,
+                        src: value?.user?.photo,
+                      }}
+                    />
+                  </Box>
+                </Grid>
+              ))}
+            </Grid>
+          </CardContent>
+        )}
 
-        <CardContent>
-          <Typography variant="subtitle1" sx={{ mb: "10px", fontWeight: 700 }}>
-            PIKET SIANG
-          </Typography>
-          <Grid container spacing={10}>
-            {[0, 1, 2].map((index) => (
-              <Grid item xs={4} key={index}>
-                <Box
-                  sx={{
-                    width: "295px",
-                  }}
-                >
-                  <CardPiket
-                    data={{
-                      stats: "8.14k",
-                      title: "Andika Akhmad Widyato",
-                      chipColor: "primary",
-                      trendNumber: "+15.6%",
-                      chipText: "Man II Opsis",
-                      src: "/images/piket&shift-img.png",
+        {shiftSiang.length > 0 && (
+          <CardContent>
+            <TitlePiket title="PIKET SIANG" />
+            <Grid container spacing={10}>
+              {shiftSiang.map((value) => (
+                <Grid item key={value.id}>
+                  <Box
+                    sx={{
+                      width: "295px",
                     }}
-                  />
-                </Box>
-              </Grid>
-            ))}
-          </Grid>
-        </CardContent>
+                  >
+                    <CardPiket
+                      data={{
+                        title: value?.user?.nama,
+                        chipText: value?.user?.jabatan,
+                        src: value?.user?.photo,
+                      }}
+                    />
+                  </Box>
+                </Grid>
+              ))}
+            </Grid>
+          </CardContent>
+        )}
 
-        <CardContent>
-          <Typography variant="subtitle1" sx={{ mb: "10px", fontWeight: 700 }}>
-            PIKET MALAM
-          </Typography>
-          <Grid container spacing={10}>
-            {[0, 1, 2].map((index) => (
-              <Grid item xs={4} key={index}>
-                <Box
-                  sx={{
-                    width: "295px",
-                  }}
-                >
-                  <CardPiket
-                    data={{
-                      stats: "8.14k",
-                      title: "Andika Akhmad Widyato",
-                      chipColor: "primary",
-                      trendNumber: "+15.6%",
-                      chipText: "Man II Opsis",
-                      src: "/images/piket&shift-img.png",
+        {shiftMalam.length > 0 && (
+          <CardContent>
+            <TitlePiket title="PIKET MALAM" />
+            <Grid container spacing={10}>
+              {shiftMalam.map((value) => (
+                <Grid item key={value.id}>
+                  <Box
+                    sx={{
+                      width: "295px",
                     }}
-                  />
-                </Box>
-              </Grid>
-            ))}
-          </Grid>
-        </CardContent>
+                  >
+                    <CardPiket
+                      data={{
+                        title: value?.user?.nama,
+                        chipText: value?.user?.jabatan,
+                        src: value?.user?.photo,
+                      }}
+                    />
+                  </Box>
+                </Grid>
+              ))}
+            </Grid>
+          </CardContent>
+        )}
 
-        <CardContent>
-          <Typography variant="subtitle1" sx={{ mb: "10px", fontWeight: 700 }}>
-            Piket fasop
-          </Typography>
-          <Grid container spacing={10}>
-            {[0, 1, 2].map((index) => (
-              <Grid item xs={4} key={index}>
-                <Box
-                  sx={{
-                    width: "280px",
-                  }}
-                >
-                  <CardPiketFasop
-                    data={{
-                      stats: "8.14k",
-                      title: "Andika Akhmad Widyato",
-                      chipColor: "primary",
-                      trendNumber: "+15.6%",
-                      chipText: "Man II Opsis",
-                      src: "/images/piket&shift-img.png",
+        {bidFasop.length > 0 && (
+          <CardContent>
+            <TitlePiket title="PIKET FASOP" />
+            <Grid container spacing={10}>
+              {bidFasop.map((value) => (
+                <Grid item key={value.id}>
+                  <Box
+                    sx={{
+                      width: "280px",
                     }}
-                  />
-                </Box>
-              </Grid>
-            ))}
-          </Grid>
-        </CardContent>
+                  >
+                    <CardPiketFasop
+                      data={{
+                        title: value?.user?.nama,
+                        chipText: value?.user?.jabatan,
+                        src: value?.user?.photo,
+                      }}
+                    />
+                  </Box>
+                </Grid>
+              ))}
+            </Grid>
+          </CardContent>
+        )}
       </Box>
     </>
   );

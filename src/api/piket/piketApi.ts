@@ -3,13 +3,26 @@ import { toast } from 'src/components/toast'
 import { Axios } from '../axios'
 
 export type Params = {
-  search?: string;
+  tanggal?: string;
 }
+
+export interface PiketList {
+  id: string;
+  user: User;
+  posisi: string;
+}
+export interface User {
+  id: string;
+  nama: string;
+  jabatan: string;
+  photo: string;
+}
+
 
 const endpoint = '/piket'
 
 const piketApi = () => {
-  const [piketList, setPiketList] = useState<[]>([])
+  const [piketList, setPiketList] = useState<PiketList[]>([] as PiketList[])
   const [loading, setLoading] = useState<boolean>(false);
 
   const getPiketList = useCallback(async (params: Params = {}) => {
