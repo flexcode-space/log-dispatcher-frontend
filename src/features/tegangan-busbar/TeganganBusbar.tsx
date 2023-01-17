@@ -125,9 +125,6 @@ const TeganganBusbar = () => {
                         Gardu Induk
                       </TableCellHead>
                       <TableCellHead size="small" rowSpan={2} minWidth="200px">
-                        Busbar
-                      </TableCellHead>
-                      <TableCellHead size="small" rowSpan={2} minWidth="200px">
                         Tegangan operasi
                       </TableCellHead>
                       <TableCellHead size="small" rowSpan={2} minWidth="150px">
@@ -163,7 +160,6 @@ const TeganganBusbar = () => {
                           <TableCell>{value.upt}</TableCell>
                           <TableCell>{value.sub_sistem}</TableCell>
                           <TableCell>{value.gardu_induk}</TableCell>
-                          <TableCell>{value.data?.nama_busbar}</TableCell>
                           <TableCell>{value.tegangan}</TableCell>
                           <TableCell>{value.arus_nominal}</TableCell>
                           <TableCell>{value.arus_mampu}</TableCell>

@@ -39,7 +39,7 @@ export const defaultColumns = [
     field: "tanggal_mulai",
     headerName: "Waktu Mulai",
     renderCell: ({ row }: CellType) => {
-      const startDate = dayjs(row?.tanggal_mulai).format("HH:mm");
+      const startDate = dayjs(row?.tanggal_mulai).format("DD MMM YYYY, HH:mm");
       return <RenderCell>{startDate}</RenderCell>;
     },
   },
@@ -49,7 +49,7 @@ export const defaultColumns = [
     field: "waktu_akhir",
     headerName: "Waktu Akhir",
     renderCell: ({ row }: CellType) => {
-      const endDate = dayjs(row?.tanggal_akhir).format("HH:mm");
+      const endDate = dayjs(row?.tanggal_akhir).format("DD MMM YYYY, HH:mm");
       return <RenderCell>{endDate}</RenderCell>;
     },
   },

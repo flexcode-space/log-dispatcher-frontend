@@ -2,6 +2,7 @@ import * as yup from "yup";
 import { CellType } from "src/types";
 import { RenderCell } from "src/components/table";
 import { PayloadCatatanPenyaluran } from "./types";
+import dayjs from "dayjs";
 
 export const defaultColumns = [
   {
@@ -25,12 +26,20 @@ export const defaultColumns = [
     minWidth: 100,
     field: "tanggal_mulai",
     headerName: "Waktu Mulai",
+    renderCell: ({ row }: CellType) => {
+      const startDate = dayjs(row?.tanggal_mulai).format("DD MMM YYYY, HH:mm");
+      return <RenderCell>{startDate}</RenderCell>;
+    },
   },
   {
     flex: 0.25,
     minWidth: 100,
     field: "tanggal_akhir",
     headerName: "Waktu Akhir",
+    renderCell: ({ row }: CellType) => {
+      const endDate = dayjs(row?.tanggal_akhir).format("DD MMM YYYY, HH:mm");
+      return <RenderCell>{endDate}</RenderCell>;
+    },
   },
   {
     flex: 0.25,

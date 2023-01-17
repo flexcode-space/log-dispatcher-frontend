@@ -36,6 +36,7 @@ import { showValueBeban } from "./BebanHarian.constant";
 import { ModalSetBebanHarian } from "./modal";
 import { convertDate } from "src/utils/date";
 import { TIME } from "src/constants/time";
+import { Total } from "src/api/analisa-beban/type";
 
 const BebanHarian = () => {
   // ** States
@@ -43,7 +44,7 @@ const BebanHarian = () => {
   const [rowsPerPage, setRowsPerPage] = useState<number>(10);
   const [date, setDate] = useState<any>(new Date());
 
-  const { getBebanList, bebanList } = bebanApi();
+  const { getBebanList, bebanList, totalData } = bebanApi();
 
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
@@ -135,6 +136,7 @@ const BebanHarian = () => {
                     {bebanList.length &&
                       bebanList.map((value: Beban) => {
                         const totalPembangkit = value?.pembangkit.total;
+                        const totalSubsistem = value?.total;
 
                         return (
                           <>
@@ -257,13 +259,33 @@ const BebanHarian = () => {
                               sx={{ background: totalPembangkit.color }}
                             >
                               <TableCell colSpan={2} size="small">
-                                {totalPembangkit.nama}
+                                {totalPembangkit?.nama}
                               </TableCell>
                               {showValueBeban(totalPembangkit?.data)}
                             </TableRow>
+
+                            {/* total subsistem */}
+                            {totalSubsistem?.nama && (
+                              <TableRow
+                                sx={{ background: totalSubsistem.color }}
+                              >
+                                <TableCell colSpan={2} size="small">
+                                  {totalSubsistem?.nama}
+                                </TableCell>
+                                {showValueBeban(totalSubsistem?.data)}
+                              </TableRow>
+                            )}
                           </>
                         );
                       })}
+                    {totalData && (
+                      <TableRow sx={{ background: totalData?.color }}>
+                        <TableCell colSpan={2} size="small">
+                          {totalData?.nama}
+                        </TableCell>
+                        {showValueBeban(totalData?.data)}
+                      </TableRow>
+                    )}
                   </TableBody>
                 </Table>
               </TableContainer>

@@ -6,6 +6,7 @@ import { FieldValues } from "../../types";
 type UploadFileProps = {
   title?: string;
   name: string;
+  jenis: string;
   onChange: (
     e: React.ChangeEvent<HTMLInputElement>,
     name: FieldPath<FieldValues>
@@ -27,6 +28,7 @@ const UploadComponent = ({ label, name, onChange }: UploadComponentProps) => {
       <OutlinedInputField
         name={name}
         label={label}
+        disabled={true}
         Icon={
           <Button
             variant="outlined"
@@ -47,7 +49,10 @@ const UploadComponent = ({ label, name, onChange }: UploadComponentProps) => {
   );
 };
 
-const UploadFile = ({ title, name, onChange }: UploadFileProps) => {
+const UploadFile = ({ title, name, onChange, jenis }: UploadFileProps) => {
+  const label_w = jenis === "mw-mvar" ? "MW" : "KW";
+  const label_var = jenis === "mw-mvar" ? "MVAR" : "KVAR";
+
   return (
     <>
       <Grid item xs={12} sm={12}>
@@ -58,8 +63,12 @@ const UploadFile = ({ title, name, onChange }: UploadFileProps) => {
           {title}
         </Typography>
       </Grid>
-      <UploadComponent onChange={onChange} name={`${name}.w`} label="MW" />
-      <UploadComponent onChange={onChange} name={`${name}.var`} label="MVAR" />
+      <UploadComponent onChange={onChange} name={`${name}.w`} label={label_w} />
+      <UploadComponent
+        onChange={onChange}
+        name={`${name}.var`}
+        label={label_var}
+      />
     </>
   );
 };
