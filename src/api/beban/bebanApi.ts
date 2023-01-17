@@ -2,6 +2,7 @@ import { useCallback, useState } from "react";
 // import { toast } from 'src/components/toast'
 import { Axios } from "../axios";
 import { Params } from "../types";
+import { Total } from "./types";
 
 interface ParamsBebanList extends Params {
   tanggal?: string;
@@ -15,7 +16,7 @@ const bebanApi = () => {
   const [bebanTrafoList, setBebanTrafoList] = useState<[]>([]);
   const [bebanPenghantarList, setBebanPenghantarList] = useState<[]>([]);
   const [teganganBusbarList, setTeganganBusbarList] = useState<[]>([]);
-  const [totalData, setTotalData] = useState<number>(0);
+  const [totalData, setTotalData] = useState<Total>({} as Total);
   const [loading, setLoading] = useState<boolean>(false);
 
   const getBebanList = useCallback(async (params: ParamsBebanList = {}) => {
@@ -23,10 +24,10 @@ const bebanApi = () => {
 
     try {
       const {
-        data: { data, total },
+        data: { data, other },
       } = await Axios.get(endpoint, { params });
       setBebanList(data || []);
-      setTotalData(total);
+      setTotalData(other);
     } finally {
       setLoading(false);
     }
@@ -40,7 +41,7 @@ const bebanApi = () => {
         data: { data, total },
       } = await Axios.get(`${endpoint}/ibt`, { params });
       setbebanIBTList(data || []);
-      setTotalData(total);
+      // setTotalData(total);
     } finally {
       setLoading(false);
     }
@@ -55,7 +56,7 @@ const bebanApi = () => {
           data: { data, total },
         } = await Axios.get(`${endpoint}/trafo`, { params });
         setBebanTrafoList(data || []);
-        setTotalData(total);
+        // setTotalData(total);
       } finally {
         setLoading(false);
       }
@@ -72,7 +73,7 @@ const bebanApi = () => {
           data: { data, total },
         } = await Axios.get(`${endpoint}/penghantar`, { params });
         setBebanPenghantarList(data || []);
-        setTotalData(total);
+        // setTotalData(total);
       } finally {
         setLoading(false);
       }
@@ -89,7 +90,7 @@ const bebanApi = () => {
           data: { data, total },
         } = await Axios.get(`${endpoint}/busbar`, { params });
         setTeganganBusbarList(data || []);
-        setTotalData(total);
+        // setTotalData(total);
       } finally {
         setLoading(false);
       }
