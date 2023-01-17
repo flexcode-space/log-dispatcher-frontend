@@ -21,13 +21,16 @@ import {
   validationSchema,
 } from "./ModalAddPiketDanShift.constant";
 import { useModal } from "./useModal";
+import { piketAndShift, removeData } from "../state/piketAndShift";
+import { useEffect } from "react";
 
 const ModalAddPiketDanShift = () => {
   const modalSnapshot = useSnapshot(modal);
+  const { data } = useSnapshot(piketAndShift);
 
   const { userOptions } = useModal();
 
-  const { createPiket } = piketApi();
+  const { createPiket, deletePiket } = piketApi();
 
   const formMethods = useForm({
     resolver: yupResolver(validationSchema),
@@ -47,10 +50,37 @@ const ModalAddPiketDanShift = () => {
         tanggal,
       } = values;
 
-      const data = [];
+      // delete DATA when edit piket
+      if (modalSnapshot.id) {
+        const deleteArray = [{ id: data?.pimpinan.id }];
+
+        data?.shiftPagi.map((value) => {
+          deleteArray.push({ id: value.id });
+        });
+
+        data?.shiftSiang.map((value) => {
+          deleteArray.push({ id: value.id });
+        });
+
+        data?.shiftMalam.map((value) => {
+          deleteArray.push({ id: value.id });
+        });
+
+        data?.bidFasop.map((value) => {
+          deleteArray.push({ id: value.id });
+        });
+
+        deleteArray.forEach(async (value) => {
+          await deletePiket(value);
+        });
+      }
+
+      // end
+
+      const dataArray = [];
       const date = dayjs(tanggal).format("YYYY-MM-DD");
 
-      data.push({
+      dataArray.push({
         posisi: "Pimpinan",
         shift: "-",
         tanggal: date,
@@ -58,7 +88,7 @@ const ModalAddPiketDanShift = () => {
       });
 
       shift_pagi?.map((value) => {
-        data.push({
+        dataArray.push({
           posisi: "Shift Pagi",
           shift: "-",
           tanggal: date,
@@ -67,7 +97,7 @@ const ModalAddPiketDanShift = () => {
       });
 
       shift_siang?.map((value) => {
-        data.push({
+        dataArray.push({
           posisi: "Shift Siang",
           shift: "-",
           tanggal: date,
@@ -76,7 +106,7 @@ const ModalAddPiketDanShift = () => {
       });
 
       shift_malam?.map((value) => {
-        data.push({
+        dataArray.push({
           posisi: "Shift Malam",
           shift: "-",
           tanggal: date,
@@ -85,7 +115,7 @@ const ModalAddPiketDanShift = () => {
       });
 
       bid_fasop?.map((value) => {
-        data.push({
+        dataArray.push({
           posisi: "BID Fasop",
           shift: "-",
           tanggal: date,
@@ -93,7 +123,7 @@ const ModalAddPiketDanShift = () => {
         });
       });
 
-      data.forEach(async (value) => {
+      dataArray.forEach(async (value) => {
         await createPiket(value);
       });
       onCloseModal();
@@ -102,8 +132,27 @@ const ModalAddPiketDanShift = () => {
 
   const onCloseModal = () => {
     closeModal();
+    removeData();
     formMethods.reset({ ...initialValues });
   };
+
+  useEffect(() => {
+    if (modalSnapshot.id) {
+      const shiftPagiArray = data?.shiftPagi?.map((value) => value.user.id);
+      const shiftSiangArray = data?.shiftSiang?.map((value) => value.user.id);
+      const shiftMalamArray = data?.shiftMalam?.map((value) => value.user.id);
+      const bidFasopArray = data?.bidFasop?.map((value) => value.user.id);
+
+      formMethods.reset({
+        tanggal: dayjs(data.tanggal),
+        pimpinan: data?.pimpinan?.user?.id,
+        shift_pagi: shiftPagiArray as never[],
+        shift_siang: shiftSiangArray as never[],
+        shift_malam: shiftMalamArray as never[],
+        bid_fasop: bidFasopArray as never[],
+      });
+    }
+  }, [modalSnapshot.isOpen]);
 
   return (
     <Dialog

@@ -37,8 +37,6 @@ const TableList = ({ type }: TableListProps) => {
 
   const filterDate = dayjs(date).format("YYYY-MM-DD");
 
-  console.log("filterDate", filterDate);
-
   const { getBatubaraList, batubaraList } = batubaraApi();
 
   const columns = [

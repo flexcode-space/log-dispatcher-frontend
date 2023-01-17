@@ -19,6 +19,7 @@ import { ModalAddPiketDanShift } from "./modal";
 import { useEffect, useState } from "react";
 import dayjs, { Dayjs } from "dayjs";
 import { piketApi } from "src/api/piket";
+import { selectData } from "./state/piketAndShift";
 
 const PiketAndShift = () => {
   const [date, setDate] = useState<Dayjs | null>(dayjs());
@@ -73,13 +74,25 @@ const PiketAndShift = () => {
                   )}
                 />
               </LocalizationProvider>
-              <Button
-                sx={{ mb: 2 }}
-                onClick={() => openModal()}
-                variant="outlined"
-              >
-                Ubah
-              </Button>
+              {piketList.length > 0 && (
+                <Button
+                  sx={{ mb: 2 }}
+                  onClick={() => {
+                    openModal("modal-piket", "1");
+                    selectData({
+                      tanggal: dayjs(date).format("YYYY-MM-DD"),
+                      pimpinan,
+                      shiftPagi,
+                      shiftSiang,
+                      shiftMalam,
+                      bidFasop,
+                    });
+                  }}
+                  variant="outlined"
+                >
+                  Ubah
+                </Button>
+              )}
               <Button
                 sx={{ mb: 2 }}
                 onClick={() => openModal()}

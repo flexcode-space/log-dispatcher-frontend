@@ -24,7 +24,13 @@ const CardPiket = ({ data }: Props) => {
           <Grid item xs={6}>
             <Typography
               variant="subtitle2"
-              sx={{ mb: 1.5, fontWeight: 600, whiteSpace: "nowrap" }}
+              sx={{
+                mb: 1.5,
+                fontWeight: 600,
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+              }}
             >
               {title}
             </Typography>
