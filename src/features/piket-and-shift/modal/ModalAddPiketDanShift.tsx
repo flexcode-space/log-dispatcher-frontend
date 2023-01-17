@@ -123,8 +123,6 @@ const ModalAddPiketDanShift = () => {
         });
       });
 
-      console.log(data);
-
       dataArray.forEach(async (value) => {
         await createPiket(value);
       });

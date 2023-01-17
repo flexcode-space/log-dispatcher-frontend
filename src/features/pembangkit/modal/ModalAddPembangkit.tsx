@@ -84,8 +84,6 @@ const ModalAddPembangkit = () => {
           ...rest
         } = data;
 
-        console.log('gardu_induk', gardu_induk)
-
         formMethods.reset({
           ...rest,
           ...scada,
