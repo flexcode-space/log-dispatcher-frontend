@@ -39,27 +39,15 @@ const piketApi = () => {
   const createPiket = useCallback(async (payload: any) => {
     setLoading(true)
 
-    try {
-      await Axios.post(endpoint, payload)
-      toast.success('Berhasil menambahkan Piket')
-    } catch (error) {
-      toast.error('Gagal menambahkan Piket')
-    } finally {
-      setLoading(false)
-    }
+    await Axios.post(endpoint, payload)
   }, [])
 
   const updatePiket = useCallback(async (payload: any) => {
-    setLoading(true)
+    await Axios.put(endpoint, payload)
+  }, [])
 
-    try {
-      await Axios.put(endpoint, payload)
-      toast.success('Berhasil mengubah Piket')
-    } catch (error) {
-      toast.error('Gagal mengubah Piket')
-    } finally {
-      setLoading(false)
-    }
+  const deletePiket = useCallback(async (payload: any) => {
+    await Axios.delete(endpoint, { data: payload })
   }, [])
 
 
@@ -68,7 +56,8 @@ const piketApi = () => {
     loading,
     getPiketList,
     createPiket,
-    updatePiket
+    updatePiket,
+    deletePiket
   }
 }
 

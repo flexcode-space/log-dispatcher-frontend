@@ -1,11 +1,22 @@
 import { Button, Card, CardContent, CardHeader, Grid } from "@mui/material";
+import dayjs from "dayjs";
+import { useEffect } from "react";
 import CardStatisticsCharacter from "src/@core/components/card-statistics/card-stats-with-image";
+import { piketApi } from "src/api/piket";
 
 type JadwalShiftProps = {
   onClick: () => void;
 };
 
 const JadwalShift = ({ onClick }: JadwalShiftProps) => {
+  const { piketList, getPiketList } = piketApi();
+
+  useEffect(() => {
+    getPiketList({ tanggal: dayjs().format("YYYY-MM-DD") });
+  }, []);
+
+  console.log("piketList", piketList);
+
   return (
     <Card>
       <CardHeader
@@ -29,16 +40,16 @@ const JadwalShift = ({ onClick }: JadwalShiftProps) => {
       />
       <CardContent>
         <Grid container spacing={2}>
-          {[0, 1, 2, 3].map((index) => (
+          {piketList.map((value, index) => (
             <Grid item xs={3} key={index}>
               <CardStatisticsCharacter
                 data={{
                   stats: "8.14k",
-                  title: "Andika Akhmad",
+                  title: value?.user?.nama,
                   chipColor: "primary",
                   trendNumber: "+15.6%",
-                  chipText: "Man II Opsis",
-                  src: "/images/card-stats-img-1.png",
+                  chipText: value?.posisi,
+                  src: value?.user?.photo || "/images/card-stats-img-1.png",
                 }}
               />
             </Grid>

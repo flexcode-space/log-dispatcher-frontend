@@ -51,6 +51,9 @@ const SelectMultipleInput = ({
         name={name}
         control={control}
         render={({ field: { value, onChange, ...otherOptions } }) => {
+          if (!!value) {
+            setValues(value);
+          }
           return (
             <>
               <InputLabel>{label}</InputLabel>

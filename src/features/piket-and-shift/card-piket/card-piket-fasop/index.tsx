@@ -1,5 +1,3 @@
-// ** MUI Imports
-import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
@@ -21,31 +19,38 @@ const cardPiketFasop = ({ data }: Props) => {
 
   return (
     <Card sx={{ overflow: "visible", position: "relative" }}>
-      <CardContent sx={{ pb: "0 !important" }}>
-        <Grid
-          item
-          // xs={6}
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            textAlign: "center",
-            justifyContent: "center",
-          }}
-        >
-          <Typography
-            variant="subtitle2"
-            sx={{ fontWeight: 600, whiteSpace: "nowrap" }}
+      <CardContent sx={{ px: "10px !important" }}>
+        <Grid container>
+          <Grid
+            item
+            xs={12}
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              textAlign: "center",
+              justifyContent: "center",
+            }}
           >
-            {title}
-          </Typography>
-          <CustomChip
-            skin="light"
-            size="small"
-            label={chipText}
-            color={chipColor}
-            sx={{ mb: 5.5, height: 20, fontWeight: 500, fontSize: "0.75rem" }}
-          />
+            <Typography
+              variant="subtitle2"
+              sx={{
+                fontWeight: 600,
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+              }}
+            >
+              {title}
+            </Typography>
+            <CustomChip
+              skin="light"
+              size="small"
+              label={chipText}
+              color={chipColor}
+              sx={{ mb: 5.5, height: 20, fontWeight: 500, fontSize: "0.75rem" }}
+            />
+          </Grid>
         </Grid>
       </CardContent>
     </Card>
