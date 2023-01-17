@@ -16,7 +16,7 @@ import { OutlinedInputField } from "src/components/input-field";
 import { DatePicker, TimePicker } from "src/components/date-picker";
 import { SelectInput } from "src/components/select-input";
 import { initialValues, validationSchema } from "./ModalUnggahLaporan.constant";
-import { tipeLaporanOptions } from "../UnggahLaporan.constant";
+import { jenisAMROptions, tipeLaporanOptions } from "../UnggahLaporan.constant";
 import { modal, reloadPage } from "src/state/modal";
 import UploadFile from "./components/UploadFile";
 import { Axios } from "src/api/axios";
@@ -40,19 +40,13 @@ const ModalUnggahLaporan = ({ handleClose }: ModalAddProps) => {
   });
 
   const tipe = formMethods.watch("tipe");
+  const jenis = formMethods.watch("jenis");
 
   const onSubmit = (event?: React.FormEvent<HTMLFormElement>) => {
     event?.preventDefault();
 
     formMethods.handleSubmit(async (values) => {
-      const { tanggal, jam, tipe, ...rest } = values;
-
-      const jenis =
-        tipe === "amr"
-          ? {
-              jenis: "mw-mvar",
-            }
-          : {};
+      const { tanggal, jam, tipe, jenis, ...rest } = values;
 
       const date = dayjs(tanggal).format("YYYY-MM-DD");
       const time = dayjs(jam).format("HH:mm");
@@ -61,7 +55,7 @@ const ModalUnggahLaporan = ({ handleClose }: ModalAddProps) => {
         ...rest,
         tipe,
         tanggal: `${date} ${time}`,
-        ...jenis,
+        ...(tipe === "amr" && { jenis }),
       };
 
       await unggahLaporan(payload);
@@ -124,6 +118,17 @@ const ModalUnggahLaporan = ({ handleClose }: ModalAddProps) => {
                   options={tipeLaporanOptions}
                 />
               </Grid>
+
+              {tipe === "amr" && (
+                <Grid item xs={12} sm={12}>
+                  <SelectInput
+                    label="Jenis AMR"
+                    name="jenis"
+                    options={jenisAMROptions}
+                  />
+                </Grid>
+              )}
+
               <Grid item xs={12} sm={6}>
                 <DatePicker label="Tanggal" name="tanggal" />
               </Grid>
@@ -159,16 +164,19 @@ const ModalUnggahLaporan = ({ handleClose }: ModalAddProps) => {
                     onChange={handleFileUpload}
                     name="pembangkit"
                     title="Pembangkit"
+                    jenis={jenis}
                   />
                   <UploadFile
                     onChange={handleFileUpload}
                     name="trafo"
                     title="Trafo"
+                    jenis={jenis}
                   />
                   <UploadFile
                     onChange={handleFileUpload}
                     name="ibt"
                     title="IBT"
+                    jenis={jenis}
                   />
                 </>
               )}

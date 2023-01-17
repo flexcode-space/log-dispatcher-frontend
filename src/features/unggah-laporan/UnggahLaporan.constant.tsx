@@ -30,3 +30,14 @@ export const tipeLaporanOptions = [
   },
   { value: "scada", label: "Scada" },
 ];
+
+export const jenisAMROptions = [
+  {
+    value: "mw-mvar",
+    label: "MW & MVAR",
+  },
+  {
+    value: "kw-kvar",
+    label: "KW & KVAR",
+  },
+];
