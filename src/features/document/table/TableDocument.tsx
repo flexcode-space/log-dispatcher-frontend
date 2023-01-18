@@ -1,5 +1,5 @@
-import { useEffect } from "react";
-import { Box, Card, CardContent, IconButton } from "@mui/material";
+import { useEffect, useState } from "react";
+import { Box, Card, CardContent, IconButton, TextField } from "@mui/material";
 import { DeleteOutline, EyeOutline, Download } from "mdi-material-ui";
 import { useSnapshot } from "valtio";
 import { CardHeader } from "src/components/card";
@@ -8,6 +8,7 @@ import { documentApi } from "src/api/document";
 import { modal } from "src/state/modal";
 import { defaultColumns } from "../Document.constant";
 import { TypeDocument } from "../types";
+import { useDebounce } from "src/hooks/useDebounce";
 
 export interface CellType {
   row: any;
@@ -24,6 +25,10 @@ type TableDocumentProps = {
 
 const TableDocument = ({ title, type, filter }: TableDocumentProps) => {
   const modalSnapshot = useSnapshot(modal);
+  const [search, setSearch] = useState<string>("");
+
+  const debouncedSearch = useDebounce(search, 500);
+
   const { getDocumentList, documentList, deleteDocument } = documentApi();
 
   const onClickDelete = async (id: string) => {
@@ -44,11 +49,6 @@ const TableDocument = ({ title, type, filter }: TableDocumentProps) => {
             <IconButton
               onClick={() => window.open(row.url, "_blank", "noreferrer")}
             >
-              <EyeOutline />
-            </IconButton>
-            <IconButton
-              onClick={() => window.open(row.url, "_blank", "noreferrer")}
-            >
               <Download />
             </IconButton>
             <IconButton>
@@ -61,12 +61,16 @@ const TableDocument = ({ title, type, filter }: TableDocumentProps) => {
   ];
 
   const getDocument = () => {
-    getDocumentList({ tipe: type });
+    if (debouncedSearch) {
+      getDocumentList({ search, tipe: type });
+    } else {
+      getDocumentList({ tipe: type });
+    }
   };
 
   useEffect(() => {
     getDocument();
-  }, [type]);
+  }, [type, debouncedSearch]);
 
   useEffect(() => {
     if (modalSnapshot.isReloadData) {
@@ -76,7 +80,18 @@ const TableDocument = ({ title, type, filter }: TableDocumentProps) => {
 
   return (
     <Card>
-      <CardHeader title={title} />
+      <CardHeader
+        title={title}
+        action={
+          <TextField
+            size="small"
+            value={search}
+            sx={{ mr: 6, mb: 2 }}
+            placeholder="Cari"
+            onChange={(e) => setSearch(e.target.value)}
+          />
+        }
+      />
       <CardContent>
         <DataGrid hideFooter autoHeight columns={columns} rows={documentList} />
       </CardContent>
