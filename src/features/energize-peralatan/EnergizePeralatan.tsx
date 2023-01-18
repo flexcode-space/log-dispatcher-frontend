@@ -29,9 +29,11 @@ import { CellType } from "src/types";
 import { EnergizeList } from "./types";
 import { selectData } from "src/state/energizePeralatan";
 import dayjs, { Dayjs } from "dayjs";
+import { reloadPage } from "src/state/reloadPage";
 
 const EnergizePeralatan = () => {
   const modalSnapshot = useSnapshot(modal);
+  const reloadPageSnap = useSnapshot(reloadPage);
   const [date, setDate] = useState<Dayjs | null>(null);
   const [search, setSearch] = useState<string>("");
 
@@ -87,10 +89,10 @@ const EnergizePeralatan = () => {
   }, [debouncedSearch, date]);
 
   useEffect(() => {
-    if (modalSnapshot.isReloadData) {
+    if (reloadPageSnap.target === "energize-peralatan") {
       getEnergize();
     }
-  }, [modalSnapshot.isReloadData]);
+  }, [reloadPageSnap.id]);
 
   return (
     <>

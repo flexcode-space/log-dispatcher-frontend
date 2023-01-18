@@ -19,7 +19,7 @@ import DeleteIcon from "src/assets/icons/delete-icon.svg";
 import { useCatatanPenyaluran } from "../useCatatanPenyaluran";
 import { validationSchema, initialValues } from "../CatatanPenyaluran.constant";
 import { catatanPenyaluranApi } from "src/api/catatan-penyaluran";
-import { reloadPage } from "src/state/modal";
+import { setReloadPage } from "src/state/reloadPage";
 
 const AddData = () => {
   const [showWaktuAkhir, setShowWaktuAkhir] = useState<boolean>(false);
@@ -60,7 +60,7 @@ const AddData = () => {
 
       await createCatatanPenyaluran(payload);
       formMethods.reset({ ...initialValues });
-      reloadPage();
+      setReloadPage("catatan-penyaluran");
     })();
   };
 

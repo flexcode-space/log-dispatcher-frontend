@@ -1,25 +1,30 @@
 import { useEffect } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import {
+  Box,
   Button,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
   Grid,
+  IconButton,
+  Stack,
 } from "@mui/material";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useSnapshot } from "valtio";
 import { SelectInput } from "src/components/select-input";
 import { InputField, TextArea } from "src/components/input-field";
 import { StyledForm } from "src/components/form";
-import { modal, reloadPage } from "src/state/modal";
+import { closeModal, modal, reloadPage } from "src/state/modal";
 import { DatePicker, TimePicker } from "src/components/date-picker";
 import { useCatatanPenyaluran } from "../useCatatanPenyaluran";
 import { validationSchema, initialValues } from "../CatatanPenyaluran.constant";
 import { catatanPenyaluran } from "src/state/catatanPenyaluran";
 import dayjs from "dayjs";
 import { catatanPenyaluranApi } from "src/api/catatan-penyaluran";
+import { TrashCanOutline } from "mdi-material-ui";
+import { setReloadPage } from "src/state/reloadPage";
 
 type ModalFilter = {
   handleClose: () => void;
@@ -29,7 +34,8 @@ const ModalFilter = ({ handleClose }: ModalFilter) => {
   const modalSnapshot = useSnapshot(modal);
   const { data } = useSnapshot(catatanPenyaluran);
 
-  const { updateCatatanPenyaluran } = catatanPenyaluranApi();
+  const { updateCatatanPenyaluran, deleteCatatanPenyaluran } =
+    catatanPenyaluranApi();
   const { garduIndukOptions } = useCatatanPenyaluran();
 
   const isOpen =
@@ -69,15 +75,22 @@ const ModalFilter = ({ handleClose }: ModalFilter) => {
 
       await updateCatatanPenyaluran(payload);
 
-      reloadPage();
-
       onClickCloseModal();
+      setReloadPage("catatan-penyaluran");
     })();
   };
 
   const onClickCloseModal = () => {
     handleClose();
     formMethods.reset({ ...initialValues });
+  };
+
+  const onClickDelete = async () => {
+    if (confirm("Hapus Data ini ?")) {
+      await deleteCatatanPenyaluran({ id: data.id });
+      onClickCloseModal();
+      setReloadPage("catatan-penyaluran");
+    }
   };
 
   useEffect(() => {
@@ -135,12 +148,29 @@ const ModalFilter = ({ handleClose }: ModalFilter) => {
             </Grid>
           </DialogContent>
           <DialogActions className="dialog-actions-dense">
-            <Button variant="outlined" onClick={onClickCloseModal}>
-              Batal
-            </Button>
-            <Button variant="contained" type="submit">
-              Simpan
-            </Button>
+            <Stack
+              width="100%"
+              direction="row"
+              alignItems="center"
+              justifyContent="space-between"
+            >
+              <Box>
+                <Button variant="text" onClick={onClickDelete}>
+                  <IconButton>
+                    <TrashCanOutline />
+                  </IconButton>
+                  Hapus data
+                </Button>
+              </Box>
+              <Box display="flex" gap="10px">
+                <Button variant="outlined" onClick={onClickCloseModal}>
+                  Batal
+                </Button>
+                <Button variant="contained" type="submit">
+                  Simpan
+                </Button>
+              </Box>
+            </Stack>
           </DialogActions>
         </StyledForm>
       </FormProvider>

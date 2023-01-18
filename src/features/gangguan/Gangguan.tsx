@@ -27,7 +27,6 @@ import {
   TableCellHead,
   TableContainer,
 } from "src/components/table";
-import FilterGreenIcon from "src/assets/icons/filter-green-icon.svg";
 import DownloadGreenIcon from "src/assets/icons/download-green-icon.svg";
 
 import { MenuMore } from "./components";
