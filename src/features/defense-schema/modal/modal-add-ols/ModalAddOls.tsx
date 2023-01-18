@@ -91,6 +91,7 @@ const ModalAdd = () => {
         gardu_induk,
         sub_sistem,
         peralatan,
+        peralatan2,
         peralatan_target,
         tahap,
         amp,
@@ -104,6 +105,7 @@ const ModalAdd = () => {
         tanggal: dayjs(tanggal),
         gardu_induk_id: gardu_induk.id,
         peralatan_id: peralatan.id,
+        peralatan2_id: peralatan2?.id,
         peralatan_target_id: peralatan_target.id,
         status: status ? "true" : "false",
         tahap_id: tahap.id,
@@ -116,7 +118,7 @@ const ModalAdd = () => {
       open={isOpen}
       fullWidth
       onClose={onCloseModal}
-      maxWidth="sm"
+      maxWidth="md"
       scroll="body"
     >
       <FormProvider {...formMethods}>
@@ -149,14 +151,21 @@ const ModalAdd = () => {
                   options={optionJenisPeralatan}
                 />
               </Grid>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12} sm={4}>
                 <SelectInput
                   label="Peralatan"
                   name="peralatan_id"
                   options={peratanOptions}
                 />
               </Grid>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12} sm={4}>
+                <SelectInput
+                  label="Peralatan 2"
+                  name="peralatan2_id"
+                  options={peratanOptions}
+                />
+              </Grid>
+              <Grid item xs={12} sm={4}>
                 <SelectInput
                   label="Tahap"
                   name="tahap_id"
