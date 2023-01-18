@@ -23,6 +23,10 @@ export interface DefenseSchemaList {
     id: string;
     nama: string;
   };
+  peralatan2?: {
+    id: string;
+    nama: string;
+  };
   jenis_peralatan_target: string;
   peralatan_target: {
     id: string;
