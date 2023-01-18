@@ -28,7 +28,7 @@ export const ModalConfirmationDelete = () => {
 
   const onClickDelete = async () => {
     await deleteGangguan({ id: data.id });
-    setReloadPage("gangguan")
+    setReloadPage("gangguan");
   };
 
   const onClickCloseModal = () => {
@@ -66,7 +66,7 @@ export const ModalConfirmationDelete = () => {
                 data.tanggal
               ).format(
                 "DD MMMM YYYY"
-              )}? Setelah dihapus data laporan akan hilang`}
+              )}? Pastikan tidak ada daftar manuver untuk dapat menghapus Laporan gangguan.`}
             </Typography>
           </Grid>
         </DialogContent>

@@ -56,6 +56,18 @@ const energizePeralatanApi = () => {
     }
   }, [])
 
+  const deleteEnergizePeralatan = useCallback(async (payload: any) => {
+    setLoading(true)
+    try {
+      await Axios.delete(endpoint, { data: payload })
+      toast.success('Berhasil menghapus')
+    } catch (error) {
+      toast.error('Gagal menghapus')
+    } finally {
+      setLoading(false)
+    }
+  }, [])
+
 
   return {
     energizePeralatanList,
@@ -64,7 +76,8 @@ const energizePeralatanApi = () => {
     getEnergizePeralatanList,
     getPeralatanByPath,
     createEnergizePeralatan,
-    updateEnergizePeralatan
+    updateEnergizePeralatan,
+    deleteEnergizePeralatan
   }
 }
 

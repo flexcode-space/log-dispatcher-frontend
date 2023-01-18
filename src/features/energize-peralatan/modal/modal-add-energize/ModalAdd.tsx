@@ -7,7 +7,10 @@ import {
   DialogContent,
   DialogTitle,
   Grid,
+  Stack,
   Typography,
+  Box,
+  IconButton,
 } from "@mui/material";
 import Plus from "mdi-material-ui/Plus";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -25,6 +28,8 @@ import { energizePeralatan, removeData } from "src/state/energizePeralatan";
 import { energizePeralatanApi } from "src/api/energize-peralatan";
 import { CreateEnergizePeralatan } from "../../types";
 import dayjs from "dayjs";
+import { TrashCanOutline } from "mdi-material-ui";
+import { setReloadPage } from "src/state/reloadPage";
 
 const defaultValue = {
   manuver: "",
@@ -51,8 +56,11 @@ const ModalAdd = () => {
   const { garduIndukOptions, optionJenisPeralatan, peratanOptions } =
     useModalAdd(jenisPeralatan, garduIndukId);
 
-  const { createEnergizePeralatan, updateEnergizePeralatan } =
-    energizePeralatanApi();
+  const {
+    createEnergizePeralatan,
+    updateEnergizePeralatan,
+    deleteEnergizePeralatan,
+  } = energizePeralatanApi();
 
   const titleModal = !!modalSnapshot.id ? "Ubah Data" : "Tambah Data";
   const isOpen =
@@ -89,8 +97,16 @@ const ModalAdd = () => {
         await createEnergizePeralatan(payload);
       }
       onCloseModal();
-      reloadPage();
+      setReloadPage("energize-peralatan");
     })();
+  };
+
+  const onClickDelete = async () => {
+    if (confirm("Hapus Data ini ?")) {
+      await deleteEnergizePeralatan({ id: data.id });
+      onCloseModal();
+      setReloadPage("energize-peralatan");
+    }
   };
 
   const onCloseModal = () => {
@@ -253,12 +269,31 @@ const ModalAdd = () => {
             </Grid>
           </DialogContent>
           <DialogActions className="dialog-actions-dense">
-            <Button variant="outlined" onClick={onCloseModal}>
-              Batal
-            </Button>
-            <Button variant="contained" type="submit">
-              Simpan
-            </Button>
+            <Stack
+              width="100%"
+              direction="row"
+              alignItems="center"
+              justifyContent="space-between"
+            >
+              <Box>
+                {modalSnapshot.id && (
+                  <Button variant="text" onClick={onClickDelete}>
+                    <IconButton>
+                      <TrashCanOutline />
+                    </IconButton>
+                    Hapus data
+                  </Button>
+                )}
+              </Box>
+              <Box display="flex" gap="10px">
+                <Button variant="outlined" onClick={onCloseModal}>
+                  Batal
+                </Button>
+                <Button variant="contained" type="submit">
+                  Simpan
+                </Button>
+              </Box>
+            </Stack>
           </DialogActions>
         </StyledForm>
       </FormProvider>

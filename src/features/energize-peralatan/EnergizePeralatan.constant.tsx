@@ -1,6 +1,9 @@
 import { CellType } from "src/types";
 import { RenderCell } from "src/components/table";
 import dayjs from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat";
+
+dayjs.extend(customParseFormat);
 
 export const defaultColumns = [
   {
@@ -30,7 +33,11 @@ export const defaultColumns = [
     headerName: "Tanggal",
     renderCell: ({ row }: CellType) => {
       const { tanggal } = row;
-      return <RenderCell>{dayjs(tanggal, "YYYY-MM-DDD HH:mm").format("DD-MM-YYYY")}</RenderCell>;
+      return (
+        <RenderCell>
+          {dayjs(tanggal, "YYYY-MM-DD").format("DD MMM YYYY")}
+        </RenderCell>
+      );
     },
   },
   {
@@ -45,8 +52,8 @@ export const defaultColumns = [
     field: "close",
     headerName: "Close",
     renderCell: ({ row }: CellType) => {
-      const { tanggal } = row;
-      return <RenderCell>{dayjs(tanggal, "YYYY-MM-DDD HH:mm").format("HH:mm")}</RenderCell>;
+      const { close } = row;
+      return <RenderCell>{dayjs(close, "HH:mm").format("HH:mm")}</RenderCell>;
     },
   },
   {

@@ -26,9 +26,11 @@ import { ModalEdit } from "./modal";
 import { defaultColumns } from "./CatatanPenyaluran.constant";
 import { CellType } from "src/types";
 import { CatatanPenyaluranList } from "./types";
+import { reloadPage } from "src/state/reloadPage";
 
 const CatatanPembangkitan = () => {
   const modalSnap = useSnapshot(modal);
+  const reloadPageSnap = useSnapshot(reloadPage);
 
   const { getCatatanPenyaluranList, catatanPenyaluranList } =
     catatanPenyaluranApi();
@@ -69,10 +71,10 @@ const CatatanPembangkitan = () => {
   }, []);
 
   useEffect(() => {
-    if (modalSnap.isReloadData) {
+    if (reloadPageSnap.target === "catatan-penyaluran") {
       getCatatanPenyaluran();
     }
-  }, [modalSnap.isReloadData]);
+  }, [reloadPageSnap.id]);
 
   return (
     <>
@@ -93,7 +95,7 @@ const CatatanPembangkitan = () => {
                 <TextField
                   size="small"
                   value=""
-                  sx={{ mr: 6, mb: 2, }}
+                  sx={{ mr: 6, mb: 2 }}
                   placeholder="Cari"
                   // onChange={(e) => setSearch(e.target.value)}
                 />
@@ -115,11 +117,7 @@ const CatatanPembangkitan = () => {
                       label="Pilih Tanggal"
                       onChange={() => null}
                       renderInput={(params) => (
-                        <TextField
-                          size="small"
-                          {...params}
-                          fullWidth
-                        />
+                        <TextField size="small" {...params} fullWidth />
                       )}
                     />
                   </LocalizationProvider>
