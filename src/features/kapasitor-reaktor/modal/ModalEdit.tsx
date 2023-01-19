@@ -1,12 +1,15 @@
 import { useEffect } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import {
+  Box,
   Button,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
   Grid,
+  IconButton,
+  Stack,
 } from "@mui/material";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useSnapshot } from "valtio";
@@ -21,6 +24,8 @@ import { kapasitorReaktor } from "src/state/kapasitorReaktor";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import { kapasitorReaktorApi } from "src/api/kapasitorReaktorApi";
+import { setReloadPage } from "src/state/reloadPage";
+import { TrashCanOutline } from "mdi-material-ui";
 
 dayjs.extend(customParseFormat);
 
@@ -28,7 +33,8 @@ const ModalEdit = () => {
   const modalSnapshot = useSnapshot(modal);
   const { data } = useSnapshot(kapasitorReaktor);
 
-  const { updateKapasitorReaktor } = kapasitorReaktorApi();
+  const { updateKapasitorReaktor, deleteKapasitorReaktor } =
+    kapasitorReaktorApi();
   const { garduIndukOptions } = useKapasitorReaktor();
 
   const isOpen =
@@ -57,7 +63,16 @@ const ModalEdit = () => {
       await updateKapasitorReaktor(payload);
       reloadPage();
       closeModal();
+      setReloadPage("kapasitor-reaktor");
     })();
+  };
+
+  const onClickDelete = async () => {
+    if (confirm("Hapus Data ini ?")) {
+      await deleteKapasitorReaktor({ id: data.id });
+      onClickCloseModal();
+      setReloadPage("kapasitor-reaktor");
+    }
   };
 
   const onClickCloseModal = () => {
@@ -124,12 +139,29 @@ const ModalEdit = () => {
             </Grid>
           </DialogContent>
           <DialogActions className="dialog-actions-dense">
-            <Button variant="outlined" onClick={onClickCloseModal}>
-              Batal
-            </Button>
-            <Button variant="contained" type="submit">
-              Simpan
-            </Button>
+            <Stack
+              width="100%"
+              direction="row"
+              alignItems="center"
+              justifyContent="space-between"
+            >
+              <Box>
+                <Button variant="text" onClick={onClickDelete}>
+                  <IconButton>
+                    <TrashCanOutline />
+                  </IconButton>
+                  Hapus data
+                </Button>
+              </Box>
+              <Box display="flex" gap="10px">
+                <Button variant="outlined" onClick={onClickCloseModal}>
+                  Batal
+                </Button>
+                <Button variant="contained" type="submit">
+                  Simpan
+                </Button>
+              </Box>
+            </Stack>
           </DialogActions>
         </StyledForm>
       </FormProvider>

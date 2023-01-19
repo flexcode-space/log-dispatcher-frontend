@@ -74,6 +74,18 @@ const defenseApi = () => {
     }
   }, [])
 
+  const deleteDefense = useCallback(async (path: string, payload: any) => {
+    setLoading(true)
+    try {
+      await Axios.delete(`${endpoint}/${path}`, { data: payload })
+      toast.success('Berhasil menghapus')
+    } catch (error) {
+      toast.error('Gagal menghapus')
+    } finally {
+      setLoading(false)
+    }
+  }, [])
+
 
   return {
     defenseList,
@@ -84,7 +96,8 @@ const defenseApi = () => {
     createDefense,
     updateDefense,
     getTahapList,
-    getAmpList
+    getAmpList,
+    deleteDefense
   }
 }
 

@@ -50,13 +50,26 @@ const laporanPoskoApi = () => {
     }
   }, [])
 
+  const deleteLaporanPosko = useCallback(async (payload: any) => {
+    setLoading(true)
+    try {
+      await Axios.delete(endpoint, { data: payload })
+      toast.success('Berhasil menghapus')
+    } catch (error) {
+      toast.error('Gagal menghapus')
+    } finally {
+      setLoading(false)
+    }
+  }, [])
+
 
   return {
     laporanPoskoList,
     loading,
     getLaporanPoskoList,
     createLaporanPosko,
-    updateLaporanPosko
+    updateLaporanPosko,
+    deleteLaporanPosko
   }
 }
 

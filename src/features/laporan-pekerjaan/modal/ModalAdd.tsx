@@ -1,6 +1,14 @@
 import { useEffect, useState } from "react";
 import { useForm, FormProvider } from "react-hook-form";
-import { Button, Dialog, DialogActions, DialogContent } from "@mui/material";
+import {
+  Box,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  IconButton,
+  Stack,
+} from "@mui/material";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useSnapshot } from "valtio";
 import { StyledForm } from "src/components/form";
@@ -15,14 +23,18 @@ import dayjs from "dayjs";
 import { laporanPekerjaanApi } from "src/api/laporan-pekerjaan";
 import { setReloadPage } from "src/state/reloadPage";
 import { laporanPekerjaan } from "../state/laporanPekerjaan";
+import { TrashCanOutline } from "mdi-material-ui";
 
 const ModalAdd = () => {
   const [isNextPage, setIsNextPage] = useState<boolean>(false);
 
   const modalSnapshot = useSnapshot(modal);
   const { data } = useSnapshot(laporanPekerjaan);
-  const { createLaporanPekerjaan, updateLaporanPekerjaan } =
-    laporanPekerjaanApi();
+  const {
+    createLaporanPekerjaan,
+    updateLaporanPekerjaan,
+    deleteLaporanPekerjaan,
+  } = laporanPekerjaanApi();
 
   const isOpen =
     modalSnapshot.isOpen && modalSnapshot.target === "modal-laporan-pekerjaan";
@@ -70,6 +82,14 @@ const ModalAdd = () => {
     })();
   };
 
+  const onClickDelete = async () => {
+    if (confirm("Hapus Data ini ?")) {
+      await deleteLaporanPekerjaan({ id: data.id });
+      onCloseModal();
+      setReloadPage("laporan-pekerjaan");
+    }
+  };
+
   const onCloseModal = () => {
     closeModal();
     setIsNextPage(false);
@@ -110,31 +130,53 @@ const ModalAdd = () => {
             {isNextPage ? Form[jenisForm]() : Form["DEFAULT"]()}
           </DialogContent>
           <DialogActions className="dialog-actions-dense">
-            <Button
-              variant={isNextPage ? "text" : "outlined"}
-              onClick={onCloseModal}
+            <Stack
+              width="100%"
+              direction="row"
+              alignItems="center"
+              justifyContent="space-between"
             >
-              Batal
-            </Button>
-            {isNextPage ? (
-              <>
-                {!modalSnapshot.id && (
-                  <Button
-                    variant="outlined"
-                    onClick={() => setIsNextPage(false)}
-                  >
-                    Sebelumnya
+              <Box>
+                {modalSnapshot.id && (
+                  <Button variant="text" onClick={onClickDelete}>
+                    <IconButton>
+                      <TrashCanOutline />
+                    </IconButton>
+                    Hapus data
                   </Button>
                 )}
-                <Button variant="contained" type="submit">
-                  Tambah
+              </Box>
+              <Box>
+                <Button
+                  variant={isNextPage ? "text" : "outlined"}
+                  onClick={onCloseModal}
+                >
+                  Batal
                 </Button>
-              </>
-            ) : (
-              <Button variant="contained" onClick={() => setIsNextPage(true)}>
-                Selanjutnya
-              </Button>
-            )}
+                {isNextPage ? (
+                  <>
+                    {!modalSnapshot.id && (
+                      <Button
+                        variant="outlined"
+                        onClick={() => setIsNextPage(false)}
+                      >
+                        Sebelumnya
+                      </Button>
+                    )}
+                    <Button variant="contained" type="submit">
+                      Tambah
+                    </Button>
+                  </>
+                ) : (
+                  <Button
+                    variant="contained"
+                    onClick={() => setIsNextPage(true)}
+                  >
+                    Selanjutnya
+                  </Button>
+                )}
+              </Box>
+            </Stack>
           </DialogActions>
         </StyledForm>
       </FormProvider>

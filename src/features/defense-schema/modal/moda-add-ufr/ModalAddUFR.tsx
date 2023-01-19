@@ -8,6 +8,8 @@ import {
   Grid,
   Typography,
   Box,
+  Stack,
+  IconButton,
 } from "@mui/material";
 import Plus from "mdi-material-ui/Plus";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -23,12 +25,13 @@ import dayjs from "dayjs";
 import { removeData, ufr } from "../../ufr/state/ufr";
 import { setReloadPage } from "src/state/reloadPage";
 import { defenseApi } from "src/api/defense";
+import { TrashCanOutline } from "mdi-material-ui";
 
 const ModalAddUFR = () => {
   const modalSnapshot = useSnapshot(modal);
   const { data } = useSnapshot(ufr);
 
-  const { createDefense, updateDefense } = defenseApi();
+  const { createDefense, updateDefense, deleteDefense } = defenseApi();
   const {
     trafoOptions,
     garduIndukOptions,
@@ -66,6 +69,14 @@ const ModalAddUFR = () => {
       onCloseModal();
       setReloadPage("ufr");
     })();
+  };
+
+  const onClickDelete = async () => {
+    if (confirm("Hapus Data ini ?")) {
+      await deleteDefense("ufr", { id: data.id });
+      onCloseModal();
+      setReloadPage("ufr");
+    }
   };
 
   const onCloseModal = () => {
@@ -224,12 +235,31 @@ const ModalAddUFR = () => {
             </Grid>
           </DialogContent>
           <DialogActions className="dialog-actions-dense">
-            <Button variant="outlined" onClick={onCloseModal}>
-              Batal
-            </Button>
-            <Button variant="contained" type="submit">
-              Tambah
-            </Button>
+            <Stack
+              width="100%"
+              direction="row"
+              alignItems="center"
+              justifyContent="space-between"
+            >
+              <Box>
+                {modalSnapshot.id && (
+                  <Button variant="text" onClick={onClickDelete}>
+                    <IconButton>
+                      <TrashCanOutline />
+                    </IconButton>
+                    Hapus data
+                  </Button>
+                )}
+              </Box>
+              <Box display="flex" gap="10px">
+                <Button variant="outlined" onClick={onCloseModal}>
+                  Batal
+                </Button>
+                <Button variant="contained" type="submit">
+                  Simpan
+                </Button>
+              </Box>
+            </Stack>
           </DialogActions>
         </StyledForm>
       </FormProvider>

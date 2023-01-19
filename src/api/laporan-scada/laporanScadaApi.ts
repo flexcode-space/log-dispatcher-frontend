@@ -51,13 +51,26 @@ const laporanScadaApi = () => {
     }
   }, [])
 
+  const deleteLaporanScada = useCallback(async (payload: any) => {
+    setLoading(true)
+    try {
+      await Axios.delete(endpoint, { data: payload })
+      toast.success('Berhasil menghapus')
+    } catch (error) {
+      toast.error('Gagal menghapus')
+    } finally {
+      setLoading(false)
+    }
+  }, [])
+
 
   return {
     laporanScadaList,
     loading,
     getLaporanScadaList,
     createLaporanScada,
-    updateLaporanScada
+    updateLaporanScada,
+    deleteLaporanScada
   }
 }
 

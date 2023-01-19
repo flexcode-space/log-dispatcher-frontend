@@ -68,6 +68,18 @@ const laporanPekerjaanApi = () => {
     }
   }, []);
 
+  const deleteLaporanPekerjaan = useCallback(async (payload: any) => {
+    setLoading(true)
+    try {
+      await Axios.delete(endpoint, { data: payload })
+      toast.success('Berhasil menghapus')
+    } catch (error) {
+      toast.error('Gagal menghapus')
+    } finally {
+      setLoading(false)
+    }
+  }, [])
+
   return {
     laporanPekerjaanList,
     laporanPekerjaanGenerateList,
@@ -76,6 +88,7 @@ const laporanPekerjaanApi = () => {
     getLaporanPekerjaanGenerate,
     createLaporanPekerjaan,
     updateLaporanPekerjaan,
+    deleteLaporanPekerjaan
   };
 };
 

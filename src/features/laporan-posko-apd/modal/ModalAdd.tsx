@@ -8,6 +8,8 @@ import {
   Grid,
   Typography,
   Box,
+  Stack,
+  IconButton,
 } from "@mui/material";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useSnapshot } from "valtio";
@@ -21,6 +23,7 @@ import { initialValues, validationSchema } from "./ModalAdd.constant";
 import { setReloadPage } from "src/state/reloadPage";
 import { laporanPosko, removeData } from "../state/laporanPosko";
 import laporanPoskoApi from "src/api/laporan-posko/laporanPoskoApi";
+import { TrashCanOutline } from "mdi-material-ui";
 
 dayjs.extend(customParseFormat);
 
@@ -28,7 +31,8 @@ const ModalAdd = () => {
   const modalSnapshot = useSnapshot(modal);
   const { data } = useSnapshot(laporanPosko);
 
-  const { createLaporanPosko, updateLaporanPosko } = laporanPoskoApi();
+  const { createLaporanPosko, updateLaporanPosko, deleteLaporanPosko } =
+    laporanPoskoApi();
 
   const isOpen =
     modalSnapshot.isOpen && modalSnapshot.target === "modal-laporan-posko";
@@ -59,13 +63,21 @@ const ModalAdd = () => {
         await createLaporanPosko(payload);
       }
       hanleCloseModal();
+      setReloadPage("laporan-posko");
     })();
+  };
+
+  const onClickDelete = async () => {
+    if (confirm("Hapus Data ini ?")) {
+      await deleteLaporanPosko({ id: data.id });
+      hanleCloseModal();
+      setReloadPage("laporan-posko");
+    }
   };
 
   const hanleCloseModal = () => {
     closeModal();
     formMethods.reset({ ...initialValues });
-    setReloadPage("laporan-posko");
     removeData();
   };
 
@@ -73,7 +85,7 @@ const ModalAdd = () => {
     if (modalSnapshot.isOpen && !!modalSnapshot.id) {
       const { tanggal, periode, ...rest } = data;
 
-      const splitPeriode = periode.split(" ")
+      const splitPeriode = periode.split(" ");
 
       formMethods.reset({
         ...rest,
@@ -154,12 +166,31 @@ const ModalAdd = () => {
             </Grid>
           </DialogContent>
           <DialogActions className="dialog-actions-dense">
-            <Button variant="outlined" onClick={hanleCloseModal}>
-              Batal
-            </Button>
-            <Button variant="contained" type="submit">
-              Tambah
-            </Button>
+            <Stack
+              width="100%"
+              direction="row"
+              alignItems="center"
+              justifyContent="space-between"
+            >
+              <Box>
+                {modalSnapshot.id && (
+                  <Button variant="text" onClick={onClickDelete}>
+                    <IconButton>
+                      <TrashCanOutline />
+                    </IconButton>
+                    Hapus data
+                  </Button>
+                )}
+              </Box>
+              <Box display="flex" gap="10px">
+                <Button variant="outlined" onClick={hanleCloseModal}>
+                  Batal
+                </Button>
+                <Button variant="contained" type="submit">
+                  Simpan
+                </Button>
+              </Box>
+            </Stack>
           </DialogActions>
         </StyledForm>
       </FormProvider>

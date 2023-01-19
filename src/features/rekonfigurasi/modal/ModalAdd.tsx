@@ -8,6 +8,8 @@ import {
   Grid,
   Typography,
   Box,
+  Stack,
+  IconButton,
 } from "@mui/material";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useSnapshot } from "valtio";
@@ -24,6 +26,7 @@ import { rekonfigurasi, removeData } from "../state/rekonfigurasi";
 import { rekonfigurasiApi } from "src/api/rekonfigurasi";
 import { restrictNumeric } from "payment";
 import { useModalAdd } from "./useModalAdd";
+import { TrashCanOutline } from "mdi-material-ui";
 
 dayjs.extend(customParseFormat);
 
@@ -33,7 +36,8 @@ const ModalAdd = () => {
 
   const { garduIndukOptions, subsitemOptions } = useModalAdd();
 
-  const { createRekonfigurasi, updateRekonfigurasi } = rekonfigurasiApi();
+  const { createRekonfigurasi, updateRekonfigurasi, deleteRekonfigurasi } =
+    rekonfigurasiApi();
 
   const isOpen =
     modalSnapshot.isOpen && modalSnapshot.target === "modal-rekonfigurasi";
@@ -62,13 +66,21 @@ const ModalAdd = () => {
         await createRekonfigurasi(payload);
       }
       hanleCloseModal();
+      setReloadPage("rekonfigurasi");
     })();
+  };
+
+  const onClickDelete = async () => {
+    if (confirm("Hapus Data ini ?")) {
+      await deleteRekonfigurasi({ id: data.id });
+      hanleCloseModal();
+      setReloadPage("rekonfigurasi");
+    }
   };
 
   const hanleCloseModal = () => {
     closeModal();
     formMethods.reset({ ...initialValues });
-    setReloadPage("rekonfigurasi");
     removeData();
   };
 
@@ -147,12 +159,31 @@ const ModalAdd = () => {
             </Grid>
           </DialogContent>
           <DialogActions className="dialog-actions-dense">
-            <Button variant="outlined" onClick={hanleCloseModal}>
-              Batal
-            </Button>
-            <Button variant="contained" type="submit">
-              Tambah
-            </Button>
+            <Stack
+              width="100%"
+              direction="row"
+              alignItems="center"
+              justifyContent="space-between"
+            >
+              <Box>
+                {modalSnapshot.id && (
+                  <Button variant="text" onClick={onClickDelete}>
+                    <IconButton>
+                      <TrashCanOutline />
+                    </IconButton>
+                    Hapus data
+                  </Button>
+                )}
+              </Box>
+              <Box display="flex" gap="10px">
+                <Button variant="outlined" onClick={hanleCloseModal}>
+                  Batal
+                </Button>
+                <Button variant="contained" type="submit">
+                  Simpan
+                </Button>
+              </Box>
+            </Stack>
           </DialogActions>
         </StyledForm>
       </FormProvider>

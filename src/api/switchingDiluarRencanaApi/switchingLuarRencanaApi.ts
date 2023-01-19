@@ -50,13 +50,26 @@ const switchingLuarRencanaApi = () => {
     }
   }, [])
 
+  const deleteSwitchingLuarRencana = useCallback(async (payload: any) => {
+    setLoading(true)
+    try {
+      await Axios.delete(endpoint, { data: payload })
+      toast.success('Berhasil menghapus')
+    } catch (error) {
+      toast.error('Gagal menghapus')
+    } finally {
+      setLoading(false)
+    }
+  }, [])
+
 
   return {
     switchingLuarRencana,
     loading,
     getSwitchingLuarRencanaList,
     createSwitchingLuarRencana,
-    updateSwitchingLuarRencana
+    updateSwitchingLuarRencana,
+    deleteSwitchingLuarRencana
   }
 }
 

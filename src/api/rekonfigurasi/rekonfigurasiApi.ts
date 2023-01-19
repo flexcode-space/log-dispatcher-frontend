@@ -50,13 +50,26 @@ const rekonfigurasiApi = () => {
     }
   }, [])
 
+  const deleteRekonfigurasi = useCallback(async (payload: any) => {
+    setLoading(true)
+    try {
+      await Axios.delete(endpoint, { data: payload })
+      toast.success('Berhasil menghapus')
+    } catch (error) {
+      toast.error('Gagal menghapus')
+    } finally {
+      setLoading(false)
+    }
+  }, [])
+
 
   return {
     rekonfigurasiList,
     loading,
     getRekonfigurasiList,
     createRekonfigurasi,
-    updateRekonfigurasi
+    updateRekonfigurasi,
+    deleteRekonfigurasi
   }
 }
 

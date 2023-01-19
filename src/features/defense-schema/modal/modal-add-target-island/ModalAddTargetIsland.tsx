@@ -8,6 +8,8 @@ import {
   Grid,
   Typography,
   Box,
+  Stack,
+  IconButton,
 } from "@mui/material";
 import Plus from "mdi-material-ui/Plus";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -24,6 +26,7 @@ import { PayloadTargetIsland } from "./types";
 import { defenseApi } from "src/api/defense";
 import { setReloadPage } from "src/state/reloadPage";
 import { targetIsland } from "../../target-island/state/targetIsland";
+import { TrashCanOutline } from "mdi-material-ui";
 
 const defaultValue = {
   target: "",
@@ -42,7 +45,7 @@ const ModalAdd = () => {
   const { garduIndukOptions, tahapOptions, statusOptions } =
     useModalTargetIsland();
 
-  const { updateDefense, createDefense } = defenseApi();
+  const { updateDefense, createDefense, deleteDefense } = defenseApi();
 
   const isOpen =
     modalSnapshot.isOpen && modalSnapshot.target === "modal-add-target-island";
@@ -80,6 +83,14 @@ const ModalAdd = () => {
       onCloseModal();
       setReloadPage("target-island");
     })();
+  };
+
+  const onClickDelete = async () => {
+    if (confirm("Hapus Data ini ?")) {
+      await deleteDefense("target-island", { id: data.id });
+      onCloseModal();
+      setReloadPage("target-island");
+    }
   };
 
   const onCloseModal = () => {
@@ -193,12 +204,31 @@ const ModalAdd = () => {
             </Grid>
           </DialogContent>
           <DialogActions className="dialog-actions-dense">
-            <Button variant="outlined" onClick={onCloseModal}>
-              Batal
-            </Button>
-            <Button variant="contained" type="submit">
-              Tambah
-            </Button>
+            <Stack
+              width="100%"
+              direction="row"
+              alignItems="center"
+              justifyContent="space-between"
+            >
+              <Box>
+                {modalSnapshot.id && (
+                  <Button variant="text" onClick={onClickDelete}>
+                    <IconButton>
+                      <TrashCanOutline />
+                    </IconButton>
+                    Hapus data
+                  </Button>
+                )}
+              </Box>
+              <Box display="flex" gap="10px">
+                <Button variant="outlined" onClick={onCloseModal}>
+                  Batal
+                </Button>
+                <Button variant="contained" type="submit">
+                  Simpan
+                </Button>
+              </Box>
+            </Stack>
           </DialogActions>
         </StyledForm>
       </FormProvider>
