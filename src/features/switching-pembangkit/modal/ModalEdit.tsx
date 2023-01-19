@@ -8,6 +8,8 @@ import {
   Grid,
   Typography,
   Box,
+  Stack,
+  IconButton,
 } from "@mui/material";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useSnapshot } from "valtio";
@@ -27,6 +29,7 @@ import { switchingPembangkitApi } from "src/api/switching-pembangkit";
 import { setReloadPage } from "src/state/reloadPage";
 import { removeData } from "../state/switchingPembangkit";
 import { switchingPembangkit } from "../state/switchingPembangkit";
+import { TrashCanOutline } from "mdi-material-ui";
 
 dayjs.extend(customParseFormat);
 
@@ -42,7 +45,8 @@ const ModalFilter = () => {
     personOptions,
   } = useSwitchingPembengkit();
 
-  const { updateSwitchingPembangkit } = switchingPembangkitApi();
+  const { updateSwitchingPembangkit, deleteSwitchingPembangkit } =
+    switchingPembangkitApi();
 
   const isOpen =
     modalSnapshot.isOpen &&
@@ -75,6 +79,14 @@ const ModalFilter = () => {
 
       handleCloseModal();
     })();
+  };
+
+  const onClickDelete = async () => {
+    if (confirm("Hapus Data ini ?")) {
+      await deleteSwitchingPembangkit({ id: data.id });
+      handleCloseModal();
+      setReloadPage("switching-pembangkit");
+    }
   };
 
   const handleCloseModal = () => {
@@ -191,12 +203,29 @@ const ModalFilter = () => {
             </Grid>
           </DialogContent>
           <DialogActions className="dialog-actions-dense">
-            <Button variant="outlined" onClick={handleCloseModal}>
-              Batal
-            </Button>
-            <Button variant="contained" type="submit">
-              Terapkan
-            </Button>
+            <Stack
+              width="100%"
+              direction="row"
+              alignItems="center"
+              justifyContent="space-between"
+            >
+              <Box>
+                <Button variant="text" onClick={onClickDelete}>
+                  <IconButton>
+                    <TrashCanOutline />
+                  </IconButton>
+                  Hapus data
+                </Button>
+              </Box>
+              <Box display="flex" gap="10px">
+                <Button variant="outlined" onClick={handleCloseModal}>
+                  Batal
+                </Button>
+                <Button variant="contained" type="submit">
+                  Simpan
+                </Button>
+              </Box>
+            </Stack>
           </DialogActions>
         </StyledForm>
       </FormProvider>

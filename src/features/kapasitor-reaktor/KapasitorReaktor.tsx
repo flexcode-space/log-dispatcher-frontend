@@ -23,17 +23,18 @@ import {
   TableContainer,
 } from "src/components/table";
 import DownloadIcon from "src/assets/icons/download-green-icon.svg";
-import FilterIcon from "src/assets/icons/filter-icon.svg";
-import { modal, openModal } from "src/state/modal";
+import { openModal } from "src/state/modal";
 import { WrapperFilter } from "src/components/filter";
 import { selectData } from "src/state/kapasitorReaktor";
 import { AddLaporan } from "./add-laporan";
 import { kapasitorReaktorApi } from "src/api/kapasitorReaktorApi";
 import { KapasitorReaktorList } from "./types";
 import { ModalEdit } from "./modal";
+import { reloadPage } from "src/state/reloadPage";
 
 const KapasitorReaktor = () => {
-  const modalSnap = useSnapshot(modal);
+  const reloadPageSnap = useSnapshot(reloadPage);
+
   const [page, setPage] = useState<number>(0);
   const [rowsPerPage, setRowsPerPage] = useState<number>(10);
 
@@ -58,10 +59,10 @@ const KapasitorReaktor = () => {
   }, []);
 
   useEffect(() => {
-    if (modalSnap.isReloadData) {
+    if (reloadPageSnap.target === "kapasitor-reaktor") {
       getKapasitorReaktor();
     }
-  }, [modalSnap.isReloadData]);
+  }, [reloadPage.id]);
 
   return (
     <>

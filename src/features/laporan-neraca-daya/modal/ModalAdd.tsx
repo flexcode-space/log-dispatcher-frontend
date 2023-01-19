@@ -7,6 +7,8 @@ import {
   Grid,
   Typography,
   Box,
+  Stack,
+  IconButton,
 } from "@mui/material";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useSnapshot } from "valtio";
@@ -21,14 +23,18 @@ import { laporanNeracaDayaApi } from "src/api/laporan-neraca-daya";
 import dayjs from "dayjs";
 import { setReloadPage } from "src/state/reloadPage";
 import { useEffect } from "react";
-import { laporanNeracaDaya } from "../state/laporanNeracaDaya";
+import { laporanNeracaDaya, removeData } from "../state/laporanNeracaDaya";
+import { TrashCanOutline } from "mdi-material-ui";
 
 const ModalAdd = () => {
   const modalSnapshot = useSnapshot(modal);
   const { data } = useSnapshot(laporanNeracaDaya);
 
-  const { createLaporanNeracaDaya, updateLaporanNeracaDaya } =
-    laporanNeracaDayaApi();
+  const {
+    createLaporanNeracaDaya,
+    updateLaporanNeracaDaya,
+    deleteLaporanNeracaDaya,
+  } = laporanNeracaDayaApi();
 
   const isOpen =
     modalSnapshot.isOpen && modalSnapshot.target === "modal-neraca-daya";
@@ -58,13 +64,22 @@ const ModalAdd = () => {
         await createLaporanNeracaDaya(payload);
       }
       hanleCloseModal();
+      setReloadPage("laporan-neraca-daya");
     })();
+  };
+
+  const onClickDelete = async () => {
+    if (confirm("Hapus Data ini ?")) {
+      await deleteLaporanNeracaDaya({ id: data.id });
+      hanleCloseModal();
+      setReloadPage("laporan-neraca-daya");
+    }
   };
 
   const hanleCloseModal = () => {
     closeModal();
+    removeData();
     formMethods.reset({ ...initialValues });
-    setReloadPage("laporan-neraca-daya");
   };
 
   useEffect(() => {
@@ -152,12 +167,31 @@ const ModalAdd = () => {
             </Grid>
           </DialogContent>
           <DialogActions className="dialog-actions-dense">
-            <Button variant="outlined" onClick={hanleCloseModal}>
-              Batal
-            </Button>
-            <Button variant="contained" type="submit">
-              Tambah
-            </Button>
+            <Stack
+              width="100%"
+              direction="row"
+              alignItems="center"
+              justifyContent="space-between"
+            >
+              <Box>
+                {modalSnapshot.id && (
+                  <Button variant="text" onClick={onClickDelete}>
+                    <IconButton>
+                      <TrashCanOutline />
+                    </IconButton>
+                    Hapus data
+                  </Button>
+                )}
+              </Box>
+              <Box display="flex" gap="10px">
+                <Button variant="outlined" onClick={hanleCloseModal}>
+                  Batal
+                </Button>
+                <Button variant="contained" type="submit">
+                  Simpan
+                </Button>
+              </Box>
+            </Stack>
           </DialogActions>
         </StyledForm>
       </FormProvider>

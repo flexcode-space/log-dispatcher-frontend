@@ -1,12 +1,15 @@
 import { useEffect, useState } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import {
+  Box,
   Button,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
   Grid,
+  IconButton,
+  Stack,
   Typography,
 } from "@mui/material";
 import Plus from "mdi-material-ui/Plus";
@@ -25,6 +28,7 @@ import { switchingDiluarRencana, removeData } from "../state";
 import { PayloadSwitchingLuarRencana } from "../types";
 import { switchingLuarRencanaApi } from "src/api/switchingDiluarRencanaApi";
 import { setReloadPage } from "src/state/reloadPage";
+import { TrashCanOutline } from "mdi-material-ui";
 
 dayjs.extend(customParseFormat);
 
@@ -41,8 +45,11 @@ const ModalAdd = () => {
   const modalSnapshot = useSnapshot(modal);
   const { data } = useSnapshot(switchingDiluarRencana);
 
-  const { createSwitchingLuarRencana, updateSwitchingLuarRencana } =
-    switchingLuarRencanaApi();
+  const {
+    createSwitchingLuarRencana,
+    updateSwitchingLuarRencana,
+    deleteSwitchingLuarRencana,
+  } = switchingLuarRencanaApi();
 
   const formMethods = useForm({
     resolver: yupResolver(validationSchema),
@@ -89,8 +96,16 @@ const ModalAdd = () => {
         createSwitchingLuarRencana(payload);
       }
       onCloseModal();
-      setReloadPage("switching-luar-rencana")
+      setReloadPage("switching-luar-rencana");
     })();
+  };
+
+  const onClickDelete = async () => {
+    if (confirm("Hapus Data ini ?")) {
+      await deleteSwitchingLuarRencana({ id: data.id });
+      onCloseModal();
+      setReloadPage("switching-luar-rencana");
+    }
   };
 
   const onCloseModal = () => {
@@ -178,7 +193,7 @@ const ModalAdd = () => {
                 );
               })}
               <Grid item xs={12}>
-                {!modalSnapshot.id && (
+                {modalSnapshot.id && (
                   <Button
                     variant="outlined"
                     sx={{ height: "30px", mb: "10px" }}
@@ -197,12 +212,31 @@ const ModalAdd = () => {
             </Grid>
           </DialogContent>
           <DialogActions className="dialog-actions-dense">
-            <Button variant="outlined" onClick={onCloseModal}>
-              Batal
-            </Button>
-            <Button variant="contained" type="submit">
-              Simpan
-            </Button>
+            <Stack
+              width="100%"
+              direction="row"
+              alignItems="center"
+              justifyContent="space-between"
+            >
+              <Box>
+                {modalSnapshot.id && (
+                  <Button variant="text" onClick={onClickDelete}>
+                    <IconButton>
+                      <TrashCanOutline />
+                    </IconButton>
+                    Hapus data
+                  </Button>
+                )}
+              </Box>
+              <Box display="flex" gap="10px">
+                <Button variant="outlined" onClick={onCloseModal}>
+                  Batal
+                </Button>
+                <Button variant="contained" type="submit">
+                  Simpan
+                </Button>
+              </Box>
+            </Stack>
           </DialogActions>
         </StyledForm>
       </FormProvider>

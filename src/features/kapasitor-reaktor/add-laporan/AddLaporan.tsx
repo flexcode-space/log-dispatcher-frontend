@@ -13,7 +13,7 @@ import { useKapasitorReaktor } from "../useKapasitorReaktor";
 import { initialValues, validationSchema } from "../KapasitorReaktor.constant";
 import dayjs from "dayjs";
 import { kapasitorReaktorApi } from "src/api/kapasitorReaktorApi";
-import { reloadPage } from "src/state/modal";
+import { setReloadPage } from "src/state/reloadPage";
 
 const AddLaporan = () => {
   const formMethods = useForm({
@@ -39,7 +39,7 @@ const AddLaporan = () => {
       };
 
       await createKapasitorReaktor(payload);
-      reloadPage();
+      setReloadPage("kapasitor-reaktor");
     })();
   };
 

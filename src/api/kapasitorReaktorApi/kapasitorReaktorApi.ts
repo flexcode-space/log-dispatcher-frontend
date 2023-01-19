@@ -49,13 +49,26 @@ const kapasitorReaktorApi = () => {
     }
   }, [])
 
+  const deleteKapasitorReaktor = useCallback(async (payload: any) => {
+    setLoading(true)
+    try {
+      await Axios.delete(endpoint, { data: payload })
+      toast.success('Berhasil menghapus')
+    } catch (error) {
+      toast.error('Gagal menghapus')
+    } finally {
+      setLoading(false)
+    }
+  }, [])
+
 
   return {
     kapasitorReaktorList,
     loading,
     getKapasitorReaktorList,
     createKapasitorReaktor,
-    updateKapasitorReaktor
+    updateKapasitorReaktor,
+    deleteKapasitorReaktor
   }
 }
 

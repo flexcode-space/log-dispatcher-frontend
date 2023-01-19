@@ -1,12 +1,15 @@
 import { useEffect } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import {
+  Box,
   Button,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
   Grid,
+  IconButton,
+  Stack,
   Typography,
 } from "@mui/material";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -26,6 +29,7 @@ import { usePengaturanTegangan } from "../usePengaturanTegangan";
 import { pengaturanTegangan, removeData } from "../state/pengaturanTegangan";
 import { pengaturanTeganganApi } from "src/api/pengaturan-tegangan";
 import { setReloadPage } from "src/state/reloadPage";
+import { TrashCanOutline } from "mdi-material-ui";
 
 dayjs.extend(customParseFormat);
 
@@ -33,7 +37,8 @@ const ModalEdit = () => {
   const modalSnapshot = useSnapshot(modal);
   const { data } = useSnapshot(pengaturanTegangan);
 
-  const { updatePengaturanTegangan } = pengaturanTeganganApi();
+  const { updatePengaturanTegangan, deletePengaturanTegangan } =
+    pengaturanTeganganApi();
 
   const { garduIndukOptions, openCloseOptions, konfigurasiOptions } =
     usePengaturanTegangan();
@@ -63,8 +68,16 @@ const ModalEdit = () => {
 
       await updatePengaturanTegangan(payload);
       handleCloseModal();
-      setReloadPage("pengaturan-tegangan")
+      setReloadPage("pengaturan-tegangan");
     })();
+  };
+
+  const onClickDelete = async () => {
+    if (confirm("Hapus Data ini ?")) {
+      await deletePengaturanTegangan({ id: data.id });
+      handleCloseModal();
+      setReloadPage("pengaturan-tegangan");
+    }
   };
 
   const handleCloseModal = () => {
@@ -147,12 +160,29 @@ const ModalEdit = () => {
             </Grid>
           </DialogContent>
           <DialogActions className="dialog-actions-dense">
-            <Button variant="outlined" onClick={handleCloseModal}>
-              Batal
-            </Button>
-            <Button variant="contained" type="submit">
-              Simpan
-            </Button>
+            <Stack
+              width="100%"
+              direction="row"
+              alignItems="center"
+              justifyContent="space-between"
+            >
+              <Box>
+                <Button variant="text" onClick={onClickDelete}>
+                  <IconButton>
+                    <TrashCanOutline />
+                  </IconButton>
+                  Hapus data
+                </Button>
+              </Box>
+              <Box display="flex" gap="10px">
+                <Button variant="outlined" onClick={handleCloseModal}>
+                  Batal
+                </Button>
+                <Button variant="contained" type="submit">
+                  Simpan
+                </Button>
+              </Box>
+            </Stack>
           </DialogActions>
         </StyledForm>
       </FormProvider>

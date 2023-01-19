@@ -61,6 +61,18 @@ const switchingPembangkitApi = () => {
     }
   }, [])
 
+  const deleteSwitchingPembangkit = useCallback(async (payload: any) => {
+    setLoading(true)
+    try {
+      await Axios.delete(endpoint, { data: payload })
+      toast.success('Berhasil menghapus')
+    } catch (error) {
+      toast.error('Gagal menghapus')
+    } finally {
+      setLoading(false)
+    }
+  }, [])
+
 
   return {
     personList,
@@ -69,7 +81,8 @@ const switchingPembangkitApi = () => {
     getSwitchingPembangkitList,
     getPersonList,
     createSwitchingPembangkit,
-    updateSwitchingPembangkit
+    updateSwitchingPembangkit,
+    deleteSwitchingPembangkit
   }
 }
 

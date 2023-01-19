@@ -78,6 +78,19 @@ const pengaturanTeganganApi = () => {
     }
   }, [])
 
+  const deletePengaturanTegangan = useCallback(async (payload: any) => {
+    setLoading(true)
+
+    try {
+      await Axios.delete(endpoint, { data: payload })
+      toast.success('Berhasil menghapus Data')
+    } catch (error) {
+      toast.error('Gagal menghapus Data')
+    } finally {
+      setLoading(false)
+    }
+  }, [])
+
   const updateKonfigurasi = useCallback(async (payload: any) => {
     setLoading(true)
 
@@ -115,7 +128,8 @@ const pengaturanTeganganApi = () => {
     updatePengaturanTegangan,
     createKonfigurasi,
     updateKonfigurasi,
-    deleteKonfigurasi
+    deleteKonfigurasi,
+    deletePengaturanTegangan
   }
 }
 
