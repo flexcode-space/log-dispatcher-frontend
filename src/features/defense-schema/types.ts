@@ -1,4 +1,9 @@
 export interface DefenseSchemaList {
+  sub_sistem: string
+  data: Data[]
+}
+
+export interface Data {
   id: string;
   sub_sistem: {
     id: string;
