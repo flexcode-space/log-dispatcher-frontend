@@ -21,7 +21,7 @@ export const defaultColumns = [
           noWrap
           sx={{ textTransform: "capitalize" }}
         >
-          {tahap.value}
+          {tahap?.value}
         </Typography>
       );
     },
@@ -45,7 +45,7 @@ export const defaultColumns = [
           noWrap
           sx={{ textTransform: "capitalize" }}
         >
-          {gardu_induk.nama}
+          {gardu_induk?.nama}
         </Typography>
       );
     },

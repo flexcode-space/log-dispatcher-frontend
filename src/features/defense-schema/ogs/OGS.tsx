@@ -30,13 +30,18 @@ import { defenseApi } from "src/api/defense";
 import { DefenseSchemaList } from "../types";
 import { PencilOutline } from "mdi-material-ui";
 import { selectData } from "../state/defenseSchema";
+import { useDebounce } from "src/hooks/useDebounce";
+import FallbackSpinner from "src/@core/components/spinner";
 
 const OgsComponent = () => {
   const reloadPageSnap = useSnapshot(reloadPage);
-  const { getDefenseList, defenseList } = defenseApi();
+  const { getDefenseList, defenseList, loading, countData } = defenseApi();
 
+  const [search, setSearch] = useState<string>("");
   const [page, setPage] = useState<number>(0);
-  const [rowsPerPage, setRowsPerPage] = useState<number>(10);
+  const [rowsPerPage, setRowsPerPage] = useState<number>(20);
+
+  const debouncedSearch = useDebounce(search, 500);
 
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
@@ -47,13 +52,21 @@ const OgsComponent = () => {
     setPage(0);
   };
 
+  const getOGSList = () => {
+    if (debouncedSearch) {
+      getDefenseList("ogs", { search, page: page + 1, limit: rowsPerPage });
+    } else {
+      getDefenseList("ogs", { page: page + 1, limit: rowsPerPage });
+    }
+  };
+
   useEffect(() => {
-    getDefenseList("ogs");
-  }, []);
+    getOGSList();
+  }, [debouncedSearch, page, rowsPerPage]);
 
   useEffect(() => {
     if (reloadPageSnap.target === "ogs") {
-      getDefenseList("ogs");
+      getOGSList();
     }
   }, [reloadPageSnap]);
 
@@ -67,10 +80,10 @@ const OgsComponent = () => {
               <WrapperFilter sx={{ alignItems: "baseline" }}>
                 <TextField
                   size="small"
-                  value=""
+                  value={search}
                   sx={{ mr: 6, mb: 2 }}
                   placeholder="Cari"
-                  // onChange={(e) => setSearch(e.target.value)}
+                  onChange={(e) => setSearch(e.target.value)}
                 />
 
                 <div style={{ display: "flex", gap: "10px" }}>
@@ -103,139 +116,164 @@ const OgsComponent = () => {
                 </div>
               </WrapperFilter>
               <TableContainer>
-                <Table>
-                  <TableHead sx={{ height: "30px", background: "#F5F5F7" }}>
-                    <TableRow>
-                      <TableCell size="small" rowSpan={2}>
-                        Lokasi OLS
-                      </TableCell>
-                      <TableCell size="small" rowSpan={2}>
-                        Tahap
-                      </TableCell>
-                      <TableCell size="small" align="center" colSpan={3}>
-                        Setting
-                      </TableCell>
-                      <TableCell size="small" rowSpan={2}>
-                        Target Trip
-                      </TableCell>
-                      <TableCell size="small" rowSpan={2}>
-                        Aktif
-                      </TableCell>
-                      <TableCell size="small" align="center" rowSpan={2}>
-                        Keterangan
-                      </TableCell>
-                      <TableCell size="small" align="center" colSpan={2}>
-                        Realisasi jam 19:00
-                      </TableCell>
-                      <TableCell size="small" align="center" colSpan={2}>
-                        Beban Target Trip
-                      </TableCell>
-                      <TableCell size="small" align="center" colSpan={2}>
-                        Beban Stlh Ols Kerja
-                      </TableCell>
-                      <TableCell size="small" align="center" rowSpan={2}>
-                        Status
-                      </TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell>AMP</TableCell>
-                      <TableCell>Detik</TableCell>
-                      <TableCell>MW</TableCell>
-                      <TableCell>I (A)</TableCell>
-                      <TableCell>% ols</TableCell>
-                      <TableCell>I (A)</TableCell>
-                      <TableCell>%</TableCell>
-                      <TableCell>I (A)</TableCell>
-                      <TableCell>%</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {defenseList.length > 0 &&
-                      defenseList.map((list: DefenseSchemaList) => (
-                        <>
-                          <TableRow>
-                            <TableCell
-                              sx={{
-                                background: "#666CFF",
-                                color: "#FFFFFF",
-                                fontWeight: 500,
-                                fontSize: "20px",
-                              }}
-                              size="small"
-                              colSpan={20}
-                            >
-                              {list.sub_sistem.nama}
-                            </TableCell>
-                          </TableRow>
-                          <TableRow key={list.id}>
-                            <TableCell size="small">
-                              {list.gardu_induk.nama}
-                            </TableCell>
-                            <TableCell size="small">
-                              {list.tahap.value}
-                            </TableCell>
-                            <TableCell
-                              size="small"
-                              sx={{ background: "#d6ebf0" }}
-                            >
-                              {list.amp.value}
-                            </TableCell>
-                            <TableCell
-                              size="small"
-                              sx={{ background: "#d6ebf0" }}
-                            >
-                              {list.detik}
-                            </TableCell>
-                            <TableCell
-                              size="small"
-                              sx={{ background: "#d6ebf0" }}
-                            >
-                              {list.mw}
-                            </TableCell>
-                            <TableCell size="small">
-                              {list.peralatan_target.nama}
-                            </TableCell>
-                            <TableCell size="small">
-                              {list.keterangan}
-                            </TableCell>
-                            <TableCell size="small">{list.real_ia}</TableCell>
-                            <TableCell size="small">{list.real_ols}</TableCell>
-                            <TableCell size="small">{list.target_ia}</TableCell>
-                            <TableCell size="small">
-                              {list.target_ols}
-                            </TableCell>
-                            <TableCell size="small">{list.set_ia}</TableCell>
-                            <TableCell size="small">{list.set_ols}</TableCell>
-                            <TableCell size="small">
-                              <Chip
-                                label={list.status ? "ON" : "OFF"}
-                                color={list.status ? "success" : "error"}
-                              />
-                            </TableCell>
-                            <TableCell size="small">
-                              <Box
-                                sx={{ display: "flex", alignItems: "center" }}
+                {loading ? (
+                  <FallbackSpinner />
+                ) : (
+                  <Table>
+                    <TableHead sx={{ height: "30px", background: "#F5F5F7" }}>
+                      <TableRow>
+                        <TableCell size="small" rowSpan={2}>
+                          Lokasi OLS
+                        </TableCell>
+                        <TableCell size="small" rowSpan={2}>
+                          Tahap
+                        </TableCell>
+                        <TableCell size="small" align="center" colSpan={3}>
+                          Setting
+                        </TableCell>
+                        <TableCell size="small" rowSpan={2}>
+                          Target Trip
+                        </TableCell>
+                        <TableCell size="small" rowSpan={2}>
+                          Aktif
+                        </TableCell>
+                        <TableCell size="small" align="center" rowSpan={2}>
+                          Keterangan
+                        </TableCell>
+                        <TableCell size="small" align="center" colSpan={2}>
+                          Realisasi jam 19:00
+                        </TableCell>
+                        <TableCell size="small" align="center" colSpan={2}>
+                          Beban Target Trip
+                        </TableCell>
+                        <TableCell size="small" align="center" colSpan={2}>
+                          Beban Stlh Ols Kerja
+                        </TableCell>
+                        <TableCell size="small" align="center" rowSpan={2}>
+                          Status
+                        </TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell>AMP</TableCell>
+                        <TableCell>Detik</TableCell>
+                        <TableCell>MW</TableCell>
+                        <TableCell>I (A)</TableCell>
+                        <TableCell>% ols</TableCell>
+                        <TableCell>I (A)</TableCell>
+                        <TableCell>%</TableCell>
+                        <TableCell>I (A)</TableCell>
+                        <TableCell>%</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {defenseList.length > 0 &&
+                        defenseList.map((list: DefenseSchemaList) => (
+                          <>
+                            <TableRow>
+                              <TableCell
+                                sx={{
+                                  background: "#666CFF",
+                                  color: "#FFFFFF",
+                                  fontWeight: 500,
+                                  fontSize: "20px",
+                                }}
+                                size="small"
+                                colSpan={20}
                               >
-                                <IconButton
-                                  onClick={() => {
-                                    openModal("modal-add-ogs", list.id);
-                                    selectData(list);
-                                  }}
-                                >
-                                  <PencilOutline />
-                                </IconButton>
-                              </Box>
-                            </TableCell>
-                          </TableRow>
-                        </>
-                      ))}
-                  </TableBody>
-                </Table>
+                                {list.sub_sistem}
+                              </TableCell>
+                            </TableRow>
+                            {list?.data.map((data) => {
+                              return (
+                                <>
+                                  <TableRow key={data.id}>
+                                    <TableCell size="small">
+                                      {data.gardu_induk.nama}
+                                    </TableCell>
+                                    <TableCell size="small">
+                                      {data.tahap.value}
+                                    </TableCell>
+                                    <TableCell
+                                      size="small"
+                                      sx={{ background: "#d6ebf0" }}
+                                    >
+                                      {data.amp.value}
+                                    </TableCell>
+                                    <TableCell
+                                      size="small"
+                                      sx={{ background: "#d6ebf0" }}
+                                    >
+                                      {data.detik}
+                                    </TableCell>
+                                    <TableCell
+                                      size="small"
+                                      sx={{ background: "#d6ebf0" }}
+                                    >
+                                      {data.mw}
+                                    </TableCell>
+                                    <TableCell size="small">
+                                      {data.peralatan_target.nama}
+                                    </TableCell>
+                                    <TableCell size="small">
+                                      {data.keterangan}
+                                    </TableCell>
+                                    <TableCell size="small">
+                                      {data.real_ia}
+                                    </TableCell>
+                                    <TableCell size="small">
+                                      {data.real_ols}
+                                    </TableCell>
+                                    <TableCell size="small">
+                                      {data.target_ia}
+                                    </TableCell>
+                                    <TableCell size="small">
+                                      {data.target_ols}
+                                    </TableCell>
+                                    <TableCell size="small">
+                                      {data.set_ia}
+                                    </TableCell>
+                                    <TableCell size="small">
+                                      {data.set_ols}
+                                    </TableCell>
+                                    <TableCell size="small">
+                                      <Chip
+                                        label={data.status ? "ON" : "OFF"}
+                                        color={
+                                          data.status ? "success" : "error"
+                                        }
+                                      />
+                                    </TableCell>
+                                    <TableCell size="small">
+                                      <Box
+                                        sx={{
+                                          display: "flex",
+                                          alignItems: "center",
+                                        }}
+                                      >
+                                        <IconButton
+                                          onClick={() => {
+                                            openModal("modal-add-ogs", data.id);
+                                            selectData(data);
+                                          }}
+                                        >
+                                          <PencilOutline />
+                                        </IconButton>
+                                      </Box>
+                                    </TableCell>
+                                  </TableRow>
+                                </>
+                              );
+                            })}
+                          </>
+                        ))}
+                    </TableBody>
+                  </Table>
+                )}
               </TableContainer>
               <TablePagination
-                rowsPerPageOptions={[10, 25, 100]}
+                rowsPerPageOptions={[10, 20, 25, 100]}
                 component="div"
-                count={12}
+                count={countData}
                 rowsPerPage={rowsPerPage}
                 page={page}
                 onPageChange={handleChangePage}

@@ -1,13 +1,13 @@
 import { proxy } from "valtio";
-import { DefenseSchemaList } from "../types";
+import { Data } from "../types";
 
 const initialValues = {
-  data: {} as DefenseSchemaList,
+  data: {} as Data,
 };
 
-export const defenseSchema = proxy<{ data: DefenseSchemaList }>(initialValues);
+export const defenseSchema = proxy<{ data: Data }>(initialValues);
 
-export const selectData = (data: DefenseSchemaList): void => {
+export const selectData = (data: Data): void => {
   defenseSchema.data = data;
 };
 

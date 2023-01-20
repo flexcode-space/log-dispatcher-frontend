@@ -1,4 +1,4 @@
-import { useState, ChangeEvent, useEffect } from "react";
+import { useState, useEffect } from "react";
 import {
   Card,
   CardContent,
@@ -27,27 +27,21 @@ import { Pencil } from "mdi-material-ui";
 import { CellType } from "src/types";
 import { selectData } from "./state/targetIsland";
 import { TargetIslandList } from "./types";
+import { useDebounce } from "src/hooks/useDebounce";
 
 const TargetIsland = () => {
   const reloadPageSnap = useSnapshot(reloadPage);
 
   const [date, setDate] = useState<Dayjs | null>(null);
-  const [limit, setLimit] = useState<number>(10);
+  const [search, setSearch] = useState<string>("");
+  const [limit, setLimit] = useState<number>(20);
   const [page, setPage] = useState<number>(1);
-  const [rowsPerPage, setRowsPerPage] = useState<number>(10);
+
+  const debouncedSearch = useDebounce(search, 500);
 
   const filterDate = date ? dayjs(date).format("YYYY-MM-DD") : "";
 
-  const { getDefenseList, defenseList } = defenseApi();
-
-  const handleChangePage = (event: unknown, newPage: number) => {
-    setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = (event: ChangeEvent<HTMLInputElement>) => {
-    setRowsPerPage(+event.target.value);
-    setPage(0);
-  };
+  const { getDefenseList, defenseList, loading, countData } = defenseApi();
 
   const columns = [
     ...defaultColumns,
@@ -72,15 +66,31 @@ const TargetIsland = () => {
     },
   ];
 
+  // @ts-ignore
+  const rowData = defenseList.map((value, index) => ({ id: index, ...value }));
+
+  const getTargetIslandList = () => {
+    if (debouncedSearch) {
+      getDefenseList("target-island", {
+        search,
+        page,
+        limit,
+        date: filterDate,
+      });
+    } else {
+      getDefenseList("target-island", { page, limit, date: filterDate });
+    }
+  };
+
   useEffect(() => {
-    getDefenseList("target-island", { date: filterDate });
-  }, [date]);
+    getTargetIslandList();
+  }, [date, page, limit, debouncedSearch]);
 
   useEffect(() => {
     if (reloadPage.target === "target-island") {
-      getDefenseList("target-island", { date: filterDate });
+      getTargetIslandList();
     }
-  }, [reloadPageSnap.id, date]);
+  }, [reloadPageSnap.id]);
 
   return (
     <>
@@ -92,10 +102,10 @@ const TargetIsland = () => {
               <WrapperFilter sx={{ alignItems: "baseline" }}>
                 <TextField
                   size="small"
-                  value=""
+                  value={search}
                   sx={{ mr: 6, mb: 2 }}
                   placeholder="Cari"
-                  // onChange={(e) => setSearch(e.target.value)}
+                  onChange={(e) => setSearch(e.target.value)}
                 />
 
                 <div style={{ display: "flex", gap: "10px" }}>
@@ -137,10 +147,10 @@ const TargetIsland = () => {
                 autoHeight
                 rowsPerPageOptions={[10, 20, 25, 50]}
                 pageSize={limit}
-                // loading={loading}
-                rows={defenseList}
+                loading={loading}
+                rows={rowData}
                 columns={columns}
-                rowCount={10}
+                rowCount={countData}
                 onPageSizeChange={(newPageSize) => setLimit(newPageSize)}
                 onPageChange={(currentPage) => setPage(currentPage + 1)}
                 paginationMode="server"

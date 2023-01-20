@@ -3,6 +3,8 @@ import { toast } from 'src/components/toast'
 import { Axios } from '../axios'
 
 export type Params = {
+  limit?: number
+  page?: number
   search?: string;
   date?: string
 }
@@ -14,13 +16,15 @@ const defenseApi = () => {
   const [tahapList, setTahapList] = useState<[]>([])
   const [ampList, setAmpList] = useState<[]>([])
   const [loading, setLoading] = useState<boolean>(false);
+  const [countData, setCountData] = useState<number>(0)
 
   const getDefenseList = useCallback(async (path: string, params: Params = {}) => {
     setLoading(true)
 
     try {
-      const { data: { data } } = await Axios.get(`${endpoint}/${path}`, { params })
+      const { data: { data, total } } = await Axios.get(`${endpoint}/${path}`, { params })
       setDefenseList(data || [])
+      setCountData(total || 0)
     } finally {
       setLoading(false)
     }
@@ -97,7 +101,8 @@ const defenseApi = () => {
     updateDefense,
     getTahapList,
     getAmpList,
-    deleteDefense
+    deleteDefense,
+    countData
   }
 }
 
