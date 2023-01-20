@@ -99,13 +99,19 @@ const Rekonfigurasi = () => {
                     {rekonfigurasiList.length > 0 &&
                       rekonfigurasiList.map((list: RekonfigurasiList) => (
                         <TableRow hover key={list.id}>
-                          <TableCell>{list.gi}</TableCell>
-                          <TableCell>{list.waktu}</TableCell>
-                          <TableCell>{list.sub_sistem_awal.nama}</TableCell>
-                          <TableCell>{list.sub_sistem_akhir.nama}</TableCell>
-                          <TableCell>{list.alasan_rekonfigurasi}</TableCell>
-                          <TableCell>{list.keterangan}</TableCell>
-                          <TableCell>
+                          <TableCell size="small">{list.gi}</TableCell>
+                          <TableCell size="small">{list.waktu}</TableCell>
+                          <TableCell size="small">
+                            {list.sub_sistem_awal.nama}
+                          </TableCell>
+                          <TableCell size="small">
+                            {list.sub_sistem_akhir.nama}
+                          </TableCell>
+                          <TableCell size="small">
+                            {list.alasan_rekonfigurasi}
+                          </TableCell>
+                          <TableCell size="small">{list.keterangan}</TableCell>
+                          <TableCell size="small">
                             <IconButton
                               onClick={() => {
                                 openModal("modal-rekonfigurasi", list.id);

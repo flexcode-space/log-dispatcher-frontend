@@ -18,6 +18,7 @@ const bebanApi = () => {
   const [teganganBusbarList, setTeganganBusbarList] = useState<[]>([]);
   const [totalData, setTotalData] = useState<Total>({} as Total);
   const [loading, setLoading] = useState<boolean>(false);
+  const [countData, setCountData] = useState<number>(0)
 
   const getBebanList = useCallback(async (params: ParamsBebanList = {}) => {
     setLoading(true);
@@ -41,7 +42,7 @@ const bebanApi = () => {
         data: { data, total },
       } = await Axios.get(`${endpoint}/ibt`, { params });
       setbebanIBTList(data || []);
-      // setTotalData(total);
+      setCountData(total || 0)
     } finally {
       setLoading(false);
     }
@@ -56,7 +57,7 @@ const bebanApi = () => {
           data: { data, total },
         } = await Axios.get(`${endpoint}/trafo`, { params });
         setBebanTrafoList(data || []);
-        // setTotalData(total);
+        setCountData(total || 0)
       } finally {
         setLoading(false);
       }
@@ -73,7 +74,7 @@ const bebanApi = () => {
           data: { data, total },
         } = await Axios.get(`${endpoint}/penghantar`, { params });
         setBebanPenghantarList(data || []);
-        // setTotalData(total);
+        setCountData(total || 0)
       } finally {
         setLoading(false);
       }
@@ -90,7 +91,7 @@ const bebanApi = () => {
           data: { data, total },
         } = await Axios.get(`${endpoint}/busbar`, { params });
         setTeganganBusbarList(data || []);
-        // setTotalData(total);
+        setCountData(total)
       } finally {
         setLoading(false);
       }
@@ -106,6 +107,7 @@ const bebanApi = () => {
     teganganBusbarList,
     loading,
     totalData,
+    countData,
     getBebanList,
     getBebanIBTList,
     getBebanTrafoList,

@@ -31,14 +31,19 @@ import { kapasitorReaktorApi } from "src/api/kapasitorReaktorApi";
 import { KapasitorReaktorList } from "./types";
 import { ModalEdit } from "./modal";
 import { reloadPage } from "src/state/reloadPage";
+import { useDebounce } from "src/hooks/useDebounce";
+import FallbackSpinner from "src/@core/components/spinner";
 
 const KapasitorReaktor = () => {
   const reloadPageSnap = useSnapshot(reloadPage);
 
+  const [search, setSearch] = useState<string>("");
   const [page, setPage] = useState<number>(0);
-  const [rowsPerPage, setRowsPerPage] = useState<number>(10);
+  const [rowsPerPage, setRowsPerPage] = useState<number>(20);
 
-  const { getKapasitorReaktorList, kapasitorReaktorList } =
+  const debouncedSearch = useDebounce(search, 500);
+
+  const { getKapasitorReaktorList, kapasitorReaktorList, loading, countData } =
     kapasitorReaktorApi();
 
   const handleChangePage = (event: unknown, newPage: number) => {
@@ -51,12 +56,16 @@ const KapasitorReaktor = () => {
   };
 
   const getKapasitorReaktor = () => {
-    getKapasitorReaktorList();
+    if (debouncedSearch) {
+      getKapasitorReaktorList({ search, page: page + 1, limit: rowsPerPage });
+    } else {
+      getKapasitorReaktorList({ page: page + 1, limit: rowsPerPage });
+    }
   };
 
   useEffect(() => {
     getKapasitorReaktor();
-  }, []);
+  }, [debouncedSearch, page, rowsPerPage]);
 
   useEffect(() => {
     if (reloadPageSnap.target === "kapasitor-reaktor") {
@@ -82,10 +91,10 @@ const KapasitorReaktor = () => {
               <WrapperFilter sx={{ alignItems: "baseline" }}>
                 <TextField
                   size="small"
-                  value=""
+                  value={search}
                   sx={{ mr: 6, mb: 2 }}
                   placeholder="Cari"
-                  // onChange={(e) => setSearch(e.target.value)}
+                  onChange={(e) => setSearch(e.target.value)}
                 />
 
                 <div style={{ display: "flex", gap: "10px" }}>
@@ -104,77 +113,85 @@ const KapasitorReaktor = () => {
                 </div>
               </WrapperFilter>
               <TableContainer>
-                <Table>
-                  <TableHead>
-                    <TableRow>
-                      <TableCellHead size="small" rowSpan={2}>
-                        No
-                      </TableCellHead>
-                      <TableCellHead size="small" rowSpan={2}>
-                        Lokasi
-                      </TableCellHead>
-                      <TableCellHead size="small" align="center" colSpan={2}>
-                        Jam
-                      </TableCellHead>
-                      <TableCellHead size="small" align="center" colSpan={2}>
-                        Tegangan
-                      </TableCellHead>
-                      <TableCellHead size="small" rowSpan={2}>
-                        Keterangan
-                      </TableCellHead>
-                      <TableCellHead size="small" align="center" rowSpan={2}>
-                        Aksi
-                      </TableCellHead>
-                    </TableRow>
-                    <TableRow>
-                      <TableCellHead>Buka</TableCellHead>
-                      <TableCellHead>Tutup</TableCellHead>
-                      <TableCellHead>Sebelum</TableCellHead>
-                      <TableCellHead>Sesudah</TableCellHead>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {kapasitorReaktorList.map(
-                      (list: KapasitorReaktorList, index) => (
-                        <TableRow key={list.id}>
-                          <TableCell size="small">{index + 1}</TableCell>
-                          <TableCell size="small">
-                            {list.gardu_induk.nama}
-                          </TableCell>
-                          <TableCell size="small">{list.jam_buka}</TableCell>
-                          <TableCell size="small">{list.jam_tutup}</TableCell>
-                          <TableCell size="small">
-                            {list.tegangan_sebelum}
-                          </TableCell>
-                          <TableCell size="small">
-                            {list.tegangan_sesudah}
-                          </TableCell>
-                          <TableCell size="small">{list.keterangan}</TableCell>
-                          <TableCell size="small">
-                            <Box sx={{ display: "flex", alignItems: "center" }}>
-                              <IconButton
-                                onClick={() => {
-                                  openModal(
-                                    "modal-edit-kapasitor-reaktor",
-                                    list.id
-                                  );
-                                  selectData(list as KapasitorReaktorList);
-                                }}
+                {loading ? (
+                  <FallbackSpinner />
+                ) : (
+                  <Table>
+                    <TableHead>
+                      <TableRow>
+                        <TableCellHead size="small" rowSpan={2}>
+                          No
+                        </TableCellHead>
+                        <TableCellHead size="small" rowSpan={2}>
+                          Lokasi
+                        </TableCellHead>
+                        <TableCellHead size="small" align="center" colSpan={2}>
+                          Jam
+                        </TableCellHead>
+                        <TableCellHead size="small" align="center" colSpan={2}>
+                          Tegangan
+                        </TableCellHead>
+                        <TableCellHead size="small" rowSpan={2}>
+                          Keterangan
+                        </TableCellHead>
+                        <TableCellHead size="small" align="center" rowSpan={2}>
+                          Aksi
+                        </TableCellHead>
+                      </TableRow>
+                      <TableRow>
+                        <TableCellHead>Buka</TableCellHead>
+                        <TableCellHead>Tutup</TableCellHead>
+                        <TableCellHead>Sebelum</TableCellHead>
+                        <TableCellHead>Sesudah</TableCellHead>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {kapasitorReaktorList.map(
+                        (list: KapasitorReaktorList, index) => (
+                          <TableRow hover key={list.id}>
+                            <TableCell size="small">{index + 1}</TableCell>
+                            <TableCell size="small">
+                              {list.gardu_induk.nama}
+                            </TableCell>
+                            <TableCell size="small">{list.jam_buka}</TableCell>
+                            <TableCell size="small">{list.jam_tutup}</TableCell>
+                            <TableCell size="small">
+                              {list.tegangan_sebelum}
+                            </TableCell>
+                            <TableCell size="small">
+                              {list.tegangan_sesudah}
+                            </TableCell>
+                            <TableCell size="small">
+                              {list.keterangan}
+                            </TableCell>
+                            <TableCell size="small">
+                              <Box
+                                sx={{ display: "flex", alignItems: "center" }}
                               >
-                                <PencilOutline />
-                              </IconButton>
-                            </Box>
-                          </TableCell>
-                        </TableRow>
-                      )
-                    )}
-                  </TableBody>
-                </Table>
+                                <IconButton
+                                  onClick={() => {
+                                    openModal(
+                                      "modal-edit-kapasitor-reaktor",
+                                      list.id
+                                    );
+                                    selectData(list as KapasitorReaktorList);
+                                  }}
+                                >
+                                  <PencilOutline />
+                                </IconButton>
+                              </Box>
+                            </TableCell>
+                          </TableRow>
+                        )
+                      )}
+                    </TableBody>
+                  </Table>
+                )}
               </TableContainer>
               <TablePagination
-                rowsPerPageOptions={[10, 25, 100]}
+                rowsPerPageOptions={[10, 20, 25, 100]}
                 component="div"
-                count={12}
+                count={countData}
                 rowsPerPage={rowsPerPage}
                 page={page}
                 onPageChange={handleChangePage}

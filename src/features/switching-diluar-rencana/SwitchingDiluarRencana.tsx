@@ -23,7 +23,7 @@ import {
 } from "src/components/table";
 import { switchingLuarRencanaApi } from "src/api/switchingDiluarRencanaApi";
 import DownloadIcon from "src/assets/icons/download-green-icon.svg";
-import FilterIcon from "src/assets/icons/filter-icon.svg";
+// import FilterIcon from "src/assets/icons/filter-icon.svg";
 import { WrapperFilter } from "src/components/filter";
 import { ModalAddSwitching } from "./modal";
 import { SwitchingLuarRencanaList } from "./types";
@@ -31,15 +31,24 @@ import { openModal } from "src/state/modal";
 import { selectData } from "./state";
 import { useSnapshot } from "valtio";
 import { reloadPage } from "src/state/reloadPage";
+import FallbackSpinner from "src/@core/components/spinner";
+import { useDebounce } from "src/hooks/useDebounce";
 
 const SwitchingDiluarRencana = () => {
   const reloadPageSnap = useSnapshot(reloadPage);
 
-  const { getSwitchingLuarRencanaList, switchingLuarRencana } =
-    switchingLuarRencanaApi();
+  const {
+    getSwitchingLuarRencanaList,
+    switchingLuarRencana,
+    loading,
+    countData,
+  } = switchingLuarRencanaApi();
 
+  const [search, setSearch] = useState<string>("");
   const [page, setPage] = useState<number>(0);
-  const [rowsPerPage, setRowsPerPage] = useState<number>(10);
+  const [rowsPerPage, setRowsPerPage] = useState<number>(20);
+
+  const debouncedSearch = useDebounce(search, 500);
 
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
@@ -50,9 +59,21 @@ const SwitchingDiluarRencana = () => {
     setPage(0);
   };
 
+  const getSwitchingLuarRencana = () => {
+    if (debouncedSearch) {
+      getSwitchingLuarRencanaList({
+        search,
+        page: page + 1,
+        limit: rowsPerPage,
+      });
+    } else {
+      getSwitchingLuarRencanaList({ page: page + 1, limit: rowsPerPage });
+    }
+  };
+
   useEffect(() => {
-    getSwitchingLuarRencanaList();
-  }, []);
+    getSwitchingLuarRencana();
+  }, [debouncedSearch, page, rowsPerPage]);
 
   useEffect(() => {
     if (reloadPageSnap.target === "switching-luar-rencana") {
@@ -80,7 +101,7 @@ const SwitchingDiluarRencana = () => {
                   value=""
                   sx={{ mr: 6, mb: 2 }}
                   placeholder="Cari"
-                  // onChange={(e) => setSearch(e.target.value)}
+                  onChange={(e) => setSearch(e.target.value)}
                 />
 
                 <div style={{ display: "flex", gap: "10px" }}>
@@ -107,70 +128,78 @@ const SwitchingDiluarRencana = () => {
                 </div>
               </WrapperFilter>
               <TableContainer>
-                <Table>
-                  <TableHead>
-                    <TableRow>
-                      <TableCellHead size="small" rowSpan={2}>
-                        No
-                      </TableCellHead>
-                      <TableCellHead size="small" rowSpan={2}>
-                        Lokasi
-                      </TableCellHead>
-                      <TableCellHead size="small" rowSpan={2}>
-                        Jurusan
-                      </TableCellHead>
-                      <TableCellHead size="small" align="center" colSpan={2}>
-                        Jam
-                      </TableCellHead>
-                      <TableCellHead rowSpan={2}>Keterangan</TableCellHead>
-                      <TableCellHead align="center" rowSpan={2}>
-                        Aksi
-                      </TableCellHead>
-                    </TableRow>
-                    <TableRow>
-                      <TableCellHead>Buka</TableCellHead>
-                      <TableCellHead>Tutup</TableCellHead>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {switchingLuarRencana.map(
-                      (list: SwitchingLuarRencanaList, index) => (
-                        <TableRow key={list.id}>
-                          <TableCell size="small">{index + 1}</TableCell>
-                          <TableCell size="small">
-                            {list.gardu_induk.nama}
-                          </TableCell>
-                          <TableCell size="small">
-                            {list.penghantar.nama}
-                          </TableCell>
-                          <TableCell size="small">{list.jam_buka}</TableCell>
-                          <TableCell size="small">{list.jam_tutup}</TableCell>
-                          <TableCell size="small">{list.keterangan}</TableCell>
-                          <TableCell size="small">
-                            <Box sx={{ display: "flex", alignItems: "center" }}>
-                              <IconButton
-                                onClick={() => {
-                                  openModal(
-                                    "modal-switching-luar-rencana",
-                                    list.id
-                                  );
-                                  selectData(list);
-                                }}
+                {loading ? (
+                  <FallbackSpinner />
+                ) : (
+                  <Table>
+                    <TableHead>
+                      <TableRow>
+                        <TableCellHead size="small" rowSpan={2}>
+                          No
+                        </TableCellHead>
+                        <TableCellHead size="small" rowSpan={2}>
+                          Lokasi
+                        </TableCellHead>
+                        <TableCellHead size="small" rowSpan={2}>
+                          Jurusan
+                        </TableCellHead>
+                        <TableCellHead size="small" align="center" colSpan={2}>
+                          Jam
+                        </TableCellHead>
+                        <TableCellHead rowSpan={2}>Keterangan</TableCellHead>
+                        <TableCellHead align="center" rowSpan={2}>
+                          Aksi
+                        </TableCellHead>
+                      </TableRow>
+                      <TableRow>
+                        <TableCellHead>Buka</TableCellHead>
+                        <TableCellHead>Tutup</TableCellHead>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {switchingLuarRencana.map(
+                        (list: SwitchingLuarRencanaList, index) => (
+                          <TableRow hover key={list.id}>
+                            <TableCell size="small">{index + 1}</TableCell>
+                            <TableCell size="small">
+                              {list.gardu_induk.nama}
+                            </TableCell>
+                            <TableCell size="small">
+                              {list.penghantar.nama}
+                            </TableCell>
+                            <TableCell size="small">{list.jam_buka}</TableCell>
+                            <TableCell size="small">{list.jam_tutup}</TableCell>
+                            <TableCell size="small">
+                              {list.keterangan}
+                            </TableCell>
+                            <TableCell size="small">
+                              <Box
+                                sx={{ display: "flex", alignItems: "center" }}
                               >
-                                <PencilOutline />
-                              </IconButton>
-                            </Box>
-                          </TableCell>
-                        </TableRow>
-                      )
-                    )}
-                  </TableBody>
-                </Table>
+                                <IconButton
+                                  onClick={() => {
+                                    openModal(
+                                      "modal-switching-luar-rencana",
+                                      list.id
+                                    );
+                                    selectData(list);
+                                  }}
+                                >
+                                  <PencilOutline />
+                                </IconButton>
+                              </Box>
+                            </TableCell>
+                          </TableRow>
+                        )
+                      )}
+                    </TableBody>
+                  </Table>
+                )}
               </TableContainer>
               <TablePagination
-                rowsPerPageOptions={[10, 25, 100]}
+                rowsPerPageOptions={[10, 20, 25, 100]}
                 component="div"
-                count={12}
+                count={countData}
                 rowsPerPage={rowsPerPage}
                 page={page}
                 onPageChange={handleChangePage}

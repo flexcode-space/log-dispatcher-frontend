@@ -74,14 +74,18 @@ export const TableLaporan = ({ title, type, filter }: TableLaporanProps) => {
                 {laporanPekerjaanList.length > 0 &&
                   laporanPekerjaanList.map((list: LaporanPekerjaanList) => (
                     <TableRow hover key={list.id}>
-                      <TableCell>{list.gardu_induk.nama}</TableCell>
-                      <TableCell>{list.bay}</TableCell>
-                      <TableCell>{list.unit_pelaksana}</TableCell>
-                      <TableCell>{list.waktu_mulai}</TableCell>
-                      <TableCell>{list.waktu_akhir}</TableCell>
-                      <TableCell>{list.progress}</TableCell>
-                      <TableCell>{list.uraian_pekerjaan}</TableCell>
-                      <TableCell>
+                      <TableCell size="small">
+                        {list.gardu_induk.nama}
+                      </TableCell>
+                      <TableCell size="small">{list.bay}</TableCell>
+                      <TableCell size="small">{list.unit_pelaksana}</TableCell>
+                      <TableCell size="small">{list.waktu_mulai}</TableCell>
+                      <TableCell size="small">{list.waktu_akhir}</TableCell>
+                      <TableCell size="small">{list.progress}</TableCell>
+                      <TableCell size="small">
+                        {list.uraian_pekerjaan}
+                      </TableCell>
+                      <TableCell size="small">
                         <Box sx={{ display: "flex", alignItems: "center" }}>
                           <IconButton
                             onClick={() => {

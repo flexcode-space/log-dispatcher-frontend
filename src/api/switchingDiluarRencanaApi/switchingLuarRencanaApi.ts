@@ -5,6 +5,8 @@ import { Axios } from '../axios'
 
 export type Params = {
   search?: string;
+  page?: number
+  limit?: number
 }
 
 const endpoint = '/dispatch/luar-rencana'
@@ -12,13 +14,15 @@ const endpoint = '/dispatch/luar-rencana'
 const switchingLuarRencanaApi = () => {
   const [switchingLuarRencana, setSwitchingLuarRencanaList] = useState<[]>([])
   const [loading, setLoading] = useState<boolean>(false);
+  const [countData, setCountData] = useState<number>(0)
 
   const getSwitchingLuarRencanaList = useCallback(async (params: Params = {}) => {
     setLoading(true)
 
     try {
-      const { data: { data } } = await Axios.get(endpoint, { params })
+      const { data: { data, total } } = await Axios.get(endpoint, { params })
       setSwitchingLuarRencanaList(data || [])
+      setCountData(total)
     } finally {
       setLoading(false)
     }
@@ -66,6 +70,7 @@ const switchingLuarRencanaApi = () => {
   return {
     switchingLuarRencana,
     loading,
+    countData,
     getSwitchingLuarRencanaList,
     createSwitchingLuarRencana,
     updateSwitchingLuarRencana,

@@ -220,7 +220,7 @@ const OLS = () => {
                             {list?.data.map((data) => {
                               return (
                                 <>
-                                  <TableRow key={data.id}>
+                                  <TableRow hover key={data.id}>
                                     <TableCell size="small">
                                       {data.gardu_induk.nama}
                                     </TableCell>

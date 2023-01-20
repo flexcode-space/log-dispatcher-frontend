@@ -169,7 +169,7 @@ const OgsComponent = () => {
                       {defenseList.length > 0 &&
                         defenseList.map((list: DefenseSchemaList) => (
                           <>
-                            <TableRow>
+                            <TableRow hover>
                               <TableCell
                                 sx={{
                                   background: "#666CFF",
@@ -186,7 +186,7 @@ const OgsComponent = () => {
                             {list?.data.map((data) => {
                               return (
                                 <>
-                                  <TableRow key={data.id}>
+                                  <TableRow hover key={data.id}>
                                     <TableCell size="small">
                                       {data.gardu_induk.nama}
                                     </TableCell>

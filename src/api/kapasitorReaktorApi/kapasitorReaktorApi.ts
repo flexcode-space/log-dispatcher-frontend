@@ -4,6 +4,8 @@ import { Axios } from '../axios'
 
 export type Params = {
   search?: string;
+  limit?: number
+  page?: number
 }
 
 const endpoint = '/dispatch/kapasitor-reaktor'
@@ -11,13 +13,15 @@ const endpoint = '/dispatch/kapasitor-reaktor'
 const kapasitorReaktorApi = () => {
   const [kapasitorReaktorList, setKapasitorReaktorList] = useState<[]>([])
   const [loading, setLoading] = useState<boolean>(false);
+  const [countData, setCountData] = useState<number>(0)
 
   const getKapasitorReaktorList = useCallback(async (params: Params = {}) => {
     setLoading(true)
 
     try {
-      const { data: { data } } = await Axios.get(endpoint, { params })
+      const { data: { data, total } } = await Axios.get(endpoint, { params })
       setKapasitorReaktorList(data || [])
+      setCountData(total)
     } finally {
       setLoading(false)
     }
@@ -65,6 +69,7 @@ const kapasitorReaktorApi = () => {
   return {
     kapasitorReaktorList,
     loading,
+    countData,
     getKapasitorReaktorList,
     createKapasitorReaktor,
     updateKapasitorReaktor,
