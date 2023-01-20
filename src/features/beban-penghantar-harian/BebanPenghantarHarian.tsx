@@ -18,7 +18,7 @@ import {
 } from "src/components/table";
 import PageHeader from "src/@core/components/page-header";
 import DownloadIcon from "src/assets/icons/download-icon.svg";
-import FilterIcon from "src/assets/icons/filter-icon.svg";
+// import FilterIcon from "src/assets/icons/filter-icon.svg";
 import EditIcon from "src/assets/icons/edit-icon.svg";
 import { openModal } from "src/state/modal";
 
@@ -29,14 +29,24 @@ import { showValueBeban } from "./BebanPenghantarHarian.constant";
 import { BebanPenghantarHarian } from "./types";
 import { convertDate } from "src/utils/date";
 import { TIME } from "src/constants/time";
+import { useDebounce } from "src/hooks/useDebounce";
+import FallbackSpinner from "src/@core/components/spinner";
 
 const BebanPenghantarHarian = () => {
   // ** States
+  const [search, setSearch] = useState<string>("");
   const [page, setPage] = useState<number>(0);
-  const [rowsPerPage, setRowsPerPage] = useState<number>(10);
+  const [rowsPerPage, setRowsPerPage] = useState<number>(20);
   const [date, setDate] = useState<any>(new Date());
 
-  const { getBebanPenghantarHarianList, bebanPenghantarList } = bebanApi();
+  const {
+    getBebanPenghantarHarianList,
+    bebanPenghantarList,
+    loading,
+    countData,
+  } = bebanApi();
+
+  const debouncedSearch = useDebounce(search, 500);
 
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
@@ -47,9 +57,26 @@ const BebanPenghantarHarian = () => {
     setPage(0);
   };
 
+  const getBebanPenghantarHarian = () => {
+    if (debouncedSearch) {
+      getBebanPenghantarHarianList({
+        tanggal: convertDate(date),
+        search,
+        page: page + 1,
+        limit: rowsPerPage,
+      });
+    } else {
+      getBebanPenghantarHarianList({
+        tanggal: convertDate(date),
+        page: page + 1,
+        limit: rowsPerPage,
+      });
+    }
+  };
+
   useEffect(() => {
-    getBebanPenghantarHarianList({ tanggal: convertDate(date) });
-  }, [date]);
+    getBebanPenghantarHarian();
+  }, [date, debouncedSearch, page, rowsPerPage]);
 
   return (
     <>
@@ -69,10 +96,10 @@ const BebanPenghantarHarian = () => {
               <WrapperFilter sx={{ alignItems: "baseline" }}>
                 <TextField
                   size="small"
-                  value=""
+                  value={search}
                   sx={{ mr: 6, mb: 2 }}
                   placeholder="Cari"
-                  // onChange={(e) => setSearch(e.target.value)}
+                  onChange={(e) => setSearch(e.target.value)}
                 />
 
                 <div style={{ display: "flex", gap: "10px" }}>
@@ -112,69 +139,105 @@ const BebanPenghantarHarian = () => {
                 </div>
               </WrapperFilter>
               <TableContainer>
-                <Table>
-                  <TableHead>
-                    <TableRow>
-                      <TableCellHead rowSpan={2}>No</TableCellHead>
-                      <TableCellHead rowSpan={2}>UPT</TableCellHead>
-                      <TableCellHead rowSpan={2}>Subsistem</TableCellHead>
-                      <TableCellHead minWidth="200px" rowSpan={2}>Gardu Induk</TableCellHead>
-                      <TableCellHead minWidth="250px" rowSpan={2}>Penghantar</TableCellHead>
-                      <TableCellHead rowSpan={2}>Jenis</TableCellHead>
-                      <TableCellHead minWidth="200px" rowSpan={2}>
-                        Tegangan operasi
-                      </TableCellHead>
-                      <TableCellHead minWidth="150px" rowSpan={2}>
-                        Arus Nominal (A)
-                      </TableCellHead>
-                      <TableCellHead minWidth="150px" rowSpan={2}>Arus Mampu (A)</TableCellHead>
-                      <TableCellHead minWidth="150px" rowSpan={2}>Setting OCR</TableCellHead>
-                      {TIME.map((value) => (
-                        <TableCellHead align="center" colSpan={6}>
-                          {value}
+                {loading ? (
+                  <FallbackSpinner />
+                ) : (
+                  <Table>
+                    <TableHead>
+                      <TableRow>
+                        <TableCellHead rowSpan={2}>No</TableCellHead>
+                        <TableCellHead minWidth="200px" rowSpan={2}>
+                          UPT
                         </TableCellHead>
-                      ))}
-                    </TableRow>
-                    <TableRow>
-                      {TIME.map(() => (
-                        <>
-                          <TableCellHead minWidth="100px">arus (a)</TableCellHead>
-                          <TableCellHead>mw</TableCellHead>
-                          <TableCellHead>mvar</TableCellHead>
-                          <TableCellHead>KWH</TableCellHead>
-                          <TableCellHead minWidth="100px">% i nom</TableCellHead>
-                          <TableCellHead minWidth="120px">% i mampu</TableCellHead>
-                        </>
-                      ))}
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {bebanPenghantarList?.map(
-                      (value: BebanPenghantarHarian, index) => {
-                        return (
-                          <TableRow>
-                            <TableCell>{index + 1}</TableCell>
-                            <TableCell>{value.upt}</TableCell>
-                            <TableCell>{value.sub_sistem}</TableCell>
-                            <TableCell>{value.gardu_induk}</TableCell>
-                            <TableCell>{value.data.nama_penghantar}</TableCell>
-                            <TableCell>{value.data.jenis}</TableCell>
-                            <TableCell>{`${value.tegangan} MVA`}</TableCell>
-                            <TableCell>{value.arus_nominal}</TableCell>
-                            <TableCell>{value.arus_mampu}</TableCell>
-                            <TableCell>{value.setting_ocr}</TableCell>
-                            {showValueBeban(value.data)}
-                          </TableRow>
-                        );
-                      }
-                    )}
-                  </TableBody>
-                </Table>
+                        <TableCellHead minWidth="200px" rowSpan={2}>
+                          Subsistem
+                        </TableCellHead>
+                        <TableCellHead minWidth="200px" rowSpan={2}>
+                          Gardu Induk
+                        </TableCellHead>
+                        <TableCellHead minWidth="250px" rowSpan={2}>
+                          Penghantar
+                        </TableCellHead>
+                        <TableCellHead rowSpan={2}>Jenis</TableCellHead>
+                        <TableCellHead minWidth="200px" rowSpan={2}>
+                          Tegangan operasi
+                        </TableCellHead>
+                        <TableCellHead minWidth="150px" rowSpan={2}>
+                          Arus Nominal (A)
+                        </TableCellHead>
+                        <TableCellHead minWidth="150px" rowSpan={2}>
+                          Arus Mampu (A)
+                        </TableCellHead>
+                        <TableCellHead minWidth="150px" rowSpan={2}>
+                          Setting OCR
+                        </TableCellHead>
+                        {TIME.map((value) => (
+                          <TableCellHead align="center" colSpan={6}>
+                            {value}
+                          </TableCellHead>
+                        ))}
+                      </TableRow>
+                      <TableRow>
+                        {TIME.map(() => (
+                          <>
+                            <TableCellHead minWidth="100px">
+                              arus (a)
+                            </TableCellHead>
+                            <TableCellHead>mw</TableCellHead>
+                            <TableCellHead>mvar</TableCellHead>
+                            <TableCellHead>KWH</TableCellHead>
+                            <TableCellHead minWidth="100px">
+                              % i nom
+                            </TableCellHead>
+                            <TableCellHead minWidth="120px">
+                              % i mampu
+                            </TableCellHead>
+                          </>
+                        ))}
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {bebanPenghantarList?.map(
+                        (value: BebanPenghantarHarian, index) => {
+                          return (
+                            <TableRow hover>
+                              <TableCell size="small">{index + 1}</TableCell>
+                              <TableCell size="small">{value.upt}</TableCell>
+                              <TableCell size="small">
+                                {value.sub_sistem}
+                              </TableCell>
+                              <TableCell size="small">
+                                {value.gardu_induk}
+                              </TableCell>
+                              <TableCell size="small">
+                                {value.data.nama_penghantar}
+                              </TableCell>
+                              <TableCell size="small">
+                                {value.data.jenis}
+                              </TableCell>
+                              <TableCell size="small">{`${value.tegangan} MVA`}</TableCell>
+                              <TableCell size="small">
+                                {value.arus_nominal}
+                              </TableCell>
+                              <TableCell size="small">
+                                {value.arus_mampu}
+                              </TableCell>
+                              <TableCell size="small">
+                                {value.setting_ocr}
+                              </TableCell>
+                              {showValueBeban(value.data)}
+                            </TableRow>
+                          );
+                        }
+                      )}
+                    </TableBody>
+                  </Table>
+                )}
               </TableContainer>
               <TablePagination
-                rowsPerPageOptions={[10, 25, 100]}
+                rowsPerPageOptions={[10, 20, 25, 100]}
                 component="div"
-                count={12}
+                count={countData}
                 rowsPerPage={rowsPerPage}
                 page={page}
                 onPageChange={handleChangePage}

@@ -61,17 +61,19 @@ const TableMonitoring = ({ title, type }: TableMonitoringProps) => {
               {laporanScadaList.length > 0 &&
                 laporanScadaList.map((list: LaporanScadaList) => (
                   <TableRow hover key={list.id}>
-                    <TableCell>
+                    <TableCell size="small">
                       {dayjs(list.tanggal).format("DD MMMM YYYY")}
                     </TableCell>
-                    <TableCell>{list.gardu_induk.nama}</TableCell>
-                    <TableCell>{list.bay}</TableCell>
-                    <TableCell>{list.keterangan}</TableCell>
-                    <TableCell>{list.tanggal_konfirmasi}</TableCell>
-                    <TableCell>{list.aksi}</TableCell>
-                    <TableCell>{list.aset}</TableCell>
-                    <TableCell>{list.status}</TableCell>
-                    <TableCell>
+                    <TableCell size="small">{list.gardu_induk.nama}</TableCell>
+                    <TableCell size="small">{list.bay}</TableCell>
+                    <TableCell size="small">{list.keterangan}</TableCell>
+                    <TableCell size="small">
+                      {list.tanggal_konfirmasi}
+                    </TableCell>
+                    <TableCell size="small">{list.aksi}</TableCell>
+                    <TableCell size="small">{list.aset}</TableCell>
+                    <TableCell size="small">{list.status}</TableCell>
+                    <TableCell size="small">
                       <IconButton
                         onClick={() => {
                           openModal("modal-laporan-scada", list.id);

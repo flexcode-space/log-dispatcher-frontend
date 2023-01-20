@@ -18,25 +18,30 @@ import {
 } from "src/components/table";
 import PageHeader from "src/@core/components/page-header";
 import DownloadIcon from "src/assets/icons/download-icon.svg";
-import FilterIcon from "src/assets/icons/filter-icon.svg";
+// import FilterIcon from "src/assets/icons/filter-icon.svg";
 import EditIcon from "src/assets/icons/edit-icon.svg";
 import { openModal } from "src/state/modal";
 import { bebanApi } from "src/api/beban";
-import { IBTList, Data } from "./types";
+import { IBTList } from "./types";
 import { showValueBeban } from "./BebanIBTHarian.constant";
 
 import { WrapperFilter } from "src/components/filter";
 import { ModalSetBebanHarian } from "./modal";
 import { convertDate } from "src/utils/date";
 import { TIME } from "src/constants/time";
+import { useDebounce } from "src/hooks/useDebounce";
+import FallbackSpinner from "src/@core/components/spinner";
 
 const BebanIBTHarian = () => {
   // ** States
+  const [search, setSearch] = useState<string>("");
   const [page, setPage] = useState<number>(0);
-  const [rowsPerPage, setRowsPerPage] = useState<number>(10);
+  const [rowsPerPage, setRowsPerPage] = useState<number>(20);
   const [date, setDate] = useState<any>(new Date());
 
-  const { getBebanIBTList, bebanIBTList } = bebanApi();
+  const debouncedSearch = useDebounce(search, 500);
+
+  const { getBebanIBTList, bebanIBTList, loading, countData } = bebanApi();
 
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
@@ -47,9 +52,26 @@ const BebanIBTHarian = () => {
     setPage(0);
   };
 
+  const getBebanIBT = () => {
+    if (debouncedSearch) {
+      getBebanIBTList({
+        tanggal: convertDate(date),
+        search,
+        page: page + 1,
+        limit: rowsPerPage,
+      });
+    } else {
+      getBebanIBTList({
+        tanggal: convertDate(date),
+        page: page + 1,
+        limit: rowsPerPage,
+      });
+    }
+  };
+
   useEffect(() => {
     getBebanIBTList({ tanggal: convertDate(date) });
-  }, [date]);
+  }, [date, debouncedSearch, page, rowsPerPage]);
 
   return (
     <>
@@ -67,10 +89,10 @@ const BebanIBTHarian = () => {
               <WrapperFilter sx={{ alignItems: "baseline" }}>
                 <TextField
                   size="small"
-                  value=""
+                  value={search}
                   sx={{ mr: 6, mb: 2 }}
                   placeholder="Cari"
-                  // onChange={(e) => setSearch(e.target.value)}
+                  onChange={(e) => setSearch(e.target.value)}
                 />
 
                 <div style={{ display: "flex", gap: "10px" }}>
@@ -110,87 +132,141 @@ const BebanIBTHarian = () => {
                 </div>
               </WrapperFilter>
               <TableContainer>
-                <Table>
-                  <TableHead>
-                    <TableRow>
-                      <TableCellHead size="small" rowSpan={2}>
-                        No
-                      </TableCellHead>
-                      <TableCellHead size="small" rowSpan={2} minWidth="100px">
-                        UPT
-                      </TableCellHead>
-                      <TableCellHead size="small" rowSpan={2} minWidth="250px">
-                        Subsistem
-                      </TableCellHead>
-                      <TableCellHead size="small" rowSpan={2} minWidth="200px">
-                        Gardu Induk
-                      </TableCellHead>
-                      <TableCellHead size="small" rowSpan={2} minWidth="200px">
-                        Nama IBT
-                      </TableCellHead>
-                      <TableCellHead
-                        size="small"
-                        rowSpan={2}
-                        minWidth="120px"
-                      >
-                        Daya (MVA)
-                      </TableCellHead>
-                      <TableCellHead size="small" rowSpan={2}>
-                        Ratio
-                      </TableCellHead>
-                      <TableCellHead minWidth="150px" size="small" rowSpan={2}>
-                        Arus Nominal (A)
-                      </TableCellHead>
-                      <TableCellHead minWidth="150px" size="small" rowSpan={2}>
-                        Arus Mampu (A)
-                      </TableCellHead>
-                      <TableCellHead minWidth="120px" size="small" rowSpan={2}>
-                        Setting OCR
-                      </TableCellHead>
-                      {TIME.map((value) => (
-                        <TableCellHead size="small" align="center" colSpan={6}>
-                          {value}
+                {loading ? (
+                  <FallbackSpinner />
+                ) : (
+                  <Table>
+                    <TableHead>
+                      <TableRow>
+                        <TableCellHead size="small" rowSpan={2}>
+                          No
                         </TableCellHead>
-                      ))}
-                    </TableRow>
-                    <TableRow>
-                      {TIME.map(() => (
-                        <>
-                          <TableCellHead minWidth="100px" size="small">arus (a)</TableCellHead>
-                          <TableCellHead size="small">mw</TableCellHead>
-                          <TableCellHead size="small">mvar</TableCellHead>
-                          <TableCellHead size="small">KWH</TableCellHead>
-                          <TableCellHead minWidth="100px" size="small">% i nom</TableCellHead>
-                          <TableCellHead minWidth="120px" size="small">% i mampu</TableCellHead>
-                        </>
-                      ))}
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {bebanIBTList?.map((value: IBTList, index) => {
-                      return (
-                        <TableRow>
-                          <TableCell>{index + 1}</TableCell>
-                          <TableCell>{value.upt}</TableCell>
-                          <TableCell>{value.sub_sistem}</TableCell>
-                          <TableCell>{value.gardu_induk}</TableCell>
-                          <TableCell>{value.data?.nama_ibt}</TableCell>
-                          <TableCell>{`${value.daya} MVA`}</TableCell>
-                          <TableCell>{value.rasio}</TableCell>
-                          <TableCell>{value.arus_nominal}</TableCell>
-                          <TableCell>{value.arus_mampu}</TableCell>
-                          <TableCell>{value.setting_ocr}</TableCell>
-                          {showValueBeban(value.data)}
-                        </TableRow>
-                      );
-                    })}
-                  </TableBody>
-                </Table>
+                        <TableCellHead
+                          size="small"
+                          rowSpan={2}
+                          minWidth="200px"
+                        >
+                          UPT
+                        </TableCellHead>
+                        <TableCellHead
+                          size="small"
+                          rowSpan={2}
+                          minWidth="250px"
+                        >
+                          Subsistem
+                        </TableCellHead>
+                        <TableCellHead
+                          size="small"
+                          rowSpan={2}
+                          minWidth="200px"
+                        >
+                          Gardu Induk
+                        </TableCellHead>
+                        <TableCellHead
+                          size="small"
+                          rowSpan={2}
+                          minWidth="200px"
+                        >
+                          Nama IBT
+                        </TableCellHead>
+                        <TableCellHead
+                          size="small"
+                          rowSpan={2}
+                          minWidth="120px"
+                        >
+                          Daya (MVA)
+                        </TableCellHead>
+                        <TableCellHead size="small" rowSpan={2}>
+                          Ratio
+                        </TableCellHead>
+                        <TableCellHead
+                          minWidth="150px"
+                          size="small"
+                          rowSpan={2}
+                        >
+                          Arus Nominal (A)
+                        </TableCellHead>
+                        <TableCellHead
+                          minWidth="150px"
+                          size="small"
+                          rowSpan={2}
+                        >
+                          Arus Mampu (A)
+                        </TableCellHead>
+                        <TableCellHead
+                          minWidth="120px"
+                          size="small"
+                          rowSpan={2}
+                        >
+                          Setting OCR
+                        </TableCellHead>
+                        {TIME.map((value) => (
+                          <TableCellHead
+                            size="small"
+                            align="center"
+                            colSpan={6}
+                          >
+                            {value}
+                          </TableCellHead>
+                        ))}
+                      </TableRow>
+                      <TableRow>
+                        {TIME.map(() => (
+                          <>
+                            <TableCellHead minWidth="100px" size="small">
+                              arus (a)
+                            </TableCellHead>
+                            <TableCellHead size="small">mw</TableCellHead>
+                            <TableCellHead size="small">mvar</TableCellHead>
+                            <TableCellHead size="small">KWH</TableCellHead>
+                            <TableCellHead minWidth="100px" size="small">
+                              % i nom
+                            </TableCellHead>
+                            <TableCellHead minWidth="120px" size="small">
+                              % i mampu
+                            </TableCellHead>
+                          </>
+                        ))}
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {bebanIBTList?.map((value: IBTList, index) => {
+                        return (
+                          <TableRow hover>
+                            <TableCell size="small">{index + 1}</TableCell>
+                            <TableCell size="small">{value.upt}</TableCell>
+                            <TableCell size="small">
+                              {value.sub_sistem}
+                            </TableCell>
+                            <TableCell size="small">
+                              {value.gardu_induk}
+                            </TableCell>
+                            <TableCell size="small">
+                              {value.data?.nama_ibt}
+                            </TableCell>
+                            <TableCell size="small">{`${value.daya} MVA`}</TableCell>
+                            <TableCell size="small">{value.rasio}</TableCell>
+                            <TableCell size="small">
+                              {value.arus_nominal}
+                            </TableCell>
+                            <TableCell size="small">
+                              {value.arus_mampu}
+                            </TableCell>
+                            <TableCell size="small">
+                              {value.setting_ocr}
+                            </TableCell>
+                            {showValueBeban(value.data)}
+                          </TableRow>
+                        );
+                      })}
+                    </TableBody>
+                  </Table>
+                )}
               </TableContainer>
               <TablePagination
-                rowsPerPageOptions={[10, 25, 100]}
+                rowsPerPageOptions={[10, 20, 25, 100]}
                 component="div"
-                count={12}
+                count={countData}
                 rowsPerPage={rowsPerPage}
                 page={page}
                 onPageChange={handleChangePage}

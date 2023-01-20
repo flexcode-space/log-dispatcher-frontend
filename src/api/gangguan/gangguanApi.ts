@@ -5,6 +5,8 @@ import { Axios } from '../axios'
 export type Params = {
   search?: string;
   tanggal?: string
+  limit?: number
+  page?: number
 }
 
 const endpoint = '/gangguan'
@@ -14,13 +16,15 @@ const gangguanApi = () => {
   const [jenisGangguanList, setJenisGangguanList] = useState<[]>([])
   const [releGangguanList, setReleGangguanList] = useState<[]>([])
   const [loading, setLoading] = useState<boolean>(false);
+  const [countData, setCountData] = useState<number>(0)
 
   const getGangguanList = useCallback(async (params: Params = {}) => {
     setLoading(true)
 
     try {
-      const { data: { data } } = await Axios.get(endpoint, { params })
+      const { data: { data, total } } = await Axios.get(endpoint, { params })
       setGangguanList(data || [])
+      setCountData(total)
     } finally {
       setLoading(false)
     }
@@ -92,6 +96,7 @@ const gangguanApi = () => {
     gangguanList,
     jenisGangguanList,
     loading,
+    countData,
     getGangguanList,
     getJenisGangguanList,
     getReleGangguanList,

@@ -34,15 +34,24 @@ import { SwitchingPembangkitList } from "./types";
 import { useSnapshot } from "valtio";
 import { reloadPage } from "src/state/reloadPage";
 import { selectData } from "./state/switchingPembangkit";
+import FallbackSpinner from "src/@core/components/spinner";
+import { useDebounce } from "src/hooks/useDebounce";
 
 const SwitchingPembangkit = () => {
   const reloadPageSnap = useSnapshot(reloadPage);
 
+  const [search, setSearch] = useState<string>("");
   const [page, setPage] = useState<number>(0);
-  const [rowsPerPage, setRowsPerPage] = useState<number>(10);
+  const [rowsPerPage, setRowsPerPage] = useState<number>(20);
 
-  const { getSwitchingPembangkitList, switchingPembangkitList } =
-    switchingPembangkitApi();
+  const {
+    getSwitchingPembangkitList,
+    switchingPembangkitList,
+    loading,
+    countData,
+  } = switchingPembangkitApi();
+
+  const debouncedSearch = useDebounce(search, 500);
 
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
@@ -57,13 +66,25 @@ const SwitchingPembangkit = () => {
     closeModal();
   };
 
+  const getSwitchingPembangkit = () => {
+    if (debouncedSearch) {
+      getSwitchingPembangkitList({
+        search,
+        page: page + 1,
+        limit: rowsPerPage,
+      });
+    } else {
+      getSwitchingPembangkitList({ page: page + 1, limit: rowsPerPage });
+    }
+  };
+
   useEffect(() => {
-    getSwitchingPembangkitList();
-  }, []);
+    getSwitchingPembangkit();
+  }, [debouncedSearch, page, rowsPerPage]);
 
   useEffect(() => {
     if (reloadPageSnap.target === "switching-pembangkit") {
-      getSwitchingPembangkitList();
+      getSwitchingPembangkit();
     }
   }, [reloadPageSnap]);
 
@@ -112,122 +133,133 @@ const SwitchingPembangkit = () => {
                 </div>
               </WrapperFilter>
               <TableContainer>
-                <Table>
-                  <TableHead>
-                    <TableRow>
-                      <TableCellHead size="small" rowSpan={2}>
-                        No
-                      </TableCellHead>
-                      <TableCellHead size="small" rowSpan={2}>
-                        Switching
-                      </TableCellHead>
-                      <TableCellHead size="small" rowSpan={2}>
-                        Pembangkit
-                      </TableCellHead>
-                      <TableCellHead
-                        minWidth="200px"
-                        size="small"
-                        align="center"
-                        rowSpan={2}
-                      >
-                        Tanggal
-                      </TableCellHead>
-                      <TableCellHead size="small" align="center" colSpan={2}>
-                        Waktu
-                      </TableCellHead>
-                      <TableCellHead size="small" align="center" colSpan={3}>
-                        Operator
-                      </TableCellHead>
-                      <TableCellHead rowSpan={2}>Energi Primer</TableCellHead>
-                      <TableCellHead rowSpan={2}>Status</TableCellHead>
-                      <TableCellHead rowSpan={2}>Dispatch</TableCellHead>
-                      <TableCellHead rowSpan={2}>Keterangan</TableCellHead>
-                      <TableCellHead align="center" rowSpan={2}>
-                        Aksi
-                      </TableCellHead>
-                    </TableRow>
-                    <TableRow>
-                      <TableCellHead>Perintah</TableCellHead>
-                      <TableCellHead>Real</TableCellHead>
-                      <TableCellHead>BOPS</TableCellHead>
-                      <TableCellHead>ACC</TableCellHead>
-                      <TableCellHead>Pembangkit</TableCellHead>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {switchingPembangkitList.length > 0 &&
-                      switchingPembangkitList?.map(
-                        (list: SwitchingPembangkitList, index: number) => {
-                          const timeColor = {
-                            bgcolor: "rgba(255, 77, 73, 0.05)",
-                          };
-                          const operatorColor = {
-                            bgcolor: "rgba(38, 198, 249, 0.05)",
-                          };
+                {loading ? (
+                  <FallbackSpinner />
+                ) : (
+                  <Table>
+                    <TableHead>
+                      <TableRow>
+                        <TableCellHead size="small" rowSpan={2}>
+                          No
+                        </TableCellHead>
+                        <TableCellHead size="small" rowSpan={2}>
+                          Switching
+                        </TableCellHead>
+                        <TableCellHead size="small" rowSpan={2}>
+                          Pembangkit
+                        </TableCellHead>
+                        <TableCellHead
+                          minWidth="200px"
+                          size="small"
+                          align="center"
+                          rowSpan={2}
+                        >
+                          Tanggal
+                        </TableCellHead>
+                        <TableCellHead size="small" align="center" colSpan={2}>
+                          Waktu
+                        </TableCellHead>
+                        <TableCellHead size="small" align="center" colSpan={3}>
+                          Operator
+                        </TableCellHead>
+                        <TableCellHead rowSpan={2}>Energi Primer</TableCellHead>
+                        <TableCellHead rowSpan={2}>Status</TableCellHead>
+                        <TableCellHead rowSpan={2}>Dispatch</TableCellHead>
+                        <TableCellHead rowSpan={2}>Keterangan</TableCellHead>
+                        <TableCellHead align="center" rowSpan={2}>
+                          Aksi
+                        </TableCellHead>
+                      </TableRow>
+                      <TableRow>
+                        <TableCellHead>Perintah</TableCellHead>
+                        <TableCellHead>Real</TableCellHead>
+                        <TableCellHead>BOPS</TableCellHead>
+                        <TableCellHead>ACC</TableCellHead>
+                        <TableCellHead>Pembangkit</TableCellHead>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {switchingPembangkitList.length > 0 &&
+                        switchingPembangkitList?.map(
+                          (list: SwitchingPembangkitList, index: number) => {
+                            const timeColor = {
+                              bgcolor: "rgba(255, 77, 73, 0.05)",
+                            };
+                            const operatorColor = {
+                              bgcolor: "rgba(38, 198, 249, 0.05)",
+                            };
 
-                          return (
-                            <TableRow hover key={list.id}>
-                              <TableCell size="small">{index + 1}</TableCell>
-                              <TableCell size="small">{list.jenis}</TableCell>
-                              <TableCell size="small">
-                                {list.pembangkit.nama}
-                              </TableCell>
-                              <TableCell size="small">{list.tanggal}</TableCell>
-                              <TableCell size="small" sx={timeColor}>
-                                {list.waktu_perintah}
-                              </TableCell>
-                              <TableCell size="small" sx={timeColor}>
-                                {list.waktu_real}
-                              </TableCell>
-                              <TableCell size="small" sx={operatorColor}>
-                                {list.operator_bops.nama}
-                              </TableCell>
-                              <TableCell size="small" sx={operatorColor}>
-                                {list.operator_acc.nama}
-                              </TableCell>
-                              <TableCell size="small" sx={operatorColor}>
-                                {list.operator_pembangkit.nama}
-                              </TableCell>
-                              <TableCell size="small">
-                                {list.energi_primer}
-                              </TableCell>
-                              <TableCell size="small">{list.status}</TableCell>
-                              <TableCell size="small">
-                                <Chip label={list.dispatch} color="success" />
-                              </TableCell>
-                              <TableCell size="small">
-                                {list.keterangan}
-                              </TableCell>
-                              <TableCell size="small">
-                                <Box
-                                  sx={{ display: "flex", alignItems: "center" }}
-                                >
-                                  <IconButton
-                                    onClick={() => {
-                                      openModal(
-                                        "modal-edit-switching-pembangkit",
-                                        list.id
-                                      );
-                                      selectData(
-                                        list as SwitchingPembangkitList
-                                      );
+                            return (
+                              <TableRow hover key={list.id}>
+                                <TableCell size="small">{index + 1}</TableCell>
+                                <TableCell size="small">{list.jenis}</TableCell>
+                                <TableCell size="small">
+                                  {list.pembangkit.nama}
+                                </TableCell>
+                                <TableCell size="small">
+                                  {list.tanggal}
+                                </TableCell>
+                                <TableCell size="small" sx={timeColor}>
+                                  {list.waktu_perintah}
+                                </TableCell>
+                                <TableCell size="small" sx={timeColor}>
+                                  {list.waktu_real}
+                                </TableCell>
+                                <TableCell size="small" sx={operatorColor}>
+                                  {list.operator_bops.nama}
+                                </TableCell>
+                                <TableCell size="small" sx={operatorColor}>
+                                  {list.operator_acc.nama}
+                                </TableCell>
+                                <TableCell size="small" sx={operatorColor}>
+                                  {list.operator_pembangkit.nama}
+                                </TableCell>
+                                <TableCell size="small">
+                                  {list.energi_primer}
+                                </TableCell>
+                                <TableCell size="small">
+                                  {list.status}
+                                </TableCell>
+                                <TableCell size="small">
+                                  <Chip label={list.dispatch} color="success" />
+                                </TableCell>
+                                <TableCell size="small">
+                                  {list.keterangan}
+                                </TableCell>
+                                <TableCell size="small">
+                                  <Box
+                                    sx={{
+                                      display: "flex",
+                                      alignItems: "center",
                                     }}
                                   >
-                                    <PencilOutline />
-                                  </IconButton>
-                                </Box>
-                              </TableCell>
-                            </TableRow>
-                          );
-                        }
-                      )}
-                  </TableBody>
-                </Table>
+                                    <IconButton
+                                      onClick={() => {
+                                        openModal(
+                                          "modal-edit-switching-pembangkit",
+                                          list.id
+                                        );
+                                        selectData(
+                                          list as SwitchingPembangkitList
+                                        );
+                                      }}
+                                    >
+                                      <PencilOutline />
+                                    </IconButton>
+                                  </Box>
+                                </TableCell>
+                              </TableRow>
+                            );
+                          }
+                        )}
+                    </TableBody>
+                  </Table>
+                )}
               </TableContainer>
               <TablePagination
-                rowsPerPageOptions={[10, 25, 100]}
+                rowsPerPageOptions={[10, 20, 25, 100]}
                 component="div"
-                count={switchingPembangkitList.length || 0}
+                count={countData}
                 rowsPerPage={rowsPerPage}
                 page={page}
                 onPageChange={handleChangePage}

@@ -177,7 +177,7 @@ const UfrComponent = () => {
                       {defenseList.length &&
                         defenseList.map(
                           (list: DefenseUFRList, index: number) => (
-                            <TableRow>
+                            <TableRow hover>
                               <TableCell size="small">
                                 {list.tahap.value}
                               </TableCell>

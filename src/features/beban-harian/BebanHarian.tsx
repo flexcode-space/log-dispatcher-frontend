@@ -36,7 +36,7 @@ import { showValueBeban } from "./BebanHarian.constant";
 import { ModalSetBebanHarian } from "./modal";
 import { convertDate } from "src/utils/date";
 import { TIME } from "src/constants/time";
-import { Total } from "src/api/analisa-beban/type";
+import FallbackSpinner from "src/@core/components/spinner";
 
 const BebanHarian = () => {
   // ** States
@@ -44,7 +44,7 @@ const BebanHarian = () => {
   const [rowsPerPage, setRowsPerPage] = useState<number>(10);
   const [date, setDate] = useState<any>(new Date());
 
-  const { getBebanList, bebanList, totalData } = bebanApi();
+  const { getBebanList, bebanList, totalData, loading } = bebanApi();
 
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
@@ -108,186 +108,201 @@ const BebanHarian = () => {
                 </div>
               </WrapperFilter>
               <TableContainer>
-                <Table style={{ width: "auto", tableLayout: "auto" }}>
-                  <TableHead>
-                    <TableRow>
-                      <TableCellHead minWidth="200px" rowSpan={2}>
-                        Jenis Pembangkit
-                      </TableCellHead>
-                      <TableCellHead minWidth="200px" rowSpan={2}>
-                        Pembangkit
-                      </TableCellHead>
-                      {TIME.map((value) => (
-                        <TableCellHead align="center" colSpan={2}>
-                          {value}
+                {loading ? (
+                  <FallbackSpinner />
+                ) : (
+                  <Table style={{ width: "auto", tableLayout: "auto" }}>
+                    <TableHead>
+                      <TableRow>
+                        <TableCellHead minWidth="200px" rowSpan={2}>
+                          Jenis Pembangkit
                         </TableCellHead>
-                      ))}
-                    </TableRow>
-                    <TableRow>
-                      {TIME.map(() => (
-                        <>
-                          <TableCellHead align="center">MW</TableCellHead>
-                          <TableCellHead align="center">MX</TableCellHead>
-                        </>
-                      ))}
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {bebanList.length &&
-                      bebanList.map((value: Beban) => {
-                        const totalPembangkit = value?.pembangkit.total;
-                        const totalSubsistem = value?.total;
-
-                        return (
+                        <TableCellHead minWidth="200px" rowSpan={2}>
+                          Pembangkit
+                        </TableCellHead>
+                        {TIME.map((value) => (
+                          <TableCellHead align="center" colSpan={2}>
+                            {value}
+                          </TableCellHead>
+                        ))}
+                      </TableRow>
+                      <TableRow>
+                        {TIME.map(() => (
                           <>
-                            <TableRow>
-                              <TableCell
-                                size="small"
-                                sx={{
-                                  background: value?.color,
-                                  color: "#FFFFFF",
-                                  fontSize: "14px",
-                                  fontWeight: "700 !important",
-                                }}
-                                colSpan={TIME.length * 2 + 2}
-                              >
-                                {value?.sub_sistem}
-                              </TableCell>
-                            </TableRow>
+                            <TableCellHead align="center">MW</TableCellHead>
+                            <TableCellHead align="center">MX</TableCellHead>
+                          </>
+                        ))}
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {bebanList.length &&
+                        bebanList.map((value: Beban) => {
+                          const totalPembangkit = value?.pembangkit.total;
+                          const totalSubsistem = value?.total;
 
-                            {value?.pembangkit?.tipe_jenis_pembangkit?.map(
-                              (tipe_jenis_pembangkit: TipeJenisPembangkit) => (
-                                <>
-                                  {tipe_jenis_pembangkit?.kategori_pembangkit.map(
-                                    (
-                                      kategori_pembangkit: KategoriPembangkit
-                                    ) => {
-                                      const { total } = kategori_pembangkit;
-                                      return (
-                                        <>
-                                          {kategori_pembangkit.data.map(
-                                            (data: DataKategoriPembangkit) => {
-                                              return (
-                                                <TableRow>
-                                                  <TableCell
-                                                    size="small"
-                                                    sx={{
-                                                      borderRight:
-                                                        "1px solid #4c4e641f",
-                                                    }}
-                                                  >
-                                                    <CustomChip
-                                                      label={data.jenis}
-                                                      skin="light"
-                                                      color="primary"
+                          return (
+                            <>
+                              <TableRow hover>
+                                <TableCell
+                                  size="small"
+                                  sx={{
+                                    background: value?.color,
+                                    color: "#FFFFFF",
+                                    fontSize: "14px",
+                                    fontWeight: "700 !important",
+                                  }}
+                                  colSpan={TIME.length * 2 + 2}
+                                >
+                                  {value?.sub_sistem}
+                                </TableCell>
+                              </TableRow>
+
+                              {value?.pembangkit?.tipe_jenis_pembangkit?.map(
+                                (
+                                  tipe_jenis_pembangkit: TipeJenisPembangkit
+                                ) => (
+                                  <>
+                                    {tipe_jenis_pembangkit?.kategori_pembangkit.map(
+                                      (
+                                        kategori_pembangkit: KategoriPembangkit
+                                      ) => {
+                                        const { total } = kategori_pembangkit;
+                                        return (
+                                          <>
+                                            {kategori_pembangkit.data.map(
+                                              (
+                                                data: DataKategoriPembangkit
+                                              ) => {
+                                                return (
+                                                  <TableRow hover>
+                                                    <TableCell
                                                       size="small"
-                                                    />
-                                                  </TableCell>
-                                                  <TableCell
-                                                    size="small"
-                                                    sx={{
-                                                      borderRight:
-                                                        "1px solid #4c4e641f",
-                                                    }}
-                                                  >
-                                                    {data.nama}
-                                                  </TableCell>
-                                                  {showValueBeban(data.data)}
-                                                </TableRow>
-                                              );
-                                            }
-                                          )}
-                                          <TableRow
-                                            sx={{
-                                              background: total.color,
-                                            }}
-                                          >
-                                            <TableCell colSpan={2} size="small">
-                                              {total.nama}
-                                            </TableCell>
-                                            {showValueBeban(total?.data)}
-                                          </TableRow>
-                                        </>
-                                      );
-                                    }
-                                  )}
-                                </>
-                              )
-                            )}
+                                                      sx={{
+                                                        borderRight:
+                                                          "1px solid #4c4e641f",
+                                                      }}
+                                                    >
+                                                      <CustomChip
+                                                        label={data.jenis}
+                                                        skin="light"
+                                                        color="primary"
+                                                        size="small"
+                                                      />
+                                                    </TableCell>
+                                                    <TableCell
+                                                      size="small"
+                                                      sx={{
+                                                        borderRight:
+                                                          "1px solid #4c4e641f",
+                                                      }}
+                                                    >
+                                                      {data.nama}
+                                                    </TableCell>
+                                                    {showValueBeban(data.data)}
+                                                  </TableRow>
+                                                );
+                                              }
+                                            )}
+                                            <TableRow
+                                              hover
+                                              sx={{
+                                                background: total.color,
+                                              }}
+                                            >
+                                              <TableCell
+                                                colSpan={2}
+                                                size="small"
+                                              >
+                                                {total.nama}
+                                              </TableCell>
+                                              {showValueBeban(total?.data)}
+                                            </TableRow>
+                                          </>
+                                        );
+                                      }
+                                    )}
+                                  </>
+                                )
+                              )}
 
-                            {value?.ibt &&
-                              value?.ibt.map((ibt: IBT) => (
-                                <>
-                                  {ibt.data.map((data: DataIBT) => (
-                                    <TableRow>
-                                      <TableCell
-                                        size="small"
-                                        sx={{
-                                          borderRight: "1px solid #4c4e641f",
-                                        }}
-                                      >
-                                        <CustomChip
-                                          label={data.jenis}
-                                          skin="light"
-                                          color="primary"
+                              {value?.ibt &&
+                                value?.ibt.map((ibt: IBT) => (
+                                  <>
+                                    {ibt.data.map((data: DataIBT) => (
+                                      <TableRow hover>
+                                        <TableCell
                                           size="small"
-                                        />
+                                          sx={{
+                                            borderRight: "1px solid #4c4e641f",
+                                          }}
+                                        >
+                                          <CustomChip
+                                            label={data.jenis}
+                                            skin="light"
+                                            color="primary"
+                                            size="small"
+                                          />
+                                        </TableCell>
+                                        <TableCell
+                                          size="small"
+                                          sx={{
+                                            borderRight: "1px solid #4c4e641f",
+                                          }}
+                                        >
+                                          {data.nama}
+                                        </TableCell>
+                                        {showValueBeban(data?.data)}
+                                      </TableRow>
+                                    ))}
+                                    <TableRow
+                                      hover
+                                      sx={{ background: ibt.total.color }}
+                                    >
+                                      <TableCell size="small" colSpan={2}>
+                                        {ibt.total.nama}
                                       </TableCell>
-                                      <TableCell
-                                        size="small"
-                                        sx={{
-                                          borderRight: "1px solid #4c4e641f",
-                                        }}
-                                      >
-                                        {data.nama}
-                                      </TableCell>
-                                      {showValueBeban(data?.data)}
+                                      {showValueBeban(ibt.total?.data)}
                                     </TableRow>
-                                  ))}
-                                  <TableRow
-                                    sx={{ background: ibt.total.color }}
-                                  >
-                                    <TableCell size="small" colSpan={2}>
-                                      {ibt.total.nama}
-                                    </TableCell>
-                                    {showValueBeban(ibt.total?.data)}
-                                  </TableRow>
-                                </>
-                              ))}
+                                  </>
+                                ))}
 
-                            <TableRow
-                              sx={{ background: totalPembangkit.color }}
-                            >
-                              <TableCell colSpan={2} size="small">
-                                {totalPembangkit?.nama}
-                              </TableCell>
-                              {showValueBeban(totalPembangkit?.data)}
-                            </TableRow>
-
-                            {/* total subsistem */}
-                            {totalSubsistem?.nama && (
                               <TableRow
-                                sx={{ background: totalSubsistem.color }}
+                                hover
+                                sx={{ background: totalPembangkit.color }}
                               >
                                 <TableCell colSpan={2} size="small">
-                                  {totalSubsistem?.nama}
+                                  {totalPembangkit?.nama}
                                 </TableCell>
-                                {showValueBeban(totalSubsistem?.data)}
+                                {showValueBeban(totalPembangkit?.data)}
                               </TableRow>
-                            )}
-                          </>
-                        );
-                      })}
-                    {totalData && (
-                      <TableRow sx={{ background: totalData?.color }}>
-                        <TableCell colSpan={2} size="small">
-                          {totalData?.nama}
-                        </TableCell>
-                        {showValueBeban(totalData?.data)}
-                      </TableRow>
-                    )}
-                  </TableBody>
-                </Table>
+
+                              {/* total subsistem */}
+                              {totalSubsistem?.nama && (
+                                <TableRow
+                                  hover
+                                  sx={{ background: totalSubsistem.color }}
+                                >
+                                  <TableCell colSpan={2} size="small">
+                                    {totalSubsistem?.nama}
+                                  </TableCell>
+                                  {showValueBeban(totalSubsistem?.data)}
+                                </TableRow>
+                              )}
+                            </>
+                          );
+                        })}
+                      {totalData && (
+                        <TableRow hover sx={{ background: totalData?.color }}>
+                          <TableCell colSpan={2} size="small">
+                            {totalData?.nama}
+                          </TableCell>
+                          {showValueBeban(totalData?.data)}
+                        </TableRow>
+                      )}
+                    </TableBody>
+                  </Table>
+                )}
               </TableContainer>
               <TablePagination
                 rowsPerPageOptions={[10, 25, 100]}

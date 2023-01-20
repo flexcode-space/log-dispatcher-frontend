@@ -35,12 +35,13 @@ import dayjs from "dayjs";
 import { selectData } from "./state/pengaturanTegangan";
 import { useSnapshot } from "valtio";
 import { reloadPage } from "src/state/reloadPage";
+import FallbackSpinner from "src/@core/components/spinner";
 
 const PengaturanTegangan = () => {
   const router = useRouter();
   const reloadPageSnap = useSnapshot(reloadPage);
 
-  const { getPengaturanTeganganList, pengaturanTeganganList } =
+  const { getPengaturanTeganganList, pengaturanTeganganList, loading } =
     pengaturanTeganganApi();
 
   const handleClose = () => {
@@ -122,96 +123,105 @@ const PengaturanTegangan = () => {
             />
             <CardContent>
               <TableContainer>
-                <Table>
-                  <TableHead>
-                    <TableRow>
-                      <TableCellHead minWidth="200px" size="small">
-                        Lokasi
-                      </TableCellHead>
-                      <TableCellHead minWidth="150px" size="small">
-                        Jenis
-                      </TableCellHead>
-                      <TableCellHead minWidth="100px" size="small">
-                        Jurusan
-                      </TableCellHead>
-                      <TableCellHead minWidth="100px" size="small">
-                        Open/Close
-                      </TableCellHead>
-                      <TableCellHead minWidth="250px" size="small">
-                        Waktu
-                      </TableCellHead>
-                      <TableCellHead minWidth="100px" size="small">
-                        Sebelum
-                      </TableCellHead>
-                      <TableCellHead minWidth="100px" size="small">
-                        Sesudah
-                      </TableCellHead>
-                      <TableCellHead minWidth="100px" size="small">
-                        MVAR
-                      </TableCellHead>
-                      <TableCellHead minWidth="200px" size="small">
-                        Keterangan
-                      </TableCellHead>
-                      <TableCellHead minWidth="50px" size="small">
-                        Aksi
-                      </TableCellHead>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {pengaturanTeganganList.length > 0
-                      ? pengaturanTeganganList.map(
-                          (value: PengaturanTeganganList, index) => (
-                            <TableRow key={`list-${index}`}>
-                              <TableCell size="small">
-                                {value?.gardu_induk?.nama}
-                              </TableCell>
-                              <TableCell size="small">{value.jenis}</TableCell>
-                              <TableCell size="small">
-                                {value.jurusan}
-                              </TableCell>
-                              <TableCell size="small">
-                                {value.open_close}
-                              </TableCell>
-                              <TableCell size="small">
-                                {`${dayjs(value.tanggal).format(
-                                  "DD MMMM YYYY"
-                                )}, ${value?.waktu} WIB`}
-                              </TableCell>
-                              <TableCell size="small">
-                                {value.sebelum}
-                              </TableCell>
-                              <TableCell size="small">
-                                {value.sesudah}
-                              </TableCell>
-                              <TableCell size="small">{value.mvar}</TableCell>
-                              <TableCell size="small">
-                                {value.keterangan}
-                              </TableCell>
-                              <TableCell size="small">
-                                <Box
-                                  sx={{ display: "flex", alignItems: "center" }}
-                                >
-                                  <IconButton
-                                    onClick={() => {
-                                      openModal(
-                                        "modal-edit-pengaturan-tegangan",
-                                        value.id
-                                      );
-                                      selectData(
-                                        value as PengaturanTeganganList
-                                      );
+                {loading ? (
+                  <FallbackSpinner />
+                ) : (
+                  <Table>
+                    <TableHead>
+                      <TableRow>
+                        <TableCellHead minWidth="200px" size="small">
+                          Lokasi
+                        </TableCellHead>
+                        <TableCellHead minWidth="150px" size="small">
+                          Jenis
+                        </TableCellHead>
+                        <TableCellHead minWidth="100px" size="small">
+                          Jurusan
+                        </TableCellHead>
+                        <TableCellHead minWidth="100px" size="small">
+                          Open/Close
+                        </TableCellHead>
+                        <TableCellHead minWidth="250px" size="small">
+                          Waktu
+                        </TableCellHead>
+                        <TableCellHead minWidth="100px" size="small">
+                          Sebelum
+                        </TableCellHead>
+                        <TableCellHead minWidth="100px" size="small">
+                          Sesudah
+                        </TableCellHead>
+                        <TableCellHead minWidth="100px" size="small">
+                          MVAR
+                        </TableCellHead>
+                        <TableCellHead minWidth="200px" size="small">
+                          Keterangan
+                        </TableCellHead>
+                        <TableCellHead minWidth="50px" size="small">
+                          Aksi
+                        </TableCellHead>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {pengaturanTeganganList.length > 0
+                        ? pengaturanTeganganList.map(
+                            (value: PengaturanTeganganList, index) => (
+                              <TableRow hover key={`list-${index}`}>
+                                <TableCell size="small">
+                                  {value?.gardu_induk?.nama}
+                                </TableCell>
+                                <TableCell size="small">
+                                  {value.jenis}
+                                </TableCell>
+                                <TableCell size="small">
+                                  {value.jurusan}
+                                </TableCell>
+                                <TableCell size="small">
+                                  {value.open_close}
+                                </TableCell>
+                                <TableCell size="small">
+                                  {`${dayjs(value.tanggal).format(
+                                    "DD MMMM YYYY"
+                                  )}, ${value?.waktu} WIB`}
+                                </TableCell>
+                                <TableCell size="small">
+                                  {value.sebelum}
+                                </TableCell>
+                                <TableCell size="small">
+                                  {value.sesudah}
+                                </TableCell>
+                                <TableCell size="small">{value.mvar}</TableCell>
+                                <TableCell size="small">
+                                  {value.keterangan}
+                                </TableCell>
+                                <TableCell size="small">
+                                  <Box
+                                    sx={{
+                                      display: "flex",
+                                      alignItems: "center",
                                     }}
                                   >
-                                    <PencilOutline />
-                                  </IconButton>
-                                </Box>
-                              </TableCell>
-                            </TableRow>
+                                    <IconButton
+                                      onClick={() => {
+                                        openModal(
+                                          "modal-edit-pengaturan-tegangan",
+                                          value.id
+                                        );
+                                        selectData(
+                                          value as PengaturanTeganganList
+                                        );
+                                      }}
+                                    >
+                                      <PencilOutline />
+                                    </IconButton>
+                                  </Box>
+                                </TableCell>
+                              </TableRow>
+                            )
                           )
-                        )
-                      : null}
-                  </TableBody>
-                </Table>
+                        : null}
+                    </TableBody>
+                  </Table>
+                )}
               </TableContainer>
             </CardContent>
           </Card>

@@ -41,15 +41,22 @@ import { GangguanList } from "./types";
 import { useSnapshot } from "valtio";
 import { reloadPage } from "src/state/reloadPage";
 import { selectData } from "./state/gangguan";
+import dayjs, { Dayjs } from "dayjs";
+import { useDebounce } from "src/hooks/useDebounce";
+import FallbackSpinner from "src/@core/components/spinner";
 
 const Gangguan = () => {
   const reloadPageSnap = useSnapshot(reloadPage);
 
+  const [date, setDate] = useState<Dayjs | null>(null);
   const [search, setSearch] = useState<string>("");
   const [page, setPage] = useState<number>(0);
-  const [rowsPerPage, setRowsPerPage] = useState<number>(10);
+  const [rowsPerPage, setRowsPerPage] = useState<number>(20);
 
-  const { getGangguanList, gangguanList } = gangguanApi();
+  const formatDate = date ? dayjs(date).format("YYYY-MM-DD") : "";
+  const debouncedSearch = useDebounce(search, 500);
+
+  const { getGangguanList, gangguanList, loading, countData } = gangguanApi();
 
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
@@ -62,13 +69,30 @@ const Gangguan = () => {
     setPage(0);
   };
 
+  const getGangguan = () => {
+    if (debouncedSearch) {
+      getGangguanList({
+        search,
+        tanggal: formatDate,
+        limit: rowsPerPage,
+        page: page + 1,
+      });
+    } else {
+      getGangguanList({
+        tanggal: formatDate,
+        limit: rowsPerPage,
+        page: page + 1,
+      });
+    }
+  };
+
   useEffect(() => {
-    getGangguanList();
-  }, []);
+    getGangguan();
+  }, [debouncedSearch, date, rowsPerPage, page]);
 
   useEffect(() => {
     if (reloadPageSnap.target === "gangguan") {
-      getGangguanList();
+      getGangguan();
     }
   }, [reloadPageSnap.id]);
 
@@ -115,9 +139,10 @@ const Gangguan = () => {
                 <div style={{ display: "flex", gap: "10px" }}>
                   <LocalizationProvider dateAdapter={AdapterDateFns}>
                     <DatePickerMui
-                      value={null}
+                      value={date}
                       label="Pilih Tanggal"
-                      onChange={() => null}
+                      inputFormat="dd/M/yyyy"
+                      onChange={(e) => setDate(e)}
                       renderInput={(params) => (
                         <TextField
                           size="small"
@@ -150,85 +175,105 @@ const Gangguan = () => {
             />
             <CardContent>
               <TableContainer>
-                <Table>
-                  <TableHead>
-                    <TableRow>
-                      <TableCellHead rowSpan={2}>No</TableCellHead>
-                      <TableCellHead minWidth="150px" rowSpan={2}>
-                        Tanggal
-                      </TableCellHead>
-                      <TableCellHead rowSpan={2}>Lokasi</TableCellHead>
-                      <TableCellHead rowSpan={2}>Peralatan</TableCellHead>
-                      <TableCellHead minWidth="150px" rowSpan={2}>
-                        Jenis Gangguan
-                      </TableCellHead>
-                      <TableCellHead colSpan={6} align="center">
-                        Jam
-                      </TableCellHead>
-                      <TableCellHead minWidth="150px" rowSpan={2}>
-                        Rele
-                      </TableCellHead>
-                      <TableCellHead minWidth="150px" rowSpan={2}>
-                        Announciator
-                      </TableCellHead>
-                      <TableCellHead minWidth="250px" rowSpan={2}>
-                        Penyebab dan Akibat
-                      </TableCellHead>
-                      <TableCellHead rowSpan={2}>Aksi</TableCellHead>
-                    </TableRow>
-                    <TableRow>
-                      <TableCellHead>Trip</TableCellHead>
-                      <TableCellHead>Reclose</TableCellHead>
-                      <TableCellHead>Buka</TableCellHead>
-                      <TableCellHead>Tutup</TableCellHead>
-                      <TableCellHead minWidth="120px">
-                        Sms Kinerja
-                      </TableCellHead>
-                      <TableCellHead minWidth="120px">
-                        Siap op. pmt
-                      </TableCellHead>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {gangguanList.length > 0 &&
-                      gangguanList.map((list: GangguanList, index: number) => (
-                        <TableRow key={list.id} hover>
-                          <TableCell>{index + 1}</TableCell>
-                          <TableCell>{list.tanggal}</TableCell>
-                          <TableCell>{list.gardu_induk.nama}</TableCell>
-                          <TableCell>{list.peralatan.nama}</TableCell>
-                          <TableCell>{list.gangguan_jenis.nama}</TableCell>
-                          <TableCell>{list.trip}</TableCell>
-                          <TableCell>{list.reclose}</TableCell>
-                          <TableCell>{list.buka}</TableCell>
-                          <TableCell>{list.tutup}</TableCell>
-                          <TableCell>{list.sms_kinerja}</TableCell>
-                          <TableCell>{list.siap_op}</TableCell>
-                          <TableCell>{list.rele}</TableCell>
-                          <TableCell>{list.announciator}</TableCell>
-                          <TableCell>{list.penyebab}</TableCell>
-                          <TableCell>
-                            <Box display="flex">
-                              <IconButton
-                                onClick={() => {
-                                  openModal("modal-add-gangguan", list.id);
-                                  selectData(list);
-                                }}
-                              >
-                                <Pencil />
-                              </IconButton>
-                              <MenuMore data={list} />
-                            </Box>
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                  </TableBody>
-                </Table>
+                {loading ? (
+                  <FallbackSpinner />
+                ) : (
+                  <Table>
+                    <TableHead>
+                      <TableRow>
+                        <TableCellHead rowSpan={2}>No</TableCellHead>
+                        <TableCellHead minWidth="150px" rowSpan={2}>
+                          Tanggal
+                        </TableCellHead>
+                        <TableCellHead rowSpan={2}>Lokasi</TableCellHead>
+                        <TableCellHead minWidth="200px" rowSpan={2}>
+                          Peralatan
+                        </TableCellHead>
+                        <TableCellHead minWidth="150px" rowSpan={2}>
+                          Jenis Gangguan
+                        </TableCellHead>
+                        <TableCellHead colSpan={6} align="center">
+                          Jam
+                        </TableCellHead>
+                        <TableCellHead minWidth="150px" rowSpan={2}>
+                          Rele
+                        </TableCellHead>
+                        <TableCellHead minWidth="150px" rowSpan={2}>
+                          Announciator
+                        </TableCellHead>
+                        <TableCellHead minWidth="250px" rowSpan={2}>
+                          Penyebab dan Akibat
+                        </TableCellHead>
+                        <TableCellHead rowSpan={2}>Aksi</TableCellHead>
+                      </TableRow>
+                      <TableRow>
+                        <TableCellHead>Trip</TableCellHead>
+                        <TableCellHead>Reclose</TableCellHead>
+                        <TableCellHead>Buka</TableCellHead>
+                        <TableCellHead>Tutup</TableCellHead>
+                        <TableCellHead minWidth="120px">
+                          Sms Kinerja
+                        </TableCellHead>
+                        <TableCellHead minWidth="120px">
+                          Siap op. pmt
+                        </TableCellHead>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {gangguanList.length > 0 &&
+                        gangguanList.map(
+                          (list: GangguanList, index: number) => (
+                            <TableRow key={list.id} hover>
+                              <TableCell size="small">{index + 1}</TableCell>
+                              <TableCell size="small">{list.tanggal}</TableCell>
+                              <TableCell size="small">
+                                {list.gardu_induk.nama}
+                              </TableCell>
+                              <TableCell size="small">
+                                {list.peralatan.nama}
+                              </TableCell>
+                              <TableCell size="small">
+                                {list.gangguan_jenis.nama}
+                              </TableCell>
+                              <TableCell size="small">{list.trip}</TableCell>
+                              <TableCell size="small">{list.reclose}</TableCell>
+                              <TableCell size="small">{list.buka}</TableCell>
+                              <TableCell size="small">{list.tutup}</TableCell>
+                              <TableCell size="small">
+                                {list.sms_kinerja}
+                              </TableCell>
+                              <TableCell size="small">{list.siap_op}</TableCell>
+                              <TableCell size="small">{list.rele}</TableCell>
+                              <TableCell size="small">
+                                {list.announciator}
+                              </TableCell>
+                              <TableCell size="small">
+                                {list.penyebab}
+                              </TableCell>
+                              <TableCell size="small">
+                                <Box display="flex">
+                                  <IconButton
+                                    onClick={() => {
+                                      openModal("modal-add-gangguan", list.id);
+                                      selectData(list);
+                                    }}
+                                  >
+                                    <Pencil />
+                                  </IconButton>
+                                  <MenuMore data={list} />
+                                </Box>
+                              </TableCell>
+                            </TableRow>
+                          )
+                        )}
+                    </TableBody>
+                  </Table>
+                )}
               </TableContainer>
               <TablePagination
-                rowsPerPageOptions={[10, 25, 100]}
+                rowsPerPageOptions={[10, 20, 25, 100]}
                 component="div"
-                count={12}
+                count={countData}
                 rowsPerPage={rowsPerPage}
                 page={page}
                 onPageChange={handleChangePage}
