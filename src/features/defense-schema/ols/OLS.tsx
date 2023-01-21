@@ -26,20 +26,23 @@ import { WrapperFilter } from "src/components/filter";
 import { ModalAddOLS } from "../modal";
 import { defenseApi } from "src/api/defense";
 import { useSnapshot } from "valtio";
-import { reloadPage } from "src/state/reloadPage";
+import { reloadPage, setReloadPage } from "src/state/reloadPage";
 import { selectData } from "../state/defenseSchema";
-import { DefenseSchemaList } from "../types";
+import { DefenseSchemaList, Data } from "../types";
 import { useDebounce } from "src/hooks/useDebounce";
 import FallbackSpinner from "src/@core/components/spinner";
+import { pencatatanDefenseApi } from "src/api/pencatatan-defense";
 
 const OLS = () => {
   const reloadPageSnap = useSnapshot(reloadPage);
-  const { getDefenseList, defenseList, loading, countData } = defenseApi();
 
   // ** States
   const [search, setSearch] = useState<string>("");
   const [page, setPage] = useState<number>(0);
   const [rowsPerPage, setRowsPerPage] = useState<number>(20);
+
+  const { getDefenseList, defenseList, loading, countData } = defenseApi();
+  const { createPencatanDefense } = pencatatanDefenseApi();
 
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
@@ -58,6 +61,18 @@ const OLS = () => {
     } else {
       getDefenseList("ols", { page: page + 1, limit: rowsPerPage });
     }
+  };
+
+  const onClickStatus = async (data: Data) => {
+    await createPencatanDefense("ols", {
+      keterangan: data?.keterangan,
+      lokasi: data?.gardu_induk?.nama,
+      status: !data?.status,
+      subsistem: data?.sub_sistem.nama,
+      tahap: data?.tahap.value,
+      trip: data?.peralatan_target.nama,
+    });
+    setReloadPage("ols");
   };
 
   useEffect(() => {
@@ -270,12 +285,18 @@ const OLS = () => {
                                       {data.set_ols}
                                     </TableCell>
                                     <TableCell size="small">
-                                      <Chip
-                                        label={data.status ? "ON" : "OFF"}
-                                        color={
-                                          data.status ? "success" : "error"
-                                        }
-                                      />
+                                      <Button
+                                        variant="contained"
+                                        onClick={() => onClickStatus(data)}
+                                        sx={{
+                                          color: "white !important",
+                                          bgcolor: data.status
+                                            ? "#72E128"
+                                            : "#FF4D49",
+                                        }}
+                                      >
+                                        {data.status ? "ON" : "OFF"}
+                                      </Button>
                                     </TableCell>
                                     <TableCell size="small">
                                       <Box

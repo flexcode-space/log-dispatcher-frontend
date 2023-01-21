@@ -22,12 +22,13 @@ import { ModalAddTargetIsland } from "../modal";
 import { WrapperFilter } from "src/components/filter";
 import { defenseApi } from "src/api/defense";
 import { useSnapshot } from "valtio";
-import { reloadPage } from "src/state/reloadPage";
+import { reloadPage, setReloadPage } from "src/state/reloadPage";
 import { Pencil } from "mdi-material-ui";
 import { CellType } from "src/types";
 import { selectData } from "./state/targetIsland";
 import { TargetIslandList } from "./types";
 import { useDebounce } from "src/hooks/useDebounce";
+import { pencatatanDefenseApi } from "src/api/pencatatan-defense";
 
 const TargetIsland = () => {
   const reloadPageSnap = useSnapshot(reloadPage);
@@ -42,9 +43,30 @@ const TargetIsland = () => {
   const filterDate = date ? dayjs(date).format("YYYY-MM-DD") : "";
 
   const { getDefenseList, defenseList, loading, countData } = defenseApi();
+  const { createPencatanDefense } = pencatatanDefenseApi();
 
   const columns = [
     ...defaultColumns,
+    {
+      flex: 0.25,
+      minWidth: 200,
+      field: "status",
+      headerName: "Status",
+      renderCell: ({ row }: CellType) => {
+        return (
+          <Button
+            variant="contained"
+            onClick={() => onClickStatus(row)}
+            sx={{
+              color: "white !important",
+              bgcolor: row?.status ? "#72E128" : "#FF4D49",
+            }}
+          >
+            {row?.status ? "ON" : "OFF"}
+          </Button>
+        );
+      },
+    },
     {
       flex: 0.15,
       minWidth: 100,
@@ -68,6 +90,18 @@ const TargetIsland = () => {
 
   // @ts-ignore
   const rowData = defenseList.map((value, index) => ({ id: index, ...value }));
+
+  const onClickStatus = async (data: TargetIslandList) => {
+    await createPencatanDefense("target-island", {
+      frekuensi: data?.frekuensi,
+      gardu_induk: data?.gardu_induk.nama,
+      island: data?.island,
+      status: !data?.status,
+      tahap: data?.tahap.value,
+      upt: data?.upt,
+    });
+    setReloadPage("target-island");
+  };
 
   const getTargetIslandList = () => {
     if (debouncedSearch) {

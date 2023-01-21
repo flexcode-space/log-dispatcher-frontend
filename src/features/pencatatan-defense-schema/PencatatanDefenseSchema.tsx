@@ -1,40 +1,33 @@
 import { useState } from "react";
-import { Button, Card, Grid, IconButton, Typography } from "@mui/material";
-import { useRouter } from "next/router";
+import { Card, Grid, Breadcrumbs, Typography, Link } from "@mui/material";
 import { TabList, TabPanel, TabContext } from "@mui/lab";
 import { Tab, TabName } from "src/components/tab";
-import { OLS } from "./ols";
-import { OGS } from "./ogs";
-import { DS } from "./ds";
-import { TargetIsland } from "./target-island";
-import { UFR } from "./ufr";
-import { TAB_MENU } from "./DefenseSchema.constant";
-import { WrapperFilter } from "src/components/filter";
-import PencatatanIcon from "src/assets/icons/pencatatan-icon.svg";
+import OLS from "./OLS";
+import { TAB_MENU } from "./PencatatanDefenseSchema.constant";
+import PageHeader from "src/@core/components/page-header";
+import OGS from "./OGS";
+import DS from "./DS";
+import UFR from "./UFR";
+import TargetIsland from "./TargetIsland";
 
 const DefenseSchema = () => {
-  const router = useRouter();
   const [activeTab, setActiveTab] = useState<string>("ols");
 
   return (
     <TabContext value={activeTab}>
       <Grid container spacing={6}>
         <Grid item xs={12}>
-          <WrapperFilter sx={{ alignItems: "baseline" }}>
-            <Typography variant="h5">Defense Scheme</Typography>
-            <div style={{ display: "flex", gap: "10px" }}>
-              <Button
-                variant="outlined"
-                onClick={() => router.push("/defense-schema/pencatatan")}
-                size="small"
-              >
-                <IconButton>
-                  <PencatatanIcon />
-                </IconButton>
-                Lihat pencatatan
-              </Button>
-            </div>
-          </WrapperFilter>
+          <Breadcrumbs aria-label="breadcrumb" sx={{ mb: "20px" }}>
+            <Link underline="hover" color="inherit" href="/defense-schema">
+              Defense Scheme
+            </Link>
+            <Typography color="text.primary">Pencatatan</Typography>
+          </Breadcrumbs>
+          <PageHeader
+            title={
+              <Typography variant="h5">Pencatatan Defense Scheme</Typography>
+            }
+          />
         </Grid>
         <Grid item xs={12}>
           <Card>
