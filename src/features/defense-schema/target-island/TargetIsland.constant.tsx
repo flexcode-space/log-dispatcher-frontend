@@ -62,19 +62,4 @@ export const defaultColumns = [
     field: "tanggal",
     headerName: "Tanggal Aktif",
   },
-  {
-    flex: 0.25,
-    minWidth: 200,
-    field: "status",
-    headerName: "Status",
-    renderCell: ({ row }: CellType) => {
-      const { status } = row;
-      return (
-        <Chip
-          label={status ? "ON" : "OFF"}
-          color={status ? "success" : "error"}
-        />
-      );
-    },
-  },
 ];

@@ -26,11 +26,12 @@ import { ModalAddUFR } from "../modal";
 import { WrapperFilter } from "src/components/filter";
 import { DefenseUFRList } from "./types";
 import { selectData } from "./state/ufr";
-import { reloadPage } from "src/state/reloadPage";
+import { reloadPage, setReloadPage } from "src/state/reloadPage";
 import { useSnapshot } from "valtio";
 import { defenseApi } from "src/api/defense";
 import { useDebounce } from "src/hooks/useDebounce";
 import FallbackSpinner from "src/@core/components/spinner";
+import { pencatatanDefenseApi } from "src/api/pencatatan-defense";
 
 const UfrComponent = () => {
   const reloadPageSnap = useSnapshot(reloadPage);
@@ -42,6 +43,7 @@ const UfrComponent = () => {
   const debouncedSearch = useDebounce(search, 500);
 
   const { getDefenseList, defenseList, loading, countData } = defenseApi();
+  const { createPencatanDefense } = pencatatanDefenseApi();
 
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
@@ -50,6 +52,20 @@ const UfrComponent = () => {
   const handleChangeRowsPerPage = (event: ChangeEvent<HTMLInputElement>) => {
     setRowsPerPage(+event.target.value);
     setPage(0);
+  };
+
+  const onClickStatus = async (data: DefenseUFRList) => {
+    await createPencatanDefense("ufr", {
+      gardu_induk: data?.gardu_induk.nama,
+      keterangan: data?.keterangan,
+      penyulang: data?.penyulang,
+      set: data?.set,
+      status: !data?.status,
+      subsistem: data?.sub_sistem.nama,
+      tahap: data?.tahap.value,
+      trafo: data?.trafo.nama,
+    });
+    setReloadPage("ufr");
   };
 
   const getUFRList = () => {
@@ -240,10 +256,18 @@ const UfrComponent = () => {
                                 </Box>
                               </TableCell>
                               <TableCell size="small">
-                                <Chip
-                                  label={list.status ? "ON" : "OFF"}
-                                  color={list.status ? "success" : "error"}
-                                />
+                                <Button
+                                  variant="contained"
+                                  onClick={() => onClickStatus(list)}
+                                  sx={{
+                                    color: "white !important",
+                                    bgcolor: list.status
+                                      ? "#72E128"
+                                      : "#FF4D49",
+                                  }}
+                                >
+                                  {list.status ? "ON" : "OFF"}
+                                </Button>
                               </TableCell>
                             </TableRow>
                           )
