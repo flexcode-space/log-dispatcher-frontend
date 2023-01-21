@@ -44,6 +44,7 @@ import { selectData } from "./state/gangguan";
 import dayjs, { Dayjs } from "dayjs";
 import { useDebounce } from "src/hooks/useDebounce";
 import FallbackSpinner from "src/@core/components/spinner";
+import ModalFilePendukung from "./modal/modal-file-pendukung/ModalFilePendukung";
 
 const Gangguan = () => {
   const reloadPageSnap = useSnapshot(reloadPage);
@@ -102,6 +103,7 @@ const Gangguan = () => {
       <ModalAddGangguan />
       <ModalKeteranganGangguan />
       <ModalConfirmationDelete />
+      <ModalFilePendukung />
       <Grid container spacing={6}>
         <Grid item xs={12}>
           <WrapperFilter>

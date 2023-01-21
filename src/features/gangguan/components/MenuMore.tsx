@@ -90,7 +90,12 @@ const MenuMore = ({ data }: MenuMoreProps) => {
           </IconButton>
           <Typography variant="inherit">Data Padam</Typography>
         </MenuItem>
-        <MenuItem>
+        <MenuItem
+          onClick={() => {
+            openModal("modal-gangguan-file-pendukung");
+            selectData(data);
+          }}
+        >
           <IconButton>
             <FilePendukungIcon />
           </IconButton>

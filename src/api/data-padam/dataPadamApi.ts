@@ -51,13 +51,26 @@ const dataPadamApi = () => {
     }
   }, [])
 
+  const deleteDataPadam = useCallback(async (payload: any) => {
+    setLoading(true)
+    try {
+      await Axios.delete(endpoint, { data: payload })
+      toast.success('Berhasil menghapus')
+    } catch (error) {
+      toast.error('Gagal menghapus')
+    } finally {
+      setLoading(false)
+    }
+  }, [])
+
 
   return {
     dataPadamList,
     loading,
     getDataPadamList,
     createDataPadam,
-    updateDataPadam
+    updateDataPadam,
+    deleteDataPadam
   }
 }
 
