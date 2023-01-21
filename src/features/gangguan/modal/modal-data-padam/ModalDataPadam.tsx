@@ -8,22 +8,28 @@ import {
   Grid,
   Typography,
   Box,
+  IconButton,
 } from "@mui/material";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { PlusCircleOutline } from "mdi-material-ui";
+import {
+  DeleteOutline,
+  PencilOutline,
+  PlusCircleOutline,
+} from "mdi-material-ui";
 import { useSnapshot } from "valtio";
 import { InputField } from "src/components/input-field";
 import { StyledForm } from "src/components/form";
 import { DataGrid } from "@mui/x-data-grid";
 import { modal, closeModal } from "src/state/modal";
 import {
-  columns,
+  defaultColumns,
   validationSchema,
   initialValues,
 } from "./ModalDataPadam.constant";
 import { dataPadamApi } from "src/api/data-padam";
 import { gangguan, removeGangguanID } from "../../state/gangguan";
 import { reloadPage, setReloadPage } from "src/state/reloadPage";
+import { CellType } from "src/types";
 
 export const ModalDataPadam = () => {
   const modalSnapshot = useSnapshot(modal);
@@ -31,11 +37,44 @@ export const ModalDataPadam = () => {
   const reloadPageSnap = useSnapshot(reloadPage);
 
   const [isAddDataPadam, setIsAddDataPadam] = useState<boolean>(false);
+  const [isEdit, setIsEdit] = useState<boolean>(false);
 
-  const { getDataPadamList, dataPadamList, createDataPadam } = dataPadamApi();
+  const {
+    getDataPadamList,
+    dataPadamList,
+    createDataPadam,
+    updateDataPadam,
+    deleteDataPadam,
+  } = dataPadamApi();
 
   const isOpen =
     modalSnapshot.isOpen && modalSnapshot.target === "modal-data-padam";
+
+  const columns = [
+    ...defaultColumns,
+    {
+      flex: 0.25,
+      minWidth: 100,
+      field: "aksi",
+      headerName: "Aksi",
+      renderCell: ({ row }: CellType) => (
+        <Box sx={{ display: "flex", alignItems: "center" }}>
+          <IconButton
+            onClick={() => {
+              formMethods.reset({ ...row });
+              setIsAddDataPadam(true);
+              setIsEdit(true);
+            }}
+          >
+            <PencilOutline />
+          </IconButton>
+          <IconButton>
+            <DeleteOutline onClick={() => onClickDelete(row?.id)} />
+          </IconButton>
+        </Box>
+      ),
+    },
+  ];
 
   const formMethods = useForm({
     resolver: yupResolver(validationSchema),
@@ -47,13 +86,29 @@ export const ModalDataPadam = () => {
     event?.preventDefault();
 
     formMethods.handleSubmit(async (values) => {
-      await createDataPadam({
-        ...values,
-        gangguan_id: gangguanSnap.gangguanId,
-      });
+      if (isEdit) {
+        await updateDataPadam({
+          ...values,
+          gangguan_id: gangguanSnap.gangguanId,
+        });
+      } else {
+        await createDataPadam({
+          ...values,
+          gangguan_id: gangguanSnap.gangguanId,
+        });
+      }
       setIsAddDataPadam(false);
+      setIsEdit(false);
+      formMethods.reset({ ...initialValues });
       setReloadPage("data-padam");
     })();
+  };
+
+  const onClickDelete = async (id: string) => {
+    if (confirm("Hapus Data ini ?")) {
+      await deleteDataPadam({ id });
+      setReloadPage("data-padam");
+    }
   };
 
   const handleCloseModal = () => {
@@ -132,7 +187,11 @@ export const ModalDataPadam = () => {
                       <Grid item xs={12}>
                         <Button
                           variant="text"
-                          onClick={() => setIsAddDataPadam(false)}
+                          onClick={() => {
+                            setIsAddDataPadam(false);
+                            formMethods.reset({ ...initialValues });
+                            setIsEdit(false);
+                          }}
                         >
                           Batal
                         </Button>

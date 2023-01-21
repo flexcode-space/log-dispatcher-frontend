@@ -115,7 +115,7 @@ const ModalAddGangguan = () => {
         siap_op: dayjs(rest?.siap_op, "HH:mm"),
       });
     }
-  }, [modalSnapshot.isOpen, data]);
+  }, [modalSnapshot.isOpen, modalSnapshot.id, data]);
 
   return (
     <>
