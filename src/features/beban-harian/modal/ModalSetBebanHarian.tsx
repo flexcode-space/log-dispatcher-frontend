@@ -10,17 +10,19 @@ import {
 } from "@mui/material";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useSnapshot } from "valtio";
-import AdapterDateFns from "@mui/lab/AdapterDateFns";
-import LocalizationProvider from "@mui/lab/LocalizationProvider";
-import { InputField } from "src/components/input-field";
 import { SelectInput } from "src/components/select-input";
 import { StyledForm } from "src/components/form";
-import { DatePicker } from "src/components/date-picker";
+import { DatePicker, TimePicker } from "src/components/date-picker";
 import { initialValues, validationSchema } from "./ModalBebanHarian.constant";
 import { modal, closeModal } from "src/state/modal";
+import { useModal } from "./useModal";
+import { bebanApi } from "src/api/beban";
+import dayjs from "dayjs";
 
 const ModalSetBebanHarian = () => {
   const modalSnapshot = useSnapshot(modal);
+
+  const { createPindahBeban } = bebanApi();
 
   const formMethods = useForm({
     resolver: yupResolver(validationSchema),
@@ -28,11 +30,22 @@ const ModalSetBebanHarian = () => {
     mode: "onSubmit",
   });
 
+  const jenisPeralatan = formMethods.watch("nama_peralatan");
+
+  const { optionJenisPeralatan, peralatanOptions, subsistemOptions } =
+    useModal(jenisPeralatan);
+
   const onSubmit = (event?: React.FormEvent<HTMLFormElement>) => {
     event?.preventDefault();
 
     formMethods.handleSubmit(async (values) => {
-      // TODO: HANDLE SUBMIT
+      const { tanggal, waktu, ...rest } = values;
+      await createPindahBeban({
+        ...rest,
+        tanggal: dayjs(tanggal).format("YYYY-MM-DD"),
+        waktu: dayjs(waktu).format("HH:mm"),
+      });
+      onClickCloseModal();
     })();
   };
 
@@ -61,39 +74,43 @@ const ModalSetBebanHarian = () => {
           >
             <Box sx={{ mb: 8 }}>
               <Typography variant="h5" sx={{ mb: 3, lineHeight: "2rem" }}>
-                Set Beban
+                Pindah SS Beban
               </Typography>
             </Box>
             <Grid container spacing={1} mt={1}>
               <Grid item xs={12} sm={6}>
                 <SelectInput
-                  label="Pilih Jenis Peralatan"
-                  name="peralatan"
-                  options={[]}
+                  label="Jenis Peralatan"
+                  name="nama_peralatan"
+                  options={optionJenisPeralatan}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
                 <SelectInput
                   label="Pilih Peralatan"
-                  name="peralatan"
-                  options={[]}
+                  name="peralatan_id"
+                  options={peralatanOptions}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
-                <InputField name="sub_sistem_awal" label="Subsistem Awal" />
+                <SelectInput
+                  label="Subsistem Awal"
+                  name="subsistem_awal_id"
+                  options={subsistemOptions}
+                />
               </Grid>
               <Grid item xs={12} sm={6}>
-                <SelectInput label="Subsistem Baru" name="no" options={[]} />
+                <SelectInput
+                  label="Subsistem Baru"
+                  name="subsistem_akhir_id"
+                  options={subsistemOptions}
+                />
               </Grid>
               <Grid item xs={12} sm={6}>
-                <LocalizationProvider dateAdapter={AdapterDateFns}>
-                  <DatePicker label="Tanggal" name="tanggal" />
-                </LocalizationProvider>
+                <DatePicker label="Tanggal" name="tanggal" />
               </Grid>
               <Grid item xs={12} sm={6}>
-                <LocalizationProvider dateAdapter={AdapterDateFns}>
-                  <DatePicker label="Waktu" name="tanggal" />
-                </LocalizationProvider>
+                <TimePicker label="Waktu" name="waktu" />
               </Grid>
             </Grid>
           </DialogContent>

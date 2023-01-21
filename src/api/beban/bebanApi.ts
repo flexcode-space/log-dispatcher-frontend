@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react";
-// import { toast } from 'src/components/toast'
+import { toast } from 'src/components/toast'
 import { Axios } from "../axios";
 import { Params } from "../types";
 import { Total } from "./types";
@@ -61,9 +61,7 @@ const bebanApi = () => {
       } finally {
         setLoading(false);
       }
-    },
-    []
-  );
+    }, []);
 
   const getBebanPenghantarHarianList = useCallback(
     async (params: ParamsBebanList = {}) => {
@@ -78,9 +76,7 @@ const bebanApi = () => {
       } finally {
         setLoading(false);
       }
-    },
-    []
-  );
+    }, []);
 
   const getTeganganBusbarList = useCallback(
     async (params: ParamsBebanList = {}) => {
@@ -95,9 +91,16 @@ const bebanApi = () => {
       } finally {
         setLoading(false);
       }
-    },
-    []
-  );
+    }, []);
+
+  const createPindahBeban = useCallback(async (payload: any) => {
+    try {
+      await Axios.post(`${endpoint}/pindah`, payload);
+      toast.success('Berhasil pindah subsistem')
+    } catch (error) {
+      toast.error('Gagal pindah subsistem')
+    }
+  }, []);
 
   return {
     bebanList,
@@ -113,6 +116,7 @@ const bebanApi = () => {
     getBebanTrafoList,
     getBebanPenghantarHarianList,
     getTeganganBusbarList,
+    createPindahBeban
   };
 };
 

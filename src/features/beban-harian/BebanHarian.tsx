@@ -90,16 +90,16 @@ const BebanHarian = () => {
                 <Typography variant="h6">Daftar File Laporan</Typography>
 
                 <div style={{ display: "flex", gap: "10px" }}>
-                  <Button sx={{ mb: 2 }} variant="outlined">
+                  {/* <Button sx={{ mb: 2 }} variant="outlined">
                     <EditIcon />
                     Ubah Data
-                  </Button>
+                  </Button> */}
                   <Button
                     sx={{ mb: 2 }}
                     variant="outlined"
                     onClick={() => openModal()}
                   >
-                    Set
+                    Pindah SS
                   </Button>
                   <Button sx={{ mb: 2 }} variant="contained">
                     <DownloadIcon />
