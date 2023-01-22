@@ -5,6 +5,7 @@ import { Axios } from "../axios";
 export type Params = {
   search?: string;
   tanggal?: string;
+  jam?: string
 };
 
 const endpoint = "/report/laporan-neraca";

@@ -27,7 +27,6 @@ export const validationSchema = yup.object({
 })
 
 export const jenisReaktorOptions = [
-  { value: "Radial", label: "Radial" },
-  { value: "Transfer", label: "Transfer" },
-  { value: "Loop", label: "Loop" }
+  { value: "Reaktor", label: "Reaktor" },
+  { value: "Kapasitor", label: "Kapasitor" },
 ]

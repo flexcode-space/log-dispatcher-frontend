@@ -1,5 +1,4 @@
 import { useState, ChangeEvent, useEffect } from "react";
-
 import DatePicketMui from "@mui/lab/DatePicker";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
@@ -7,10 +6,7 @@ import { Card, CardContent, Button } from "@mui/material";
 import { Typography, TextField } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import Table from "@mui/material/Table";
-// import TableRow from "@mui/material/TableRow";
-// import TableHead from "@mui/material/TableHead";
 import TableBody from "@mui/material/TableBody";
-// import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TablePagination from "@mui/material/TablePagination";
 import PageHeader from "src/@core/components/page-header";
@@ -21,7 +17,6 @@ import {
   TableCell,
 } from "src/components/table";
 import DownloadIcon from "src/assets/icons/download-icon.svg";
-// import FilterIcon from "src/assets/icons/filter-icon.svg";
 import EditIcon from "src/assets/icons/edit-icon.svg";
 import { openModal } from "src/state/modal";
 import { bebanApi } from "src/api/beban";

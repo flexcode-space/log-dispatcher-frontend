@@ -26,7 +26,7 @@ import {
   TableCellHead,
   TableContainer,
 } from "src/components/table";
-import { ModalAdd } from "./modal";
+import { ModalAdd, ModalFilter } from "./modal";
 import { ModalGenerateLaporan } from "src/components/modal";
 import { laporanNeracaDayaApi } from "src/api/laporan-neraca-daya";
 import { LaporanNeracaDayaList } from "./types";
@@ -40,14 +40,32 @@ const LaporanNeracaDaya = () => {
 
   const [search, setSearch] = useState<string>("");
   const [date, setDate] = useState<Dayjs | null>(null);
+  const [filterGenerate, setFilterGenerate] = useState<{
+    tanggal: Dayjs | null;
+    jam: Dayjs | null;
+  }>({
+    tanggal: null,
+    jam: null,
+  });
 
   const filterDate = date ? dayjs(date).format("YYYY-MM-DD") : "";
+
   const {
     getLaporanNeracaDayaList,
     laporanNeracaDayaList,
     getLaporanNeracaDayaGenerate,
     laporanNeracaDayaGenerateList,
   } = laporanNeracaDayaApi();
+
+  const onChangeFilter = ({
+    tanggal,
+    jam,
+  }: {
+    tanggal: Dayjs | null;
+    jam: Dayjs | null;
+  }) => {
+    setFilterGenerate({ tanggal, jam });
+  };
 
   useEffect(() => {
     getLaporanNeracaDayaList({ tanggal: filterDate });
@@ -62,17 +80,23 @@ const LaporanNeracaDaya = () => {
   useEffect(() => {
     if (modalSnapshot.target === "modal-generate-laporan") {
       getLaporanNeracaDayaGenerate({
-        tanggal: filterDate || dayjs().format("YYYY-MM-DD"),
+        tanggal: filterGenerate?.tanggal
+          ? dayjs(filterGenerate.tanggal).format("YYYY-MM-DD")
+          : dayjs().format("YYYY-MM-DD"),
+        jam: filterGenerate?.jam
+          ? dayjs(filterGenerate.jam).format("HH:mm")
+          : "",
       });
     }
-  }, [modalSnapshot.isOpen]);
+  }, [modalSnapshot.isOpen, filterGenerate]);
 
   return (
     <>
       <ModalAdd />
+      <ModalFilter onChangeFilter={onChangeFilter} />
       <ModalGenerateLaporan
         value={laporanNeracaDayaGenerateList}
-        title="Laporan Neraca Daya"
+        title={`Laporan Neraca Daya ${filterGenerate.jam ? "(Per Jam)" : ""}`}
       />
       <Grid container spacing={6}>
         <Grid item xs={12}>
@@ -109,7 +133,7 @@ const LaporanNeracaDaya = () => {
               </LocalizationProvider>
               <Button
                 sx={{ mb: 2 }}
-                onClick={() => openModal("modal-generate-laporan")}
+                onClick={() => openModal("modal-filter-neraca-daya")}
                 variant="contained"
               >
                 Generate Laporan

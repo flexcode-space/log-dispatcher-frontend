@@ -23,7 +23,7 @@ import { laporanNeracaDayaApi } from "src/api/laporan-neraca-daya";
 import dayjs from "dayjs";
 import { setReloadPage } from "src/state/reloadPage";
 import { useEffect } from "react";
-import { laporanNeracaDaya, removeData } from "../state/laporanNeracaDaya";
+import { laporanNeracaDaya, removeData } from "../../state/laporanNeracaDaya";
 import { TrashCanOutline } from "mdi-material-ui";
 
 const ModalAdd = () => {
