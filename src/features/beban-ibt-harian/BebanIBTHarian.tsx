@@ -26,7 +26,7 @@ import { IBTList } from "./types";
 import { showValueBeban } from "./BebanIBTHarian.constant";
 
 import { WrapperFilter } from "src/components/filter";
-import { ModalSetBebanHarian } from "./modal";
+import { ModalSetBebanHarian, ModalDownload } from "./modal";
 import { convertDate } from "src/utils/date";
 import { TIME } from "src/constants/time";
 import { useDebounce } from "src/hooks/useDebounce";
@@ -76,7 +76,7 @@ const BebanIBTHarian = () => {
   return (
     <>
       <ModalSetBebanHarian />
-
+      <ModalDownload />
       <Grid container spacing={6}>
         <Grid item xs={12}>
           <PageHeader
@@ -121,11 +121,15 @@ const BebanIBTHarian = () => {
                   <Button
                     sx={{ mb: 2 }}
                     variant="outlined"
-                    onClick={() => openModal()}
+                    onClick={() => openModal("modal-beban-harian")}
                   >
                     Set
                   </Button>
-                  <Button sx={{ mb: 2 }} variant="contained">
+                  <Button
+                    sx={{ mb: 2 }}
+                    variant="contained"
+                    onClick={() => openModal("modal-download")}
+                  >
                     <DownloadIcon />
                     Download laporan
                   </Button>

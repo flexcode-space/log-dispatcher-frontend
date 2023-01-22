@@ -1,7 +1,7 @@
 import axios from 'axios'
 import authConfig from "src/configs/auth";
 // TODO: create env
-const baseURL = 'https://backend.logsheet-api.flexcode.co.id'
+export const baseURL = 'https://backend.logsheet-api.flexcode.co.id'
 
 const instance = axios.create({
   baseURL,
