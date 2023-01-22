@@ -16,7 +16,6 @@ import { DatePicker, TimePicker } from "src/components/date-picker";
 import { StyledForm } from "src/components/form";
 import { modal, closeModal, openModal } from "src/state/modal";
 import dayjs, { Dayjs } from "dayjs";
-import { laporanNeracaDaya, removeData } from "../../state/laporanNeracaDaya";
 
 type ModalFilterProps = {
   onChangeFilter: ({
@@ -70,7 +69,6 @@ const ModalFilter = ({ onChangeFilter }: ModalFilterProps) => {
 
   const hanleCloseModal = () => {
     closeModal();
-    removeData();
     formMethods.reset({ ...initialValues });
   };
 

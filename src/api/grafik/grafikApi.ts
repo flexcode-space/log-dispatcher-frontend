@@ -24,9 +24,7 @@ const grafikApi = () => {
   const [grafikSubsistem, setGrafikSubsistem] = useState<GrafikData>(
     [] as GrafikData
   );
-  const [grafikPembangkit, setGrafikPembangkit] = useState<GrafikData>(
-    [] as GrafikData
-  );
+  const [grafikPembangkit, setGrafikPembangkit] = useState<[]>([]);
 
   const getGrafik = useCallback(async (params: ParamsGrafik = {}, path?: string) => {
     const url = path ? `${endpoint}/${path}` : endpoint
@@ -64,8 +62,8 @@ const grafikApi = () => {
           return {
             time,
             beban: (data as any)[mw]! || 0,
-            rencana: rencana ? (rencana as any)[mw]! || 0 : [],
-            selisih: selisih ? (selisih as any)[mw]! || 0 : [],
+            rencana: rencana ? (rencana as any)[mw]! : 0,
+            selisih: selisih ? (selisih as any)[mw]! : 0,
           };
         });
         setGrafikSubsistem(result);
@@ -78,25 +76,9 @@ const grafikApi = () => {
 
   const getGrafikPembangkit = useCallback(
     async (id?: string, params: ParamsGrafik = {}) => {
-      const {
-        data: { data, rencana, selisih },
-      } = await Axios.get(`${endpoint}/kategori-pembangkit/${id}`, { params });
+      const { data } = await Axios.get(`${endpoint}/kategori-pembangkit/${id}`, { params });
+      setGrafikPembangkit(data || [])
 
-      if (data) {
-        const result = Object.values(TIME).map((time) => {
-          const mw = "mw_" + time.replace(".", "");
-
-          return {
-            time,
-            beban: (data as any)[mw]! || 0,
-            rencana: rencana ? (rencana as any)[mw]! || 0 : [],
-            selisih: selisih ? (selisih as any)[mw]! || 0 : [],
-          };
-        });
-        setGrafikPembangkit(result);
-      } else {
-        setGrafikPembangkit([]);
-      }
     },
     []
   );

@@ -1,6 +1,5 @@
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
-import Typography from "@mui/material/Typography";
 import CardContent from "@mui/material/CardContent";
 import Divider from "@mui/material/Divider";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
@@ -13,19 +12,17 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
-  TooltipProps,
 } from "recharts";
 import RechartsWrapper from "src/@core/styles/libs/recharts";
 import { CardHeader } from "src/components/card";
 import DatePickerMui from "@mui/lab/DatePicker";
-
-import Circle from "mdi-material-ui/Circle";
 
 import { useEffect, useState } from "react";
 import dayjs, { Dayjs } from "dayjs";
 import { MenuItem, Select, TextField } from "@mui/material";
 import { subsistemApi } from "src/api/subsistem";
 import { grafikApi } from "src/api/grafik";
+import CustomTooltip from "src/features/grafik/components/CustomTooltips";
 
 const Grafik: React.FC<{ title: string }> = ({ title }) => {
   const [date, setDate] = useState<Dayjs | null>(dayjs());
@@ -42,7 +39,7 @@ const Grafik: React.FC<{ title: string }> = ({ title }) => {
   const direction = "ltr";
 
   useEffect(() => {
-    getSubsistemList().then();
+    getSubsistemList();
   }, []);
 
   const getAllDataGrafik = () => {
@@ -57,36 +54,7 @@ const Grafik: React.FC<{ title: string }> = ({ title }) => {
     }
   }, [subsitemId, date]);
 
-  const CustomTooltip = (data: TooltipProps<any, any>) => {
-    // ** Props
-    const { active, payload } = data;
-
-    if (active && payload) {
-      return (
-        <div className="recharts-custom-tooltip">
-          <Typography>{data.label}</Typography>
-          <Divider />
-          {data &&
-            data.payload &&
-            data.payload.map((i: any) => {
-              return (
-                <Box
-                  sx={{ display: "flex", alignItems: "center" }}
-                  key={i.dataKey}
-                >
-                  <Circle sx={{ color: i.fill, mr: 2.5, fontSize: "0.6rem" }} />
-                  <span>
-                    {i.dataKey} : {i.payload[i.dataKey]}
-                  </span>
-                </Box>
-              );
-            })}
-        </div>
-      );
-    }
-
-    return null;
-  };
+  console.log("grafikSubsistem", grafikSubsistem);
 
   return (
     <RechartsWrapper>
@@ -136,7 +104,7 @@ const Grafik: React.FC<{ title: string }> = ({ title }) => {
                 margin={{ left: -20 }}
               >
                 <CartesianGrid />
-                <XAxis dataKey="name" reversed={false} />
+                <XAxis dataKey="time" reversed={false} />
                 <YAxis orientation="left" />
                 <Tooltip content={CustomTooltip} />
                 <Line dataKey="beban" stroke="#4AA1B9" strokeWidth={3} />

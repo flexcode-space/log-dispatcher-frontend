@@ -21,10 +21,16 @@ import { CardHeader } from "src/components/card";
 import { grafikApi } from "src/api/grafik";
 import { convertDate } from "src/utils/date";
 import CustomTooltip from "../components/CustomTooltips";
+import { TIME } from "src/constants/time";
 
 type GrafikPembangkitProps = {
   id?: string;
   name?: string;
+};
+
+type DataGrafikPembangkit = {
+  nama: string;
+  data: any[];
 };
 
 const GrafikPembangkit = ({ id, name }: GrafikPembangkitProps): JSX.Element => {
@@ -36,6 +42,32 @@ const GrafikPembangkit = ({ id, name }: GrafikPembangkitProps): JSX.Element => {
   const getAllDataGrafik = () => {
     getGrafikPembangkit(id, { tanggal: convertDate(date) });
   };
+
+  const generateData = () => {
+    const result = Object.values(TIME).map((time) => {
+      const mw = "mw_" + time.replace(".", "");
+
+      const dataGrafik = grafikPembangkit?.map(
+        (value: DataGrafikPembangkit, index) => ({
+          [value?.nama]: (value?.data as any)[mw]! || 0,
+        })
+      );
+
+      return {
+        time,
+        ...Object.assign({}, ...dataGrafik),
+      };
+    });
+
+    return result;
+  };
+
+  const colorGrafik = grafikPembangkit?.map(
+    (value: DataGrafikPembangkit, index) => ({
+      nama: value.nama,
+      color: `#${Math.floor(Math.random() * 16777215).toString(16)}`,
+    })
+  );
 
   useEffect(() => {
     if (id && date) {
@@ -67,16 +99,20 @@ const GrafikPembangkit = ({ id, name }: GrafikPembangkitProps): JSX.Element => {
             <ResponsiveContainer>
               <LineChart
                 height={350}
-                data={grafikPembangkit}
+                data={generateData()}
                 style={{ direction }}
               >
                 <CartesianGrid />
                 <XAxis dataKey="time" reversed={false} />
                 <YAxis orientation="left" />
                 <Tooltip content={CustomTooltip} />
-                <Line dataKey="beban" stroke="#4AA1B9" strokeWidth={3} />
-                <Line dataKey="rencana" stroke="#ff9f43" strokeWidth={3} />
-                <Line dataKey="selisih" stroke="none" />
+                {colorGrafik?.map((value) => (
+                  <Line
+                    dataKey={value.nama}
+                    stroke={value?.color}
+                    strokeWidth={3}
+                  />
+                ))}
               </LineChart>
             </ResponsiveContainer>
           </Box>
