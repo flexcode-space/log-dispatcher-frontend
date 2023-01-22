@@ -62,8 +62,8 @@ const grafikApi = () => {
           return {
             time,
             beban: (data as any)[mw]! || 0,
-            rencana: rencana ? (rencana as any)[mw]! || 0 : [],
-            selisih: selisih ? (selisih as any)[mw]! || 0 : [],
+            rencana: rencana ? (rencana as any)[mw]! : 0,
+            selisih: selisih ? (selisih as any)[mw]! : 0,
           };
         });
         setGrafikSubsistem(result);
@@ -79,21 +79,6 @@ const grafikApi = () => {
       const { data } = await Axios.get(`${endpoint}/kategori-pembangkit/${id}`, { params });
       setGrafikPembangkit(data || [])
 
-      // if (data) {
-      //   const result = Object.values(TIME).map((time) => {
-      //     const mw = "mw_" + time.replace(".", "");
-
-      //     return {
-      //       time,
-      //       beban: (data as any)[mw]! || 0,
-      //       rencana: rencana ? (rencana as any)[mw]! || 0 : [],
-      //       selisih: selisih ? (selisih as any)[mw]! || 0 : [],
-      //     };
-      //   });
-      //   setGrafikPembangkit(result);
-      // } else {
-      //   setGrafikPembangkit([]);
-      // }
     },
     []
   );
