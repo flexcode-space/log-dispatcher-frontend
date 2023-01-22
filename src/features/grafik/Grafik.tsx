@@ -38,11 +38,13 @@ const Grafik = () => {
       <Grid item xs={12}>
         <PageHeader title={<Typography variant="h5">Pembangkit</Typography>} />
       </Grid>
-      {kategoriPembangkit.map((kategori: any) => (
-        <Grid key={kategori?.id} item xs={12} sm={6}>
-          <GrafikPembangkit id={kategori?.id} name={kategori?.nama} />
-        </Grid>
-      ))}
+      {kategoriPembangkit.map((kategori: any, index: number) => {
+        return (
+          <Grid key={kategori?.id} item xs={12} sm={6}>
+            <GrafikPembangkit id={kategori?.id} name={kategori?.nama} />
+          </Grid>
+        );
+      })}
     </Grid>
   );
 };
