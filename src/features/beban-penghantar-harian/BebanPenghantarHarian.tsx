@@ -23,7 +23,7 @@ import EditIcon from "src/assets/icons/edit-icon.svg";
 import { openModal } from "src/state/modal";
 
 import { WrapperFilter } from "src/components/filter";
-import { ModalSetBebanHarian } from "./modal";
+import { ModalSetBebanHarian, ModalDownload } from "./modal";
 import { bebanApi } from "src/api/beban";
 import { showValueBeban } from "./BebanPenghantarHarian.constant";
 import { BebanPenghantarHarian } from "./types";
@@ -81,7 +81,7 @@ const BebanPenghantarHarian = () => {
   return (
     <>
       <ModalSetBebanHarian />
-
+      <ModalDownload />
       <Grid container spacing={6}>
         <Grid item xs={12}>
           <PageHeader
@@ -128,11 +128,15 @@ const BebanPenghantarHarian = () => {
                   <Button
                     sx={{ mb: 2 }}
                     variant="outlined"
-                    onClick={() => openModal()}
+                    onClick={() => openModal("modal-beban-harian")}
                   >
                     Set
                   </Button>
-                  <Button sx={{ mb: 2 }} variant="contained">
+                  <Button
+                    sx={{ mb: 2 }}
+                    variant="contained"
+                    onClick={() => openModal("modal-download")}
+                  >
                     <DownloadIcon />
                     Download laporan
                   </Button>

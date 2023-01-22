@@ -24,6 +24,9 @@ const ModalSetBebanHarian = () => {
 
   const { createPindahBeban } = bebanApi();
 
+  const isOpen =
+    modalSnapshot.isOpen && modalSnapshot.target === "modal-beban-harian";
+
   const formMethods = useForm({
     resolver: yupResolver(validationSchema),
     defaultValues: initialValues,
@@ -56,7 +59,7 @@ const ModalSetBebanHarian = () => {
 
   return (
     <Dialog
-      open={modalSnapshot.isOpen}
+      open={isOpen}
       fullWidth
       onClose={onClickCloseModal}
       maxWidth="sm"

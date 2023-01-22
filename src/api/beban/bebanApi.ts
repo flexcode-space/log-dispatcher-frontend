@@ -8,6 +8,11 @@ interface ParamsBebanList extends Params {
   tanggal?: string;
 }
 
+interface ParamsReportBeban {
+  tanggal_start: string
+  tanggal_end: string
+}
+
 const endpoint = "/beban";
 
 const bebanApi = () => {
@@ -19,6 +24,7 @@ const bebanApi = () => {
   const [totalData, setTotalData] = useState<Total>({} as Total);
   const [loading, setLoading] = useState<boolean>(false);
   const [countData, setCountData] = useState<number>(0)
+  const [loadingDownload, setLoadingDownload] = useState<boolean>(false);
 
   const getBebanList = useCallback(async (params: ParamsBebanList = {}) => {
     setLoading(true);
@@ -102,6 +108,19 @@ const bebanApi = () => {
     }
   }, []);
 
+  const getReportBeban = useCallback(
+    async (params: ParamsReportBeban, path?: string) => {
+      setLoadingDownload(true);
+
+      try {
+        const url = path ? `${endpoint}/${path}` : endpoint
+        const { data } = await Axios.get(`${url}/report`, { params });
+        return data
+      } finally {
+        setLoadingDownload(false);
+      }
+    }, []);
+
   return {
     bebanList,
     bebanIBTList,
@@ -116,7 +135,9 @@ const bebanApi = () => {
     getBebanTrafoList,
     getBebanPenghantarHarianList,
     getTeganganBusbarList,
-    createPindahBeban
+    createPindahBeban,
+    getReportBeban,
+    loadingDownload,
   };
 };
 

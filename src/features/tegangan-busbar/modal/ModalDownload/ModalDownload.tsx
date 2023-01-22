@@ -8,22 +8,21 @@ import {
   Typography,
   Box,
 } from "@mui/material";
+import LoadingButton from "@mui/lab/LoadingButton";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useSnapshot } from "valtio";
-import AdapterDateFns from "@mui/lab/AdapterDateFns";
-import LocalizationProvider from "@mui/lab/LocalizationProvider";
-import { InputField } from "src/components/input-field";
-import { SelectInput } from "src/components/select-input";
 import { StyledForm } from "src/components/form";
 import { DatePicker } from "src/components/date-picker";
-import { initialValues, validationSchema } from "./ModalBebanHarian.constant";
 import { modal, closeModal } from "src/state/modal";
+import { bebanApi } from "src/api/beban";
+import dayjs from "dayjs";
+import { initialValues, validationSchema } from "./ModalDownload.constant";
+import { baseURL } from "src/api/axios";
 
-const ModalSetBebanHarian = () => {
+const ModalDownload = () => {
   const modalSnapshot = useSnapshot(modal);
 
-  const isOpen =
-    modalSnapshot.isOpen && modalSnapshot.target === "modal-beban-harian";
+  const { getReportBeban, loadingDownload } = bebanApi();
 
   const formMethods = useForm({
     resolver: yupResolver(validationSchema),
@@ -31,11 +30,29 @@ const ModalSetBebanHarian = () => {
     mode: "onSubmit",
   });
 
+  const isOpen =
+    modalSnapshot.isOpen && modalSnapshot.target === "modal-download";
+
   const onSubmit = (event?: React.FormEvent<HTMLFormElement>) => {
     event?.preventDefault();
 
     formMethods.handleSubmit(async (values) => {
-      // TODO: HANDLE SUBMIT
+      const tanggalStart = dayjs(values?.tanggal_start);
+      const tanggalEnd = dayjs(values?.tanggal_end);
+
+      if (tanggalStart.isAfter(tanggalEnd, "day")) {
+        alert("Tanggal Akhir tidak boleh kecil dari Tanggal Awal");
+      } else {
+        await getReportBeban(
+          {
+            tanggal_start: tanggalStart.format("YYYY-MM-DD"),
+            tanggal_end: tanggalEnd.format("YYYY-MM-DD"),
+          },
+          "tegangan-busbar"
+        ).then((result) => {
+          window.open(`${baseURL}/${result?.path}`, "_blank", "noreferrer");
+        });
+      }
     })();
   };
 
@@ -64,39 +81,15 @@ const ModalSetBebanHarian = () => {
           >
             <Box sx={{ mb: 8 }}>
               <Typography variant="h5" sx={{ mb: 3, lineHeight: "2rem" }}>
-                Set Beban
+                Download Laporan
               </Typography>
             </Box>
             <Grid container spacing={1} mt={1}>
               <Grid item xs={12} sm={6}>
-                <SelectInput
-                  label="Pilih Jenis Peralatan"
-                  name="peralatan"
-                  options={[]}
-                />
+                <DatePicker label="Dari Tanggal" name="tanggal_start" />
               </Grid>
               <Grid item xs={12} sm={6}>
-                <SelectInput
-                  label="Pilih Peralatan"
-                  name="peralatan"
-                  options={[]}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <InputField name="sub_sistem_awal" label="Subsistem Awal" />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <SelectInput label="Subsistem Baru" name="no" options={[]} />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <LocalizationProvider dateAdapter={AdapterDateFns}>
-                  <DatePicker label="Tanggal" name="tanggal" />
-                </LocalizationProvider>
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <LocalizationProvider dateAdapter={AdapterDateFns}>
-                  <DatePicker label="Waktu" name="tanggal" />
-                </LocalizationProvider>
+                <DatePicker label="Sampai Tanggal" name="tanggal_end" />
               </Grid>
             </Grid>
           </DialogContent>
@@ -104,9 +97,13 @@ const ModalSetBebanHarian = () => {
             <Button variant="outlined" onClick={onClickCloseModal}>
               Batal
             </Button>
-            <Button variant="contained" type="submit">
+            <LoadingButton
+              loading={loadingDownload}
+              variant="contained"
+              type="submit"
+            >
               Simpan
-            </Button>
+            </LoadingButton>
           </DialogActions>
         </StyledForm>
       </FormProvider>
@@ -114,4 +111,4 @@ const ModalSetBebanHarian = () => {
   );
 };
 
-export default ModalSetBebanHarian;
+export default ModalDownload;

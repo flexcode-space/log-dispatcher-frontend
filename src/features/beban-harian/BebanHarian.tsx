@@ -33,7 +33,7 @@ import {
   IBT,
 } from "src/api/beban/types";
 import { showValueBeban } from "./BebanHarian.constant";
-import { ModalSetBebanHarian } from "./modal";
+import { ModalDownload, ModalSetBebanHarian } from "./modal";
 import { convertDate } from "src/utils/date";
 import { TIME } from "src/constants/time";
 import FallbackSpinner from "src/@core/components/spinner";
@@ -62,7 +62,7 @@ const BebanHarian = () => {
   return (
     <>
       <ModalSetBebanHarian />
-
+      <ModalDownload />
       <Grid container spacing={6}>
         <Grid item xs={12}>
           <WrapperFilter sx={{ alignItems: "center" }}>
@@ -97,11 +97,15 @@ const BebanHarian = () => {
                   <Button
                     sx={{ mb: 2 }}
                     variant="outlined"
-                    onClick={() => openModal()}
+                    onClick={() => openModal("modal-beban-harian")}
                   >
                     Pindah SS
                   </Button>
-                  <Button sx={{ mb: 2 }} variant="contained">
+                  <Button
+                    sx={{ mb: 2 }}
+                    variant="contained"
+                    onClick={() => openModal("modal-download")}
+                  >
                     <DownloadIcon />
                     Download laporan
                   </Button>

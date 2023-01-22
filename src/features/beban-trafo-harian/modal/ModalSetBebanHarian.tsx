@@ -28,6 +28,8 @@ const ModalSetBebanHarian = () => {
     mode: "onSubmit",
   });
 
+  const isOpen = modalSnapshot.isOpen && modalSnapshot.target === "modal-beban-harian"
+
   const onSubmit = (event?: React.FormEvent<HTMLFormElement>) => {
     event?.preventDefault();
 
@@ -43,7 +45,7 @@ const ModalSetBebanHarian = () => {
 
   return (
     <Dialog
-      open={modalSnapshot.isOpen}
+      open={isOpen}
       fullWidth
       onClose={onClickCloseModal}
       maxWidth="sm"
