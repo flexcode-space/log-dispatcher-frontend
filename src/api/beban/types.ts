@@ -3,6 +3,7 @@ export type Beban = {
   color: string
   pembangkit: Pembangkit
   ibt: IBT[]
+  transfer: IBT[]
   total: Total
 }
 
