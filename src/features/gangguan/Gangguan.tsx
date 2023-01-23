@@ -28,7 +28,7 @@ import {
   TableContainer,
 } from "src/components/table";
 import DownloadGreenIcon from "src/assets/icons/download-green-icon.svg";
-
+import FilterGreenIcon from "src/assets/icons/filter-green-icon.svg";
 import { MenuMore } from "./components";
 import {
   ModalAddGangguan,
@@ -154,7 +154,7 @@ const Gangguan = () => {
                       )}
                     />
                   </LocalizationProvider>
-                  {/* <Button
+                  <Button
                     variant="outlined"
                     size="small"
                     sx={{ height: "40px" }}
@@ -163,7 +163,7 @@ const Gangguan = () => {
                       <FilterGreenIcon />
                     </IconButton>
                     Filter
-                  </Button> */}
+                  </Button>
                   <Button
                     variant="contained"
                     size="small"

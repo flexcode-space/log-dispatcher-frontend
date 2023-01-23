@@ -271,6 +271,47 @@ const BebanHarian = () => {
                                   </>
                                 ))}
 
+                              {value?.transfer &&
+                                value?.transfer.map((transfer: IBT) => (
+                                  <>
+                                    {transfer.data.map((data: DataIBT) => (
+                                      <TableRow hover>
+                                        <TableCell
+                                          size="small"
+                                          sx={{
+                                            borderRight: "1px solid #4c4e641f",
+                                          }}
+                                        >
+                                          <CustomChip
+                                            label={data.jenis}
+                                            skin="light"
+                                            color="primary"
+                                            size="small"
+                                          />
+                                        </TableCell>
+                                        <TableCell
+                                          size="small"
+                                          sx={{
+                                            borderRight: "1px solid #4c4e641f",
+                                          }}
+                                        >
+                                          {data.nama}
+                                        </TableCell>
+                                        {showValueBeban(data?.data)}
+                                      </TableRow>
+                                    ))}
+                                    <TableRow
+                                      hover
+                                      sx={{ background: transfer?.total.color }}
+                                    >
+                                      <TableCell size="small" colSpan={2}>
+                                        {transfer?.total?.nama}
+                                      </TableCell>
+                                      {showValueBeban(transfer?.total?.data)}
+                                    </TableRow>
+                                  </>
+                                ))}
+
                               <TableRow
                                 hover
                                 sx={{ background: totalPembangkit.color }}
@@ -285,7 +326,7 @@ const BebanHarian = () => {
                               {totalSubsistem?.nama && (
                                 <TableRow
                                   hover
-                                  sx={{ background: totalSubsistem.color }}
+                                  // sx={{ background: totalSubsistem.color }}
                                 >
                                   <TableCell colSpan={2} size="small">
                                     {totalSubsistem?.nama}

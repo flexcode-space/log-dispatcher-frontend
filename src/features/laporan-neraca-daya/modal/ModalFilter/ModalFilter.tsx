@@ -56,7 +56,7 @@ const ModalFilter = ({ onChangeFilter }: ModalFilterProps) => {
 
     formMethods.handleSubmit(async (values) => {
       console.log("values", values);
-      const tanggal = values.jenis_laporan === 2 ? dayjs(values.tanggal) : null;
+      const tanggal = dayjs(values.tanggal);
       const jam = values.jenis_laporan === 2 ? dayjs(values.jam) : null;
       onChangeFilter({
         tanggal,
@@ -114,15 +114,13 @@ const ModalFilter = ({ onChangeFilter }: ModalFilterProps) => {
                   ]}
                 />
               </Grid>
+              <Grid item xs={jenisLaporan === 2 ? 6 : 12}>
+                <DatePicker label="Tanggal" name="tanggal" />
+              </Grid>
               {jenisLaporan === 2 && (
-                <>
-                  <Grid item xs={6}>
-                    <DatePicker label="Tanggal" name="tanggal" />
-                  </Grid>
-                  <Grid item xs={6}>
-                    <TimePicker label="Jam" name="jam" />
-                  </Grid>
-                </>
+                <Grid item xs={6}>
+                  <TimePicker label="Jam" name="jam" />
+                </Grid>
               )}
             </Grid>
           </DialogContent>
