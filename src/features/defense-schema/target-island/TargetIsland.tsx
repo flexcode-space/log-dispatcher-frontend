@@ -42,7 +42,8 @@ const TargetIsland = () => {
 
   const filterDate = date ? dayjs(date).format("YYYY-MM-DD") : "";
 
-  const { getDefenseList, defenseList, loading, countData } = defenseApi();
+  const { getDefenseList, updateDefense, defenseList, loading, countData } =
+    defenseApi();
   const { createPencatanDefense } = pencatatanDefenseApi();
 
   const columns = [
@@ -92,13 +93,19 @@ const TargetIsland = () => {
   const rowData = defenseList.map((value, index) => ({ id: index, ...value }));
 
   const onClickStatus = async (data: TargetIslandList) => {
-    await createPencatanDefense("target-island", {
-      frekuensi: data?.frekuensi,
-      gardu_induk: data?.gardu_induk.nama,
-      island: data?.island,
+    await updateDefense("target-island", {
+      ...data,
       status: !data?.status,
-      tahap: data?.tahap.value,
-      upt: data?.upt,
+      tanggal: dayjs(data?.tanggal).format("YYYY-MM-DD"),
+    }).then(async () => {
+      await createPencatanDefense("target-island", {
+        frekuensi: data?.frekuensi,
+        gardu_induk: data?.gardu_induk.nama,
+        island: data?.island,
+        status: !data?.status,
+        tahap: data?.tahap.value,
+        upt: data?.upt,
+      });
     });
     setReloadPage("target-island");
   };

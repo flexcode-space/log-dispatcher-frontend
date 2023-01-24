@@ -33,10 +33,12 @@ import { selectData } from "../state/defenseSchema";
 import { useDebounce } from "src/hooks/useDebounce";
 import FallbackSpinner from "src/@core/components/spinner";
 import { pencatatanDefenseApi } from "src/api/pencatatan-defense";
+import dayjs from "dayjs";
 
 const OgsComponent = () => {
   const reloadPageSnap = useSnapshot(reloadPage);
-  const { getDefenseList, defenseList, loading, countData } = defenseApi();
+  const { getDefenseList, updateDefense, defenseList, loading, countData } =
+    defenseApi();
   const { createPencatanDefense } = pencatatanDefenseApi();
 
   const [search, setSearch] = useState<string>("");
@@ -63,13 +65,19 @@ const OgsComponent = () => {
   };
 
   const onClickStatus = async (data: Data) => {
-    await createPencatanDefense("ogs", {
-      keterangan: data?.keterangan,
-      lokasi: data?.gardu_induk?.nama,
+    await updateDefense("ogs", {
+      ...data,
       status: !data?.status,
-      subsistem: data?.sub_sistem.nama,
-      tahap: data?.tahap.value,
-      trip: data?.peralatan_target.nama,
+      tanggal: dayjs(data?.tanggal).format("YYYY-MM-DD"),
+    }).then(async () => {
+      await createPencatanDefense("ogs", {
+        keterangan: data?.keterangan,
+        lokasi: data?.gardu_induk?.nama,
+        status: !data?.status,
+        subsistem: data?.sub_sistem.nama,
+        tahap: data?.tahap.value,
+        trip: data?.peralatan_target.nama,
+      });
     });
     setReloadPage("ogs");
   };

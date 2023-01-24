@@ -22,7 +22,7 @@ import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import { openModal } from "src/state/modal";
-
+import dayjs from "dayjs";
 import { WrapperFilter } from "src/components/filter";
 import { useSnapshot } from "valtio";
 import { reloadPage, setReloadPage } from "src/state/reloadPage";
@@ -37,7 +37,8 @@ import { pencatatanDefenseApi } from "src/api/pencatatan-defense";
 
 const DSComponent = () => {
   const reloadPageSnap = useSnapshot(reloadPage);
-  const { getDefenseList, defenseList, loading, countData } = defenseApi();
+  const { getDefenseList, updateDefense, defenseList, loading, countData } =
+    defenseApi();
   const { createPencatanDefense } = pencatatanDefenseApi();
 
   const [search, setSearch] = useState<string>("");
@@ -57,20 +58,26 @@ const DSComponent = () => {
 
   const getDSList = () => {
     if (debouncedSearch) {
-      getDefenseList("DS", { search, page: page + 1, limit: rowsPerPage });
+      getDefenseList("ds", { search, page: page + 1, limit: rowsPerPage });
     } else {
-      getDefenseList("DS", { page: page + 1, limit: rowsPerPage });
+      getDefenseList("ds", { page: page + 1, limit: rowsPerPage });
     }
   };
 
   const onClickStatus = async (data: Data) => {
-    await createPencatanDefense("ds", {
-      keterangan: data?.keterangan,
-      lokasi: data?.gardu_induk?.nama,
+    await updateDefense("ds", {
+      ...data,
       status: !data?.status,
-      subsistem: data?.sub_sistem.nama,
-      tahap: data?.tahap.value,
-      trip: data?.peralatan_target.nama,
+      tanggal: dayjs(data?.tanggal).format("YYYY-MM-DD"),
+    }).then(async () => {
+      await createPencatanDefense("ds", {
+        keterangan: data?.keterangan,
+        lokasi: data?.gardu_induk?.nama,
+        status: !data?.status,
+        subsistem: data?.sub_sistem.nama,
+        tahap: data?.tahap.value,
+        trip: data?.peralatan_target.nama,
+      });
     });
     setReloadPage("ds");
   };
