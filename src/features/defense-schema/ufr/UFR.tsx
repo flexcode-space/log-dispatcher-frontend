@@ -32,6 +32,7 @@ import { defenseApi } from "src/api/defense";
 import { useDebounce } from "src/hooks/useDebounce";
 import FallbackSpinner from "src/@core/components/spinner";
 import { pencatatanDefenseApi } from "src/api/pencatatan-defense";
+import dayjs from "dayjs";
 
 const UfrComponent = () => {
   const reloadPageSnap = useSnapshot(reloadPage);
@@ -42,7 +43,8 @@ const UfrComponent = () => {
 
   const debouncedSearch = useDebounce(search, 500);
 
-  const { getDefenseList, defenseList, loading, countData } = defenseApi();
+  const { getDefenseList, updateDefense, defenseList, loading, countData } =
+    defenseApi();
   const { createPencatanDefense } = pencatatanDefenseApi();
 
   const handleChangePage = (event: unknown, newPage: number) => {
@@ -55,15 +57,21 @@ const UfrComponent = () => {
   };
 
   const onClickStatus = async (data: DefenseUFRList) => {
-    await createPencatanDefense("ufr", {
-      gardu_induk: data?.gardu_induk.nama,
-      keterangan: data?.keterangan,
-      penyulang: data?.penyulang,
-      set: data?.set,
+    await updateDefense("ufr", {
+      ...data,
       status: !data?.status,
-      subsistem: data?.sub_sistem.nama,
-      tahap: data?.tahap.value,
-      trafo: data?.trafo.nama,
+      tanggal: dayjs(data?.tanggal).format("YYYY-MM-DD"),
+    }).then(async () => {
+      await createPencatanDefense("ufr", {
+        gardu_induk: data?.gardu_induk.nama,
+        keterangan: data?.keterangan,
+        penyulang: data?.penyulang,
+        set: data?.set,
+        status: !data?.status,
+        subsistem: data?.sub_sistem.nama,
+        tahap: data?.tahap.value,
+        trafo: data?.trafo.nama,
+      });
     });
     setReloadPage("ufr");
   };

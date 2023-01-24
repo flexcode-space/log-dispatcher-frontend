@@ -8,11 +8,17 @@ export type Params = {
   tipe: string
 }
 
+interface ParamsReport {
+  tanggal_start: string
+  tanggal_end: string
+}
+
 const endpoint = '/kit-lur/catatan-pembangkit'
 
 const catatanPembangkitanApi = () => {
   const [catatanPembangkitanList, setCatatanPembangkitan] = useState<[]>([])
   const [loading, setLoading] = useState<boolean>(false);
+  const [loadingDownloadKit, setLoadingDownload] = useState<boolean>(false);
 
   const getCatatanPembangkitanList = useCallback(async (params: Params) => {
     setLoading(true)
@@ -63,14 +69,27 @@ const catatanPembangkitanApi = () => {
     }
   }, [])
 
+  const getReportCatatanPembangkitan = useCallback(async (params: ParamsReport) => {
+    setLoadingDownload(true);
+
+    try {
+      const { data } = await Axios.get(`${endpoint}/report`, { params });
+      return data
+    } finally {
+      setLoadingDownload(false);
+    }
+  }, []);
+
 
   return {
     catatanPembangkitanList,
     loading,
+    loadingDownloadKit,
     getCatatanPembangkitanList,
     createCatatanPembangkitan,
     updateCatatanPembangkitan,
-    deleteCatatanPembangkitan
+    deleteCatatanPembangkitan,
+    getReportCatatanPembangkitan
   }
 }
 

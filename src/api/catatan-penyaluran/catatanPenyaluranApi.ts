@@ -6,11 +6,17 @@ export type Params = {
   search?: string;
 }
 
+interface ParamsReport {
+  tanggal_start: string
+  tanggal_end: string
+}
+
 const endpoint = '/kit-lur/catatan-penyaluran'
 
 const catatanPenyaluranApi = () => {
   const [catatanPenyaluranList, setCatatanPenyaluran] = useState<[]>([])
   const [loading, setLoading] = useState<boolean>(false);
+  const [loadingDownloadLur, setLoadingDownload] = useState<boolean>(false);
 
   const getCatatanPenyaluranList = useCallback(async (params: Params = {}) => {
     setLoading(true)
@@ -61,14 +67,27 @@ const catatanPenyaluranApi = () => {
     }
   }, [])
 
+  const getReportCatatanPenyaluran = useCallback(async (params: ParamsReport) => {
+    setLoadingDownload(true);
+
+    try {
+      const { data } = await Axios.get(`${endpoint}/report`, { params });
+      return data
+    } finally {
+      setLoadingDownload(false);
+    }
+  }, []);
+
 
   return {
     catatanPenyaluranList,
     loading,
+    loadingDownloadLur,
     getCatatanPenyaluranList,
     createCatatanPenyaluran,
     updateCatatanPenyaluran,
-    deleteCatatanPenyaluran
+    deleteCatatanPenyaluran,
+    getReportCatatanPenyaluran
   }
 }
 

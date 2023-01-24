@@ -18,11 +18,17 @@ import { bebanApi } from "src/api/beban";
 import dayjs from "dayjs";
 import { initialValues, validationSchema } from "./ModalDownload.constant";
 import { baseURL } from "src/api/axios";
+import catatanPembangkitanApi from "src/api/catatan-pembangkitan/catatanPembangkitanApi";
+import { catatanPenyaluranApi } from "src/api/catatan-penyaluran";
 
 const ModalDownload = () => {
   const modalSnapshot = useSnapshot(modal);
 
   const { getReportBeban, loadingDownload } = bebanApi();
+  const { getReportCatatanPembangkitan, loadingDownloadKit } =
+    catatanPembangkitanApi();
+  const { getReportCatatanPenyaluran, loadingDownloadLur } =
+    catatanPenyaluranApi();
 
   const formMethods = useForm({
     resolver: yupResolver(validationSchema),
@@ -43,10 +49,17 @@ const ModalDownload = () => {
       if (tanggalStart.isAfter(tanggalEnd, "day")) {
         alert("Tanggal Akhir tidak boleh kecil dari Tanggal Awal");
       } else {
-        await getReportBeban({
+        const params = {
           tanggal_start: tanggalStart.format("YYYY-MM-DD"),
           tanggal_end: tanggalEnd.format("YYYY-MM-DD"),
-        }).then((result) => {
+        };
+        await getReportBeban(params).then((result) => {
+          window.open(`${baseURL}/${result?.path}`, "_blank", "noreferrer");
+        });
+        await getReportCatatanPembangkitan(params).then((result) => {
+          window.open(`${baseURL}/${result?.path}`, "_blank", "noreferrer");
+        });
+        await getReportCatatanPenyaluran(params).then((result) => {
           window.open(`${baseURL}/${result?.path}`, "_blank", "noreferrer");
         });
       }
@@ -95,7 +108,9 @@ const ModalDownload = () => {
               Batal
             </Button>
             <LoadingButton
-              loading={loadingDownload}
+              loading={
+                loadingDownload || loadingDownloadKit || loadingDownloadLur
+              }
               variant="contained"
               type="submit"
             >
