@@ -73,7 +73,7 @@ const catatanPembangkitanApi = () => {
     setLoadingDownload(true);
 
     try {
-      const { data } = await Axios.get(`${endpoint}/report`, { params });
+      const { data } = await Axios.get(`/beban/kit/report`, { params });
       return data
     } finally {
       setLoadingDownload(false);

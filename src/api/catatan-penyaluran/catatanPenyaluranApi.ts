@@ -71,7 +71,7 @@ const catatanPenyaluranApi = () => {
     setLoadingDownload(true);
 
     try {
-      const { data } = await Axios.get(`${endpoint}/report`, { params });
+      const { data } = await Axios.get(`/beban/lur/report`, { params });
       return data
     } finally {
       setLoadingDownload(false);
