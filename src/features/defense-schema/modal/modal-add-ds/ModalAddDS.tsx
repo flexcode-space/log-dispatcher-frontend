@@ -140,7 +140,7 @@ const ModalAdd = () => {
           >
             <Box sx={{ mb: 8 }}>
               <Typography variant="h5" sx={{ mb: 3, lineHeight: "2rem" }}>
-                Tambah OGS
+                Tambah DS 500KV
               </Typography>
             </Box>
             <Grid container spacing={1} mt={1}>
