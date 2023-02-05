@@ -33,7 +33,7 @@ export const columns = [
 
 export const StatusPembangkit = ({ data = [] }: { data: [] }) => {
   return (
-    <Card sx={{ height: "500px" }}>
+    <Card sx={{ height: "auto" }}>
       <CardHeader title="Status Pembangkitan" />
       <CardContent>
         <DataGrid autoHeight hideFooter rows={data} columns={columns} />
