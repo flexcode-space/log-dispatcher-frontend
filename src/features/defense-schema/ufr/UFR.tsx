@@ -25,7 +25,7 @@ import { ModalAddUFR } from "../modal";
 
 import { WrapperFilter } from "src/components/filter";
 import { DefenseUFRList } from "./types";
-import { selectData } from "./state/ufr";
+import { selectData, ufr } from "./state/ufr";
 import { reloadPage, setReloadPage } from "src/state/reloadPage";
 import { useSnapshot } from "valtio";
 import { defenseApi } from "src/api/defense";
@@ -33,9 +33,11 @@ import { useDebounce } from "src/hooks/useDebounce";
 import FallbackSpinner from "src/@core/components/spinner";
 import { pencatatanDefenseApi } from "src/api/pencatatan-defense";
 import dayjs from "dayjs";
+import { ModalChangeStatus } from "../modal/modal-change-status";
 
 const UfrComponent = () => {
   const reloadPageSnap = useSnapshot(reloadPage);
+  const { data } = useSnapshot(ufr);
 
   const [search, setSearch] = useState<string>("");
   const [page, setPage] = useState<number>(0);
@@ -56,7 +58,7 @@ const UfrComponent = () => {
     setPage(0);
   };
 
-  const onClickStatus = async (data: DefenseUFRList) => {
+  const onClickStatus = async (keterangan: string) => {
     await updateDefense("ufr", {
       ...data,
       status: !data?.status,
@@ -64,7 +66,7 @@ const UfrComponent = () => {
     }).then(async () => {
       await createPencatanDefense("ufr", {
         gardu_induk: data?.gardu_induk.nama,
-        keterangan: data?.keterangan,
+        keterangan: keterangan,
         penyulang: data?.penyulang,
         set: data?.set,
         status: !data?.status,
@@ -97,6 +99,7 @@ const UfrComponent = () => {
   return (
     <>
       <ModalAddUFR />
+      <ModalChangeStatus onSubmitStatus={onClickStatus} />
       <Grid container spacing={6}>
         <Grid item xs={12}>
           <Card>
@@ -266,7 +269,13 @@ const UfrComponent = () => {
                               <TableCell size="small">
                                 <Button
                                   variant="contained"
-                                  onClick={() => onClickStatus(list)}
+                                  onClick={() => {
+                                    selectData(list);
+                                    openModal(
+                                      "modal-change-status",
+                                      list.status ? "Nonaktifkan" : "Aktifkan"
+                                    );
+                                  }}
                                   sx={{
                                     color: "white !important",
                                     bgcolor: list.status

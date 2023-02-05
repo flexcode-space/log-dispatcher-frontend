@@ -25,13 +25,15 @@ import { useSnapshot } from "valtio";
 import { reloadPage, setReloadPage } from "src/state/reloadPage";
 import { Pencil } from "mdi-material-ui";
 import { CellType } from "src/types";
-import { selectData } from "./state/targetIsland";
+import { selectData, targetIsland } from "./state/targetIsland";
 import { TargetIslandList } from "./types";
 import { useDebounce } from "src/hooks/useDebounce";
 import { pencatatanDefenseApi } from "src/api/pencatatan-defense";
+import { ModalChangeStatus } from "../modal/modal-change-status";
 
 const TargetIsland = () => {
   const reloadPageSnap = useSnapshot(reloadPage);
+  const { data } = useSnapshot(targetIsland);
 
   const [date, setDate] = useState<Dayjs | null>(null);
   const [search, setSearch] = useState<string>("");
@@ -57,7 +59,13 @@ const TargetIsland = () => {
         return (
           <Button
             variant="contained"
-            onClick={() => onClickStatus(row)}
+            onClick={() => {
+              selectData(data);
+              openModal(
+                "modal-change-status",
+                data.status ? "Nonaktifkan" : "Aktifkan"
+              );
+            }}
             sx={{
               color: "white !important",
               bgcolor: row?.status ? "#72E128" : "#FF4D49",
@@ -92,7 +100,7 @@ const TargetIsland = () => {
   // @ts-ignore
   const rowData = defenseList.map((value, index) => ({ id: index, ...value }));
 
-  const onClickStatus = async (data: TargetIslandList) => {
+  const onClickStatus = async (keterangan: string) => {
     await updateDefense("target-island", {
       ...data,
       status: !data?.status,
@@ -105,6 +113,7 @@ const TargetIsland = () => {
         status: !data?.status,
         tahap: data?.tahap.value,
         upt: data?.upt,
+        keterangan: keterangan,
       });
     });
     setReloadPage("target-island");
@@ -136,6 +145,7 @@ const TargetIsland = () => {
   return (
     <>
       <ModalAddTargetIsland />
+      <ModalChangeStatus onSubmitStatus={onClickStatus} />
       <Grid container spacing={6}>
         <Grid item xs={12}>
           <Card>

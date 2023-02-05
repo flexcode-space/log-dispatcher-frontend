@@ -14,7 +14,6 @@ import {
   TextField,
   Button,
   IconButton,
-  Chip,
 } from "@mui/material";
 import { PencilOutline } from "mdi-material-ui";
 import { TimePicker } from "@mui/x-date-pickers/TimePicker";
@@ -27,15 +26,17 @@ import { ModalAddOLS } from "../modal";
 import { defenseApi } from "src/api/defense";
 import { useSnapshot } from "valtio";
 import { reloadPage, setReloadPage } from "src/state/reloadPage";
-import { selectData } from "../state/defenseSchema";
-import { DefenseSchemaList, Data } from "../types";
+import { defenseSchema, selectData } from "../state/defenseSchema";
+import { DefenseSchemaList } from "../types";
 import { useDebounce } from "src/hooks/useDebounce";
 import FallbackSpinner from "src/@core/components/spinner";
 import { pencatatanDefenseApi } from "src/api/pencatatan-defense";
 import dayjs from "dayjs";
+import { ModalChangeStatus } from "../modal/modal-change-status";
 
 const OLS = () => {
   const reloadPageSnap = useSnapshot(reloadPage);
+  const { data } = useSnapshot(defenseSchema);
 
   // ** States
   const [search, setSearch] = useState<string>("");
@@ -65,14 +66,14 @@ const OLS = () => {
     }
   };
 
-  const onClickStatus = async (data: Data) => {
+  const onClickStatus = async (keterangan: string) => {
     await updateDefense("ols", {
       ...data,
       status: !data?.status,
       tanggal: dayjs(data?.tanggal).format("YYYY-MM-DD"),
     }).then(async () => {
       await createPencatanDefense("ols", {
-        keterangan: data?.keterangan,
+        keterangan: keterangan,
         lokasi: data?.gardu_induk?.nama,
         status: !data?.status,
         subsistem: data?.sub_sistem.nama,
@@ -97,6 +98,7 @@ const OLS = () => {
   return (
     <>
       <ModalAddOLS />
+      <ModalChangeStatus onSubmitStatus={onClickStatus} />
       <Grid container spacing={6}>
         <Grid item xs={12}>
           <Card>
@@ -296,7 +298,15 @@ const OLS = () => {
                                     <TableCell size="small">
                                       <Button
                                         variant="contained"
-                                        onClick={() => onClickStatus(data)}
+                                        onClick={() => {
+                                          selectData(data);
+                                          openModal(
+                                            "modal-change-status",
+                                            data.status
+                                              ? "Nonaktifkan"
+                                              : "Aktifkan"
+                                          );
+                                        }}
                                         sx={{
                                           color: "white !important",
                                           bgcolor: data.status

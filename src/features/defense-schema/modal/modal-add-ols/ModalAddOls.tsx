@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import {
   Button,
@@ -112,15 +112,15 @@ const ModalAdd = () => {
 
       formMethods.reset({
         ...rest,
-        sub_sistem_id: sub_sistem.id,
+        sub_sistem_id: sub_sistem?.id,
         tanggal: dayjs(tanggal),
-        gardu_induk_id: gardu_induk.id,
-        peralatan_id: peralatan.id,
+        gardu_induk_id: gardu_induk?.id,
+        peralatan_id: peralatan?.id,
         peralatan2_id: peralatan2?.id,
-        peralatan_target_id: peralatan_target.id,
+        peralatan_target_id: peralatan_target?.id,
         status: status ? "true" : "false",
-        tahap_id: tahap.id,
-        amp_id: amp.id,
+        tahap_id: tahap?.id,
+        amp_id: amp?.id,
       });
     }
   }, [modalSnapshot.isOpen]);
