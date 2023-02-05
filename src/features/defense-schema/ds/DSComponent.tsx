@@ -30,13 +30,16 @@ import { defenseApi } from "src/api/defense";
 import { ModalAddDS } from "../modal/modal-add-ds";
 import { DefenseSchemaList, Data } from "../types";
 import { PencilOutline } from "mdi-material-ui";
-import { selectData } from "../state/defenseSchema";
+import { defenseSchema, selectData } from "../state/defenseSchema";
 import { useDebounce } from "src/hooks/useDebounce";
 import FallbackSpinner from "src/@core/components/spinner";
 import { pencatatanDefenseApi } from "src/api/pencatatan-defense";
+import { ModalChangeStatus } from "../modal/modal-change-status";
 
 const DSComponent = () => {
   const reloadPageSnap = useSnapshot(reloadPage);
+  const { data } = useSnapshot(defenseSchema);
+
   const { getDefenseList, updateDefense, defenseList, loading, countData } =
     defenseApi();
   const { createPencatanDefense } = pencatatanDefenseApi();
@@ -64,14 +67,14 @@ const DSComponent = () => {
     }
   };
 
-  const onClickStatus = async (data: Data) => {
+  const onClickStatus = async (keterangan: string) => {
     await updateDefense("ds", {
       ...data,
       status: !data?.status,
       tanggal: dayjs(data?.tanggal).format("YYYY-MM-DD"),
     }).then(async () => {
       await createPencatanDefense("ds", {
-        keterangan: data?.keterangan,
+        keterangan: keterangan,
         lokasi: data?.gardu_induk?.nama,
         status: !data?.status,
         subsistem: data?.sub_sistem.nama,
@@ -95,6 +98,7 @@ const DSComponent = () => {
   return (
     <>
       <ModalAddDS />
+      <ModalChangeStatus onSubmitStatus={onClickStatus} />
       <Grid container spacing={6}>
         <Grid item xs={12}>
           <Card>
@@ -274,7 +278,15 @@ const DSComponent = () => {
                                     <TableCell size="small">
                                       <Button
                                         variant="contained"
-                                        onClick={() => onClickStatus(data)}
+                                        onClick={() => {
+                                          selectData(data);
+                                          openModal(
+                                            "modal-change-status",
+                                            data.status
+                                              ? "Nonaktifkan"
+                                              : "Aktifkan"
+                                          );
+                                        }}
                                         sx={{
                                           color: "white !important",
                                           bgcolor: data.status
