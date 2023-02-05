@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import { Card, CardContent, Button, Grid } from "@mui/material";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
@@ -22,6 +23,9 @@ const AddLaporan = () => {
     mode: "onChange",
   });
 
+  const jamBuka = formMethods.watch("jam_buka");
+  const jamTutup = formMethods.watch("jam_tutup");
+
   const { createKapasitorReaktor } = kapasitorReaktorApi();
   const { garduIndukOptions } = useKapasitorReaktor();
 
@@ -33,8 +37,8 @@ const AddLaporan = () => {
 
       const payload = {
         ...rest,
-        jam_buka: dayjs(jam_buka).format("HH:mm"),
-        jam_tutup: dayjs(jam_tutup).format("HH:mm"),
+        jam_buka: jam_buka ? dayjs(jam_buka).format("HH:mm") : null,
+        jam_tutup: jam_tutup ? dayjs(jam_tutup).format("HH:mm") : null,
         tanggal: dayjs(tanggal).format("YYYY-MM-DD"),
       };
 
@@ -42,6 +46,16 @@ const AddLaporan = () => {
       setReloadPage("kapasitor-reaktor");
     })();
   };
+
+  useEffect(() => {
+    if (jamBuka) {
+      formMethods.setValue("jam_tutup", null);
+    }
+
+    if (jamTutup) {
+      formMethods.setValue("jam_buka", null);
+    }
+  }, [jamBuka, jamTutup]);
 
   return (
     <Card>

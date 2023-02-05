@@ -1,7 +1,7 @@
 export type PayloadKapasitorReaktor = {
   gardu_induk_id: string,
-  jam_buka: Date,
-  jam_tutup: Date,
+  jam_buka: Date | null,
+  jam_tutup: Date | null,
   keterangan: string,
   tanggal: Date,
   tegangan_sebelum: number | null,
