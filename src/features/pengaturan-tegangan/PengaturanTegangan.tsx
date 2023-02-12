@@ -36,6 +36,7 @@ import { selectData } from "./state/pengaturanTegangan";
 import { useSnapshot } from "valtio";
 import { reloadPage } from "src/state/reloadPage";
 import FallbackSpinner from "src/@core/components/spinner";
+import ModalDownload from "./modal/ModalDownload";
 
 const PengaturanTegangan = () => {
   const router = useRouter();
@@ -59,6 +60,7 @@ const PengaturanTegangan = () => {
 
   return (
     <>
+      <ModalDownload />
       <ModalFilter handleClose={handleClose} />
       <ModalEdit />
       <Grid container spacing={6}>
@@ -100,7 +102,11 @@ const PengaturanTegangan = () => {
                     </IconButton>
                     Filter
                   </Button> */}
-                  <Button sx={{ mb: 2 }} variant="contained">
+                  <Button
+                    sx={{ mb: 2 }}
+                    variant="contained"
+                    onClick={() => openModal("modal-download")}
+                  >
                     <IconButton>
                       <DownloadIcon />
                     </IconButton>

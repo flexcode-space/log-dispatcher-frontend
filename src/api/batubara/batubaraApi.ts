@@ -8,11 +8,17 @@ export type Params = {
   tipe: string
 }
 
+interface ParamsReport {
+  tanggal_start: string
+  tanggal_end: string
+}
+
 const endpoint = '/primer/hsd'
 
 const batubaraApi = () => {
   const [batubaraList, setBatubaraList] = useState<[]>([])
   const [loading, setLoading] = useState<boolean>(false);
+  const [loadingDownload, setLoadingDownload] = useState<boolean>(false);
 
   const getBatubaraList = useCallback(async (params: Params) => {
     setLoading(true)
@@ -51,13 +57,29 @@ const batubaraApi = () => {
     }
   }, [])
 
+  const getReport = useCallback(
+    async (params: ParamsReport, path?: string) => {
+      setLoadingDownload(true);
+
+      try {
+        const url = path ? `${endpoint}/${path}` : endpoint
+        const { data } = await Axios.get(`${url}/report`, { params });
+        return data
+      } finally {
+        setLoadingDownload(false);
+      }
+    }, []);
+
+
 
   return {
     batubaraList,
     loading,
     getBatubaraList,
     createBatubara,
-    updateBatubara
+    updateBatubara,
+    getReport,
+    loadingDownload
   }
 }
 

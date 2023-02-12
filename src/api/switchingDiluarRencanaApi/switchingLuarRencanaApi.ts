@@ -9,11 +9,17 @@ export type Params = {
   limit?: number
 }
 
+interface ParamsReport {
+  tanggal_start: string
+  tanggal_end: string
+}
+
 const endpoint = '/dispatch/luar-rencana'
 
 const switchingLuarRencanaApi = () => {
   const [switchingLuarRencana, setSwitchingLuarRencanaList] = useState<[]>([])
   const [loading, setLoading] = useState<boolean>(false);
+  const [loadingDownload, setLoadingDownload] = useState<boolean>(false);
   const [countData, setCountData] = useState<number>(0)
 
   const getSwitchingLuarRencanaList = useCallback(async (params: Params = {}) => {
@@ -66,6 +72,19 @@ const switchingLuarRencanaApi = () => {
     }
   }, [])
 
+  const getReport = useCallback(
+    async (params: ParamsReport, path?: string) => {
+      setLoadingDownload(true);
+
+      try {
+        const url = path ? `${endpoint}/${path}` : endpoint
+        const { data } = await Axios.get(`${url}/report`, { params });
+        return data
+      } finally {
+        setLoadingDownload(false);
+      }
+    }, []);
+
 
   return {
     switchingLuarRencana,
@@ -74,7 +93,9 @@ const switchingLuarRencanaApi = () => {
     getSwitchingLuarRencanaList,
     createSwitchingLuarRencana,
     updateSwitchingLuarRencana,
-    deleteSwitchingLuarRencana
+    deleteSwitchingLuarRencana,
+    getReport,
+    loadingDownload
   }
 }
 

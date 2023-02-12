@@ -78,6 +78,19 @@ const catatanPenyaluranApi = () => {
     }
   }, []);
 
+  const getReport = useCallback(
+    async (params: ParamsReport, path?: string) => {
+      setLoadingDownload(true);
+
+      try {
+        const url = path ? `${endpoint}/${path}` : endpoint
+        const { data } = await Axios.get(`${url}/report`, { params });
+        return data
+      } finally {
+        setLoadingDownload(false);
+      }
+    }, []);
+
 
   return {
     catatanPenyaluranList,
@@ -87,7 +100,8 @@ const catatanPenyaluranApi = () => {
     createCatatanPenyaluran,
     updateCatatanPenyaluran,
     deleteCatatanPenyaluran,
-    getReportCatatanPenyaluran
+    getReportCatatanPenyaluran,
+    getReport
   }
 }
 

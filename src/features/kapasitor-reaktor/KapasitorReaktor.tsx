@@ -33,6 +33,7 @@ import { ModalEdit } from "./modal";
 import { reloadPage } from "src/state/reloadPage";
 import { useDebounce } from "src/hooks/useDebounce";
 import FallbackSpinner from "src/@core/components/spinner";
+import ModalDownload from "./modal/ModalDownload";
 
 const KapasitorReaktor = () => {
   const reloadPageSnap = useSnapshot(reloadPage);
@@ -75,6 +76,7 @@ const KapasitorReaktor = () => {
 
   return (
     <>
+      <ModalDownload />
       <ModalEdit />
       <Grid container spacing={6}>
         <Grid item xs={12}>
@@ -104,7 +106,12 @@ const KapasitorReaktor = () => {
                     </IconButton>
                     Filter
                   </Button> */}
-                  <Button size="small" sx={{ mb: 2 }} variant="outlined">
+                  <Button
+                    size="small"
+                    sx={{ mb: 2 }}
+                    variant="outlined"
+                    onClick={() => openModal("modal-download")}
+                  >
                     <IconButton>
                       <DownloadIcon />
                     </IconButton>
