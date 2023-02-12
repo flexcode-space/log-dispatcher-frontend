@@ -9,6 +9,11 @@ export type Params = {
   page?: number
 }
 
+interface ParamsReport {
+  tanggal_start: string
+  tanggal_end: string
+}
+
 const endpoint = '/gangguan'
 
 const gangguanApi = () => {
@@ -17,6 +22,7 @@ const gangguanApi = () => {
   const [releGangguanList, setReleGangguanList] = useState<[]>([])
   const [loading, setLoading] = useState<boolean>(false);
   const [countData, setCountData] = useState<number>(0)
+  const [loadingDownload, setLoadingDownload] = useState<boolean>(false);
 
   const getGangguanList = useCallback(async (params: Params = {}) => {
     setLoading(true)
@@ -90,6 +96,19 @@ const gangguanApi = () => {
     }
   }, [])
 
+  const getReport = useCallback(
+    async (params: ParamsReport, path?: string) => {
+      setLoadingDownload(true);
+
+      try {
+        const url = path ? `${endpoint}/${path}` : endpoint
+        const { data } = await Axios.get(`${url}/report`, { params });
+        return data
+      } finally {
+        setLoadingDownload(false);
+      }
+    }, []);
+
 
   return {
     releGangguanList,
@@ -97,12 +116,14 @@ const gangguanApi = () => {
     jenisGangguanList,
     loading,
     countData,
+    getReport,
     getGangguanList,
     getJenisGangguanList,
     getReleGangguanList,
     createGangguan,
     updateGangguan,
-    deleteGangguan
+    deleteGangguan,
+    loadingDownload
   }
 }
 

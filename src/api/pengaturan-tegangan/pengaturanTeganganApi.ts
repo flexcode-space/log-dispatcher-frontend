@@ -10,12 +10,18 @@ export type ParamsKonfigurasi = Params & {
   tipe?: string
 }
 
+interface ParamsReport {
+  tanggal_start: string
+  tanggal_end: string
+}
+
 const endpoint = '/dispatch/switching-khusus'
 
 const pengaturanTeganganApi = () => {
   const [pengaturanTeganganList, setPengaturanTeganganList] = useState<[]>([])
   const [konfigurasiList, setKonfigurasiList] = useState<[]>([])
   const [loading, setLoading] = useState<boolean>(false);
+  const [loadingDownload, setLoadingDownload] = useState<boolean>(false);
 
   const getPengaturanTeganganList = useCallback(async (params: Params = {}) => {
     setLoading(true)
@@ -117,6 +123,19 @@ const pengaturanTeganganApi = () => {
     }
   }, [])
 
+  const getReport = useCallback(
+    async (params: ParamsReport, path?: string) => {
+      setLoadingDownload(true);
+
+      try {
+        const url = path ? `${endpoint}/${path}` : endpoint
+        const { data } = await Axios.get(`${url}/report`, { params });
+        return data
+      } finally {
+        setLoadingDownload(false);
+      }
+    }, []);
+
 
   return {
     loading,
@@ -129,7 +148,9 @@ const pengaturanTeganganApi = () => {
     createKonfigurasi,
     updateKonfigurasi,
     deleteKonfigurasi,
-    deletePengaturanTegangan
+    deletePengaturanTegangan,
+    getReport,
+    loadingDownload
   }
 }
 

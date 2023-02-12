@@ -33,6 +33,7 @@ import { useSnapshot } from "valtio";
 import { reloadPage } from "src/state/reloadPage";
 import FallbackSpinner from "src/@core/components/spinner";
 import { useDebounce } from "src/hooks/useDebounce";
+import ModalDownload from "./modal/ModalDownload";
 
 const SwitchingDiluarRencana = () => {
   const reloadPageSnap = useSnapshot(reloadPage);
@@ -83,6 +84,7 @@ const SwitchingDiluarRencana = () => {
 
   return (
     <>
+      <ModalDownload />
       <ModalAddSwitching />
       <Grid container spacing={6}>
         <Grid item xs={12}>
@@ -111,7 +113,12 @@ const SwitchingDiluarRencana = () => {
                     </IconButton>
                     Filter
                   </Button> */}
-                  <Button size="small" sx={{ mb: 2 }} variant="outlined">
+                  <Button
+                    size="small"
+                    sx={{ mb: 2 }}
+                    variant="outlined"
+                    onClick={() => openModal("modal-download")}
+                  >
                     <IconButton>
                       <DownloadIcon />
                     </IconButton>

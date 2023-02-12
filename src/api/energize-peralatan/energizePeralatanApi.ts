@@ -7,12 +7,18 @@ export type Params = {
   tanggal?: string
 }
 
+interface ParamsReport {
+  tanggal_start: string
+  tanggal_end: string
+}
+
 const endpoint = '/kit-lur/energize-peralatan'
 
 const energizePeralatanApi = () => {
   const [energizePeralatanList, setEnergizePeralatanList] = useState<[]>([])
   const [peralatanList, setPeralatanList] = useState<[]>([])
   const [loading, setLoading] = useState<boolean>(false);
+  const [loadingDownload, setLoadingDownload] = useState<boolean>(false);
 
   const getEnergizePeralatanList = useCallback(async (params: Params = {}) => {
     setLoading(true)
@@ -68,6 +74,19 @@ const energizePeralatanApi = () => {
     }
   }, [])
 
+  const getReport = useCallback(
+    async (params: ParamsReport, path?: string) => {
+      setLoadingDownload(true);
+
+      try {
+        const url = path ? `${endpoint}/${path}` : endpoint
+        const { data } = await Axios.get(`${url}/report`, { params });
+        return data
+      } finally {
+        setLoadingDownload(false);
+      }
+    }, []);
+
 
   return {
     energizePeralatanList,
@@ -77,7 +96,9 @@ const energizePeralatanApi = () => {
     getPeralatanByPath,
     createEnergizePeralatan,
     updateEnergizePeralatan,
-    deleteEnergizePeralatan
+    deleteEnergizePeralatan,
+    getReport,
+    loadingDownload
   }
 }
 

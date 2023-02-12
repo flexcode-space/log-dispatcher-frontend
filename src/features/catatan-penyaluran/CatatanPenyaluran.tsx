@@ -15,7 +15,8 @@ import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import DatePicketMui from "@mui/lab/DatePicker";
 import PageHeader from "src/@core/components/page-header";
-import FilterIcon from "src/assets/icons/filter-green-icon.svg";
+// import FilterIcon from "src/assets/icons/filter-green-icon.svg";
+import DownloadIcon from "src/assets/icons/download-green-icon.svg";
 
 import { WrapperFilter } from "src/components/filter";
 import { catatanPenyaluranApi } from "src/api/catatan-penyaluran";
@@ -27,6 +28,7 @@ import { defaultColumns } from "./CatatanPenyaluran.constant";
 import { CellType } from "src/types";
 import { CatatanPenyaluranList } from "./types";
 import { reloadPage } from "src/state/reloadPage";
+import ModalDownload from "./modal/ModalDownload";
 
 const CatatanPembangkitan = () => {
   const modalSnap = useSnapshot(modal);
@@ -78,6 +80,7 @@ const CatatanPembangkitan = () => {
 
   return (
     <>
+      <ModalDownload />
       <ModalEdit handleClose={handleClose} />
       <Grid container spacing={6}>
         <Grid item xs={12}>
@@ -121,6 +124,17 @@ const CatatanPembangkitan = () => {
                       )}
                     />
                   </LocalizationProvider>
+                  <Button
+                    size="small"
+                    sx={{ mb: 2, width: "400px" }}
+                    variant="outlined"
+                    onClick={() => openModal("modal-download")}
+                  >
+                    <IconButton>
+                      <DownloadIcon />
+                    </IconButton>
+                    Download laporan
+                  </Button>
                 </div>
               </WrapperFilter>
               <DataGrid

@@ -4,13 +4,15 @@ import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import DatePicketMui from "@mui/lab/DatePicker";
 import dayjs, { Dayjs } from "dayjs";
 import PageHeader from "src/@core/components/page-header";
-import FilterIcon from "src/assets/icons/filter-green-icon.svg";
-
+// import FilterIcon from "src/assets/icons/filter-green-icon.svg";
+import DownloadIcon from "src/assets/icons/download-green-icon.svg";
 import { WrapperFilter } from "src/components/filter";
 import { AddData } from "./add-data";
 import { ModalEdit } from "./modal";
 import { TableList } from "./table-list";
 import { useState } from "react";
+import ModalDownload from "./modal/ModalDownload";
+import { openModal } from "src/state/modal";
 
 const CatatanPembangkitan = () => {
   const [date, setDate] = useState<Dayjs | null>(null);
@@ -19,6 +21,7 @@ const CatatanPembangkitan = () => {
 
   return (
     <>
+      <ModalDownload />
       <ModalEdit />
       <Grid container spacing={6}>
         <Grid item xs={12}>
@@ -61,6 +64,17 @@ const CatatanPembangkitan = () => {
                   )}
                 />
               </LocalizationProvider>
+              <Button
+                size="small"
+                sx={{ mb: 2, width: "400px" }}
+                variant="outlined"
+                onClick={() => openModal("modal-download")}
+              >
+                <IconButton>
+                  <DownloadIcon />
+                </IconButton>
+                Download laporan
+              </Button>
             </div>
           </WrapperFilter>
         </Grid>

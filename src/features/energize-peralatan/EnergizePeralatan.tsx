@@ -18,7 +18,8 @@ import DatePicketMui from "@mui/lab/DatePicker";
 import { modal } from "src/state/modal";
 import { useDebounce } from "src/hooks/useDebounce";
 import PageHeader from "src/@core/components/page-header";
-import FilterIcon from "src/assets/icons/filter-green-icon.svg";
+// import FilterIcon from "src/assets/icons/filter-green-icon.svg";
+import DownloadIcon from "src/assets/icons/download-green-icon.svg";
 
 import { CardHeader } from "src/components/card";
 import { openModal } from "src/state/modal";
@@ -30,9 +31,9 @@ import { EnergizeList } from "./types";
 import { selectData } from "src/state/energizePeralatan";
 import dayjs, { Dayjs } from "dayjs";
 import { reloadPage } from "src/state/reloadPage";
+import ModalDownload from "./modal/ModalDownload";
 
 const EnergizePeralatan = () => {
-  const modalSnapshot = useSnapshot(modal);
   const reloadPageSnap = useSnapshot(reloadPage);
   const [date, setDate] = useState<Dayjs | null>(null);
   const [search, setSearch] = useState<string>("");
@@ -96,6 +97,7 @@ const EnergizePeralatan = () => {
 
   return (
     <>
+      <ModalDownload />
       <ModalAdd />
       <ModalDetail />
       <Grid container spacing={6}>
@@ -135,6 +137,17 @@ const EnergizePeralatan = () => {
                     </IconButton>
                     Filter
                   </Button> */}
+                  <Button
+                    size="small"
+                    sx={{ mb: 2 }}
+                    variant="outlined"
+                    onClick={() => openModal("modal-download")}
+                  >
+                    <IconButton>
+                      <DownloadIcon />
+                    </IconButton>
+                    Download laporan
+                  </Button>
                   <Button
                     sx={{ mb: 2 }}
                     variant="contained"

@@ -36,6 +36,7 @@ import { reloadPage } from "src/state/reloadPage";
 import { selectData } from "./state/switchingPembangkit";
 import FallbackSpinner from "src/@core/components/spinner";
 import { useDebounce } from "src/hooks/useDebounce";
+import ModalDownload from "./modal/ModalDownload";
 
 const SwitchingPembangkit = () => {
   const reloadPageSnap = useSnapshot(reloadPage);
@@ -90,6 +91,7 @@ const SwitchingPembangkit = () => {
 
   return (
     <>
+      <ModalDownload />
       <ModalFilter handleClose={handleClose} />
       <ModalEdit />
       <Grid container spacing={6}>
@@ -124,7 +126,11 @@ const SwitchingPembangkit = () => {
                     </IconButton>
                     Filter
                   </Button> */}
-                  <Button sx={{ mb: 2 }} variant="contained">
+                  <Button
+                    sx={{ mb: 2 }}
+                    variant="contained"
+                    onClick={() => openModal("modal-download")}
+                  >
                     <IconButton>
                       <DownloadIcon />
                     </IconButton>

@@ -8,11 +8,17 @@ export type Params = {
   page?: number
 }
 
+interface ParamsReport {
+  tanggal_start: string
+  tanggal_end: string
+}
+
 const endpoint = '/dispatch/kapasitor-reaktor'
 
 const kapasitorReaktorApi = () => {
   const [kapasitorReaktorList, setKapasitorReaktorList] = useState<[]>([])
   const [loading, setLoading] = useState<boolean>(false);
+  const [loadingDownload, setLoadingDownload] = useState<boolean>(false);
   const [countData, setCountData] = useState<number>(0)
 
   const getKapasitorReaktorList = useCallback(async (params: Params = {}) => {
@@ -65,6 +71,19 @@ const kapasitorReaktorApi = () => {
     }
   }, [])
 
+  const getReport = useCallback(
+    async (params: ParamsReport, path?: string) => {
+      setLoadingDownload(true);
+
+      try {
+        const url = path ? `${endpoint}/${path}` : endpoint
+        const { data } = await Axios.get(`${url}/report`, { params });
+        return data
+      } finally {
+        setLoadingDownload(false);
+      }
+    }, []);
+
 
   return {
     kapasitorReaktorList,
@@ -73,7 +92,9 @@ const kapasitorReaktorApi = () => {
     getKapasitorReaktorList,
     createKapasitorReaktor,
     updateKapasitorReaktor,
-    deleteKapasitorReaktor
+    deleteKapasitorReaktor,
+    loadingDownload,
+    getReport
   }
 }
 

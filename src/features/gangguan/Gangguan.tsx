@@ -45,6 +45,7 @@ import dayjs, { Dayjs } from "dayjs";
 import { useDebounce } from "src/hooks/useDebounce";
 import FallbackSpinner from "src/@core/components/spinner";
 import ModalFilePendukung from "./modal/modal-file-pendukung/ModalFilePendukung";
+import ModalDownload from "./modal/ModalDownload";
 
 const Gangguan = () => {
   const reloadPageSnap = useSnapshot(reloadPage);
@@ -99,6 +100,7 @@ const Gangguan = () => {
 
   return (
     <>
+      <ModalDownload />
       <ModalDataPadam />
       <ModalAddGangguan />
       <ModalKeteranganGangguan />
@@ -116,7 +118,11 @@ const Gangguan = () => {
                 }
               />
             </Grid>
-            <Button sx={{ mb: 2 }} onClick={() => null} variant="outlined">
+            <Button
+              sx={{ mb: 2 }}
+              onClick={() => openModal("modal-download")}
+              variant="outlined"
+            >
               <IconButton>
                 <DownloadGreenIcon />
               </IconButton>

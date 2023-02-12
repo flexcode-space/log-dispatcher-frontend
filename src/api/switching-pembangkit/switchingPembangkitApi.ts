@@ -8,12 +8,18 @@ export type Params = {
   limit?: number
 }
 
+interface ParamsReport {
+  tanggal_start: string
+  tanggal_end: string
+}
+
 const endpoint = '/dispatch/switching-pembangkit'
 
 const switchingPembangkitApi = () => {
   const [switchingPembangkitList, setSwitchingPembangkitList] = useState<[]>([])
   const [personList, setPersonList] = useState<[]>([])
   const [loading, setLoading] = useState<boolean>(false);
+  const [loadingDownload, setLoadingDownload] = useState<boolean>(false);
   const [countData, setCountData] = useState<number>(0)
 
   const getSwitchingPembangkitList = useCallback(async (params: Params = {}) => {
@@ -77,6 +83,19 @@ const switchingPembangkitApi = () => {
     }
   }, [])
 
+  const getReport = useCallback(
+    async (params: ParamsReport, path?: string) => {
+      setLoadingDownload(true);
+
+      try {
+        const url = path ? `${endpoint}/${path}` : endpoint
+        const { data } = await Axios.get(`${url}/report`, { params });
+        return data
+      } finally {
+        setLoadingDownload(false);
+      }
+    }, []);
+
 
   return {
     personList,
@@ -87,7 +106,9 @@ const switchingPembangkitApi = () => {
     getPersonList,
     createSwitchingPembangkit,
     updateSwitchingPembangkit,
-    deleteSwitchingPembangkit
+    deleteSwitchingPembangkit,
+    getReport,
+    loadingDownload
   }
 }
 
