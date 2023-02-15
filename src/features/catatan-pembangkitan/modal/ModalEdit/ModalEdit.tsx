@@ -20,16 +20,16 @@ import { InputField, TextArea } from "src/components/input-field";
 import { StyledForm } from "src/components/form";
 import { closeModal, modal, reloadPage } from "src/state/modal";
 import { DatePicker, TimePicker } from "src/components/date-picker";
-import { useCatatanPembangkitan } from "../useCatatanPembangkitan";
+import { useCatatanPembangkitan } from "../../useCatatanPembangkitan";
 import {
   initialValues,
   validationSchema,
-} from "../CatatanPembangkitan.constant";
-import { catatanPembangkitan, removeData } from "../state";
+} from "../../CatatanPembangkitan.constant";
+import { catatanPembangkitan, removeData } from "../../state";
 import catatanPembangkitanApi from "src/api/catatan-pembangkitan/catatanPembangkitanApi";
 import { setReloadPage } from "src/state/reloadPage";
 
-const ModalFilter = () => {
+const ModalEdit = () => {
   const modalSnapshot = useSnapshot(modal);
   const { data } = useSnapshot(catatanPembangkitan);
   const { pembangkitOptions, statusOptions } = useCatatanPembangkitan();
@@ -188,4 +188,4 @@ const ModalFilter = () => {
   );
 };
 
-export default ModalFilter;
+export default ModalEdit;

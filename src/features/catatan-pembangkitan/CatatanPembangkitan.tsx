@@ -1,17 +1,16 @@
+import { useState } from "react";
 import { Grid, Typography, TextField, Button, IconButton } from "@mui/material";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import DatePicketMui from "@mui/lab/DatePicker";
 import dayjs, { Dayjs } from "dayjs";
 import PageHeader from "src/@core/components/page-header";
-// import FilterIcon from "src/assets/icons/filter-green-icon.svg";
+import FilterIcon from "src/assets/icons/filter-green-icon.svg";
 import DownloadIcon from "src/assets/icons/download-green-icon.svg";
 import { WrapperFilter } from "src/components/filter";
 import { AddData } from "./add-data";
-import { ModalEdit } from "./modal";
+import { ModalEdit, ModalFilter, ModalDownload } from "./modal";
 import { TableList } from "./table-list";
-import { useState } from "react";
-import ModalDownload from "./modal/ModalDownload";
 import { openModal } from "src/state/modal";
 
 const CatatanPembangkitan = () => {
@@ -23,6 +22,7 @@ const CatatanPembangkitan = () => {
     <>
       <ModalDownload />
       <ModalEdit />
+      <ModalFilter />
       <Grid container spacing={6}>
         <Grid item xs={12}>
           <PageHeader
@@ -43,16 +43,6 @@ const CatatanPembangkitan = () => {
             />
 
             <div style={{ display: "flex", gap: "10px" }}>
-              {/* <Button
-                sx={{ mb: 2 }}
-                variant="outlined"
-                // onClick={() => openModal()}
-              >
-                <IconButton>
-                  <FilterIcon />
-                </IconButton>
-                Filter
-              </Button> */}
               <LocalizationProvider dateAdapter={AdapterDateFns}>
                 <DatePicketMui
                   value={date}
@@ -60,13 +50,23 @@ const CatatanPembangkitan = () => {
                   inputFormat="dd/M/yyyy"
                   onChange={(e) => setDate(e)}
                   renderInput={(params) => (
-                    <TextField size="small" {...params} fullWidth />
+                    <TextField size="small" {...params} />
                   )}
                 />
               </LocalizationProvider>
               <Button
+                sx={{ mb: 2 }}
+                variant="outlined"
+                onClick={() => openModal("modal-filter")}
+              >
+                <IconButton>
+                  <FilterIcon />
+                </IconButton>
+                Filter
+              </Button>
+              <Button
                 size="small"
-                sx={{ mb: 2, width: "400px" }}
+                sx={{ mb: 2 }}
                 variant="outlined"
                 onClick={() => openModal("modal-download")}
               >

@@ -1,1 +1,1 @@
-export { default } from './ModalDownload'
+export { default as ModalDownload } from './ModalDownload'

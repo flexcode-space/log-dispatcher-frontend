@@ -18,12 +18,12 @@ import DatePicketMui from "@mui/lab/DatePicker";
 import { modal } from "src/state/modal";
 import { useDebounce } from "src/hooks/useDebounce";
 import PageHeader from "src/@core/components/page-header";
-// import FilterIcon from "src/assets/icons/filter-green-icon.svg";
+import FilterIcon from "src/assets/icons/filter-green-icon.svg";
 import DownloadIcon from "src/assets/icons/download-green-icon.svg";
 
 import { CardHeader } from "src/components/card";
 import { openModal } from "src/state/modal";
-import { ModalAdd, ModalDetail } from "./modal";
+import { ModalAdd, ModalDetail, ModalFilter } from "./modal";
 import { defaultColumns } from "./EnergizePeralatan.constant";
 import { energizePeralatanApi } from "src/api/energize-peralatan";
 import { CellType } from "src/types";
@@ -99,6 +99,7 @@ const EnergizePeralatan = () => {
     <>
       <ModalDownload />
       <ModalAdd />
+      <ModalFilter />
       <ModalDetail />
       <Grid container spacing={6}>
         <Grid item xs={12}>
@@ -131,12 +132,16 @@ const EnergizePeralatan = () => {
                       )}
                     />
                   </LocalizationProvider>
-                  {/* <Button sx={{ mb: 2 }} variant="outlined">
+                  <Button
+                    sx={{ mb: 2 }}
+                    variant="outlined"
+                    onClick={() => openModal("modal-filter")}
+                  >
                     <IconButton>
                       <FilterIcon />
                     </IconButton>
                     Filter
-                  </Button> */}
+                  </Button>
                   <Button
                     size="small"
                     sx={{ mb: 2 }}
