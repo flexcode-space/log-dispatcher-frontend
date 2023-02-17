@@ -248,7 +248,7 @@ const OLS = () => {
                                 <>
                                   <TableRow hover key={data.id}>
                                     <TableCell size="small">
-                                      {data.gardu_induk.nama}
+                                      {`${data.peralatan?.nama} & ${data?.peralatan2?.nama}`}
                                     </TableCell>
                                     <TableCell size="small">
                                       {data.tahap.value}
@@ -272,7 +272,7 @@ const OLS = () => {
                                       {data.mw}
                                     </TableCell>
                                     <TableCell size="small">
-                                      {data.peralatan_target.nama}
+                                      {`${data?.gardu_induk.nama}_${data?.peralatan.nama}`}
                                     </TableCell>
                                     <TableCell size="small">
                                       {data.keterangan}

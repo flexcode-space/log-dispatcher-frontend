@@ -162,7 +162,7 @@ const DSComponent = () => {
                   <Table>
                     <TableHead sx={{ height: "30px", background: "#F5F5F7" }}>
                       <TableRow>
-                        <TableCell size="small" rowSpan={2}>
+                        <TableCell size="small" sx={{ minWidth: '250px'}} rowSpan={2}>
                           Lokasi DS
                         </TableCell>
                         <TableCell size="small" rowSpan={2}>
@@ -171,11 +171,8 @@ const DSComponent = () => {
                         <TableCell size="small" align="center" colSpan={3}>
                           Setting
                         </TableCell>
-                        <TableCell size="small" rowSpan={2}>
+                        <TableCell size="small" sx={{ minWidth: '200px'}} rowSpan={2}>
                           Target Trip
-                        </TableCell>
-                        <TableCell size="small" rowSpan={2}>
-                          Aktif
                         </TableCell>
                         <TableCell size="small" align="center" rowSpan={2}>
                           Keteragan
@@ -191,6 +188,14 @@ const DSComponent = () => {
                         </TableCell>
                         <TableCell size="small" align="center" rowSpan={2}>
                           Status
+                        </TableCell>
+                        <TableCell
+                          variant="head"
+                          size="small"
+                          align="center"
+                          rowSpan={2}
+                        >
+                          Aksi
                         </TableCell>
                       </TableRow>
                       <TableRow>
@@ -228,7 +233,7 @@ const DSComponent = () => {
                                 <>
                                   <TableRow hover key={data.id}>
                                     <TableCell size="small">
-                                      {data.gardu_induk.nama}
+                                    {`${data.peralatan?.nama} & ${data?.peralatan2?.nama}`}
                                     </TableCell>
                                     <TableCell size="small">
                                       {data.tahap.value}
@@ -252,7 +257,7 @@ const DSComponent = () => {
                                       {data.mw}
                                     </TableCell>
                                     <TableCell size="small">
-                                      {data.peralatan_target.nama}
+                                    {`${data?.gardu_induk.nama}_${data?.peralatan.nama}`}
                                     </TableCell>
                                     <TableCell size="small">
                                       {data.keterangan}
