@@ -148,7 +148,7 @@ const OgsComponent = () => {
                   <Table>
                     <TableHead sx={{ height: "30px", background: "#F5F5F7" }}>
                       <TableRow>
-                        <TableCell size="small" rowSpan={2}>
+                        <TableCell size="small" sx={{ minWidth: '250px'}} rowSpan={2}>
                           Lokasi OLS
                         </TableCell>
                         <TableCell size="small" rowSpan={2}>
@@ -157,12 +157,12 @@ const OgsComponent = () => {
                         <TableCell size="small" align="center" colSpan={3}>
                           Setting
                         </TableCell>
-                        <TableCell size="small" rowSpan={2}>
+                        <TableCell size="small" sx={{ minWidth: '210px'}} rowSpan={2}>
                           Target Trip
                         </TableCell>
-                        <TableCell size="small" rowSpan={2}>
+                        {/* <TableCell size="small" rowSpan={2}>
                           Aktif
-                        </TableCell>
+                        </TableCell> */}
                         <TableCell size="small" align="center" rowSpan={2}>
                           Keterangan
                         </TableCell>
@@ -177,6 +177,14 @@ const OgsComponent = () => {
                         </TableCell>
                         <TableCell size="small" align="center" rowSpan={2}>
                           Status
+                        </TableCell>
+                        <TableCell
+                          variant="head"
+                          size="small"
+                          align="center"
+                          rowSpan={2}
+                        >
+                          Aksi
                         </TableCell>
                       </TableRow>
                       <TableRow>
@@ -214,7 +222,7 @@ const OgsComponent = () => {
                                 <>
                                   <TableRow hover key={data.id}>
                                     <TableCell size="small">
-                                      {data.gardu_induk.nama}
+                                    {`${data.peralatan?.nama} & ${data?.peralatan2?.nama}`}
                                     </TableCell>
                                     <TableCell size="small">
                                       {data.tahap.value}
@@ -238,7 +246,7 @@ const OgsComponent = () => {
                                       {data.mw}
                                     </TableCell>
                                     <TableCell size="small">
-                                      {data.peralatan_target.nama}
+                                    {`${data?.gardu_induk.nama}_${data?.peralatan.nama}`}
                                     </TableCell>
                                     <TableCell size="small">
                                       {data.keterangan}

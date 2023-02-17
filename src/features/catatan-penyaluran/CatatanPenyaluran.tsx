@@ -15,7 +15,7 @@ import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import DatePicketMui from "@mui/lab/DatePicker";
 import PageHeader from "src/@core/components/page-header";
-// import FilterIcon from "src/assets/icons/filter-green-icon.svg";
+import FilterIcon from "src/assets/icons/filter-green-icon.svg";
 import DownloadIcon from "src/assets/icons/download-green-icon.svg";
 
 import { WrapperFilter } from "src/components/filter";
@@ -23,12 +23,11 @@ import { catatanPenyaluranApi } from "src/api/catatan-penyaluran";
 import { selectData } from "src/state/catatanPenyaluran";
 import { AddData } from "./add-data";
 import { openModal, closeModal, modal } from "src/state/modal";
-import { ModalEdit } from "./modal";
+import { ModalEdit, ModalDownload, ModalFilter } from "./modal";
 import { defaultColumns } from "./CatatanPenyaluran.constant";
 import { CellType } from "src/types";
 import { CatatanPenyaluranList } from "./types";
 import { reloadPage } from "src/state/reloadPage";
-import ModalDownload from "./modal/ModalDownload";
 
 const CatatanPembangkitan = () => {
   const modalSnap = useSnapshot(modal);
@@ -80,6 +79,7 @@ const CatatanPembangkitan = () => {
 
   return (
     <>
+      <ModalFilter />
       <ModalDownload />
       <ModalEdit handleClose={handleClose} />
       <Grid container spacing={6}>
@@ -104,29 +104,29 @@ const CatatanPembangkitan = () => {
                 />
 
                 <div style={{ display: "flex", gap: "10px" }}>
-                  {/* <Button
-                    sx={{ mb: 2 }}
-                    variant="outlined"
-                    // onClick={() => openModal()}
-                  >
-                    <IconButton>
-                      <FilterIcon />
-                    </IconButton>
-                    Filter
-                  </Button> */}
                   <LocalizationProvider dateAdapter={AdapterDateFns}>
                     <DatePicketMui
                       value={new Date()}
                       label="Pilih Tanggal"
                       onChange={() => null}
                       renderInput={(params) => (
-                        <TextField size="small" {...params} fullWidth />
+                        <TextField size="small" {...params} />
                       )}
                     />
                   </LocalizationProvider>
                   <Button
+                    sx={{ mb: 2 }}
+                    variant="outlined"
+                    onClick={() => openModal("modal-filter")}
+                  >
+                    <IconButton>
+                      <FilterIcon />
+                    </IconButton>
+                    Filter
+                  </Button>
+                  <Button
                     size="small"
-                    sx={{ mb: 2, width: "400px" }}
+                    sx={{ mb: 2 }}
                     variant="outlined"
                     onClick={() => openModal("modal-download")}
                   >

@@ -1,1 +1,3 @@
-export { default as ModalEdit } from './ModalEdit'
+export * from './ModalEdit'
+export * from './ModalDownload'
+export * from './ModalFilter'

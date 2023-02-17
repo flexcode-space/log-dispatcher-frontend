@@ -125,7 +125,7 @@ const ModalAdd = () => {
       open={isOpen}
       fullWidth
       onClose={onCloseModal}
-      maxWidth="sm"
+      maxWidth="md"
       scroll="body"
     >
       <FormProvider {...formMethods}>
@@ -158,14 +158,21 @@ const ModalAdd = () => {
                   options={optionJenisPeralatan}
                 />
               </Grid>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12} sm={4}>
                 <SelectInput
                   label="Peralatan"
                   name="peralatan_id"
                   options={peratanOptions}
                 />
               </Grid>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12} sm={4}>
+                <SelectInput
+                  label="Peralatan 2"
+                  name="peralatan2_id"
+                  options={peratanOptions}
+                />
+              </Grid>
+              <Grid item xs={12} sm={4}>
                 <SelectInput
                   label="Tahap"
                   name="tahap_id"

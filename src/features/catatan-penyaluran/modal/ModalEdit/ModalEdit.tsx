@@ -18,19 +18,22 @@ import { InputField, TextArea } from "src/components/input-field";
 import { StyledForm } from "src/components/form";
 import { closeModal, modal, reloadPage } from "src/state/modal";
 import { DatePicker, TimePicker } from "src/components/date-picker";
-import { useCatatanPenyaluran } from "../useCatatanPenyaluran";
-import { validationSchema, initialValues } from "../CatatanPenyaluran.constant";
+import { useCatatanPenyaluran } from "../../useCatatanPenyaluran";
+import {
+  validationSchema,
+  initialValues,
+} from "../../CatatanPenyaluran.constant";
 import { catatanPenyaluran } from "src/state/catatanPenyaluran";
 import dayjs from "dayjs";
 import { catatanPenyaluranApi } from "src/api/catatan-penyaluran";
 import { TrashCanOutline } from "mdi-material-ui";
 import { setReloadPage } from "src/state/reloadPage";
 
-type ModalFilter = {
+type ModalEdit = {
   handleClose: () => void;
 };
 
-const ModalFilter = ({ handleClose }: ModalFilter) => {
+const ModalEdit = ({ handleClose }: ModalEdit) => {
   const modalSnapshot = useSnapshot(modal);
   const { data } = useSnapshot(catatanPenyaluran);
 
@@ -178,4 +181,4 @@ const ModalFilter = ({ handleClose }: ModalFilter) => {
   );
 };
 
-export default ModalFilter;
+export default ModalEdit;
