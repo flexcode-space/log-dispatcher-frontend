@@ -17,14 +17,11 @@ type GrafikData = {
 }[];
 
 const grafikApi = () => {
-  const [grafikBeban, setGrafikBeban] = useState<GrafikData>(
-    [] as GrafikData
-  );
-
-  const [grafikSubsistem, setGrafikSubsistem] = useState<GrafikData>(
-    [] as GrafikData
-  );
+  const [grafikBeban, setGrafikBeban] = useState<GrafikData>([] as GrafikData);
+  const [grafikSubsistem, setGrafikSubsistem] = useState<GrafikData>([] as GrafikData);
   const [grafikPembangkit, setGrafikPembangkit] = useState<[]>([]);
+  const [grafikTransfer, setGrafikTransfer] = useState<[]>([]);
+  const [grafikIBT, setGrafikIBT] = useState<[]>([]);
 
   const getGrafik = useCallback(async (params: ParamsGrafik = {}, path?: string) => {
     const url = path ? `${endpoint}/${path}` : endpoint
@@ -78,18 +75,31 @@ const grafikApi = () => {
     async (id?: string, params: ParamsGrafik = {}) => {
       const { data } = await Axios.get(`${endpoint}/kategori-pembangkit/${id}`, { params });
       setGrafikPembangkit(data || [])
+    }, []);
 
-    },
-    []
-  );
+  const getGrafikTransfer = useCallback(
+    async (params: ParamsGrafik = {}) => {
+      const { data: { data } } = await Axios.get(`${endpoint}/transfer`, { params });
+      setGrafikTransfer(data || [])
+    }, []);
+
+  const getGrafikIBT = useCallback(
+    async (params: ParamsGrafik = {}) => {
+      const { data: { data } } = await Axios.get(`${endpoint}/ibt`, { params });
+      setGrafikIBT(data || [])
+    }, []);
 
   return {
     grafikBeban,
     getGrafikSubsistem,
     getGrafikPembangkit,
     getGrafik,
+    getGrafikTransfer,
+    getGrafikIBT,
     grafikSubsistem,
     grafikPembangkit,
+    grafikTransfer,
+    grafikIBT
   };
 };
 
