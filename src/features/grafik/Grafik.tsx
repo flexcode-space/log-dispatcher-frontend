@@ -7,6 +7,8 @@ import { pembangkitApi } from "src/api/pembangkit";
 import { GrafikBebanDistribusi } from "./grafik-beban-distribusi";
 import { GrafikSubsistem } from "./grafik-subsistem";
 import { GrafikPembangkit } from "./grafik-pembangkit";
+import { GrafikTransfer } from "./grafik-transfer";
+import { GrafikIBT } from "./grafik-ibt";
 
 export type DateType = Date | null | undefined;
 
@@ -45,6 +47,12 @@ const Grafik = () => {
           </Grid>
         );
       })}
+      <Grid item xs={12}>
+        <GrafikTransfer />
+      </Grid>
+      <Grid item xs={12}>
+        <GrafikIBT />
+      </Grid>
     </Grid>
   );
 };
