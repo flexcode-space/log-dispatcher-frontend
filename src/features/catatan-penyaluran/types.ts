@@ -1,3 +1,5 @@
+import { Dayjs } from "dayjs"
+
 export type PayloadCatatanPenyaluran = {
   gardu_induk_id: string
   jurusan: string
@@ -20,4 +22,11 @@ export interface CatatanPenyaluranList {
   tanggal_akhir: string;
   tanggal_mulai: string;
 }
+
+export type FilterProps = {
+  gardu_induk_id: string;
+  jurusan: string;
+  tanggal_mulai: Dayjs | null;
+  tanggal_akhir: Dayjs | null;
+};
 
