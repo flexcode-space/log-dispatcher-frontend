@@ -3,7 +3,7 @@ import { formatDecimalNumber } from "src/utils/number";
 import { Data } from "./types";
 import { TIME } from "src/constants/time";
 
-export const showValueBeban = (data: Data) => {
+export const showValueBeban = (data: Data, filterTable: string[]) => {
   if (!data) return <></>;
 
   return Object.values(TIME).map((value) => {
@@ -15,24 +15,26 @@ export const showValueBeban = (data: Data) => {
     const imampu = "imampu_" + value.replace(".", "");
     return (
       <>
-        <TableCell size="small">
-          {formatDecimalNumber((data as any)[arus]!, 2)}
-        </TableCell>
-        <TableCell size="small">
-          {formatDecimalNumber((data as any)[mw]!, 2)}
-        </TableCell>
-        <TableCell size="small">
-          {formatDecimalNumber((data as any)[mvar]!, 2)}
-        </TableCell>
-        <TableCell size="small">
-          {formatDecimalNumber((data as any)[kwh]!, 2)}
-        </TableCell>
-        <TableCell size="small">
-          {formatDecimalNumber((data as any)[inom]!, 2)}
-        </TableCell>
-        <TableCell size="small">
-          {formatDecimalNumber((data as any)[imampu]!, 2)}
-        </TableCell>
+        {filterTable.includes("arus") && (
+          <TableCell>{formatDecimalNumber((data as any)[arus]!, 2)}</TableCell>
+        )}
+        {filterTable.includes("mw") && (
+          <TableCell>{formatDecimalNumber((data as any)[mw]!, 2)}</TableCell>
+        )}
+        {filterTable.includes("mvar") && (
+          <TableCell>{formatDecimalNumber((data as any)[mvar]!, 2)}</TableCell>
+        )}
+        {filterTable.includes("kwh") && (
+          <TableCell>{formatDecimalNumber((data as any)[kwh]!, 2)}</TableCell>
+        )}
+        {filterTable.includes("i_nom") && (
+          <TableCell>{formatDecimalNumber((data as any)[inom]!, 2)}</TableCell>
+        )}
+        {filterTable.includes("i_mampu") && (
+          <TableCell>
+            {formatDecimalNumber((data as any)[imampu]!, 2)}
+          </TableCell>
+        )}
       </>
     );
   });

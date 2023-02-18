@@ -1,8 +1,8 @@
-import { useState, ChangeEvent, useEffect } from "react";
+import { useState, ChangeEvent, useEffect, useMemo } from "react";
 import DatePicketMui from "@mui/lab/DatePicker";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
-import { Card, CardContent, Button } from "@mui/material";
+import { Card, CardContent, Button, IconButton } from "@mui/material";
 import { Typography, TextField } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import Table from "@mui/material/Table";
@@ -18,13 +18,14 @@ import {
 } from "src/components/table";
 import DownloadIcon from "src/assets/icons/download-icon.svg";
 import EditIcon from "src/assets/icons/edit-icon.svg";
+import FilterIcon from "src/assets/icons/filter-green-icon.svg";
 import { openModal } from "src/state/modal";
 import { bebanApi } from "src/api/beban";
 import { BebanTrafo } from "./types";
 import { showValueBeban } from "./BebanTrafoHarian.constant";
 
 import { WrapperFilter } from "src/components/filter";
-import { ModalSetBebanHarian, ModalDownload } from "./modal";
+import { ModalSetBebanHarian, ModalDownload, ModalFilter } from "./modal";
 import { convertDate } from "src/utils/date";
 import { TIME } from "src/constants/time";
 import { useDebounce } from "src/hooks/useDebounce";
@@ -36,6 +37,14 @@ const BebanHarian = () => {
   const [page, setPage] = useState<number>(0);
   const [rowsPerPage, setRowsPerPage] = useState<number>(20);
   const [date, setDate] = useState<any>(new Date());
+  const [filterTable, setFilterTable] = useState<string[]>([
+    "arus",
+    "mw",
+    "mvar",
+    "kwh",
+    "i_nom",
+    "i_mampu",
+  ]);
 
   const { getBebanTrafoList, bebanTrafoList, loading, countData } = bebanApi();
 
@@ -67,6 +76,27 @@ const BebanHarian = () => {
     }
   };
 
+  const renderRowTime = useMemo(
+    () =>
+      TIME.map(() => (
+        <>
+          {filterTable.includes("arus") && (
+            <TableCellHead minWidth="100px">arus (a)</TableCellHead>
+          )}
+          {filterTable.includes("mw") && <TableCellHead>mw</TableCellHead>}
+          {filterTable.includes("mvar") && <TableCellHead>mvar</TableCellHead>}
+          {filterTable.includes("kwh") && <TableCellHead>KWH</TableCellHead>}
+          {filterTable.includes("i_nom") && (
+            <TableCellHead minWidth="100px">% i nom</TableCellHead>
+          )}
+          {filterTable.includes("i_mampu") && (
+            <TableCellHead minWidth="120px">% i mampu</TableCellHead>
+          )}
+        </>
+      )),
+    [filterTable]
+  );
+
   useEffect(() => {
     getBebanTrafo();
   }, [date, debouncedSearch, rowsPerPage, page]);
@@ -75,6 +105,10 @@ const BebanHarian = () => {
     <>
       <ModalSetBebanHarian />
       <ModalDownload />
+      <ModalFilter
+        onChange={(value) => setFilterTable(value)}
+        value={filterTable}
+      />
       <Grid container spacing={6}>
         <Grid item xs={12}>
           <PageHeader
@@ -108,10 +142,6 @@ const BebanHarian = () => {
                       )}
                     />
                   </LocalizationProvider>
-                  {/* <Button sx={{ mb: 2 }} variant="outlined">
-                    <FilterIcon />
-                    Filter
-                  </Button> */}
                   <Button sx={{ mb: 2 }} variant="outlined">
                     <EditIcon />
                     Ubah Arus Mampu
@@ -122,6 +152,16 @@ const BebanHarian = () => {
                     onClick={() => openModal("modal-beban-harian")}
                   >
                     Set
+                  </Button>
+                  <Button
+                    sx={{ mb: 2 }}
+                    variant="outlined"
+                    onClick={() => openModal("modal-filter")}
+                  >
+                    <IconButton>
+                      <FilterIcon />
+                    </IconButton>
+                    Filter
                   </Button>
                   <Button
                     sx={{ mb: 2 }}
@@ -168,30 +208,17 @@ const BebanHarian = () => {
                         <TableCellHead rowSpan={2} minWidth="120px">
                           Setting OCR
                         </TableCellHead>
-                        {TIME.map((value) => (
-                          <TableCellHead align="center" colSpan={6}>
-                            {value}
-                          </TableCellHead>
-                        ))}
+                        {filterTable.length > 0 &&
+                          TIME.map((value) => (
+                            <TableCellHead
+                              align="center"
+                              colSpan={filterTable.length}
+                            >
+                              {value}
+                            </TableCellHead>
+                          ))}
                       </TableRow>
-                      <TableRow>
-                        {TIME.map(() => (
-                          <>
-                            <TableCellHead minWidth="100px">
-                              arus (a)
-                            </TableCellHead>
-                            <TableCellHead>mw</TableCellHead>
-                            <TableCellHead>mvar</TableCellHead>
-                            <TableCellHead>KWH</TableCellHead>
-                            <TableCellHead minWidth="100px">
-                              % i nom
-                            </TableCellHead>
-                            <TableCellHead minWidth="120px">
-                              % i mampu
-                            </TableCellHead>
-                          </>
-                        ))}
-                      </TableRow>
+                      <TableRow>{renderRowTime}</TableRow>
                     </TableHead>
                     <TableBody>
                       {bebanTrafoList?.map((value: BebanTrafo, index) => {
@@ -217,7 +244,7 @@ const BebanHarian = () => {
                             <TableCell size="small">
                               {value.setting_ocr}
                             </TableCell>
-                            {showValueBeban(value.data)}
+                            {showValueBeban(value.data, filterTable)}
                           </TableRow>
                         );
                       })}
