@@ -15,7 +15,7 @@ export const useModalAdd = (jenisPeralatan: string, garduIndukId: string) => {
 
 
   useEffect(() => {
-    if (modalSnap.isOpen && modalSnap.target === "modal-energize-peralatan") {
+    if (modalSnap.isOpen && (modalSnap.target === "modal-energize-peralatan" || modalSnap.target === "modal-filter")) {
       getGarduIndukList()
     }
   }, [modalSnap.isOpen])

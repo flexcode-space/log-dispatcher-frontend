@@ -52,11 +52,8 @@ const ModalFilter = ({ filter, onChange }: ModaFilterProps) => {
 
     formMethods.handleSubmit(async (values) => {
       onChange(values);
+      closeModal();
     })();
-  };
-
-  const onClickCloseModal = () => {
-    closeModal();
   };
 
   const onClickDelete = () => {
@@ -72,7 +69,7 @@ const ModalFilter = ({ filter, onChange }: ModaFilterProps) => {
     <Dialog
       open={isOpen}
       fullWidth
-      onClose={onClickCloseModal}
+      onClose={closeModal}
       maxWidth="sm"
       scroll="body"
     >
@@ -117,7 +114,7 @@ const ModalFilter = ({ filter, onChange }: ModaFilterProps) => {
                 )}
               </Box>
               <Box display="flex" gap="10px">
-                <Button variant="outlined" onClick={onClickCloseModal}>
+                <Button variant="outlined" onClick={closeModal}>
                   Batal
                 </Button>
                 <Button variant="contained" type="submit">

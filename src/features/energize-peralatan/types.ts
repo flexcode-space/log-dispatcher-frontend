@@ -1,3 +1,5 @@
+import { Dayjs } from "dayjs";
+
 export type EnergizeList = {
   id: string;
   ba_ptp: string;
@@ -30,3 +32,11 @@ export type CreateEnergizePeralatan = {
   tanggal: string
   close?: string
 }
+
+export type FilterProps = {
+  gardu_induk_id: string;
+  jenis_peralatan: string
+  jurusan: string;
+  tanggal_mulai: Dayjs | null;
+  tanggal_akhir: Dayjs | null;
+};
