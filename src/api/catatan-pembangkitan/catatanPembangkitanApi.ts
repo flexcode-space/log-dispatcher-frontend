@@ -6,6 +6,11 @@ export type Params = {
   search?: string;
   tanggal?: string
   tipe: string
+  operator?: string
+  pembangkit_id?: string
+  status?: string
+  tanggal_mulai?: string
+  tanggal_akhir?: string
 }
 
 interface ParamsReport {

@@ -1,5 +1,3 @@
-import { useEffect } from "react";
-import dayjs from "dayjs";
 import { useForm, FormProvider } from "react-hook-form";
 import {
   Box,
@@ -15,16 +13,23 @@ import {
 } from "@mui/material";
 import { TrashCanOutline } from "mdi-material-ui";
 import { useSnapshot } from "valtio";
-// import { yupResolver } from "@hookform/resolvers/yup";
+import { yupResolver } from "@hookform/resolvers/yup";
 import { SelectInput } from "src/components/select-input";
 import { InputField } from "src/components/input-field";
 import { StyledForm } from "src/components/form";
 import { closeModal, modal } from "src/state/modal";
 import { DatePicker } from "src/components/date-picker";
 import { useCatatanPenyaluran } from "../../useCatatanPenyaluran";
-// import { useCatatanPembangkitan } from "../../useCatatanPembangkitan";
+import { initialValues, validationSchema } from "./ModalFilter.constant";
+import { FilterProps } from "../../types";
+import { useEffect } from "react";
 
-const ModalFilter = () => {
+type ModaFilterProps = {
+  filter: FilterProps;
+  onChange: (value: FilterProps) => void;
+};
+
+const ModalFilter = ({ filter, onChange }: ModaFilterProps) => {
   const modalSnapshot = useSnapshot(modal);
 
   const { garduIndukOptions } = useCatatanPenyaluran();
@@ -33,33 +38,38 @@ const ModalFilter = () => {
     modalSnapshot.isOpen && modalSnapshot.target === "modal-filter";
 
   const formMethods = useForm({
-    // resolver: yupResolver(validationSchema),
-    // defaultValues: initialValues,
+    resolver: yupResolver(validationSchema),
+    defaultValues: initialValues,
     mode: "onSubmit",
   });
+
+  const {
+    formState: { isDirty },
+  } = formMethods;
 
   const onSubmit = (event?: React.FormEvent<HTMLFormElement>) => {
     event?.preventDefault();
 
     formMethods.handleSubmit(async (values) => {
-      // TODO: handle submit
+      onChange(values);
+      closeModal();
     })();
   };
 
-  const onClickCloseModal = () => {
-    closeModal();
-    // formMethods.reset({ ...initialValues });
+  const onClickDelete = () => {
+    formMethods.reset({ ...initialValues });
+    onChange({ ...initialValues });
   };
 
-  const onClickDelete = () => {
-    // TODO: handle delete
-  };
+  useEffect(() => {
+    formMethods.reset({ ...filter });
+  }, []);
 
   return (
     <Dialog
       open={isOpen}
       fullWidth
-      onClose={onClickCloseModal}
+      onClose={closeModal}
       maxWidth="sm"
       scroll="body"
     >
@@ -68,9 +78,6 @@ const ModalFilter = () => {
           <DialogTitle id="max-width-dialog-title">Filter</DialogTitle>
           <DialogContent>
             <Grid container spacing={1} mt={1}>
-              <Grid item xs={12} sx={{ mb: "10px" }}>
-                <Typography fontWeight={500}>Pembangkit Derating</Typography>
-              </Grid>
               <Grid item xs={6}>
                 <SelectInput
                   label="Gardu Induk"
@@ -97,15 +104,17 @@ const ModalFilter = () => {
               justifyContent="space-between"
             >
               <Box>
-                <Button variant="text" onClick={onClickDelete}>
-                  <IconButton>
-                    <TrashCanOutline />
-                  </IconButton>
-                  Hapus Filter
-                </Button>
+                {isDirty && (
+                  <Button variant="text" onClick={onClickDelete}>
+                    <IconButton>
+                      <TrashCanOutline />
+                    </IconButton>
+                    Hapus Filter
+                  </Button>
+                )}
               </Box>
               <Box display="flex" gap="10px">
-                <Button variant="outlined" onClick={onClickCloseModal}>
+                <Button variant="outlined" onClick={closeModal}>
                   Batal
                 </Button>
                 <Button variant="contained" type="submit">

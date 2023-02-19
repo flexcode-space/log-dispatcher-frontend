@@ -4,6 +4,11 @@ import { Axios } from '../axios'
 
 export type Params = {
   search?: string;
+  tanggal?: string
+  gardu_induk_id?: string,
+  jurusan?: string,
+  tanggal_mulai?: string,
+  tanggal_akhir?: string
 }
 
 interface ParamsReport {

@@ -1,3 +1,5 @@
+import { Dayjs } from "dayjs";
+
 export interface CatatanPembangkitanList {
   id: string;
   keterangan: string;
@@ -22,4 +24,18 @@ export type PayloadCatatanPembangkitan = {
   waktu_akhir?: Date;
   keterangan: string;
   operator: string
+};
+
+export type FilterProps = {
+  pembangkit_id: string;
+  status: string;
+  tanggal_mulai: Dayjs | null;
+  tanggal_akhir: Dayjs | null;
+  operator: string
+};
+
+export type Filter = {
+  derating: FilterProps;
+  outage: FilterProps;
+  lain: FilterProps;
 };

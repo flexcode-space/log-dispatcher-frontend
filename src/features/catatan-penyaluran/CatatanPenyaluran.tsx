@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import {
   Card,
   CardContent,
@@ -22,16 +22,27 @@ import { WrapperFilter } from "src/components/filter";
 import { catatanPenyaluranApi } from "src/api/catatan-penyaluran";
 import { selectData } from "src/state/catatanPenyaluran";
 import { AddData } from "./add-data";
-import { openModal, closeModal, modal } from "src/state/modal";
+import { openModal, closeModal } from "src/state/modal";
 import { ModalEdit, ModalDownload, ModalFilter } from "./modal";
 import { defaultColumns } from "./CatatanPenyaluran.constant";
 import { CellType } from "src/types";
-import { CatatanPenyaluranList } from "./types";
+import { CatatanPenyaluranList, FilterProps } from "./types";
 import { reloadPage } from "src/state/reloadPage";
+import dayjs, { Dayjs } from "dayjs";
+import { useDebounce } from "src/hooks/useDebounce";
 
 const CatatanPembangkitan = () => {
-  const modalSnap = useSnapshot(modal);
   const reloadPageSnap = useSnapshot(reloadPage);
+  const [search, setSearch] = useState<string>("");
+  const [date, setDate] = useState<Dayjs | null>(null);
+  const [filter, setFilter] = useState<FilterProps>({
+    gardu_induk_id: "",
+    jurusan: "",
+    tanggal_mulai: null,
+    tanggal_akhir: null,
+  });
+
+  const debouncedSearch = useDebounce(search, 500);
 
   const { getCatatanPenyaluranList, catatanPenyaluranList } =
     catatanPenyaluranApi();
@@ -64,12 +75,29 @@ const CatatanPembangkitan = () => {
   };
 
   const getCatatanPenyaluran = () => {
-    getCatatanPenyaluranList();
+    const { tanggal_mulai, tanggal_akhir, ...rest } = filter;
+
+    const params = {
+      ...rest,
+      tanggal: date ? dayjs(date).format("YYYY-MM-DD") : "",
+      tanggal_mulai: tanggal_mulai
+        ? dayjs(tanggal_mulai).format("YYYY-MM-DD")
+        : "",
+      tanggal_akhir: tanggal_akhir
+        ? dayjs(tanggal_akhir).format("YYYY-MM-DD")
+        : "",
+    };
+
+    if (debouncedSearch) {
+      getCatatanPenyaluranList({ ...params, search });
+    } else {
+      getCatatanPenyaluranList({ ...params });
+    }
   };
 
   useEffect(() => {
     getCatatanPenyaluran();
-  }, []);
+  }, [filter, date, debouncedSearch]);
 
   useEffect(() => {
     if (reloadPageSnap.target === "catatan-penyaluran") {
@@ -79,7 +107,7 @@ const CatatanPembangkitan = () => {
 
   return (
     <>
-      <ModalFilter />
+      <ModalFilter filter={filter} onChange={(value) => setFilter(value)} />
       <ModalDownload />
       <ModalEdit handleClose={handleClose} />
       <Grid container spacing={6}>
@@ -97,18 +125,18 @@ const CatatanPembangkitan = () => {
               <WrapperFilter sx={{ alignItems: "baseline" }}>
                 <TextField
                   size="small"
-                  value=""
+                  value={search}
                   sx={{ mr: 6, mb: 2 }}
                   placeholder="Cari"
-                  // onChange={(e) => setSearch(e.target.value)}
+                  onChange={(e) => setSearch(e.target.value)}
                 />
 
                 <div style={{ display: "flex", gap: "10px" }}>
                   <LocalizationProvider dateAdapter={AdapterDateFns}>
                     <DatePicketMui
-                      value={new Date()}
-                      label="Pilih Tanggal"
-                      onChange={() => null}
+                      value={date}
+                      inputFormat="dd/M/yyyy"
+                      onChange={(e) => setDate(e)}
                       renderInput={(params) => (
                         <TextField size="small" {...params} />
                       )}

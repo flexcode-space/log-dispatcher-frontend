@@ -15,15 +15,22 @@ import {
 } from "@mui/material";
 import { TrashCanOutline } from "mdi-material-ui";
 import { useSnapshot } from "valtio";
-// import { yupResolver } from "@hookform/resolvers/yup";
+import { yupResolver } from "@hookform/resolvers/yup";
 import { SelectInput } from "src/components/select-input";
 import { InputField } from "src/components/input-field";
 import { StyledForm } from "src/components/form";
 import { closeModal, modal } from "src/state/modal";
 import { DatePicker } from "src/components/date-picker";
 import { useCatatanPembangkitan } from "../../useCatatanPembangkitan";
+import { initialValues, validationSchema } from "./ModalFilter.constant";
+import { FilterProps, Filter } from "../../types";
 
-const ModalFilter = () => {
+type ModaFilterProps = {
+  filter: Filter;
+  onChange: (value: Filter) => void;
+};
+
+const ModalFilter = ({ filter, onChange }: ModaFilterProps) => {
   const modalSnapshot = useSnapshot(modal);
 
   const { pembangkitOptions, statusOptions } = useCatatanPembangkitan();
@@ -32,33 +39,38 @@ const ModalFilter = () => {
     modalSnapshot.isOpen && modalSnapshot.target === "modal-filter";
 
   const formMethods = useForm({
-    // resolver: yupResolver(validationSchema),
-    // defaultValues: initialValues,
+    resolver: yupResolver(validationSchema),
+    defaultValues: initialValues,
     mode: "onSubmit",
   });
+
+  const {
+    formState: { isDirty },
+  } = formMethods;
 
   const onSubmit = (event?: React.FormEvent<HTMLFormElement>) => {
     event?.preventDefault();
 
     formMethods.handleSubmit(async (values) => {
-      // TODO: handle submit
+      onChange(values);
+      closeModal();
     })();
   };
 
-  const onClickCloseModal = () => {
-    closeModal();
-    // formMethods.reset({ ...initialValues });
+  const onClickDelete = () => {
+    formMethods.reset({ ...initialValues });
+    onChange({ ...initialValues });
   };
 
-  const onClickDelete = () => {
-    // TODO: handle delete
-  };
+  useEffect(() => {
+    formMethods.reset({ ...filter });
+  }, []);
 
   return (
     <Dialog
       open={isOpen}
       fullWidth
-      onClose={onClickCloseModal}
+      onClose={closeModal}
       maxWidth="sm"
       scroll="body"
     >
@@ -73,25 +85,31 @@ const ModalFilter = () => {
               <Grid item xs={6}>
                 <SelectInput
                   label="Pembangkit"
-                  name="pembangkit_id"
+                  name="derating.pembangkit_id"
                   options={pembangkitOptions}
                 />
               </Grid>
               <Grid item xs={6}>
                 <SelectInput
                   label="Status"
-                  name="status"
+                  name="derating.status"
                   options={statusOptions}
                 />
               </Grid>
               <Grid item xs={4}>
-                <DatePicker label="Tanggal Mulai" name="tanggal_mulai" />
+                <DatePicker
+                  label="Tanggal Mulai"
+                  name="derating.tanggal_mulai"
+                />
               </Grid>
               <Grid item xs={4}>
-                <DatePicker label="Tanggal Akhir" name="tanggal_akhir" />
+                <DatePicker
+                  label="Tanggal Akhir"
+                  name="derating.tanggal_akhir"
+                />
               </Grid>
               <Grid item xs={4}>
-                <InputField name="operator" label="Operator" />
+                <InputField name="derating.operator" label="Operator" />
               </Grid>
             </Grid>
 
@@ -102,25 +120,25 @@ const ModalFilter = () => {
               <Grid item xs={6}>
                 <SelectInput
                   label="Pembangkit"
-                  name="pembangkit_id"
+                  name="outage.pembangkit_id"
                   options={pembangkitOptions}
                 />
               </Grid>
               <Grid item xs={6}>
                 <SelectInput
                   label="Status"
-                  name="status"
+                  name="outage.status"
                   options={statusOptions}
                 />
               </Grid>
               <Grid item xs={4}>
-                <DatePicker label="Tanggal Mulai" name="tanggal_mulai" />
+                <DatePicker label="Tanggal Mulai" name="outage.tanggal_mulai" />
               </Grid>
               <Grid item xs={4}>
-                <DatePicker label="Tanggal Akhir" name="tanggal_akhir" />
+                <DatePicker label="Tanggal Akhir" name="outage.tanggal_akhir" />
               </Grid>
               <Grid item xs={4}>
-                <InputField name="operator" label="Operator" />
+                <InputField name="outage.operator" label="Operator" />
               </Grid>
             </Grid>
 
@@ -131,25 +149,25 @@ const ModalFilter = () => {
               <Grid item xs={6}>
                 <SelectInput
                   label="Pembangkit"
-                  name="pembangkit_id"
+                  name="lain.pembangkit_id"
                   options={pembangkitOptions}
                 />
               </Grid>
               <Grid item xs={6}>
                 <SelectInput
                   label="Status"
-                  name="status"
+                  name="lain.status"
                   options={statusOptions}
                 />
               </Grid>
               <Grid item xs={4}>
-                <DatePicker label="Tanggal Mulai" name="tanggal_mulai" />
+                <DatePicker label="Tanggal Mulai" name="lain.tanggal_mulai" />
               </Grid>
               <Grid item xs={4}>
-                <DatePicker label="Tanggal Akhir" name="tanggal_akhir" />
+                <DatePicker label="Tanggal Akhir" name="lain.tanggal_akhir" />
               </Grid>
               <Grid item xs={4}>
-                <InputField name="operator" label="Operator" />
+                <InputField name="lain.operator" label="Operator" />
               </Grid>
             </Grid>
           </DialogContent>
@@ -161,15 +179,17 @@ const ModalFilter = () => {
               justifyContent="space-between"
             >
               <Box>
-                <Button variant="text" onClick={onClickDelete}>
-                  <IconButton>
-                    <TrashCanOutline />
-                  </IconButton>
-                  Hapus Filter
-                </Button>
+                {isDirty && (
+                  <Button variant="text" onClick={onClickDelete}>
+                    <IconButton>
+                      <TrashCanOutline />
+                    </IconButton>
+                    Hapus Filter
+                  </Button>
+                )}
               </Box>
               <Box display="flex" gap="10px">
-                <Button variant="outlined" onClick={onClickCloseModal}>
+                <Button variant="outlined" onClick={closeModal}>
                   Batal
                 </Button>
                 <Button variant="contained" type="submit">

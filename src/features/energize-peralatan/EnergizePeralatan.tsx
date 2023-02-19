@@ -15,7 +15,6 @@ import { PencilOutline, EyeOutline } from "mdi-material-ui";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import DatePicketMui from "@mui/lab/DatePicker";
-import { modal } from "src/state/modal";
 import { useDebounce } from "src/hooks/useDebounce";
 import PageHeader from "src/@core/components/page-header";
 import FilterIcon from "src/assets/icons/filter-green-icon.svg";
@@ -27,7 +26,7 @@ import { ModalAdd, ModalDetail, ModalFilter } from "./modal";
 import { defaultColumns } from "./EnergizePeralatan.constant";
 import { energizePeralatanApi } from "src/api/energize-peralatan";
 import { CellType } from "src/types";
-import { EnergizeList } from "./types";
+import { EnergizeList, FilterProps } from "./types";
 import { selectData } from "src/state/energizePeralatan";
 import dayjs, { Dayjs } from "dayjs";
 import { reloadPage } from "src/state/reloadPage";
@@ -37,9 +36,15 @@ const EnergizePeralatan = () => {
   const reloadPageSnap = useSnapshot(reloadPage);
   const [date, setDate] = useState<Dayjs | null>(null);
   const [search, setSearch] = useState<string>("");
+  const [filter, setFilter] = useState<FilterProps>({
+    gardu_induk_id: "",
+    jenis_peralatan: "",
+    jurusan: "",
+    tanggal_mulai: null,
+    tanggal_akhir: null,
+  });
 
   const debouncedSearch = useDebounce(search, 500);
-  const formatDate = date ? dayjs(date).format("YYYY-MM-DD") : "";
 
   const { getEnergizePeralatanList, energizePeralatanList } =
     energizePeralatanApi();
@@ -78,16 +83,29 @@ const EnergizePeralatan = () => {
   ];
 
   const getEnergize = () => {
+    const { tanggal_mulai, tanggal_akhir, ...rest } = filter;
+
+    const params = {
+      ...rest,
+      tanggal: date ? dayjs(date).format("YYYY-MM-DD") : "",
+      tanggal_mulai: tanggal_mulai
+        ? dayjs(tanggal_mulai).format("YYYY-MM-DD")
+        : "",
+      tanggal_akhir: tanggal_akhir
+        ? dayjs(tanggal_akhir).format("YYYY-MM-DD")
+        : "",
+    };
+
     if (debouncedSearch) {
-      getEnergizePeralatanList({ search, tanggal: formatDate });
+      getEnergizePeralatanList({ ...params, search });
     } else {
-      getEnergizePeralatanList({ search, tanggal: formatDate });
+      getEnergizePeralatanList({ ...params });
     }
   };
 
   useEffect(() => {
     getEnergize();
-  }, [debouncedSearch, date]);
+  }, [debouncedSearch, date, filter]);
 
   useEffect(() => {
     if (reloadPageSnap.target === "energize-peralatan") {
@@ -99,7 +117,7 @@ const EnergizePeralatan = () => {
     <>
       <ModalDownload />
       <ModalAdd />
-      <ModalFilter />
+      <ModalFilter filter={filter} onChange={(filter) => setFilter(filter)} />
       <ModalDetail />
       <Grid container spacing={6}>
         <Grid item xs={12}>
