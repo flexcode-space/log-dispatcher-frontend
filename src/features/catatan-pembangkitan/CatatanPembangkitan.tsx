@@ -12,9 +12,16 @@ import { AddData } from "./add-data";
 import { ModalEdit, ModalFilter, ModalDownload } from "./modal";
 import { TableList } from "./table-list";
 import { openModal } from "src/state/modal";
+import { Filter } from "./types";
+import { values } from "./modal/ModalFilter/ModalFilter.constant";
 
 const CatatanPembangkitan = () => {
   const [date, setDate] = useState<Dayjs | null>(null);
+  const [filter, setFilter] = useState<Filter>({
+    derating: { ...values },
+    outage: { ...values },
+    lain: { ...values },
+  });
 
   const formatDate = date ? dayjs(date).format("YYYY-MM-DD") : "";
 
@@ -22,7 +29,7 @@ const CatatanPembangkitan = () => {
     <>
       <ModalDownload />
       <ModalEdit />
-      <ModalFilter />
+      <ModalFilter filter={filter} onChange={(value) => setFilter(value)} />
       <Grid container spacing={6}>
         <Grid item xs={12}>
           <PageHeader
@@ -82,12 +89,19 @@ const CatatanPembangkitan = () => {
           title="Pembangkit Derating"
           type="derating"
           date={formatDate}
+          filter={filter.derating}
         />
-        <TableList title="Pembangkit Outage" type="outage" date={formatDate} />
+        <TableList
+          title="Pembangkit Outage"
+          type="outage"
+          date={formatDate}
+          filter={filter.outage}
+        />
         <TableList
           title="Pembangkit RS, NC, Dll"
           type="lain"
           date={formatDate}
+          filter={filter.lain}
         />
       </Grid>
     </>

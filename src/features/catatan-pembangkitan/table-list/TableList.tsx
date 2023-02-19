@@ -8,8 +8,9 @@ import { CellType } from "src/types";
 import { useSnapshot } from "valtio";
 import { defaultColumns } from "../CatatanPembangkitan.constant";
 import { selectData } from "../state";
-import { CatatanPembangkitanList } from "../types";
+import { CatatanPembangkitanList, FilterProps } from "../types";
 import { reloadPage } from "src/state/reloadPage";
+import dayjs from "dayjs";
 
 type TableListProps = {
   type: string;
@@ -17,6 +18,7 @@ type TableListProps = {
   actionCard?: React.ReactNode;
   showAction?: boolean;
   date?: string;
+  filter: FilterProps;
 };
 
 const TableList = ({
@@ -25,6 +27,7 @@ const TableList = ({
   actionCard,
   showAction = true,
   date,
+  filter,
 }: TableListProps) => {
   const reloadPageSnap = useSnapshot(reloadPage);
 
@@ -58,15 +61,33 @@ const TableList = ({
       : []),
   ];
 
+  const getCatatanPembangkitan = () => {
+    const { tanggal_mulai, tanggal_akhir, ...rest } = filter;
+
+    const params = {
+      ...rest,
+      tipe: type,
+      tanggal: date,
+      tanggal_mulai: tanggal_mulai
+        ? dayjs(tanggal_mulai).format("YYYY-MM-DD")
+        : "",
+      tanggal_akhir: tanggal_akhir
+        ? dayjs(tanggal_akhir).format("YYYY-MM-DD")
+        : "",
+    };
+
+    getCatatanPembangkitanList({ ...params });
+  };
+
   useEffect(() => {
-    getCatatanPembangkitanList({ tipe: type, tanggal: date });
-  }, [date]);
+    getCatatanPembangkitan();
+  }, [filter, date]);
 
   useEffect(() => {
     if (reloadPage.target === "catatan-pembangkitan") {
-      getCatatanPembangkitanList({ tipe: type, tanggal: date });
+      getCatatanPembangkitan();
     }
-  }, [reloadPageSnap.id, date]);
+  }, [reloadPageSnap.id]);
 
   return (
     <Grid item xs={12}>
