@@ -18,7 +18,7 @@ type TableListProps = {
   actionCard?: React.ReactNode;
   showAction?: boolean;
   date?: string;
-  filter: FilterProps;
+  filter?: FilterProps;
 };
 
 const TableList = ({
