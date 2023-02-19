@@ -62,21 +62,25 @@ const TableList = ({
   ];
 
   const getCatatanPembangkitan = () => {
-    const { tanggal_mulai, tanggal_akhir, ...rest } = filter;
+    if (filter) {
+      const { tanggal_mulai, tanggal_akhir, ...rest } = filter;
 
-    const params = {
-      ...rest,
-      tipe: type,
-      tanggal: date,
-      tanggal_mulai: tanggal_mulai
-        ? dayjs(tanggal_mulai).format("YYYY-MM-DD")
-        : "",
-      tanggal_akhir: tanggal_akhir
-        ? dayjs(tanggal_akhir).format("YYYY-MM-DD")
-        : "",
-    };
+      const params = {
+        ...rest,
+        tipe: type,
+        tanggal: date,
+        tanggal_mulai: tanggal_mulai
+          ? dayjs(tanggal_mulai).format("YYYY-MM-DD")
+          : "",
+        tanggal_akhir: tanggal_akhir
+          ? dayjs(tanggal_akhir).format("YYYY-MM-DD")
+          : "",
+      };
 
-    getCatatanPembangkitanList({ ...params });
+      getCatatanPembangkitanList({ ...params });
+    } else {
+      getCatatanPembangkitanList({ tipe: type });
+    }
   };
 
   useEffect(() => {
