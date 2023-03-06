@@ -9,6 +9,7 @@ import { TableBebanSubsistem } from "./components/TableBebanSubsistem";
 import { TableMonitoring } from "./components/TableMonitoring";
 import { analisaBebanApi } from "src/api/analisa-beban";
 import { convertDate } from "src/utils/date";
+import RekorBeban from "./components/RekorBeban";
 
 const AnalisaBeban = () => {
   const [date, setDate] = useState<any>(new Date());
@@ -33,6 +34,7 @@ const AnalisaBeban = () => {
   return (
     <>
       <Grid container spacing={6}>
+        <RekorBeban />
         <Grid item xs={12}>
           <WrapperFilter sx={{ alignItems: "center" }}>
             <Grid item>
@@ -56,16 +58,16 @@ const AnalisaBeban = () => {
         <Grid item xs={12}>
           <TableBebanSubsistem tanggal={tanggal} />
         </Grid>
-        <Grid item xl={4} md={6}>
+        <Grid item xl={6}>
           <TableMonitoring title="Monitoring IBT" data={monitorIbtList} />
         </Grid>
-        <Grid item xl={4} md={6}>
+        <Grid item xl={6}>
           <TableMonitoring
             title="Monitoring Penghantar"
             data={monitorPengahantarList}
           />
         </Grid>
-        <Grid item xl={4} md={6}>
+        <Grid item xl={6}>
           <TableMonitoring title="Monitoring Trafo" data={monitorTrafoList} />
         </Grid>
       </Grid>
