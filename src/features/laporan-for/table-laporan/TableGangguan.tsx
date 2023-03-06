@@ -39,7 +39,7 @@ export const TableGangguan = () => {
                   <TableCellHead>Keterangan</TableCellHead>
                   <TableCellHead>Beban Padam</TableCellHead>
                   <TableCellHead>SRT</TableCellHead>
-                  <TableCellHead>Defense Schema</TableCellHead>
+                  <TableCellHead>Defense Scheme</TableCellHead>
                 </TableRow>
               </TableHead>
               <TableBody>
