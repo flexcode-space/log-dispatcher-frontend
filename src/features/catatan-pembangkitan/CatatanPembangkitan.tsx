@@ -16,7 +16,7 @@ import { Filter } from "./types";
 import { values } from "./modal/ModalFilter/ModalFilter.constant";
 
 const CatatanPembangkitan = () => {
-  const [date, setDate] = useState<Dayjs | null>(null);
+  const [date, setDate] = useState<Dayjs | null>(dayjs());
   const [filter, setFilter] = useState<Filter>({
     derating: { ...values },
     outage: { ...values },

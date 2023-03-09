@@ -34,7 +34,7 @@ import { useDebounce } from "src/hooks/useDebounce";
 const CatatanPembangkitan = () => {
   const reloadPageSnap = useSnapshot(reloadPage);
   const [search, setSearch] = useState<string>("");
-  const [date, setDate] = useState<Dayjs | null>(null);
+  const [date, setDate] = useState<Dayjs | null>(dayjs());
   const [filter, setFilter] = useState<FilterProps>({
     gardu_induk_id: "",
     jurusan: "",

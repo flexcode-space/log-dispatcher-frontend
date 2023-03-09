@@ -50,7 +50,7 @@ import ModalDownload from "./modal/ModalDownload";
 const Gangguan = () => {
   const reloadPageSnap = useSnapshot(reloadPage);
 
-  const [date, setDate] = useState<Dayjs | null>(null);
+  const [date, setDate] = useState<Dayjs | null>(dayjs());
   const [search, setSearch] = useState<string>("");
   const [page, setPage] = useState<number>(0);
   const [rowsPerPage, setRowsPerPage] = useState<number>(20);
