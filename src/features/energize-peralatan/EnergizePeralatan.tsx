@@ -34,7 +34,7 @@ import ModalDownload from "./modal/ModalDownload";
 
 const EnergizePeralatan = () => {
   const reloadPageSnap = useSnapshot(reloadPage);
-  const [date, setDate] = useState<Dayjs | null>(null);
+  const [date, setDate] = useState<Dayjs | null>(dayjs());
   const [search, setSearch] = useState<string>("");
   const [filter, setFilter] = useState<FilterProps>({
     gardu_induk_id: "",
