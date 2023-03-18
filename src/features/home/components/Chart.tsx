@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import {
   CardHeader,
   Card,
@@ -6,61 +7,105 @@ import {
   Typography,
   TextField,
 } from "@mui/material";
+import dayjs, { Dayjs } from "dayjs";
 import ReactApexcharts from "src/@core/components/react-apexcharts";
 import { ApexOptions } from "apexcharts";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
+import { berandaApi } from "src/api/beranda";
 
-const options: ApexOptions = {
+type KomposisiProps = {
+  color: string;
+  nama: string;
+  percentage: number;
+  value: number;
+};
+
+const initialOptionsChart: ApexOptions = {
+  chart: {
+    width: 380,
+    type: "pie",
+  },
   legend: { show: false },
-  colors: ["#6D788D", "#4AA1B9", "#FDBE42"],
-  labels: [
-    `${new Date().getFullYear()}`,
-    `${new Date().getFullYear() - 1}`,
-    `${new Date().getFullYear() - 2}`,
-  ],
-  tooltip: {
-    y: { formatter: (val: number) => `${val}%` },
-  },
-  dataLabels: {
-    enabled: false,
-  },
-  states: {
-    hover: {
-      filter: { type: "none" },
-    },
-    active: {
-      filter: { type: "none" },
-    },
-  },
-  plotOptions: {
-    pie: {
-      donut: {
-        size: "70%",
-        labels: {
-          show: true,
-          name: { show: false },
-          total: {
-            label: "",
-            show: true,
-            formatter(val) {
-              return typeof val === "string" ? `${val}%` : "12%";
-            },
-          },
-          value: {
-            offsetY: 6,
-            formatter(val) {
-              return `${val}%`;
-            },
-          },
+  responsive: [
+    {
+      breakpoint: 480,
+      options: {
+        chart: {
+          width: 200,
+        },
+        legend: {
+          position: "bottom",
         },
       },
     },
-  },
+  ],
 };
 
 export const Chart = () => {
+  const { getPieChart } = berandaApi();
+
+  const [komposisi, setKomposisi] = useState<{
+    options: ApexOptions;
+    series: number[];
+  }>({
+    options: initialOptionsChart,
+    series: [],
+  });
+
+  const [beban, setBeban] = useState<{
+    options: ApexOptions;
+    series: number[];
+  }>({
+    options: initialOptionsChart,
+    series: [],
+  });
+
+  const [date, setDate] = useState<Dayjs | null>(dayjs());
+
+  useEffect(() => {
+    getPieChart({ tanggal: dayjs(date).format("YYYY-MM-DD") }).then(
+      (result) => {
+        if (result?.komposisi) {
+          let komposisiLabel: string[] = [];
+          let komposisiSeries: number[] = [];
+
+          result?.komposisi?.forEach((value: KomposisiProps) => {
+            komposisiLabel.push(value.nama);
+            komposisiSeries.push(value.value);
+          });
+
+          setKomposisi((prevState) => ({
+            series: komposisiSeries,
+            options: {
+              ...prevState.options,
+              labels: komposisiLabel,
+            },
+          }));
+        }
+
+        if (result?.beban) {
+          let bebanLabel: string[] = [];
+          let bebanSeries: number[] = [];
+
+          result?.beban.forEach((value: KomposisiProps) => {
+            bebanLabel.push(value.nama);
+            bebanSeries.push(value.value);
+          });
+
+          setBeban((prevState) => ({
+            series: bebanSeries,
+            options: {
+              ...prevState.options,
+              labels: bebanLabel,
+            },
+          }));
+        }
+      }
+    );
+  }, [date]);
+
   return (
     <Card sx={{ height: 390 }}>
       <CardHeader
@@ -80,8 +125,8 @@ export const Chart = () => {
             <DatePicker
               label="Tanggal"
               inputFormat="dd/M/yyyy"
-              value={new Date()}
-              onChange={() => null}
+              value={date}
+              onChange={(e) => setDate(e)}
               renderInput={(params) => <TextField {...params} />}
             />
           </LocalizationProvider>
@@ -94,10 +139,10 @@ export const Chart = () => {
               Komposisi Pembebanan
             </Typography>
             <ReactApexcharts
-              type="donut"
+              type="pie"
               height={250}
-              options={options}
-              series={[35, 30, 23]}
+              options={komposisi.options}
+              series={komposisi.series}
             />
           </Grid>
           <Grid item xs={6}>
@@ -105,10 +150,10 @@ export const Chart = () => {
               Beban Subsistem
             </Typography>
             <ReactApexcharts
-              type="donut"
+              type="pie"
               height={250}
-              options={options}
-              series={[35, 30, 23]}
+              options={beban.options}
+              series={beban.series}
             />
           </Grid>
         </Grid>
