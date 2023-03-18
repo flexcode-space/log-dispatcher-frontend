@@ -6,6 +6,7 @@ import {
   Grid,
   Typography,
   TextField,
+  Box,
 } from "@mui/material";
 import dayjs, { Dayjs } from "dayjs";
 import ReactApexcharts from "src/@core/components/react-apexcharts";
@@ -83,6 +84,8 @@ export const Chart = () => {
               labels: komposisiLabel,
             },
           }));
+        } else {
+          setKomposisi({ options: initialOptionsChart, series: [] });
         }
 
         if (result?.beban) {
@@ -101,6 +104,8 @@ export const Chart = () => {
               labels: bebanLabel,
             },
           }));
+        } else {
+          setBeban({ options: initialOptionsChart, series: [] });
         }
       }
     );
@@ -138,23 +143,35 @@ export const Chart = () => {
             <Typography textAlign="center" variant="h6" mb="24px">
               Komposisi Pembebanan
             </Typography>
-            <ReactApexcharts
-              type="pie"
-              height={250}
-              options={komposisi.options}
-              series={komposisi.series}
-            />
+            {komposisi.series.length ? (
+              <ReactApexcharts
+                type="pie"
+                height={250}
+                options={komposisi.options}
+                series={komposisi.series}
+              />
+            ) : (
+              <Box textAlign="center" pt="20px">
+                <Typography>Tidak Ada Data</Typography>
+              </Box>
+            )}
           </Grid>
           <Grid item xs={6}>
             <Typography textAlign="center" variant="h6" mb="24px">
               Beban Subsistem
             </Typography>
-            <ReactApexcharts
-              type="pie"
-              height={250}
-              options={beban.options}
-              series={beban.series}
-            />
+            {beban.series.length ? (
+              <ReactApexcharts
+                type="pie"
+                height={250}
+                options={beban.options}
+                series={beban.series}
+              />
+            ) : (
+              <Box textAlign="center" pt="20px">
+                <Typography>Tidak Ada Data</Typography>
+              </Box>
+            )}
           </Grid>
         </Grid>
       </CardContent>
