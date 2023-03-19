@@ -39,11 +39,11 @@ const BebanPenghantarHarian = () => {
   const [rowsPerPage, setRowsPerPage] = useState<number>(20);
   const [date, setDate] = useState<any>(new Date());
   const [filterTable, setFilterTable] = useState<string[]>([
-    "arus",
+    "i_nom",
     "mw",
     "mvar",
     "kwh",
-    "i_nom",
+    "percent_i_nom",
     "i_mampu",
   ]);
 
@@ -86,13 +86,13 @@ const BebanPenghantarHarian = () => {
     () =>
       TIME.map(() => (
         <>
-          {filterTable.includes("arus") && (
-            <TableCellHead minWidth="100px">arus (a)</TableCellHead>
+          {filterTable.includes("i_nom") && (
+            <TableCellHead minWidth="80px">i nom</TableCellHead>
           )}
           {filterTable.includes("mw") && <TableCellHead>mw</TableCellHead>}
           {filterTable.includes("mvar") && <TableCellHead>mvar</TableCellHead>}
           {filterTable.includes("kwh") && <TableCellHead>KWH</TableCellHead>}
-          {filterTable.includes("i_nom") && (
+          {filterTable.includes("percent_i_nom") && (
             <TableCellHead minWidth="100px">% i nom</TableCellHead>
           )}
           {filterTable.includes("i_mampu") && (

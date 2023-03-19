@@ -257,7 +257,7 @@ const DSComponent = () => {
                                       {data.mw}
                                     </TableCell>
                                     <TableCell size="small">
-                                    {`${data?.gardu_induk.nama}_${data?.peralatan.nama}`}
+                                    {`${data?.gardu_induk.nama}_${data?.peralatan_target?.nama}`}
                                     </TableCell>
                                     <TableCell size="small">
                                       {data.keterangan}

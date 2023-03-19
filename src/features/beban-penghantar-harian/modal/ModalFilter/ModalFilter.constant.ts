@@ -10,8 +10,8 @@ export const validationSchema = yup.object({
 
 export const optionsFilter = [
   {
-    value: 'arus',
-    label: 'Arus (A)'
+    value: 'i_nom',
+    label: 'I NOM'
   },
   {
     value: 'mw',
@@ -26,7 +26,7 @@ export const optionsFilter = [
     label: 'KWH'
   },
   {
-    value: 'i_nom',
+    value: 'percent_i_nom',
     label: '% I NOM'
   },
   {
