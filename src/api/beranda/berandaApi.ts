@@ -21,6 +21,7 @@ const berandaApi = () => {
     terendah: MonitorList[]
   }>({ tertinggi: [], terendah: [] })
   const [ibtList, setIbtList] = useState<[]>([])
+  const [pieChart, setPieChat] = useState<{}>({})
   const [loading, setLoading] = useState<boolean>(false);
 
   const getPengaturanSistem = useCallback(async () => {
@@ -81,6 +82,16 @@ const berandaApi = () => {
     }
   }, [])
 
+  const getPieChart = useCallback(async (params: { tanggal: string }) => {
+    setLoading(true)
+    try {
+      const { data } = await Axios.get('/beranda/pie-chart', { params })
+      return data
+    } finally {
+      setLoading(false)
+    }
+  }, [])
+
 
   return {
     loading,
@@ -93,7 +104,9 @@ const berandaApi = () => {
     getPengaturanSistem,
     getMonitoringPenghantar,
     getStatusPembangkitan,
-    getMonitorAnalisaBeban
+    getMonitorAnalisaBeban,
+    getPieChart,
+    // pieChart
   }
 }
 
