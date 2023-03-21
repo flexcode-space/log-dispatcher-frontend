@@ -109,6 +109,32 @@ const gangguanApi = () => {
       }
     }, []);
 
+  const createReleGangguan = useCallback(async (payload: any) => {
+    setLoading(true)
+
+    try {
+      await Axios.post(`${endpoint}/rele-announciator`, payload)
+      toast.success('Berhasil menambahkan Rele')
+    } catch (error) {
+      toast.error('Gagal menambahkan Rele')
+    } finally {
+      setLoading(false)
+    }
+  }, [])
+
+  const createJenisGangguan = useCallback(async (payload: any) => {
+    setLoading(true)
+
+    try {
+      await Axios.post(`${endpoint}/jenis`, payload)
+      toast.success('Berhasil menambahkan Jenis Gangguan')
+    } catch (error) {
+      toast.error('Gagal menambahkan Jenis Gangguan')
+    } finally {
+      setLoading(false)
+    }
+  }, [])
+
 
   return {
     releGangguanList,
@@ -123,7 +149,9 @@ const gangguanApi = () => {
     createGangguan,
     updateGangguan,
     deleteGangguan,
-    loadingDownload
+    loadingDownload,
+    createReleGangguan,
+    createJenisGangguan
   }
 }
 

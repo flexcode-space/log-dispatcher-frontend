@@ -11,7 +11,7 @@ export const validationSchema = yup.object({
 export const optionsFilter = [
   {
     value: 'i_nom',
-    label: 'I NOM'
+    label: 'I (A)'
   },
   {
     value: 'mw',

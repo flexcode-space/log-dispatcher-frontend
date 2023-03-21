@@ -65,7 +65,7 @@ const BebanIBTHarian = () => {
       TIME.map(() => (
         <>
           {filterTable.includes("i_nom") && (
-            <TableCellHead minWidth="80px">i nom</TableCellHead>
+            <TableCellHead minWidth="80px">I (A)</TableCellHead>
           )}
           {filterTable.includes("mw") && <TableCellHead>mw</TableCellHead>}
           {filterTable.includes("mvar") && <TableCellHead>mvar</TableCellHead>}
@@ -210,14 +210,14 @@ const BebanIBTHarian = () => {
                           size="small"
                           rowSpan={2}
                         >
-                          Arus Nominal (A)
+                          I NOM (A)
                         </TableCellHead>
                         <TableCellHead
                           minWidth="150px"
                           size="small"
                           rowSpan={2}
                         >
-                          Arus Mampu (A)
+                          I Mampu (A)
                         </TableCellHead>
                         <TableCellHead
                           minWidth="120px"

@@ -81,7 +81,7 @@ const BebanHarian = () => {
       TIME.map(() => (
         <>
           {filterTable.includes("i_nom") && (
-            <TableCellHead minWidth="80px">i nom</TableCellHead>
+            <TableCellHead minWidth="80px">I (A)</TableCellHead>
           )}
           {filterTable.includes("mw") && <TableCellHead>mw</TableCellHead>}
           {filterTable.includes("mvar") && <TableCellHead>mvar</TableCellHead>}
@@ -200,10 +200,10 @@ const BebanHarian = () => {
                         </TableCellHead>
                         <TableCellHead rowSpan={2}>Ratio</TableCellHead>
                         <TableCellHead rowSpan={2} minWidth="150px">
-                          Arus Nominal (A)
+                          I Nom (A)
                         </TableCellHead>
                         <TableCellHead rowSpan={2} minWidth="150px">
-                          Arus Mampu (A)
+                          I Mampu (A)
                         </TableCellHead>
                         <TableCellHead rowSpan={2} minWidth="120px">
                           Setting OCR
