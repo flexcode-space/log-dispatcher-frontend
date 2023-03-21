@@ -44,9 +44,12 @@ const GarduInduk = () => {
     totalData,
   } = garduIndukApi();
 
-  const onClickDelete = async () => {
-    await deleteGarduInduk({ id: modalSnapshot.id });
-    reloadPage();
+  const onClickDelete = async (id: string) => {
+    if (id) {
+      await deleteGarduInduk({ id });
+      closeModal();
+      reloadPage();
+    }
   };
 
   const columns = [

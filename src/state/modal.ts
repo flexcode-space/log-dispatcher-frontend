@@ -17,9 +17,9 @@ const initialModal = {
 
 export const modal = proxy<Modal>(initialModal)
 
-export const openModal = (target?: string, id?: string,): void => {
+export const openModal = (target?: string, id?: string): void => {
   modal.isOpen = true
-  modal.id = id || ""
+  modal.id = id
   modal.target = target
 }
 

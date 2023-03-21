@@ -42,9 +42,12 @@ const Busbar = () => {
   const { getBusbarList, busbarList, loading, totalData, deleteBusbar } =
     busbarApi();
 
-  const onClickDelete = async () => {
-    await deleteBusbar({ id: modalSnapshot.id });
-    reloadPage();
+  const onClickDelete = async (id: string) => {
+    if (id) {
+      await deleteBusbar({ id });
+      closeModal();
+      reloadPage();
+    }
   };
 
   const id = router.query.id as string;

@@ -43,9 +43,12 @@ const IBT = () => {
   const id = router.query.id as string;
   const path = router.pathname.split("/")[2];
 
-  const onClickDelete = async () => {
-    await deleteIbt({ id: modalSnapshot.id });
-    reloadPage();
+  const onClickDelete = async (id: string) => {
+    if (id) {
+      await deleteIbt({ id });
+      closeModal();
+      reloadPage();
+    }
   };
 
   const columns = [
