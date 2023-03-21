@@ -21,6 +21,7 @@ export const useModal = (jenisPeralatan: string) => {
   }, [jenisPeralatan])
 
   return {
+    peralatanList,
     peralatanOptions,
     optionJenisPeralatan,
     subsistemOptions
