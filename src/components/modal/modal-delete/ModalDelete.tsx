@@ -13,7 +13,7 @@ import { useSnapshot } from "valtio";
 import { modal, closeModal } from "src/state/modal";
 
 type ModalDeleteProps = {
-  onClickDelete: () => void;
+  onClickDelete: (id: string) => void;
 };
 
 const ModalDelete = ({ onClickDelete }: ModalDeleteProps) => {
@@ -61,7 +61,7 @@ const ModalDelete = ({ onClickDelete }: ModalDeleteProps) => {
           <Button
             variant="contained"
             sx={{ bgcolor: "#FF4D49" }}
-            onClick={onClickDelete}
+            onClick={() => onClickDelete(modalSnapshot.id!)}
           >
             <TrashCanOutline sx={{ mr: 1 }} />
             Ya, Hapus

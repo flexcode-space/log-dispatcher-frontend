@@ -23,7 +23,7 @@ import { ModalAddReaktor } from "./modal";
 import { WrapperFilter } from "src/components/filter";
 
 import { reaktorApi } from "src/api/reaktor";
-import { openModal, modal, reloadPage } from "src/state/modal";
+import { openModal, modal, reloadPage, closeModal } from "src/state/modal";
 import { useDebounce } from "src/hooks/useDebounce";
 import { ModalDelete } from "src/components/modal";
 
@@ -43,9 +43,12 @@ const Reaktor = () => {
   const id = router.query.id as string;
   const path = router.pathname.split("/")[2];
 
-  const onClickDelete = async () => {
-    await deleteReaktor({ id: modalSnapshot.id });
-    reloadPage();
+  const onClickDelete = async (id: string) => {
+    if (id) {
+      await deleteReaktor({ id });
+      closeModal();
+      reloadPage();
+    }
   };
 
   const columns = [

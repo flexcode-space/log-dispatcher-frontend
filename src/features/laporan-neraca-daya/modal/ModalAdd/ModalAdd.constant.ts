@@ -12,12 +12,12 @@ export const initialValues = {
 }
 
 export const validationSchema = yup.object({
-  beban_ibt: yup.number().required('This field is required'),
-  beban_kit: yup.number().required('This field is required'),
+  beban_ibt: yup.number(),
+  beban_kit: yup.number(),
   dm_pasok: yup.number().required('This field is required'),
-  ibt_id: yup.string().required('This field is required'),
+  ibt_id: yup.string(),
   keterangan: yup.string().required('This field is required'),
-  pembangkit_id: yup.string().required('This field is required'),
+  pembangkit_id: yup.string(),
   sub_sistem_id: yup.string().required('This field is required'),
   tanggal: yup.string().required('This field is required')
 })
