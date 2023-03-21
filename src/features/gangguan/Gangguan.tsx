@@ -46,6 +46,9 @@ import { useDebounce } from "src/hooks/useDebounce";
 import FallbackSpinner from "src/@core/components/spinner";
 import ModalFilePendukung from "./modal/modal-file-pendukung/ModalFilePendukung";
 import ModalDownload from "./modal/ModalDownload";
+import { MenuPengaturanGangguan } from "./components/menu-pengaturan-gangguan";
+import { ModalReleAnnounciator } from "./modal/modal-rele-announciator";
+import { ModalJenisGangguan } from "./modal/modal-jenis-gangguan";
 
 const Gangguan = () => {
   const reloadPageSnap = useSnapshot(reloadPage);
@@ -100,6 +103,8 @@ const Gangguan = () => {
 
   return (
     <>
+      <ModalJenisGangguan />
+      <ModalReleAnnounciator />
       <ModalDownload />
       <ModalDataPadam />
       <ModalAddGangguan />
@@ -170,6 +175,7 @@ const Gangguan = () => {
                     </IconButton>
                     Filter
                   </Button>
+                  <MenuPengaturanGangguan />
                   <Button
                     variant="contained"
                     size="small"
