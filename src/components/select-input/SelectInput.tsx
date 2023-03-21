@@ -19,6 +19,7 @@ type SelectInputProps = {
   placeholder?: string;
   options?: { value: string | number; label: string }[];
   size?: "small" | "medium";
+  disabled?: boolean;
 };
 
 const SelectInput = ({
@@ -27,6 +28,7 @@ const SelectInput = ({
   placeholder,
   options,
   size,
+  disabled,
 }: SelectInputProps) => {
   const {
     control,
@@ -42,6 +44,7 @@ const SelectInput = ({
           <>
             <InputLabel>{label}</InputLabel>
             <Select
+              disabled={disabled}
               size={size}
               value={value}
               onChange={onChange}

@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import {
   Button,
@@ -19,6 +20,7 @@ import { useModal } from "./useModal";
 import { bebanApi } from "src/api/beban";
 import dayjs from "dayjs";
 
+
 const ModalSetBebanHarian = () => {
   const modalSnapshot = useSnapshot(modal);
 
@@ -34,9 +36,14 @@ const ModalSetBebanHarian = () => {
   });
 
   const jenisPeralatan = formMethods.watch("nama_peralatan");
+  const peralatanId = formMethods.watch("peralatan_id");
 
-  const { optionJenisPeralatan, peralatanOptions, subsistemOptions } =
-    useModal(jenisPeralatan);
+  const {
+    optionJenisPeralatan,
+    peralatanOptions,
+    subsistemOptions,
+    peralatanList,
+  } = useModal(jenisPeralatan);
 
   const onSubmit = (event?: React.FormEvent<HTMLFormElement>) => {
     event?.preventDefault();
@@ -56,6 +63,14 @@ const ModalSetBebanHarian = () => {
     closeModal();
     formMethods.reset({ ...initialValues });
   };
+
+  useEffect(() => {
+    const selectedPeralatan = peralatanList.filter(
+      ({ id }) => id === peralatanId
+    )[0];
+    // @ts-ignore
+    formMethods.setValue("subsistem_awal_id", selectedPeralatan?.sub_sistem?.id);
+  }, [peralatanId]);
 
   return (
     <Dialog
@@ -100,6 +115,7 @@ const ModalSetBebanHarian = () => {
                   label="Subsistem Awal"
                   name="subsistem_awal_id"
                   options={subsistemOptions}
+                  disabled
                 />
               </Grid>
               <Grid item xs={12} sm={6}>

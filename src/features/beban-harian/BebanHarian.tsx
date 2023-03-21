@@ -18,7 +18,7 @@ import {
   TableBody,
 } from "src/components/table";
 import DownloadIcon from "src/assets/icons/download-icon.svg";
-import EditIcon from "src/assets/icons/edit-icon.svg";
+// import EditIcon from "src/assets/icons/edit-icon.svg";
 import { openModal } from "src/state/modal";
 import CustomChip from "src/@core/components/mui/chip";
 
