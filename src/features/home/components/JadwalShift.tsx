@@ -15,8 +15,6 @@ const JadwalShift = ({ onClick }: JadwalShiftProps) => {
     getPiketList({ tanggal: dayjs().format("YYYY-MM-DD") });
   }, []);
 
-  console.log("piketList", piketList);
-
   return (
     <Card>
       <CardHeader
