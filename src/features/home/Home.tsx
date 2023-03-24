@@ -107,7 +107,14 @@ const Home = () => {
           </Grid>
         </Grid>
         <Grid item xs={5}>
-          <StatusPembangkit data={(statusPembangkitan as []) || []} />
+          <Grid container spacing={6}>
+            <Grid item xs={12}>
+              <StatusPembangkit data={(statusPembangkitan as []) || []} />
+            </Grid>
+            <Grid item xs={12}>
+              <MonitoringIBT data={(dataIbt as []) || []} />
+            </Grid>
+          </Grid>
         </Grid>
         <Grid item xs={7}>
           <Grid container spacing={6}>
@@ -121,9 +128,9 @@ const Home = () => {
         </Grid>
         <Grid item xs={5}>
           <Grid container spacing={6}>
-            <Grid item xs={12}>
+            {/* <Grid item xs={12}>
               <MonitoringIBT data={(dataIbt as []) || []} />
-            </Grid>
+            </Grid> */}
             {/* <Grid item xs={12}>
               <MonitoringPenghantar data={(dataPenghantar as []) || []} />
             </Grid> */}
