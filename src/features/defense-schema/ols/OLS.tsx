@@ -15,7 +15,7 @@ import {
   Button,
   IconButton,
 } from "@mui/material";
-import { PencilOutline } from "mdi-material-ui";
+import { DotsVertical, PencilOutline } from "mdi-material-ui";
 import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
@@ -33,6 +33,7 @@ import FallbackSpinner from "src/@core/components/spinner";
 import { pencatatanDefenseApi } from "src/api/pencatatan-defense";
 import dayjs from "dayjs";
 import { ModalChangeStatus } from "../modal/modal-change-status";
+import { MenuRealisasi } from "../components/menu-realisasi";
 
 const OLS = () => {
   const reloadPageSnap = useSnapshot(reloadPage);
@@ -40,6 +41,7 @@ const OLS = () => {
 
   // ** States
   const [search, setSearch] = useState<string>("");
+  const [realisasiField, setRealisasiField] = useState<"a" | "mw">("a");
   const [page, setPage] = useState<number>(0);
   const [rowsPerPage, setRowsPerPage] = useState<number>(20);
 
@@ -218,7 +220,18 @@ const OLS = () => {
                         <TableCell variant="head">AMP</TableCell>
                         <TableCell variant="head">Detik</TableCell>
                         <TableCell variant="head">MW</TableCell>
-                        <TableCell variant="head">I (A)</TableCell>
+                        <TableCell variant="head" width="90px">
+                          <Box
+                            display="flex"
+                            alignItems="center"
+                            alignContent="center"
+                          >
+                            {realisasiField === "a" ? "I (A)" : "MW"}
+                            <MenuRealisasi
+                              onChange={(value) => setRealisasiField(value)}
+                            />
+                          </Box>
+                        </TableCell>
                         <TableCell variant="head">% ols</TableCell>
                         <TableCell variant="head">I (A)</TableCell>
                         <TableCell variant="head">%</TableCell>
@@ -278,7 +291,9 @@ const OLS = () => {
                                       {data.keterangan}
                                     </TableCell>
                                     <TableCell size="small">
-                                      {data.real_ia}
+                                      {realisasiField === "a"
+                                        ? data.real_ia
+                                        : data?.real_mw}
                                     </TableCell>
                                     <TableCell size="small">
                                       {data.real_ols}
