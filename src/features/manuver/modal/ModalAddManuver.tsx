@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { useForm, FormProvider } from "react-hook-form";
 import {
@@ -70,9 +70,13 @@ const ModalAddManuver = () => {
           gangguan_id: gangguanId,
           gardu_induk_id: value.id,
           jurusan: values.jurusan[index].value,
-          buka: dayjs(values.buka[index].value).format("HH:mm"),
-          tutup: dayjs(values.tutup[index].value).format("HH:mm"),
-          keterangan: values.keterangan,
+          buka: values.buka[index].value
+            ? dayjs(values.buka[index].value).format("HH:mm")
+            : "",
+          tutup: values.tutup[index].value
+            ? dayjs(values.tutup[index].value).format("HH:mm")
+            : "",
+          keterangan: values.keterangan[index].value,
         });
       });
 
@@ -98,9 +102,21 @@ const ModalAddManuver = () => {
       formMethods.reset({
         gardu_induk: [{ id: data.gardu_induk.id }],
         jurusan: [{ value: data.jurusan }],
-        buka: [{ value: dayjs(data.buka, "HH:mm") }],
-        tutup: [{ value: dayjs(data.tutup, "HH:mm") }],
-        keterangan: data.keterangan,
+        buka: [
+          {
+            value: dayjs(data.buka, "HH:mm").isValid()
+              ? dayjs(data.buka, "HH:mm")
+              : null,
+          },
+        ],
+        tutup: [
+          {
+            value: dayjs(data.tutup, "HH:mm").isValid()
+              ? dayjs(data.tutup, "HH:mm")
+              : null,
+          },
+        ],
+        keterangan: [{ value: data.keterangan }],
       });
     }
   }, [modalSnapshot.isOpen]);
@@ -131,7 +147,7 @@ const ModalAddManuver = () => {
             <Grid container spacing={1} mt={1}>
               {fields.map((value, index: number) => {
                 return (
-                  <>
+                  <Fragment key={`manuver-${index}`}>
                     {fields.length > 1 && (
                       <Grid item xs={12}>
                         <Typography
@@ -165,9 +181,12 @@ const ModalAddManuver = () => {
                       />
                     </Grid>
                     <Grid item xs={12} sm={12}>
-                      <InputField name="keterangan" label="Keterangan" />
+                      <InputField
+                        name={`keterangan[${index}].value`}
+                        label="Keterangan"
+                      />
                     </Grid>
-                  </>
+                  </Fragment>
                 );
               })}
               {!modalSnapshot.id && (
@@ -175,9 +194,21 @@ const ModalAddManuver = () => {
                   <Button
                     style={{ height: "30px" }}
                     sx={{ mb: 2 }}
-                    onClick={() =>
-                      setFields((prevState) => [...prevState, defaultValue])
-                    }
+                    onClick={() => {
+                      setFields((prevState) => {
+                        const nextKey = prevState.length;
+
+                        // @ts-ignore
+                        formMethods.setValue(`buka[${nextKey}].value`, null, {
+                          shouldValidate: false,
+                        });
+                        // @ts-ignore
+                        formMethods.setValue(`tutup[${nextKey}].value`, null, {
+                          shouldValidate: false,
+                        });
+                        return [...prevState, defaultValue];
+                      });
+                    }}
                     variant="outlined"
                   >
                     <IconButton>

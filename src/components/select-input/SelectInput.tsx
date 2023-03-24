@@ -1,17 +1,11 @@
-import { useState } from "react";
 import {
   FormControl,
   MenuItem,
   InputLabel,
   Select,
   FormHelperText,
-  TextField,
-  Divider,
-  Typography,
-  Box,
 } from "@mui/material";
 import { useFormContext, Controller } from "react-hook-form";
-import Plus from "mdi-material-ui/Plus";
 
 type SelectInputProps = {
   label: string;
