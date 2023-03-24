@@ -37,7 +37,7 @@ import {
   ModalConfirmationDelete,
 } from "./modal";
 import { gangguanApi } from "src/api/gangguan";
-import { GangguanList } from "./types";
+import { Filter, GangguanList } from "./types";
 import { useSnapshot } from "valtio";
 import { reloadPage } from "src/state/reloadPage";
 import { selectData } from "./state/gangguan";
@@ -49,6 +49,7 @@ import ModalDownload from "./modal/ModalDownload";
 import { MenuPengaturanGangguan } from "./components/menu-pengaturan-gangguan";
 import { ModalReleAnnounciator } from "./modal/modal-rele-announciator";
 import { ModalJenisGangguan } from "./modal/modal-jenis-gangguan";
+import { ModalFilter } from "./modal/ModalFilter";
 
 const Gangguan = () => {
   const reloadPageSnap = useSnapshot(reloadPage);
@@ -57,6 +58,7 @@ const Gangguan = () => {
   const [search, setSearch] = useState<string>("");
   const [page, setPage] = useState<number>(0);
   const [rowsPerPage, setRowsPerPage] = useState<number>(20);
+  const [filter, setFilter] = useState<Filter>({} as Filter);
 
   const formatDate = date ? dayjs(date).format("YYYY-MM-DD") : "";
   const debouncedSearch = useDebounce(search, 500);
@@ -75,25 +77,30 @@ const Gangguan = () => {
   };
 
   const getGangguan = () => {
+    const params = Object.keys(filter).length
+      ? {
+          ...filter,
+          tanggal: filter.tanggal ? dayjs(date).format("YYYY-MM-DD") : "",
+        }
+      : {
+          tanggal: formatDate,
+          limit: rowsPerPage,
+          page: page + 1,
+        };
+
     if (debouncedSearch) {
       getGangguanList({
         search,
-        tanggal: formatDate,
-        limit: rowsPerPage,
-        page: page + 1,
+        ...params,
       });
     } else {
-      getGangguanList({
-        tanggal: formatDate,
-        limit: rowsPerPage,
-        page: page + 1,
-      });
+      getGangguanList({ ...params });
     }
   };
 
   useEffect(() => {
     getGangguan();
-  }, [debouncedSearch, date, rowsPerPage, page]);
+  }, [debouncedSearch, date, rowsPerPage, page, filter]);
 
   useEffect(() => {
     if (reloadPageSnap.target === "gangguan") {
@@ -103,6 +110,10 @@ const Gangguan = () => {
 
   return (
     <>
+      <ModalFilter
+        filter={filter}
+        onChange={(value: Filter) => setFilter(value)}
+      />
       <ModalJenisGangguan />
       <ModalReleAnnounciator />
       <ModalDownload />
@@ -169,6 +180,7 @@ const Gangguan = () => {
                     variant="outlined"
                     size="small"
                     sx={{ height: "40px" }}
+                    onClick={() => openModal("modal-filter")}
                   >
                     <IconButton>
                       <FilterGreenIcon />

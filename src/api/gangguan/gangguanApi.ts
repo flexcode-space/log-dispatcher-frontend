@@ -7,6 +7,11 @@ export type Params = {
   tanggal?: string
   limit?: number
   page?: number
+  gardu_induk_id?: string,
+  gangguan_jenis_id?: string,
+  jenis_peralatan?: string,
+  peralatan_id?: string,
+  announciator?: string,
 }
 
 interface ParamsReport {
