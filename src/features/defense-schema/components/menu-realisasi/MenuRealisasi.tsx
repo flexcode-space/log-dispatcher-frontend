@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { IconButton, Menu, MenuItem, Typography } from "@mui/material";
-import { openModal } from "src/state/modal";
 import { DotsVertical } from "mdi-material-ui";
 
 type MenuRealisasiProps = {

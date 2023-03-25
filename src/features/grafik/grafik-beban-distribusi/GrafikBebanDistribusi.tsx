@@ -1,12 +1,8 @@
 import { useEffect, useState } from "react";
-import { TextField } from "@mui/material";
-import DatePickerMui from "@mui/lab/DatePicker";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Divider from "@mui/material/Divider";
-import AdapterDateFns from "@mui/lab/AdapterDateFns";
-import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import {
   LineChart,
   Line,
@@ -21,6 +17,7 @@ import { CardHeader } from "src/components/card";
 import { grafikApi } from "src/api/grafik";
 import { convertDate } from "src/utils/date";
 import CustomTooltip from "../components/CustomTooltips";
+import { MenuGrafikDistribusi } from "../components/menu-grafik-distribusi";
 
 type GrafikBebanDistribusiProps = {
   title?: string;
@@ -43,21 +40,7 @@ const GrafikBebanDistribusi = ({
   return (
     <RechartsWrapper>
       <Card>
-        <CardHeader
-          title={title}
-          action={
-            <LocalizationProvider dateAdapter={AdapterDateFns}>
-              <DatePickerMui
-                value={date}
-                inputFormat="dd/M/yyyy"
-                onChange={(e) => setDate(e)}
-                renderInput={(params) => (
-                  <TextField size="small" {...params} sx={{ width: "250px" }} />
-                )}
-              />
-            </LocalizationProvider>
-          }
-        />
+        <CardHeader title={title} action={<MenuGrafikDistribusi />} />
         <Divider />
         <CardContent>
           <Box sx={{ height: 350 }}>
