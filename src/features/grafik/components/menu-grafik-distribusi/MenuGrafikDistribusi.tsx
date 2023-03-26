@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import {
   Box,
   Divider,
@@ -16,10 +16,21 @@ import CloseIcon from "src/assets/icons/close-icon.svg";
 import { LocalizationProvider } from "@mui/lab";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import dayjs, { Dayjs } from "dayjs";
+import "dayjs/locale/id";
 
-const MenuGrafikDistribusi = () => {
-  const [dateList, setDateList] = useState<string[]>([]);
+dayjs.locale("id");
 
+type MenuGrafikDistribusiProps = {
+  dateList: string[];
+  handleSelectDate: (value: Dayjs | null) => void;
+  removeSelectDate: (value: string) => void;
+};
+
+const MenuGrafikDistribusi = ({
+  dateList,
+  handleSelectDate,
+  removeSelectDate,
+}: MenuGrafikDistribusiProps) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
 
@@ -29,24 +40,6 @@ const MenuGrafikDistribusi = () => {
 
   const handleClose = () => {
     setAnchorEl(null);
-  };
-
-  const handleSelectDate = (value: Dayjs | null) => {
-    const date = dayjs(value).format("YYYY-MM-DD");
-    setDateList((prevState) => {
-      if (!prevState.includes(date)) {
-        return [...prevState, date];
-      } else {
-        return [...prevState];
-      }
-    });
-  };
-
-  const removeSelectDate = (value: string) => {
-    const index = dateList.indexOf(value);
-    const newDateList = [...dateList];
-    newDateList.splice(index, 1);
-    setDateList(newDateList);
   };
 
   return (
@@ -97,7 +90,9 @@ const MenuGrafikDistribusi = () => {
               alignItems="center"
               justifyContent="space-between"
             >
-              <Typography variant="inherit">{dayjs(value, "YYYY-MM-DD").format("DD MMMM YYYY")}</Typography>
+              <Typography variant="inherit">
+                {dayjs(value, "YYYY-MM-DD").format("DD MMMM YYYY")}
+              </Typography>
               <IconButton onClick={() => removeSelectDate(value)}>
                 <CloseIcon />
               </IconButton>

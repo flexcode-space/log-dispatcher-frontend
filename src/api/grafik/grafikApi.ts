@@ -1,7 +1,6 @@
 import { useCallback, useState } from "react";
 import { Axios } from "../axios";
-import { Params, MWandMVAR } from "../types";
-import { BebanSubsistem, MonitorBusbar } from "./type";
+import { Params } from "../types";
 import { TIME } from "src/constants/time";
 
 const endpoint = "/beban/grafik";
@@ -17,33 +16,16 @@ type GrafikData = {
 }[];
 
 const grafikApi = () => {
-  const [grafikBeban, setGrafikBeban] = useState<GrafikData>([] as GrafikData);
   const [grafikSubsistem, setGrafikSubsistem] = useState<GrafikData>([] as GrafikData);
   const [grafikPembangkit, setGrafikPembangkit] = useState<[]>([]);
   const [grafikTransfer, setGrafikTransfer] = useState<[]>([]);
   const [grafikIBT, setGrafikIBT] = useState<[]>([]);
 
-  const getGrafik = useCallback(async (params: ParamsGrafik = {}, path?: string) => {
-    const url = path ? `${endpoint}/${path}` : endpoint
+  const getGrafik = useCallback(async (params: ParamsGrafik = {}) => {
     const {
-      data: { data, rencana, selisih },
-    } = await Axios.get(url, { params });
-
-    if (data) {
-      const result = Object.values(TIME).map((time) => {
-        const mw = "mw_" + time.replace(".", "");
-
-        return {
-          time,
-          beban: (data as any)[mw]! || 0,
-          rencana: rencana ? (rencana as any)[mw]! || 0 : [],
-          selisih: selisih ? (selisih as any)[mw]! || 0 : [],
-        };
-      });
-      setGrafikBeban(result);
-    } else {
-      setGrafikBeban([]);
-    }
+      data: { data },
+    } = await Axios.get(endpoint, { params });
+    return data as Object
   }, []);
 
   const getGrafikSubsistem = useCallback(
@@ -90,7 +72,6 @@ const grafikApi = () => {
     }, []);
 
   return {
-    grafikBeban,
     getGrafikSubsistem,
     getGrafikPembangkit,
     getGrafik,
