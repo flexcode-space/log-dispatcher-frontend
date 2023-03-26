@@ -26,6 +26,7 @@ dayjs.locale("id");
 
 type GrafikBebanDistribusiProps = {
   title?: string;
+  path?: string
 };
 
 const GrafikBebanDistribusi = ({
