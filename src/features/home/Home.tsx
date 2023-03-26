@@ -14,7 +14,7 @@ import { berandaApi } from "src/api/beranda";
 import { useEffect } from "react";
 import { useRouter } from "next/router";
 import dayjs from "dayjs";
-import { GrafikBebanDistribusi } from "../grafik/grafik-beban-distribusi";
+import { GrafikBebanDistribusi } from "./components/grafik-beban-distribusi";
 
 const Home = () => {
   const router = useRouter();

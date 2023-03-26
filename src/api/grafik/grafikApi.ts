@@ -1,7 +1,6 @@
 import { useCallback, useState } from "react";
 import { Axios } from "../axios";
-import { Params, MWandMVAR } from "../types";
-import { BebanSubsistem, MonitorBusbar } from "./type";
+import { Params } from "../types";
 import { TIME } from "src/constants/time";
 
 const endpoint = "/beban/grafik";
@@ -44,6 +43,7 @@ const grafikApi = () => {
     } else {
       setGrafikBeban([]);
     }
+    return data as Object
   }, []);
 
   const getGrafikSubsistem = useCallback(
