@@ -17,7 +17,6 @@ import "dayjs/locale/id";
 import RechartsWrapper from "src/@core/styles/libs/recharts";
 import { CardHeader } from "src/components/card";
 import { grafikApi } from "src/api/grafik";
-import { convertDate } from "src/utils/date";
 import CustomTooltip from "../components/CustomTooltips";
 import { MenuGrafikDistribusi } from "../components/menu-grafik-distribusi";
 import { TIME } from "src/constants/time";
@@ -26,7 +25,7 @@ dayjs.locale("id");
 
 type GrafikBebanDistribusiProps = {
   title?: string;
-  path?: string
+  path?: string;
 };
 
 const GrafikBebanDistribusi = ({
