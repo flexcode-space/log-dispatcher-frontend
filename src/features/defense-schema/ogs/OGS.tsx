@@ -47,6 +47,8 @@ const OgsComponent = () => {
 
   const [search, setSearch] = useState<string>("");
   const [realisasiField, setRealisasiField] = useState<"a" | "mw">("a");
+  const [targetField, setTargetField] = useState<"a" | "mw">("a");
+  const [setelahField, setSetelahField] = useState<"a" | "mw">("a");
   const [page, setPage] = useState<number>(0);
   const [rowsPerPage, setRowsPerPage] = useState<number>(20);
 
@@ -214,9 +216,31 @@ const OgsComponent = () => {
                           </Box>
                         </TableCell>
                         <TableCell>% ols</TableCell>
-                        <TableCell>I (A)</TableCell>
+                        <TableCell variant="head" width="90px">
+                          <Box
+                            display="flex"
+                            alignItems="center"
+                            alignContent="center"
+                          >
+                            {targetField === "a" ? "I (A)" : "MW"}
+                            <MenuRealisasi
+                              onChange={(value) => setTargetField(value)}
+                            />
+                          </Box>
+                        </TableCell>
                         <TableCell>%</TableCell>
-                        <TableCell>I (A)</TableCell>
+                        <TableCell variant="head" width="90px">
+                          <Box
+                            display="flex"
+                            alignItems="center"
+                            alignContent="center"
+                          >
+                            {setelahField === "a" ? "I (A)" : "MW"}
+                            <MenuRealisasi
+                              onChange={(value) => setSetelahField(value)}
+                            />
+                          </Box>
+                        </TableCell>
                         <TableCell>%</TableCell>
                       </TableRow>
                     </TableHead>
@@ -281,13 +305,17 @@ const OgsComponent = () => {
                                       {data.real_ols}
                                     </TableCell>
                                     <TableCell size="small">
-                                      {data.target_ia}
+                                      {targetField === "a"
+                                        ? data.target_ia
+                                        : data.target_mw}
                                     </TableCell>
                                     <TableCell size="small">
                                       {data.target_ols}
                                     </TableCell>
                                     <TableCell size="small">
-                                      {data.set_ia}
+                                      {setelahField === "a"
+                                        ? data.set_ia
+                                        : data?.set_mw}
                                     </TableCell>
                                     <TableCell size="small">
                                       {data.set_ols}
