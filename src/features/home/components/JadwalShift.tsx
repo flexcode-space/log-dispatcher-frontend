@@ -19,10 +19,9 @@ type JadwalShiftProps = {
   onClick: () => void;
 };
 
-type JabatanUnions = "pimpinan" | "shiftPagi" | "shiftSiang" | "shiftMalam";
+type JabatanUnions = "shiftPagi" | "shiftSiang" | "shiftMalam";
 
 enum JabatanTitle {
-  pimpinan = "Pimpinan",
   shiftPagi = "Shift Pagi",
   shiftSiang = "Shift Siang",
   shiftMalam = "Shift Malam",
@@ -30,14 +29,24 @@ enum JabatanTitle {
 
 const JadwalShift = ({ onClick }: JadwalShiftProps) => {
   const [selectedPiket, setSelectedPicket] =
-    useState<JabatanUnions>("pimpinan");
+    useState<JabatanUnions>("shiftPagi");
   const { piketList, getPiketList } = piketApi();
 
+  const pimpinan = piketList.filter((value) => value?.posisi === "Pimpinan");
+
   const dataPiket = {
-    pimpinan: piketList.filter((value) => value?.posisi === "Pimpinan"),
-    shiftPagi: piketList.filter((value) => value?.posisi === "Shift Pagi"),
-    shiftSiang: piketList.filter((value) => value?.posisi === "Shift Siang"),
-    shiftMalam: piketList.filter((value) => value?.posisi === "Shift Malam"),
+    shiftPagi: [
+      ...pimpinan,
+      ...piketList.filter((value) => value?.posisi === "Shift Pagi"),
+    ],
+    shiftSiang: [
+      ...pimpinan,
+      ...piketList.filter((value) => value?.posisi === "Shift Siang"),
+    ],
+    shiftMalam: [
+      ...pimpinan,
+      ...piketList.filter((value) => value?.posisi === "Shift Malam"),
+    ],
   };
 
   const handleNextSelected = (action: string) => {
@@ -90,7 +99,7 @@ const JadwalShift = ({ onClick }: JadwalShiftProps) => {
                   alignItems="center"
                 >
                   <IconButton
-                    disabled={selectedPiket === "pimpinan"}
+                    disabled={selectedPiket === "shiftPagi"}
                     onClick={() => handleNextSelected("prev")}
                   >
                     <ChevronLeftIcon />
