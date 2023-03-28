@@ -27,7 +27,9 @@ type ListType = {
   id: string;
   nama: string;
   tipe: string;
-  data: [];
+  data: {
+    average: number;
+  };
 };
 
 const TableGarung = () => {
@@ -192,7 +194,7 @@ const TableGarung = () => {
                             </TableCell>
                           );
                         })}
-                        <TableCell>-</TableCell>
+                        <TableCell>{list?.data?.average}</TableCell>
                       </TableRow>
                     );
                   })}
