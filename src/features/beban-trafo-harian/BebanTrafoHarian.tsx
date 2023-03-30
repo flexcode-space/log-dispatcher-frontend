@@ -25,7 +25,11 @@ import { BebanTrafo } from "./types";
 import { showValueBeban } from "./BebanTrafoHarian.constant";
 
 import { WrapperFilter } from "src/components/filter";
-import { ModalSetBebanHarian, ModalDownload, ModalFilter } from "./modal";
+import {
+  // ModalSetBebanHarian,
+  ModalDownload,
+  ModalFilter,
+} from "./modal";
 import { convertDate } from "src/utils/date";
 import { TIME } from "src/constants/time";
 import { useDebounce } from "src/hooks/useDebounce";
@@ -103,7 +107,7 @@ const BebanHarian = () => {
 
   return (
     <>
-      <ModalSetBebanHarian />
+      {/* <ModalSetBebanHarian /> */}
       <ModalDownload />
       <ModalFilter
         onChange={(value) => setFilterTable(value)}
@@ -146,13 +150,13 @@ const BebanHarian = () => {
                     <EditIcon />
                     Ubah Arus Mampu
                   </Button>
-                  <Button
+                  {/* <Button
                     sx={{ mb: 2 }}
                     variant="outlined"
                     onClick={() => openModal("modal-beban-harian")}
                   >
                     Set
-                  </Button>
+                  </Button> */}
                   <Button
                     sx={{ mb: 2 }}
                     variant="outlined"

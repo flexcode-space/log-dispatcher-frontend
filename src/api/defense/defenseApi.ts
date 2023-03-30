@@ -6,7 +6,8 @@ export type Params = {
   limit?: number
   page?: number
   search?: string;
-  date?: string
+  jam?: string
+  tanggal?: string
 }
 
 const endpoint = '/defense'
