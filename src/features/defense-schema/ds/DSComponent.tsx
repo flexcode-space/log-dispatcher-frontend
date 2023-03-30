@@ -21,7 +21,7 @@ import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import { openModal } from "src/state/modal";
-import dayjs from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
 import { WrapperFilter } from "src/components/filter";
 import { useSnapshot } from "valtio";
 import { reloadPage, setReloadPage } from "src/state/reloadPage";
@@ -45,6 +45,8 @@ const DSComponent = () => {
   const { createPencatanDefense } = pencatatanDefenseApi();
 
   const [search, setSearch] = useState<string>("");
+  const [date, setDate] = useState<Dayjs | null>(null);
+  const [time, setTime] = useState<Dayjs | null>(null);
   const [realisasiField, setRealisasiField] = useState<"a" | "mw">("a");
   const [targetField, setTargetField] = useState<"a" | "mw">("a");
   const [setelahField, setSetelahField] = useState<"a" | "mw">("a");
@@ -63,10 +65,23 @@ const DSComponent = () => {
   };
 
   const getDSList = () => {
+    const tanggal = date ? dayjs(date).format("YYYY-MM-DD") : "";
+    const jam = time ? dayjs(time).format("HH:mm") : "";
     if (debouncedSearch) {
-      getDefenseList("ds", { search, page: page + 1, limit: rowsPerPage });
+      getDefenseList("ds", {
+        tanggal,
+        jam,
+        search,
+        page: page + 1,
+        limit: rowsPerPage,
+      });
     } else {
-      getDefenseList("ds", { page: page + 1, limit: rowsPerPage });
+      getDefenseList("ds", {
+        tanggal,
+        jam,
+        page: page + 1,
+        limit: rowsPerPage,
+      });
     }
   };
 
@@ -90,7 +105,7 @@ const DSComponent = () => {
 
   useEffect(() => {
     getDSList();
-  }, [debouncedSearch, page, rowsPerPage]);
+  }, [debouncedSearch, page, rowsPerPage, date, time]);
 
   useEffect(() => {
     if (reloadPageSnap.target === "ds") {
@@ -118,9 +133,9 @@ const DSComponent = () => {
                 <div style={{ display: "flex", gap: "10px" }}>
                   <LocalizationProvider dateAdapter={AdapterDateFns}>
                     <DatePicker
-                      value={null}
+                      value={date}
                       label="Tanggal"
-                      onChange={() => null}
+                      onChange={(e) => setDate(e)}
                       renderInput={(params) => (
                         <TextField
                           size="small"
@@ -132,10 +147,10 @@ const DSComponent = () => {
                   </LocalizationProvider>
                   <LocalizationProvider dateAdapter={AdapterDateFns}>
                     <TimePicker
-                      value={null}
+                      value={time}
                       ampm={false}
                       label="Realisasi Jam"
-                      onChange={() => null}
+                      onChange={(e) => setTime(e)}
                       renderInput={(params) => (
                         <TextField
                           size="small"

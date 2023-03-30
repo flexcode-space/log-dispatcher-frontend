@@ -31,7 +31,7 @@ import { DefenseSchemaList } from "../types";
 import { useDebounce } from "src/hooks/useDebounce";
 import FallbackSpinner from "src/@core/components/spinner";
 import { pencatatanDefenseApi } from "src/api/pencatatan-defense";
-import dayjs from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
 import { ModalChangeStatus } from "../modal/modal-change-status";
 import { MenuRealisasi } from "../components/menu-realisasi";
 
@@ -41,6 +41,7 @@ const OLS = () => {
 
   // ** States
   const [search, setSearch] = useState<string>("");
+  const [date, setDate] = useState<Dayjs | null>(null);
   const [realisasiField, setRealisasiField] = useState<"a" | "mw">("a");
   const [targetField, setTargetField] = useState<"a" | "mw">("a");
   const [setelahField, setSetelahField] = useState<"a" | "mw">("a");
@@ -63,10 +64,16 @@ const OLS = () => {
   };
 
   const getOLSList = () => {
+    const time = date ? dayjs(date).format("HH:mm") : "";
     if (debouncedSearch) {
-      getDefenseList("ols", { search, page: page + 1, limit: rowsPerPage });
+      getDefenseList("ols", {
+        jam: time,
+        search,
+        page: page + 1,
+        limit: rowsPerPage,
+      });
     } else {
-      getDefenseList("ols", { page: page + 1, limit: rowsPerPage });
+      getDefenseList("ols", { jam: time, page: page + 1, limit: rowsPerPage });
     }
   };
 
@@ -91,7 +98,7 @@ const OLS = () => {
 
   useEffect(() => {
     getOLSList();
-  }, [debouncedSearch, page, rowsPerPage]);
+  }, [debouncedSearch, page, rowsPerPage, date]);
 
   useEffect(() => {
     if (reloadPageSnap.target === "ols") {
@@ -119,10 +126,10 @@ const OLS = () => {
                 <div style={{ display: "flex", gap: "10px" }}>
                   <LocalizationProvider dateAdapter={AdapterDateFns}>
                     <TimePicker
-                      value={null}
+                      value={date}
                       ampm={false}
                       label="Realisasi Jam"
-                      onChange={() => null}
+                      onChange={(e) => setDate(e)}
                       renderInput={(params) => (
                         <TextField
                           size="small"

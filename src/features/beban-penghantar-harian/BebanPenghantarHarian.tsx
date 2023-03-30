@@ -23,7 +23,11 @@ import EditIcon from "src/assets/icons/edit-icon.svg";
 import { openModal } from "src/state/modal";
 
 import { WrapperFilter } from "src/components/filter";
-import { ModalSetBebanHarian, ModalDownload, ModalFilter } from "./modal";
+import {
+  // ModalSetBebanHarian,
+  ModalDownload,
+  ModalFilter,
+} from "./modal";
 import { bebanApi } from "src/api/beban";
 import { showValueBeban } from "./BebanPenghantarHarian.constant";
 import { BebanPenghantarHarian } from "./types";
@@ -109,7 +113,7 @@ const BebanPenghantarHarian = () => {
 
   return (
     <>
-      <ModalSetBebanHarian />
+      {/* <ModalSetBebanHarian /> */}
       <ModalDownload />
       <ModalFilter
         onChange={(value) => setFilterTable(value)}
@@ -158,13 +162,13 @@ const BebanPenghantarHarian = () => {
                     <EditIcon />
                     Ubah Arus Mampu
                   </Button>
-                  <Button
+                  {/* <Button
                     sx={{ mb: 2 }}
                     variant="outlined"
                     onClick={() => openModal("modal-beban-harian")}
                   >
                     Set
-                  </Button>
+                  </Button> */}
                   <Button
                     sx={{ mb: 2 }}
                     variant="outlined"
