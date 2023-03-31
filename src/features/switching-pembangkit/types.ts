@@ -1,3 +1,5 @@
+import { Dayjs } from "dayjs";
+
 export interface SwitchingPembangkitList {
   dispatch: string;
   energi_primer: string;
@@ -25,3 +27,11 @@ export interface SwitchingPembangkitList {
   waktu_perintah: string;
   waktu_real: string;
 }
+
+export type Filter = {
+  pembangkit_id: string
+  status: string
+  jenis: string
+  tanggal: Dayjs | null
+};
+
