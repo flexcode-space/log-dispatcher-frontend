@@ -14,13 +14,13 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useSnapshot } from "valtio";
 import { InputField, TextArea } from "src/components/input-field";
 import { SelectInput } from "src/components/select-input";
-import { DatePicker } from "src/components/date-picker";
+// import { DatePicker } from "src/components/date-picker";
 import { StyledForm } from "src/components/form";
 import { modal, closeModal } from "src/state/modal";
 import { useModalAdd } from "./useModalAdd";
 import { initialValues, validationSchema } from "./ModalAdd.constant";
 import { laporanNeracaDayaApi } from "src/api/laporan-neraca-daya";
-import dayjs from "dayjs";
+// import dayjs from "dayjs";
 import { setReloadPage } from "src/state/reloadPage";
 import { useEffect } from "react";
 import { laporanNeracaDaya, removeData } from "../../state/laporanNeracaDaya";
@@ -51,11 +51,12 @@ const ModalAdd = () => {
     event?.preventDefault();
 
     formMethods.handleSubmit(async (values) => {
-      const { tanggal, ...rest } = values;
+      // const { tanggal, ...rest } = values;
+      const { ...rest } = values;
 
       const payload = {
         ...rest,
-        tanggal: dayjs(tanggal).format("YYYY-MM-DD"),
+        // tanggal: dayjs(tanggal).format("YYYY-MM-DD"),
       };
 
       if (modalSnapshot.id) {
@@ -90,7 +91,7 @@ const ModalAdd = () => {
       ibt_id: ibt?.id,
       sub_sistem_id: sub_sistem?.id,
       pembangkit_id: pembangkit?.id,
-      tanggal: dayjs(tanggal),
+      // tanggal: dayjs(tanggal),
     });
   }, [modalSnapshot.isOpen]);
 
@@ -118,9 +119,9 @@ const ModalAdd = () => {
               </Typography>
             </Box>
             <Grid container spacing={1} mt={1}>
-              <Grid item xs={12}>
+              {/* <Grid item xs={12}>
                 <DatePicker label="Tanggal" name="tanggal" />
-              </Grid>
+              </Grid> */}
               <Grid item xs={12} sm={6}>
                 <SelectInput
                   label="Subsistem"

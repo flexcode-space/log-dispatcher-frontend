@@ -8,7 +8,7 @@ export const initialValues = {
   keterangan: "",
   pembangkit_id: "",
   sub_sistem_id: "",
-  tanggal: new Date()
+  // tanggal: new Date()
 }
 
 export const validationSchema = yup.object({
@@ -19,5 +19,5 @@ export const validationSchema = yup.object({
   keterangan: yup.string().required('This field is required'),
   pembangkit_id: yup.string(),
   sub_sistem_id: yup.string().required('This field is required'),
-  tanggal: yup.string().required('This field is required')
+  // tanggal: yup.string().required('This field is required')
 })

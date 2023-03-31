@@ -8,9 +8,9 @@ import {
   CardContent,
   IconButton,
 } from "@mui/material";
-import DatePickerMui from "@mui/lab/DatePicker";
-import AdapterDateFns from "@mui/lab/AdapterDateFns";
-import LocalizationProvider from "@mui/lab/LocalizationProvider";
+// import DatePickerMui from "@mui/lab/DatePicker";
+// import AdapterDateFns from "@mui/lab/AdapterDateFns";
+// import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import { Pencil } from "mdi-material-ui";
 import dayjs, { Dayjs } from "dayjs";
 import PageHeader from "src/@core/components/page-header";
@@ -116,7 +116,7 @@ const LaporanNeracaDaya = () => {
                 placeholder="Cari"
                 onChange={(e) => setSearch(e.target.value)}
               />
-              <LocalizationProvider dateAdapter={AdapterDateFns}>
+              {/* <LocalizationProvider dateAdapter={AdapterDateFns}>
                 <DatePickerMui
                   value={date}
                   label="Pilih Tanggal"
@@ -130,7 +130,7 @@ const LaporanNeracaDaya = () => {
                     />
                   )}
                 />
-              </LocalizationProvider>
+              </LocalizationProvider> */}
               <Button
                 sx={{ mb: 2 }}
                 onClick={() => openModal("modal-filter-neraca-daya")}
@@ -161,7 +161,7 @@ const LaporanNeracaDaya = () => {
                 <Table>
                   <TableHead>
                     <TableRow>
-                      <TableCellHead>Tanggal</TableCellHead>
+                      {/* <TableCellHead>Tanggal</TableCellHead> */}
                       <TableCellHead>Subsistem</TableCellHead>
                       <TableCellHead>DM Pasok</TableCellHead>
                       <TableCellHead>IBT</TableCellHead>
@@ -177,9 +177,9 @@ const LaporanNeracaDaya = () => {
                       laporanNeracaDayaList.map(
                         (list: LaporanNeracaDayaList) => (
                           <TableRow key={list.id} hover>
-                            <TableCell size="small">
+                            {/* <TableCell size="small">
                               {dayjs(list.tanggal).format("DD MMMM YYYY")}
-                            </TableCell>
+                            </TableCell> */}
                             <TableCell size="small">
                               {list.sub_sistem.nama}
                             </TableCell>
