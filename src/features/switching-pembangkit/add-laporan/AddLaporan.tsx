@@ -14,7 +14,6 @@ import { DatePicker, TimePicker } from "src/components/date-picker";
 
 import { StyledForm } from "src/components/form";
 import { useSwitchingPembengkit } from "../useSwitchingPembangkit";
-// import { AutoCompletePerson } from "../components/autocomplete-person";
 import {
   initialValues,
   validationSchema,
@@ -72,9 +71,6 @@ const AddLaporan = () => {
         <FormProvider {...formMethods}>
           <StyledForm noValidate onSubmit={onSubmit} sx={{ width: "100%" }}>
             <Grid container spacing={2} mt={1}>
-              {/* <Grid item xs={12}>
-                <AutoCompletePerson name="test" label="test" />
-              </Grid> */}
               <Grid item xs={12}>
                 <SelectInput
                   label="Jenis Switching"
