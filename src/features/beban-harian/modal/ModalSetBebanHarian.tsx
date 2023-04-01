@@ -20,7 +20,6 @@ import { useModal } from "./useModal";
 import { bebanApi } from "src/api/beban";
 import dayjs from "dayjs";
 
-
 const ModalSetBebanHarian = () => {
   const modalSnapshot = useSnapshot(modal);
 
@@ -49,12 +48,19 @@ const ModalSetBebanHarian = () => {
     event?.preventDefault();
 
     formMethods.handleSubmit(async (values) => {
-      const { tanggal, waktu, ...rest } = values;
-      await createPindahBeban({
+      const { tanggal, waktu, nama_peralatan, ...rest } = values;
+
+      const selectedPeralatan = peralatanOptions.filter(
+        ({ value }) => value === rest.peralatan_id
+      )[0];
+
+      const payload = {
         ...rest,
+        nama_peralatan: `${nama_peralatan} - ${selectedPeralatan?.label}`,
         tanggal: dayjs(tanggal).format("YYYY-MM-DD"),
         waktu: dayjs(waktu).format("HH:mm"),
-      });
+      };
+      await createPindahBeban(payload);
       onClickCloseModal();
     })();
   };
