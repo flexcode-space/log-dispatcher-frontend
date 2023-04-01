@@ -92,7 +92,6 @@ const ModalFilter = () => {
   const handleCloseModal = () => {
     closeModal();
     formMethods.reset({ ...initialValues });
-    setReloadPage("switching-pembangkit");
     removeData();
   };
 
@@ -100,6 +99,9 @@ const ModalFilter = () => {
     formMethods.reset({
       ...data,
       pembangkit_id: data.pembangkit?.id,
+      operator_acc_id: data?.operator_acc?.id,
+      operator_bops_id: data?.operator_bops?.id,
+      operator_pembangkit_id: data?.operator_pembangkit?.id,
       tanggal: dayjs(data.tanggal),
       waktu_perintah: dayjs(data.waktu_perintah, "HH: mm"),
       // @ts-ignore
@@ -140,9 +142,24 @@ const ModalFilter = () => {
                   options={jenisSwitchingOptions}
                 />
               </Grid>
-              <Grid item xs={6}>
-                <InputField name="tipe" label="Dispatch" />
-              </Grid>
+              {jenis === "start-stop" && (
+                <Grid item xs={6}>
+                  <SelectInput
+                    label="Dispatch"
+                    name="tipe"
+                    options={[
+                      {
+                        value: "Start",
+                        label: "Start",
+                      },
+                      {
+                        value: "Start",
+                        label: "Stop",
+                      },
+                    ]}
+                  />
+                </Grid>
+              )}
               <Grid item xs={6}>
                 <SelectInput
                   label="Pembangkit"
@@ -180,15 +197,15 @@ const ModalFilter = () => {
                   options={personOptions}
                 />
               </Grid>
-              <Grid item xs={12}>
+              <Grid item xs={4}>
                 <SelectInput
                   label="Energi Primer"
                   name="energi_primer"
                   options={energiPrimerOptions}
                 />
               </Grid>
-              {jenis !== "change-over" ? (
-                <Grid item xs={12}>
+              {jenis === "change-over" ? (
+                <Grid item xs={4}>
                   <SelectInput
                     label="Status"
                     name="status"
@@ -196,6 +213,12 @@ const ModalFilter = () => {
                   />
                 </Grid>
               ) : null}
+
+              {jenis === "naik-turun" && (
+                <Grid item xs={4}>
+                  <InputField type="number" name="tegangan" label="Tegangan" />
+                </Grid>
+              )}
 
               <Grid item xs={12}>
                 <InputField name="keterangan" label="Keterangan" />
