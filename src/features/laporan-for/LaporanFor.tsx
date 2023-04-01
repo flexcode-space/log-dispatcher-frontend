@@ -72,7 +72,8 @@ const LaporanPekerjaan = () => {
                 <DatePickerMui
                   value={date}
                   label="Pilih Tanggal"
-                  onChange={setDate}
+                  inputFormat="dd/M/yyyy"
+                  onChange={(e) => setDate(e)}
                   renderInput={(params) => (
                     <TextField
                       size="small"
@@ -98,12 +99,14 @@ const LaporanPekerjaan = () => {
           type="derating"
           showAction={false}
           actionCard={<ButtonEdit />}
+          date={filterDate}
         />
         <TableList
           title="Pembangkit Outage"
           type="outage"
           showAction={false}
           actionCard={<ButtonEdit />}
+          date={filterDate}
         />
         <TableGangguan />
       </Grid>

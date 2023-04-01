@@ -81,7 +81,7 @@ const ModalAddPerson = () => {
           >
             <Box sx={{ mb: 8, width: 1000 }}>
               <Typography variant="h5" sx={{ mb: 3, lineHeight: "2rem" }}>
-                Rele Announciator
+                person
               </Typography>
             </Box>
             <Grid container spacing={2} mt={1}>
