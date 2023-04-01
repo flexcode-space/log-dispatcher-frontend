@@ -108,7 +108,7 @@ const LaporanPekerjaan = () => {
           actionCard={<ButtonEdit />}
           date={filterDate}
         />
-        <TableGangguan />
+        <TableGangguan date={filterDate} />
       </Grid>
     </>
   );
