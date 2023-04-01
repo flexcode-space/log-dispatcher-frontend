@@ -14,7 +14,10 @@ import { useSnapshot } from "valtio";
 import { SelectInput } from "src/components/select-input";
 import { StyledForm } from "src/components/form";
 import { DatePicker, TimePicker } from "src/components/date-picker";
-import { initialValues, validationSchema } from "./ModalBebanHarian.constant";
+import {
+  initialValues,
+  validationSchema,
+} from "./ModalSetBebanHarian.constant";
 import { modal, closeModal } from "src/state/modal";
 import { useModal } from "./useModal";
 import { bebanApi } from "src/api/beban";
@@ -25,8 +28,7 @@ const ModalSetBebanHarian = () => {
 
   const { createPindahBeban } = bebanApi();
 
-  const isOpen =
-    modalSnapshot.isOpen && modalSnapshot.target === "modal-beban-harian";
+  const isOpen = modalSnapshot.isOpen && modalSnapshot.target === "modal-beban-harian";
 
   const formMethods = useForm({
     resolver: yupResolver(validationSchema),

@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { optionJenisPeralatan } from './ModalBebanHarian.constant'
+import { optionJenisPeralatan } from './ModalSetBebanHarian.constant'
 import { peralatanApi } from "src/api/peralatan";
 import { subsistemApi } from "src/api/subsistem";
 
