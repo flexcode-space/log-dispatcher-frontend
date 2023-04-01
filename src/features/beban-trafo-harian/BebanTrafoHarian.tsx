@@ -16,7 +16,7 @@ import {
   TableRow,
   TableCell,
 } from "src/components/table";
-import DownloadIcon from "src/assets/icons/download-icon.svg";
+import DownloadIcon from "src/assets/icons/download-green-icon.svg";
 import EditIcon from "src/assets/icons/edit-icon.svg";
 import FilterIcon from "src/assets/icons/filter-green-icon.svg";
 import { openModal } from "src/state/modal";

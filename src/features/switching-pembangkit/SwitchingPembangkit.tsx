@@ -23,7 +23,7 @@ import {
   TableCellHead,
   TableContainer,
 } from "src/components/table";
-import DownloadIcon from "src/assets/icons/download-icon.svg";
+import DownloadIcon from "src/assets/icons/download-green-icon.svg";
 import FilterIcon from "src/assets/icons/filter-icon.svg";
 
 import { WrapperFilter } from "src/components/filter";

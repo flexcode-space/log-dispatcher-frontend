@@ -37,7 +37,12 @@ const Button = (theme: Theme) => {
         },
         contained: {
           boxShadow: theme.shadows[3],
-          padding: `${theme.spacing(1.75, 5.5)}`
+          padding: `${theme.spacing(1.75, 5.5)}`,
+          backgroundColor: '#F9E434',
+          color: '#165D73',
+          ':hover': {
+            backgroundColor: '#e0cf40'
+          }
         },
         outlined: {
           lineHeight: 1.572,

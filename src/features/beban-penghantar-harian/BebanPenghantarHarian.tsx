@@ -17,7 +17,7 @@ import {
   TableContainer,
 } from "src/components/table";
 import PageHeader from "src/@core/components/page-header";
-import DownloadIcon from "src/assets/icons/download-icon.svg";
+import DownloadIcon from "src/assets/icons/download-green-icon.svg";
 import FilterIcon from "src/assets/icons/filter-icon.svg";
 import EditIcon from "src/assets/icons/edit-icon.svg";
 import { openModal } from "src/state/modal";

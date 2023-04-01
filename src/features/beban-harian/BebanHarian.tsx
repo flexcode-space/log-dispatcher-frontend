@@ -3,7 +3,7 @@ import { useState, ChangeEvent, useEffect } from "react";
 
 // ** MUI Imports
 import DatePicketMui from "@mui/lab/DatePicker";
-import { Card, CardContent, Button } from "@mui/material";
+import { Card, CardContent, Button, IconButton } from "@mui/material";
 import { Typography, TextField, Grid } from "@mui/material";
 import TablePagination from "@mui/material/TablePagination";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
@@ -17,7 +17,7 @@ import {
   TableCell,
   TableBody,
 } from "src/components/table";
-import DownloadIcon from "src/assets/icons/download-icon.svg";
+import DownloadIcon from "src/assets/icons/download-green-icon.svg";
 // import EditIcon from "src/assets/icons/edit-icon.svg";
 import { openModal } from "src/state/modal";
 import CustomChip from "src/@core/components/mui/chip";
@@ -106,7 +106,9 @@ const BebanHarian = () => {
                     variant="contained"
                     onClick={() => openModal("modal-download")}
                   >
-                    <DownloadIcon />
+                    <IconButton>
+                      <DownloadIcon />
+                    </IconButton>
                     Download laporan
                   </Button>
                 </div>
