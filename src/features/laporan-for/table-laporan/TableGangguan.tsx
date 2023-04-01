@@ -15,13 +15,17 @@ import {
 import { gangguanApi } from "src/api/gangguan";
 import { GangguanList } from "src/features/gangguan/types";
 
-export const TableGangguan = () => {
+type TableGangguanProps = {
+  date?: string;
+};
+
+export const TableGangguan = ({ date }: TableGangguanProps) => {
   const router = useRouter();
   const { getGangguanList, gangguanList } = gangguanApi();
 
   useEffect(() => {
-    getGangguanList();
-  }, []);
+    getGangguanList({ tanggal: date });
+  }, [date]);
 
   return (
     <Grid item xs={12}>
