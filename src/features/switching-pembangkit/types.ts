@@ -31,7 +31,7 @@ export interface SwitchingPembangkitList {
 export type Filter = {
   pembangkit_id: string
   status: string
-  jenis: string
+  jenis?: 'naik-turun' | 'change-over' | 'start-stop' | ''
   tanggal: Dayjs | null
 };
 

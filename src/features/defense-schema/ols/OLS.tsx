@@ -19,7 +19,7 @@ import { PencilOutline } from "mdi-material-ui";
 import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
-import DownloadIcon from "src/assets/icons/download-icon.svg";
+import DownloadIcon from "src/assets/icons/download-green-icon.svg";
 import { openModal } from "src/state/modal";
 import { WrapperFilter } from "src/components/filter";
 import { ModalAddOLS } from "../modal";

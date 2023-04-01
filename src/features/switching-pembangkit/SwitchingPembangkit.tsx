@@ -23,7 +23,7 @@ import {
   TableCellHead,
   TableContainer,
 } from "src/components/table";
-import DownloadIcon from "src/assets/icons/download-icon.svg";
+import DownloadIcon from "src/assets/icons/download-green-icon.svg";
 import FilterIcon from "src/assets/icons/filter-icon.svg";
 
 import { WrapperFilter } from "src/components/filter";
@@ -90,6 +90,20 @@ const SwitchingPembangkit = () => {
     } else {
       getSwitchingPembangkitList({ ...params });
     }
+  };
+
+  const renderDispatch = (list: SwitchingPembangkitList) => {
+    const component: Record<SwitchingPembangkitList["jenis"], any> = {
+      "naik-turun": `${list?.dispatch} MW`,
+      "change-over": list?.dispatch || '-',
+      "start-stop": (
+        <Chip
+          label={list.dispatch}
+          color={list?.dispatch === "start" ? "success" : "error"}
+        />
+      ),
+    };
+    return component[list?.jenis] as JSX.Element;
   };
 
   useEffect(() => {
@@ -169,7 +183,11 @@ const SwitchingPembangkit = () => {
                         <TableCellHead size="small" rowSpan={2}>
                           No
                         </TableCellHead>
-                        <TableCellHead size="small" rowSpan={2}>
+                        <TableCellHead
+                          size="small"
+                          minWidth="130px"
+                          rowSpan={2}
+                        >
                           Switching
                         </TableCellHead>
                         <TableCellHead size="small" rowSpan={2}>
@@ -192,7 +210,7 @@ const SwitchingPembangkit = () => {
                         <TableCellHead rowSpan={2}>Energi Primer</TableCellHead>
                         <TableCellHead rowSpan={2}>Status</TableCellHead>
                         <TableCellHead rowSpan={2}>Dispatch</TableCellHead>
-                        <TableCellHead rowSpan={2}>Keterangan</TableCellHead>
+                        <TableCellHead minWidth="200px" rowSpan={2}>Keterangan</TableCellHead>
                         <TableCellHead align="center" rowSpan={2}>
                           Aksi
                         </TableCellHead>
@@ -248,7 +266,7 @@ const SwitchingPembangkit = () => {
                                   {list.status}
                                 </TableCell>
                                 <TableCell size="small">
-                                  <Chip label={list.dispatch} color="success" />
+                                  {renderDispatch(list)}
                                 </TableCell>
                                 <TableCell size="small">
                                   {list.keterangan}
