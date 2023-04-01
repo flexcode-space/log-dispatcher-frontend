@@ -1,5 +1,5 @@
 // ** React Imports
-import { useState, ChangeEvent, useEffect } from "react";
+import { useState, ChangeEvent, useEffect, Fragment } from "react";
 
 // ** MUI Imports
 import DatePicketMui from "@mui/lab/DatePicker";
@@ -18,7 +18,7 @@ import {
   TableBody,
 } from "src/components/table";
 import DownloadIcon from "src/assets/icons/download-green-icon.svg";
-// import EditIcon from "src/assets/icons/edit-icon.svg";
+import EditIcon from "src/assets/icons/edit-icon.svg";
 import { openModal } from "src/state/modal";
 import CustomChip from "src/@core/components/mui/chip";
 
@@ -33,16 +33,20 @@ import {
   IBT,
 } from "src/api/beban/types";
 import { showValueBeban } from "./BebanHarian.constant";
-import { ModalDownload, ModalSetBebanHarian } from "./modal";
-import { convertDate } from "src/utils/date";
+import {
+  ModalDownload,
+  ModalSetBebanHarian,
+  ModalEditBebanHarian,
+} from "./modal";
 import { TIME } from "src/constants/time";
 import FallbackSpinner from "src/@core/components/spinner";
+import dayjs, { Dayjs } from "dayjs";
 
 const BebanHarian = () => {
   // ** States
   const [page, setPage] = useState<number>(0);
   const [rowsPerPage, setRowsPerPage] = useState<number>(10);
-  const [date, setDate] = useState<any>(new Date());
+  const [date, setDate] = useState<Dayjs | null>(dayjs());
 
   const { getBebanList, bebanList, totalData, loading } = bebanApi();
 
@@ -56,12 +60,13 @@ const BebanHarian = () => {
   };
 
   useEffect(() => {
-    getBebanList({ tanggal: convertDate(date) });
+    getBebanList({ tanggal: date ? dayjs(date).format("YYYY-MM-DD") : "" });
   }, [date]);
 
   return (
     <>
       <ModalSetBebanHarian />
+      <ModalEditBebanHarian date={date} />
       <ModalDownload />
       <Grid container spacing={6}>
         <Grid item xs={12}>
@@ -90,10 +95,14 @@ const BebanHarian = () => {
                 <Typography variant="h6">Daftar File Laporan</Typography>
 
                 <div style={{ display: "flex", gap: "10px" }}>
-                  {/* <Button sx={{ mb: 2 }} variant="outlined">
+                  <Button
+                    sx={{ mb: 2 }}
+                    variant="outlined"
+                    onClick={() => openModal("modal-edit")}
+                  >
                     <EditIcon />
                     Ubah Data
-                  </Button> */}
+                  </Button>
                   <Button
                     sx={{ mb: 2 }}
                     variant="outlined"
@@ -127,28 +136,28 @@ const BebanHarian = () => {
                           Pembangkit
                         </TableCellHead>
                         {TIME.map((value) => (
-                          <TableCellHead align="center" colSpan={2}>
+                          <TableCellHead key={value} align="center" colSpan={2}>
                             {value}
                           </TableCellHead>
                         ))}
                       </TableRow>
                       <TableRow>
-                        {TIME.map(() => (
-                          <>
+                        {TIME.map((value) => (
+                          <Fragment key={value}>
                             <TableCellHead align="center">MW</TableCellHead>
                             <TableCellHead align="center">MX</TableCellHead>
-                          </>
+                          </Fragment>
                         ))}
                       </TableRow>
                     </TableHead>
                     <TableBody>
                       {bebanList.length &&
-                        bebanList.map((value: Beban) => {
+                        bebanList.map((value: Beban, index) => {
                           const totalPembangkit = value?.pembangkit.total;
                           const totalSubsistem = value?.total;
 
                           return (
-                            <>
+                            <Fragment key={`bebanlist-${index}`}>
                               <TableRow hover>
                                 <TableCell
                                   size="small"
@@ -166,22 +175,22 @@ const BebanHarian = () => {
 
                               {value?.pembangkit?.tipe_jenis_pembangkit?.map(
                                 (
-                                  tipe_jenis_pembangkit: TipeJenisPembangkit
+                                  tipe_jenis_pembangkit: TipeJenisPembangkit, tipeIndex
                                 ) => (
-                                  <>
+                                  <Fragment key={tipeIndex}>
                                     {tipe_jenis_pembangkit?.kategori_pembangkit.map(
                                       (
-                                        kategori_pembangkit: KategoriPembangkit
+                                        kategori_pembangkit: KategoriPembangkit, kategoriIndex
                                       ) => {
                                         const { total } = kategori_pembangkit;
                                         return (
-                                          <>
+                                          <Fragment key={`kategori_pembangkit-${kategoriIndex}`}>
                                             {kategori_pembangkit.data.map(
                                               (
-                                                data: DataKategoriPembangkit
+                                                data: DataKategoriPembangkit, indexData
                                               ) => {
                                                 return (
-                                                  <TableRow hover>
+                                                  <TableRow key={`data-${indexData}`} hover>
                                                     <TableCell
                                                       size="small"
                                                       sx={{
@@ -224,11 +233,11 @@ const BebanHarian = () => {
                                               </TableCell>
                                               {showValueBeban(total?.data)}
                                             </TableRow>
-                                          </>
+                                          </Fragment>
                                         );
                                       }
                                     )}
-                                  </>
+                                  </Fragment>
                                 )
                               )}
 
@@ -336,7 +345,7 @@ const BebanHarian = () => {
                                   {showValueBeban(totalSubsistem?.data)}
                                 </TableRow>
                               )}
-                            </>
+                            </Fragment>
                           );
                         })}
                       {totalData && (
