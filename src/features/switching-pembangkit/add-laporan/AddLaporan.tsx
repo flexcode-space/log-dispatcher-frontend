@@ -133,13 +133,15 @@ const AddLaporan = () => {
                   options={personOptions}
                 />
               </Grid>
-              <Grid item xs={12}>
-                <SelectInput
-                  label="Energi Primer"
-                  name="energi_primer"
-                  options={energiPrimerOptions}
-                />
-              </Grid>
+              {jenis !== "change-over" ? (
+                <Grid item xs={12}>
+                  <SelectInput
+                    label="Energi Primer"
+                    name="energi_primer"
+                    options={energiPrimerOptions}
+                  />
+                </Grid>
+              ) : null}
               {jenis === "change-over" ? (
                 <Grid item xs={12}>
                   <SelectInput
