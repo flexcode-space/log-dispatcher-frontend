@@ -42,7 +42,7 @@ export const initialValues = {
 };
 
 export const validationSchema = yup.object({
-  energi_primer: yup.string().required("This field is required"),
+  energi_primer: yup.string(),
   jenis: yup.string().required("This field is required"),
   keterangan: yup.string().required("This field is required"),
   operator_acc_id: yup.string().required("This field is required"),

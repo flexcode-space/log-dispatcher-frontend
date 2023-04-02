@@ -15,7 +15,7 @@ export const showValueBeban = (data: Data, filterTable: string[]) => {
     const imampu = "imampu_" + value.replace(".", "");
     return (
       <>
-        {filterTable.includes("arus") && (
+        {filterTable.includes("i_nom") && (
           <TableCell>{formatDecimalNumber((data as any)[arus]!, 2)}</TableCell>
         )}
         {filterTable.includes("mw") && (
@@ -27,7 +27,7 @@ export const showValueBeban = (data: Data, filterTable: string[]) => {
         {filterTable.includes("kwh") && (
           <TableCell>{formatDecimalNumber((data as any)[kwh]!, 2)}</TableCell>
         )}
-        {filterTable.includes("i_nom") && (
+        {filterTable.includes("percent_i_nom") && (
           <TableCell>{formatDecimalNumber((data as any)[inom]!, 2)}</TableCell>
         )}
         {filterTable.includes("i_mampu") && (
