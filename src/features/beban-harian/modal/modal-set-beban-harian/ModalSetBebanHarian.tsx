@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import {
   Button,
@@ -13,7 +14,10 @@ import { useSnapshot } from "valtio";
 import { SelectInput } from "src/components/select-input";
 import { StyledForm } from "src/components/form";
 import { DatePicker, TimePicker } from "src/components/date-picker";
-import { initialValues, validationSchema } from "./ModalBebanHarian.constant";
+import {
+  initialValues,
+  validationSchema,
+} from "./ModalSetBebanHarian.constant";
 import { modal, closeModal } from "src/state/modal";
 import { useModal } from "./useModal";
 import { bebanApi } from "src/api/beban";
@@ -24,8 +28,7 @@ const ModalSetBebanHarian = () => {
 
   const { createPindahBeban } = bebanApi();
 
-  const isOpen =
-    modalSnapshot.isOpen && modalSnapshot.target === "modal-beban-harian";
+  const isOpen = modalSnapshot.isOpen && modalSnapshot.target === "modal-beban-harian";
 
   const formMethods = useForm({
     resolver: yupResolver(validationSchema),
@@ -34,20 +37,32 @@ const ModalSetBebanHarian = () => {
   });
 
   const jenisPeralatan = formMethods.watch("nama_peralatan");
+  const peralatanId = formMethods.watch("peralatan_id");
 
-  const { optionJenisPeralatan, peralatanOptions, subsistemOptions } =
-    useModal(jenisPeralatan);
+  const {
+    optionJenisPeralatan,
+    peralatanOptions,
+    subsistemOptions,
+    peralatanList,
+  } = useModal(jenisPeralatan);
 
   const onSubmit = (event?: React.FormEvent<HTMLFormElement>) => {
     event?.preventDefault();
 
     formMethods.handleSubmit(async (values) => {
-      const { tanggal, waktu, ...rest } = values;
-      await createPindahBeban({
+      const { tanggal, waktu, nama_peralatan, ...rest } = values;
+
+      const selectedPeralatan = peralatanOptions.filter(
+        ({ value }) => value === rest.peralatan_id
+      )[0];
+
+      const payload = {
         ...rest,
+        nama_peralatan: `${nama_peralatan} - ${selectedPeralatan?.label}`,
         tanggal: dayjs(tanggal).format("YYYY-MM-DD"),
         waktu: dayjs(waktu).format("HH:mm"),
-      });
+      };
+      await createPindahBeban(payload);
       onClickCloseModal();
     })();
   };
@@ -56,6 +71,14 @@ const ModalSetBebanHarian = () => {
     closeModal();
     formMethods.reset({ ...initialValues });
   };
+
+  useEffect(() => {
+    const selectedPeralatan = peralatanList.filter(
+      ({ id }) => id === peralatanId
+    )[0];
+    // @ts-ignore
+    formMethods.setValue("subsistem_awal_id", selectedPeralatan?.sub_sistem?.id);
+  }, [peralatanId]);
 
   return (
     <Dialog
@@ -100,6 +123,7 @@ const ModalSetBebanHarian = () => {
                   label="Subsistem Awal"
                   name="subsistem_awal_id"
                   options={subsistemOptions}
+                  disabled
                 />
               </Grid>
               <Grid item xs={12} sm={6}>

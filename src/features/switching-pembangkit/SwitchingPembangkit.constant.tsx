@@ -35,14 +35,14 @@ export const initialValues = {
   pembangkit_id: "",
   status: "",
   tanggal: new Date(),
-  // tegangan: 0,
+  tegangan: 0,
   tipe: "",
   waktu_perintah: new Date(),
   waktu_real: null,
 };
 
 export const validationSchema = yup.object({
-  energi_primer: yup.string().required("This field is required"),
+  energi_primer: yup.string(),
   jenis: yup.string().required("This field is required"),
   keterangan: yup.string().required("This field is required"),
   operator_acc_id: yup.string().required("This field is required"),
@@ -51,8 +51,8 @@ export const validationSchema = yup.object({
   pembangkit_id: yup.string().required("This field is required"),
   status: yup.string(),
   tanggal: yup.string().required("This field is required"),
-  // tegangan: yup.number().required("This field is required"),
-  tipe: yup.string().required("This field is required"),
+  tegangan: yup.number(),
+  tipe: yup.string(),
   waktu_perintah: yup.string().required("This field is required"),
   waktu_real: yup.string().nullable(true),
 });

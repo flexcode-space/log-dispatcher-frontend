@@ -5,7 +5,7 @@ const DefenseSchemaPage = () => {
   return (
     <>
       <Head>
-        <title>Defense Schema</title>
+        <title>Defense Scheme</title>
       </Head>
       <DefenseSchema />
     </>

@@ -5,7 +5,7 @@ import { Shortcut } from "./components/Shortcut";
 import Grafik from "./components/Grafik";
 import { NeracaDaya } from "./components/neraca-daya";
 import { StatusPembangkit } from "./components/StatusPembangkit";
-// import { MonitoringIBT } from "./components/MonitoringIBT";
+import { MonitoringIBT } from "./components/MonitoringIBT";
 // import { MonitoringPenghantar } from "./components/MonitoringPenghantar";
 // import { TeganganSubsistem } from "./components/TeganganSubsistem";
 import JadwalShift from "./components/JadwalShift";
@@ -14,7 +14,7 @@ import { berandaApi } from "src/api/beranda";
 import { useEffect } from "react";
 import { useRouter } from "next/router";
 import dayjs from "dayjs";
-import { GrafikBebanDistribusi } from "../grafik/grafik-beban-distribusi";
+import { GrafikBebanDistribusi } from "./components/grafik-beban-distribusi";
 
 const Home = () => {
   const router = useRouter();
@@ -107,7 +107,14 @@ const Home = () => {
           </Grid>
         </Grid>
         <Grid item xs={5}>
-          <StatusPembangkit data={(statusPembangkitan as []) || []} />
+          <Grid container spacing={6}>
+            <Grid item xs={12}>
+              <StatusPembangkit data={(statusPembangkitan as []) || []} />
+            </Grid>
+            <Grid item xs={12}>
+              <MonitoringIBT data={(dataIbt as []) || []} />
+            </Grid>
+          </Grid>
         </Grid>
         <Grid item xs={7}>
           <Grid container spacing={6}>
@@ -119,16 +126,16 @@ const Home = () => {
             </Grid> */}
           </Grid>
         </Grid>
-        {/* <Grid item xs={5}>
+        <Grid item xs={5}>
           <Grid container spacing={6}>
-            <Grid item xs={12}>
+            {/* <Grid item xs={12}>
               <MonitoringIBT data={(dataIbt as []) || []} />
-            </Grid>
-            <Grid item xs={12}>
+            </Grid> */}
+            {/* <Grid item xs={12}>
               <MonitoringPenghantar data={(dataPenghantar as []) || []} />
-            </Grid>
+            </Grid> */}
           </Grid>
-        </Grid> */}
+        </Grid>
       </Grid>
     </>
   );

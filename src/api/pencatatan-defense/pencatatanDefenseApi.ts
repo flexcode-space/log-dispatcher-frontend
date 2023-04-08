@@ -33,9 +33,9 @@ const pencatatanDefenseApi = () => {
 
     try {
       await Axios.post(`${endpoint}/${path}/pencatatan`, payload)
-      toast.success('Berhasil menambahkan pencatatan Defense Schema')
+      toast.success('Berhasil menambahkan pencatatan Defense Scheme')
     } catch (error) {
-      toast.error('Gagal menambahkan pencatatan Defense Schema')
+      toast.error('Gagal menambahkan pencatatan Defense Scheme')
     } finally {
       setLoading(false)
     }

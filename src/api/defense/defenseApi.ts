@@ -6,7 +6,8 @@ export type Params = {
   limit?: number
   page?: number
   search?: string;
-  date?: string
+  jam?: string
+  tanggal?: string
 }
 
 const endpoint = '/defense'
@@ -57,9 +58,9 @@ const defenseApi = () => {
 
     try {
       await Axios.post(`${endpoint}/${path}`, payload)
-      toast.success('Berhasil menambahkan Defense Schema')
+      toast.success('Berhasil menambahkan Defense Scheme')
     } catch (error) {
-      toast.error('Gagal menambahkan Defense Schema')
+      toast.error('Gagal menambahkan Defense Scheme')
     } finally {
       setLoading(false)
     }
@@ -70,9 +71,9 @@ const defenseApi = () => {
 
     try {
       await Axios.put(`${endpoint}/${path}`, payload)
-      toast.success('Berhasil mengubah Defense Schema')
+      toast.success('Berhasil mengubah Defense Scheme')
     } catch (error) {
-      toast.error('Gagal mengubah Defense Schema')
+      toast.error('Gagal mengubah Defense Scheme')
     } finally {
       setLoading(false)
     }

@@ -28,7 +28,11 @@ type ListType = {
   id: string;
   nama: string;
   tipe: string;
-  data: [];
+  data: {
+    average: number;
+    min: number;
+    max: number;
+  };
 };
 
 const TableInflow = () => {
@@ -48,7 +52,6 @@ const TableInflow = () => {
     event?.preventDefault();
 
     formMethods.handleSubmit(async (values) => {
-
       Object.values(values).map(async (value, index) => {
         Object.keys(value).map((key) => {
           value[key] = value[key] ? parseFloat(value[key]) : 0;
@@ -200,9 +203,9 @@ const TableInflow = () => {
                             );
                           }
                         })}
-                        <TableCell>-</TableCell>
-                        <TableCell>-</TableCell>
-                        <TableCell>-</TableCell>
+                        <TableCell>{list?.data?.average}</TableCell>
+                        <TableCell>{list?.data?.max}</TableCell>
+                        <TableCell>{list?.data?.min}</TableCell>
                       </TableRow>
                     );
                   })}

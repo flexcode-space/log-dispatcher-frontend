@@ -21,7 +21,7 @@ import {
   TableCellHead,
   TableContainer,
 } from "src/components/table";
-import DownloadIcon from "src/assets/icons/download-icon.svg";
+import DownloadIcon from "src/assets/icons/download-green-icon.svg";
 import KonfigurasiIcon from "src/assets/icons/konfigurasi-icon.svg";
 import FilterIcon from "src/assets/icons/filter-icon.svg";
 import { AddLaporan } from "./add-laporan";

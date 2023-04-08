@@ -63,7 +63,7 @@ export const defaultColumns = [
           noWrap
           sx={{ textTransform: "capitalize" }}
         >
-          {`${tegangan.value} A`}
+          {`${tegangan.value} KV`}
         </Typography>
       );
     },

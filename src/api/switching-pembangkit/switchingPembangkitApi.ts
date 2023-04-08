@@ -60,6 +60,19 @@ const switchingPembangkitApi = () => {
     }
   }, [])
 
+  const createPerson = useCallback(async (payload: any) => {
+    setLoading(true)
+
+    try {
+      await Axios.post(`${endpoint}/person`, payload)
+      toast.success('Berhasil menambahkan person Switching Pembangkit')
+    } catch (error) {
+      toast.error('Gagal menambahkan person Switching Pembangkit')
+    } finally {
+      setLoading(false)
+    }
+  }, [])
+
   const getPersonList = useCallback(async (params: Params = {}) => {
     setLoading(true)
 
@@ -99,6 +112,7 @@ const switchingPembangkitApi = () => {
 
   return {
     personList,
+    createPerson,
     switchingPembangkitList,
     loading,
     countData,

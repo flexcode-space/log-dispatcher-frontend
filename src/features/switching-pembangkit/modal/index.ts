@@ -1,2 +1,2 @@
-export { default as ModalFilter } from './ModalFilter'
+export { ModalFilter } from './modal-filter'
 export { default as ModalEdit } from './ModalEdit'

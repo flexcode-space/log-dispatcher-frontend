@@ -14,7 +14,6 @@ import { DatePicker, TimePicker } from "src/components/date-picker";
 
 import { StyledForm } from "src/components/form";
 import { useSwitchingPembengkit } from "../useSwitchingPembangkit";
-// import { AutoCompletePerson } from "../components/autocomplete-person";
 import {
   initialValues,
   validationSchema,
@@ -72,9 +71,6 @@ const AddLaporan = () => {
         <FormProvider {...formMethods}>
           <StyledForm noValidate onSubmit={onSubmit} sx={{ width: "100%" }}>
             <Grid container spacing={2} mt={1}>
-              {/* <Grid item xs={12}>
-                <AutoCompletePerson name="test" label="test" />
-              </Grid> */}
               <Grid item xs={12}>
                 <SelectInput
                   label="Jenis Switching"
@@ -82,9 +78,24 @@ const AddLaporan = () => {
                   options={jenisSwitchingOptions}
                 />
               </Grid>
-              <Grid item xs={12}>
-                <InputField name="tipe" label="Dispatch" />
-              </Grid>
+              {jenis === "start-stop" && (
+                <Grid item xs={12}>
+                  <SelectInput
+                    label="Dispatch"
+                    name="tipe"
+                    options={[
+                      {
+                        value: "Start",
+                        label: "Start",
+                      },
+                      {
+                        value: "Start",
+                        label: "Stop",
+                      },
+                    ]}
+                  />
+                </Grid>
+              )}
               <Grid item xs={12}>
                 <SelectInput
                   label="Pembangkit"
@@ -122,14 +133,16 @@ const AddLaporan = () => {
                   options={personOptions}
                 />
               </Grid>
-              <Grid item xs={12}>
-                <SelectInput
-                  label="Energi Primer"
-                  name="energi_primer"
-                  options={energiPrimerOptions}
-                />
-              </Grid>
               {jenis !== "change-over" ? (
+                <Grid item xs={12}>
+                  <SelectInput
+                    label="Energi Primer"
+                    name="energi_primer"
+                    options={energiPrimerOptions}
+                  />
+                </Grid>
+              ) : null}
+              {jenis === "change-over" ? (
                 <Grid item xs={12}>
                   <SelectInput
                     label="Status"
@@ -138,6 +151,12 @@ const AddLaporan = () => {
                   />
                 </Grid>
               ) : null}
+
+              {jenis === "naik-turun" && (
+                <Grid item xs={12}>
+                  <InputField type="number" name="tegangan" label="Tegangan" />
+                </Grid>
+              )}
 
               <Grid item xs={12}>
                 <InputField name="keterangan" label="Keterangan" />

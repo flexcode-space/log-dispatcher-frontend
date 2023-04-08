@@ -125,10 +125,10 @@ const TargetIsland = () => {
         search,
         page,
         limit,
-        date: filterDate,
+        tanggal: filterDate,
       });
     } else {
-      getDefenseList("target-island", { page, limit, date: filterDate });
+      getDefenseList("target-island", { page, limit, tanggal: filterDate });
     }
   };
 

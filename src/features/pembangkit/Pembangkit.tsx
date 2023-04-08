@@ -23,7 +23,7 @@ import { CellType } from "./types";
 import { ModalAddPembangkit } from "./modal";
 import { WrapperFilter } from "src/components/filter";
 import { pembangkitApi } from "src/api/pembangkit";
-import { openModal, modal, reloadPage } from "src/state/modal";
+import { openModal, modal, reloadPage, closeModal } from "src/state/modal";
 import { useDebounce } from "src/hooks/useDebounce";
 import { ModalDelete } from "src/components/modal";
 import { MenuMore } from "src/components/menu-more";
@@ -52,9 +52,12 @@ const Pembangkit = () => {
     deletePembangkit,
   } = pembangkitApi();
 
-  const onClickDelete = async () => {
-    await deletePembangkit({ id: modalSnapshot.id });
-    reloadPage();
+  const onClickDelete = async (id: string) => {
+    if (id) {
+      await deletePembangkit({ id });
+      closeModal();
+      reloadPage();
+    }
   };
 
   const id = router.query.id as string;

@@ -79,7 +79,7 @@ const TableList = ({
 
       getCatatanPembangkitanList({ ...params });
     } else {
-      getCatatanPembangkitanList({ tipe: type });
+      getCatatanPembangkitanList({ tipe: type, tanggal: date });
     }
   };
 

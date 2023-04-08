@@ -14,7 +14,6 @@ import {
   TextField,
   Button,
   IconButton,
-  Chip,
 } from "@mui/material";
 import Plus from "mdi-material-ui/Plus";
 import DatePicker from "@mui/lab/DatePicker";
@@ -22,7 +21,7 @@ import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import { openModal } from "src/state/modal";
-import dayjs from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
 import { WrapperFilter } from "src/components/filter";
 import { useSnapshot } from "valtio";
 import { reloadPage, setReloadPage } from "src/state/reloadPage";
@@ -35,6 +34,7 @@ import { useDebounce } from "src/hooks/useDebounce";
 import FallbackSpinner from "src/@core/components/spinner";
 import { pencatatanDefenseApi } from "src/api/pencatatan-defense";
 import { ModalChangeStatus } from "../modal/modal-change-status";
+import { MenuRealisasi } from "../components/menu-realisasi";
 
 const DSComponent = () => {
   const reloadPageSnap = useSnapshot(reloadPage);
@@ -45,6 +45,11 @@ const DSComponent = () => {
   const { createPencatanDefense } = pencatatanDefenseApi();
 
   const [search, setSearch] = useState<string>("");
+  const [date, setDate] = useState<Dayjs | null>(null);
+  const [time, setTime] = useState<Dayjs | null>(null);
+  const [realisasiField, setRealisasiField] = useState<"a" | "mw">("a");
+  const [targetField, setTargetField] = useState<"a" | "mw">("a");
+  const [setelahField, setSetelahField] = useState<"a" | "mw">("a");
   const [page, setPage] = useState<number>(0);
   const [rowsPerPage, setRowsPerPage] = useState<number>(20);
 
@@ -60,10 +65,23 @@ const DSComponent = () => {
   };
 
   const getDSList = () => {
+    const tanggal = date ? dayjs(date).format("YYYY-MM-DD") : "";
+    const jam = time ? dayjs(time).format("HH:mm") : "";
     if (debouncedSearch) {
-      getDefenseList("ds", { search, page: page + 1, limit: rowsPerPage });
+      getDefenseList("ds", {
+        tanggal,
+        jam,
+        search,
+        page: page + 1,
+        limit: rowsPerPage,
+      });
     } else {
-      getDefenseList("ds", { page: page + 1, limit: rowsPerPage });
+      getDefenseList("ds", {
+        tanggal,
+        jam,
+        page: page + 1,
+        limit: rowsPerPage,
+      });
     }
   };
 
@@ -87,7 +105,7 @@ const DSComponent = () => {
 
   useEffect(() => {
     getDSList();
-  }, [debouncedSearch, page, rowsPerPage]);
+  }, [debouncedSearch, page, rowsPerPage, date, time]);
 
   useEffect(() => {
     if (reloadPageSnap.target === "ds") {
@@ -115,9 +133,9 @@ const DSComponent = () => {
                 <div style={{ display: "flex", gap: "10px" }}>
                   <LocalizationProvider dateAdapter={AdapterDateFns}>
                     <DatePicker
-                      value={null}
+                      value={date}
                       label="Tanggal"
-                      onChange={() => null}
+                      onChange={(e) => setDate(e)}
                       renderInput={(params) => (
                         <TextField
                           size="small"
@@ -129,10 +147,10 @@ const DSComponent = () => {
                   </LocalizationProvider>
                   <LocalizationProvider dateAdapter={AdapterDateFns}>
                     <TimePicker
-                      value={null}
+                      value={time}
                       ampm={false}
                       label="Realisasi Jam"
-                      onChange={() => null}
+                      onChange={(e) => setTime(e)}
                       renderInput={(params) => (
                         <TextField
                           size="small"
@@ -162,7 +180,11 @@ const DSComponent = () => {
                   <Table>
                     <TableHead sx={{ height: "30px", background: "#F5F5F7" }}>
                       <TableRow>
-                        <TableCell size="small" sx={{ minWidth: '250px'}} rowSpan={2}>
+                        <TableCell
+                          size="small"
+                          sx={{ minWidth: "250px" }}
+                          rowSpan={2}
+                        >
                           Lokasi DS
                         </TableCell>
                         <TableCell size="small" rowSpan={2}>
@@ -171,7 +193,11 @@ const DSComponent = () => {
                         <TableCell size="small" align="center" colSpan={3}>
                           Setting
                         </TableCell>
-                        <TableCell size="small" sx={{ minWidth: '200px'}} rowSpan={2}>
+                        <TableCell
+                          size="small"
+                          sx={{ minWidth: "200px" }}
+                          rowSpan={2}
+                        >
                           Target Trip
                         </TableCell>
                         <TableCell size="small" align="center" rowSpan={2}>
@@ -202,11 +228,44 @@ const DSComponent = () => {
                         <TableCell>AMP</TableCell>
                         <TableCell>Detik</TableCell>
                         <TableCell>MW</TableCell>
-                        <TableCell>I (A)</TableCell>
+                        <TableCell variant="head" width="90px">
+                          <Box
+                            display="flex"
+                            alignItems="center"
+                            alignContent="center"
+                          >
+                            {realisasiField === "a" ? "I (A)" : "MW"}
+                            <MenuRealisasi
+                              onChange={(value) => setRealisasiField(value)}
+                            />
+                          </Box>
+                        </TableCell>
                         <TableCell>% ols</TableCell>
-                        <TableCell>I (A)</TableCell>
+                        <TableCell variant="head" width="90px">
+                          <Box
+                            display="flex"
+                            alignItems="center"
+                            alignContent="center"
+                          >
+                            {targetField === "a" ? "I (A)" : "MW"}
+                            <MenuRealisasi
+                              onChange={(value) => setTargetField(value)}
+                            />
+                          </Box>
+                        </TableCell>
                         <TableCell>%</TableCell>
-                        <TableCell>I (A)</TableCell>
+                        <TableCell variant="head" width="90px">
+                          <Box
+                            display="flex"
+                            alignItems="center"
+                            alignContent="center"
+                          >
+                            {setelahField === "a" ? "I (A)" : "MW"}
+                            <MenuRealisasi
+                              onChange={(value) => setSetelahField(value)}
+                            />
+                          </Box>
+                        </TableCell>
                         <TableCell>%</TableCell>
                       </TableRow>
                     </TableHead>
@@ -233,7 +292,7 @@ const DSComponent = () => {
                                 <>
                                   <TableRow hover key={data.id}>
                                     <TableCell size="small">
-                                    {`${data.peralatan?.nama} & ${data?.peralatan2?.nama}`}
+                                      {`${data.peralatan?.nama} & ${data?.peralatan2?.nama}`}
                                     </TableCell>
                                     <TableCell size="small">
                                       {data.tahap.value}
@@ -257,25 +316,31 @@ const DSComponent = () => {
                                       {data.mw}
                                     </TableCell>
                                     <TableCell size="small">
-                                    {`${data?.gardu_induk.nama}_${data?.peralatan.nama}`}
+                                      {`${data?.gardu_induk.nama}_${data?.peralatan_target?.nama}`}
                                     </TableCell>
                                     <TableCell size="small">
                                       {data.keterangan}
                                     </TableCell>
                                     <TableCell size="small">
-                                      {data.real_ia}
+                                      {realisasiField === "a"
+                                        ? data.real_ia
+                                        : data?.real_mw}
                                     </TableCell>
                                     <TableCell size="small">
                                       {data.real_ols}
                                     </TableCell>
                                     <TableCell size="small">
-                                      {data.target_ia}
+                                      {targetField === "a"
+                                        ? data.target_ia
+                                        : data.target_mw}
                                     </TableCell>
                                     <TableCell size="small">
                                       {data.target_ols}
                                     </TableCell>
                                     <TableCell size="small">
-                                      {data.set_ia}
+                                      {setelahField === "a"
+                                        ? data.set_ia
+                                        : data?.set_mw}
                                     </TableCell>
                                     <TableCell size="small">
                                       {data.set_ols}

@@ -13,7 +13,6 @@ import {
   TablePagination,
   TextField,
   Button,
-  Chip,
   IconButton,
 } from "@mui/material";
 import Plus from "mdi-material-ui/Plus";
@@ -27,14 +26,15 @@ import { ModalAddGS } from "../modal/modal-add-ogs";
 import { useSnapshot } from "valtio";
 import { reloadPage, setReloadPage } from "src/state/reloadPage";
 import { defenseApi } from "src/api/defense";
-import { DefenseSchemaList, Data } from "../types";
+import { DefenseSchemaList } from "../types";
 import { PencilOutline } from "mdi-material-ui";
 import { defenseSchema, selectData } from "../state/defenseSchema";
 import { useDebounce } from "src/hooks/useDebounce";
 import FallbackSpinner from "src/@core/components/spinner";
 import { pencatatanDefenseApi } from "src/api/pencatatan-defense";
-import dayjs from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
 import { ModalChangeStatus } from "../modal/modal-change-status";
+import { MenuRealisasi } from "../components/menu-realisasi";
 
 const OgsComponent = () => {
   const reloadPageSnap = useSnapshot(reloadPage);
@@ -45,6 +45,10 @@ const OgsComponent = () => {
   const { createPencatanDefense } = pencatatanDefenseApi();
 
   const [search, setSearch] = useState<string>("");
+  const [date, setDate] = useState<Dayjs | null>(null);
+  const [realisasiField, setRealisasiField] = useState<"a" | "mw">("a");
+  const [targetField, setTargetField] = useState<"a" | "mw">("a");
+  const [setelahField, setSetelahField] = useState<"a" | "mw">("a");
   const [page, setPage] = useState<number>(0);
   const [rowsPerPage, setRowsPerPage] = useState<number>(20);
 
@@ -60,10 +64,16 @@ const OgsComponent = () => {
   };
 
   const getOGSList = () => {
+    const time = date ? dayjs(date).format("HH:mm") : "";
     if (debouncedSearch) {
-      getDefenseList("ogs", { search, page: page + 1, limit: rowsPerPage });
+      getDefenseList("ogs", {
+        jam: time,
+        search,
+        page: page + 1,
+        limit: rowsPerPage,
+      });
     } else {
-      getDefenseList("ogs", { page: page + 1, limit: rowsPerPage });
+      getDefenseList("ogs", { jam: time, page: page + 1, limit: rowsPerPage });
     }
   };
 
@@ -87,7 +97,7 @@ const OgsComponent = () => {
 
   useEffect(() => {
     getOGSList();
-  }, [debouncedSearch, page, rowsPerPage]);
+  }, [debouncedSearch, page, rowsPerPage, date]);
 
   useEffect(() => {
     if (reloadPageSnap.target === "ogs") {
@@ -115,10 +125,10 @@ const OgsComponent = () => {
                 <div style={{ display: "flex", gap: "10px" }}>
                   <LocalizationProvider dateAdapter={AdapterDateFns}>
                     <TimePicker
-                      value={null}
+                      value={date}
                       ampm={false}
                       label="Realisasi Jam"
-                      onChange={() => null}
+                      onChange={(e) => setDate(e)}
                       renderInput={(params) => (
                         <TextField
                           size="small"
@@ -148,7 +158,11 @@ const OgsComponent = () => {
                   <Table>
                     <TableHead sx={{ height: "30px", background: "#F5F5F7" }}>
                       <TableRow>
-                        <TableCell size="small" sx={{ minWidth: '250px'}} rowSpan={2}>
+                        <TableCell
+                          size="small"
+                          sx={{ minWidth: "250px" }}
+                          rowSpan={2}
+                        >
                           Lokasi OLS
                         </TableCell>
                         <TableCell size="small" rowSpan={2}>
@@ -157,7 +171,11 @@ const OgsComponent = () => {
                         <TableCell size="small" align="center" colSpan={3}>
                           Setting
                         </TableCell>
-                        <TableCell size="small" sx={{ minWidth: '210px'}} rowSpan={2}>
+                        <TableCell
+                          size="small"
+                          sx={{ minWidth: "210px" }}
+                          rowSpan={2}
+                        >
                           Target Trip
                         </TableCell>
                         {/* <TableCell size="small" rowSpan={2}>
@@ -191,11 +209,44 @@ const OgsComponent = () => {
                         <TableCell>AMP</TableCell>
                         <TableCell>Detik</TableCell>
                         <TableCell>MW</TableCell>
-                        <TableCell>I (A)</TableCell>
+                        <TableCell variant="head" width="90px">
+                          <Box
+                            display="flex"
+                            alignItems="center"
+                            alignContent="center"
+                          >
+                            {realisasiField === "a" ? "I (A)" : "MW"}
+                            <MenuRealisasi
+                              onChange={(value) => setRealisasiField(value)}
+                            />
+                          </Box>
+                        </TableCell>
                         <TableCell>% ols</TableCell>
-                        <TableCell>I (A)</TableCell>
+                        <TableCell variant="head" width="90px">
+                          <Box
+                            display="flex"
+                            alignItems="center"
+                            alignContent="center"
+                          >
+                            {targetField === "a" ? "I (A)" : "MW"}
+                            <MenuRealisasi
+                              onChange={(value) => setTargetField(value)}
+                            />
+                          </Box>
+                        </TableCell>
                         <TableCell>%</TableCell>
-                        <TableCell>I (A)</TableCell>
+                        <TableCell variant="head" width="90px">
+                          <Box
+                            display="flex"
+                            alignItems="center"
+                            alignContent="center"
+                          >
+                            {setelahField === "a" ? "I (A)" : "MW"}
+                            <MenuRealisasi
+                              onChange={(value) => setSetelahField(value)}
+                            />
+                          </Box>
+                        </TableCell>
                         <TableCell>%</TableCell>
                       </TableRow>
                     </TableHead>
@@ -222,7 +273,7 @@ const OgsComponent = () => {
                                 <>
                                   <TableRow hover key={data.id}>
                                     <TableCell size="small">
-                                    {`${data.peralatan?.nama} & ${data?.peralatan2?.nama}`}
+                                      {`${data.peralatan?.nama} & ${data?.peralatan2?.nama}`}
                                     </TableCell>
                                     <TableCell size="small">
                                       {data.tahap.value}
@@ -246,25 +297,31 @@ const OgsComponent = () => {
                                       {data.mw}
                                     </TableCell>
                                     <TableCell size="small">
-                                    {`${data?.gardu_induk.nama}_${data?.peralatan.nama}`}
+                                      {`${data?.gardu_induk.nama}_${data?.peralatan_target?.nama}`}
                                     </TableCell>
                                     <TableCell size="small">
                                       {data.keterangan}
                                     </TableCell>
                                     <TableCell size="small">
-                                      {data.real_ia}
+                                      {realisasiField === "a"
+                                        ? data.real_ia
+                                        : data?.real_mw}
                                     </TableCell>
                                     <TableCell size="small">
                                       {data.real_ols}
                                     </TableCell>
                                     <TableCell size="small">
-                                      {data.target_ia}
+                                      {targetField === "a"
+                                        ? data.target_ia
+                                        : data.target_mw}
                                     </TableCell>
                                     <TableCell size="small">
                                       {data.target_ols}
                                     </TableCell>
                                     <TableCell size="small">
-                                      {data.set_ia}
+                                      {setelahField === "a"
+                                        ? data.set_ia
+                                        : data?.set_mw}
                                     </TableCell>
                                     <TableCell size="small">
                                       {data.set_ols}

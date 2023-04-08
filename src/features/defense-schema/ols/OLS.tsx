@@ -19,7 +19,7 @@ import { PencilOutline } from "mdi-material-ui";
 import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
-import DownloadIcon from "src/assets/icons/download-icon.svg";
+import DownloadIcon from "src/assets/icons/download-green-icon.svg";
 import { openModal } from "src/state/modal";
 import { WrapperFilter } from "src/components/filter";
 import { ModalAddOLS } from "../modal";
@@ -31,8 +31,9 @@ import { DefenseSchemaList } from "../types";
 import { useDebounce } from "src/hooks/useDebounce";
 import FallbackSpinner from "src/@core/components/spinner";
 import { pencatatanDefenseApi } from "src/api/pencatatan-defense";
-import dayjs from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
 import { ModalChangeStatus } from "../modal/modal-change-status";
+import { MenuRealisasi } from "../components/menu-realisasi";
 
 const OLS = () => {
   const reloadPageSnap = useSnapshot(reloadPage);
@@ -40,6 +41,10 @@ const OLS = () => {
 
   // ** States
   const [search, setSearch] = useState<string>("");
+  const [date, setDate] = useState<Dayjs | null>(null);
+  const [realisasiField, setRealisasiField] = useState<"a" | "mw">("a");
+  const [targetField, setTargetField] = useState<"a" | "mw">("a");
+  const [setelahField, setSetelahField] = useState<"a" | "mw">("a");
   const [page, setPage] = useState<number>(0);
   const [rowsPerPage, setRowsPerPage] = useState<number>(20);
 
@@ -59,10 +64,16 @@ const OLS = () => {
   };
 
   const getOLSList = () => {
+    const time = date ? dayjs(date).format("HH:mm") : "";
     if (debouncedSearch) {
-      getDefenseList("ols", { search, page: page + 1, limit: rowsPerPage });
+      getDefenseList("ols", {
+        jam: time,
+        search,
+        page: page + 1,
+        limit: rowsPerPage,
+      });
     } else {
-      getDefenseList("ols", { page: page + 1, limit: rowsPerPage });
+      getDefenseList("ols", { jam: time, page: page + 1, limit: rowsPerPage });
     }
   };
 
@@ -87,7 +98,7 @@ const OLS = () => {
 
   useEffect(() => {
     getOLSList();
-  }, [debouncedSearch, page, rowsPerPage]);
+  }, [debouncedSearch, page, rowsPerPage, date]);
 
   useEffect(() => {
     if (reloadPageSnap.target === "ols") {
@@ -115,10 +126,10 @@ const OLS = () => {
                 <div style={{ display: "flex", gap: "10px" }}>
                   <LocalizationProvider dateAdapter={AdapterDateFns}>
                     <TimePicker
-                      value={null}
+                      value={date}
                       ampm={false}
                       label="Realisasi Jam"
-                      onChange={() => null}
+                      onChange={(e) => setDate(e)}
                       renderInput={(params) => (
                         <TextField
                           size="small"
@@ -218,11 +229,44 @@ const OLS = () => {
                         <TableCell variant="head">AMP</TableCell>
                         <TableCell variant="head">Detik</TableCell>
                         <TableCell variant="head">MW</TableCell>
-                        <TableCell variant="head">I (A)</TableCell>
+                        <TableCell variant="head" width="90px">
+                          <Box
+                            display="flex"
+                            alignItems="center"
+                            alignContent="center"
+                          >
+                            {realisasiField === "a" ? "I (A)" : "MW"}
+                            <MenuRealisasi
+                              onChange={(value) => setRealisasiField(value)}
+                            />
+                          </Box>
+                        </TableCell>
                         <TableCell variant="head">% ols</TableCell>
-                        <TableCell variant="head">I (A)</TableCell>
+                        <TableCell variant="head" width="90px">
+                          <Box
+                            display="flex"
+                            alignItems="center"
+                            alignContent="center"
+                          >
+                            {targetField === "a" ? "I (A)" : "MW"}
+                            <MenuRealisasi
+                              onChange={(value) => setTargetField(value)}
+                            />
+                          </Box>
+                        </TableCell>
                         <TableCell variant="head">%</TableCell>
-                        <TableCell variant="head">I (A)</TableCell>
+                        <TableCell variant="head" width="90px">
+                          <Box
+                            display="flex"
+                            alignItems="center"
+                            alignContent="center"
+                          >
+                            {setelahField === "a" ? "I (A)" : "MW"}
+                            <MenuRealisasi
+                              onChange={(value) => setSetelahField(value)}
+                            />
+                          </Box>
+                        </TableCell>
                         <TableCell variant="head">%</TableCell>
                       </TableRow>
                     </TableHead>
@@ -272,25 +316,31 @@ const OLS = () => {
                                       {data.mw}
                                     </TableCell>
                                     <TableCell size="small">
-                                      {`${data?.gardu_induk.nama}_${data?.peralatan.nama}`}
+                                      {`${data?.gardu_induk.nama}_${data?.peralatan_target?.nama}`}
                                     </TableCell>
                                     <TableCell size="small">
                                       {data.keterangan}
                                     </TableCell>
                                     <TableCell size="small">
-                                      {data.real_ia}
+                                      {realisasiField === "a"
+                                        ? data.real_ia
+                                        : data?.real_mw}
                                     </TableCell>
                                     <TableCell size="small">
                                       {data.real_ols}
                                     </TableCell>
                                     <TableCell size="small">
-                                      {data.target_ia}
+                                      {targetField === "a"
+                                        ? data.target_ia
+                                        : data.target_mw}
                                     </TableCell>
                                     <TableCell size="small">
                                       {data.target_ols}
                                     </TableCell>
                                     <TableCell size="small">
-                                      {data.set_ia}
+                                      {setelahField === "a"
+                                        ? data.set_ia
+                                        : data?.set_mw}
                                     </TableCell>
                                     <TableCell size="small">
                                       {data.set_ols}

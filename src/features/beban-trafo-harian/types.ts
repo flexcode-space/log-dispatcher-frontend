@@ -13,7 +13,10 @@ export interface BebanTrafo {
   sub_sistem: string;
   color: string;
   gardu_induk: string;
-  trafo: string;
+  trafo: {
+    id: string
+    nama: string
+  };
   daya: number;
   rasio: string;
   arus_nominal: number;

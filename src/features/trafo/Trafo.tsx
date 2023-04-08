@@ -25,7 +25,7 @@ import { ModalAddTrafo } from "./modal";
 import { WrapperFilter } from "src/components/filter";
 
 import { trafoApi } from "src/api/trafo";
-import { openModal, modal, reloadPage } from "src/state/modal";
+import { openModal, modal, reloadPage, closeModal } from "src/state/modal";
 import { useDebounce } from "src/hooks/useDebounce";
 import { ModalDelete } from "src/components/modal";
 import { ModalKoefisien } from "./modal/modal-koenfisien";
@@ -43,9 +43,12 @@ const Trafo = () => {
 
   const { getTrafoList, trafoList, totalData, deleteTrafo } = trafoApi();
 
-  const onClickDelete = async () => {
-    await deleteTrafo({ id: modalSnapshot.id });
-    reloadPage();
+  const onClickDelete = async (id: string) => {
+    if (id) {
+      await deleteTrafo({ id });
+      closeModal();
+      reloadPage();
+    }
   };
 
   const id = router.query.id as string;

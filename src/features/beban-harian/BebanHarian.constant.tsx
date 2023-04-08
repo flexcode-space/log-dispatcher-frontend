@@ -1,3 +1,4 @@
+import { Fragment } from "react";
 import TableCell from "@mui/material/TableCell";
 import { Data } from "src/api/beban/types";
 import { formatDecimalNumber } from "src/utils/number";
@@ -10,7 +11,7 @@ export const showValueBeban = (data: Data) => {
     const mw = "mw_" + value.replace(".", "");
     const mx = "mx_" + value.replace(".", "");
     return (
-      <>
+      <Fragment key={value}>
         <TableCell
           size="small"
           align="center"
@@ -25,7 +26,7 @@ export const showValueBeban = (data: Data) => {
         >
           {formatDecimalNumber((data as any)[mx]!, 2)}
         </TableCell>
-      </>
+      </Fragment>
     );
   });
 };

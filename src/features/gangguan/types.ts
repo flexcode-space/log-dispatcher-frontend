@@ -1,3 +1,5 @@
+import { Dayjs } from "dayjs";
+
 export interface GangguanList {
   akibat: string;
   announciator: string[];
@@ -79,4 +81,14 @@ export interface GangguanList {
   tutup: string;
   vaisala: string;
 }
+
+export type Filter = {
+  gardu_induk_id: string,
+  gangguan_jenis_id: string,
+  jenis_peralatan: string,
+  peralatan_id: string,
+  announciator: string,
+  rele: string
+  tanggal: Dayjs | null,
+};
 

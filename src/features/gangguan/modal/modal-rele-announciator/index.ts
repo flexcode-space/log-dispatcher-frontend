@@ -1,0 +1,1 @@
+export { default as ModalReleAnnounciator } from './ModalReleAnnounciator'

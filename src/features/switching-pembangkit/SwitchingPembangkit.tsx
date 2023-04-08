@@ -12,6 +12,7 @@ import {
   Chip,
 } from "@mui/material";
 import { PencilOutline } from "mdi-material-ui";
+import dayjs from "dayjs";
 import PageHeader from "src/@core/components/page-header";
 import {
   Table,
@@ -22,21 +23,23 @@ import {
   TableCellHead,
   TableContainer,
 } from "src/components/table";
-import DownloadIcon from "src/assets/icons/download-icon.svg";
+import DownloadIcon from "src/assets/icons/download-green-icon.svg";
 import FilterIcon from "src/assets/icons/filter-icon.svg";
 
 import { WrapperFilter } from "src/components/filter";
 import { AddLaporan } from "./add-laporan";
-import { openModal, closeModal } from "src/state/modal";
+import { openModal } from "src/state/modal";
 import { ModalFilter, ModalEdit } from "./modal";
 import { switchingPembangkitApi } from "src/api/switching-pembangkit";
-import { SwitchingPembangkitList } from "./types";
+import { Filter, SwitchingPembangkitList } from "./types";
 import { useSnapshot } from "valtio";
 import { reloadPage } from "src/state/reloadPage";
 import { selectData } from "./state/switchingPembangkit";
 import FallbackSpinner from "src/@core/components/spinner";
 import { useDebounce } from "src/hooks/useDebounce";
 import ModalDownload from "./modal/ModalDownload";
+import { MenuPengaturan } from "./components/menu-pengaturan";
+import { ModalAddPerson } from "./modal/modal-add-person";
 
 const SwitchingPembangkit = () => {
   const reloadPageSnap = useSnapshot(reloadPage);
@@ -44,6 +47,7 @@ const SwitchingPembangkit = () => {
   const [search, setSearch] = useState<string>("");
   const [page, setPage] = useState<number>(0);
   const [rowsPerPage, setRowsPerPage] = useState<number>(20);
+  const [filter, setFilter] = useState<Filter>({} as Filter);
 
   const {
     getSwitchingPembangkitList,
@@ -63,25 +67,48 @@ const SwitchingPembangkit = () => {
     setPage(0);
   };
 
-  const handleClose = () => {
-    closeModal();
-  };
-
   const getSwitchingPembangkit = () => {
+    const formatTanggal = filter.tanggal
+      ? dayjs(filter.tanggal).format("YYYY-MM-DD")
+      : "";
+    const params = Object.keys(filter).length
+      ? {
+          ...filter,
+          tanggal: formatTanggal,
+        }
+      : {
+          tanggal: formatTanggal,
+          limit: rowsPerPage,
+          page: page + 1,
+        };
+
     if (debouncedSearch) {
       getSwitchingPembangkitList({
         search,
-        page: page + 1,
-        limit: rowsPerPage,
+        ...params,
       });
     } else {
-      getSwitchingPembangkitList({ page: page + 1, limit: rowsPerPage });
+      getSwitchingPembangkitList({ ...params });
     }
+  };
+
+  const renderDispatch = (list: SwitchingPembangkitList) => {
+    const component: Record<SwitchingPembangkitList["jenis"], any> = {
+      "naik-turun": `${list?.dispatch} MW`,
+      "change-over": list?.dispatch || '-',
+      "start-stop": (
+        <Chip
+          label={list.dispatch}
+          color={list?.dispatch === "start" ? "success" : "error"}
+        />
+      ),
+    };
+    return component[list?.jenis] as JSX.Element;
   };
 
   useEffect(() => {
     getSwitchingPembangkit();
-  }, [debouncedSearch, page, rowsPerPage]);
+  }, [debouncedSearch, page, rowsPerPage, filter]);
 
   useEffect(() => {
     if (reloadPageSnap.target === "switching-pembangkit") {
@@ -91,8 +118,12 @@ const SwitchingPembangkit = () => {
 
   return (
     <>
+      <ModalFilter
+        filter={filter}
+        onChange={(value: Filter) => setFilter(value)}
+      />
+      <ModalAddPerson />
       <ModalDownload />
-      <ModalFilter handleClose={handleClose} />
       <ModalEdit />
       <Grid container spacing={6}>
         <Grid item xs={12}>
@@ -109,25 +140,29 @@ const SwitchingPembangkit = () => {
               <WrapperFilter sx={{ alignItems: "baseline" }}>
                 <TextField
                   size="small"
-                  value=""
+                  value={search}
                   sx={{ mr: 6, mb: 2 }}
                   placeholder="Cari"
-                  // onChange={(e) => setSearch(e.target.value)}
+                  onChange={(e) => setSearch(e.target.value)}
                 />
 
                 <div style={{ display: "flex", gap: "10px", height: "45px" }}>
-                  {/* <Button
+                  <Button
                     sx={{ mb: 2 }}
                     variant="outlined"
-                    onClick={() => openModal()}
+                    onClick={() =>
+                      openModal("modal-filter-switching-pembangkit")
+                    }
                   >
                     <IconButton>
                       <FilterIcon />
                     </IconButton>
                     Filter
-                  </Button> */}
+                  </Button>
+                  <MenuPengaturan />
                   <Button
-                    sx={{ mb: 2 }}
+                    size="small"
+                    sx={{ height: "40px" }}
                     variant="contained"
                     onClick={() => openModal("modal-download")}
                   >
@@ -148,7 +183,11 @@ const SwitchingPembangkit = () => {
                         <TableCellHead size="small" rowSpan={2}>
                           No
                         </TableCellHead>
-                        <TableCellHead size="small" rowSpan={2}>
+                        <TableCellHead
+                          size="small"
+                          minWidth="130px"
+                          rowSpan={2}
+                        >
                           Switching
                         </TableCellHead>
                         <TableCellHead size="small" rowSpan={2}>
@@ -171,7 +210,7 @@ const SwitchingPembangkit = () => {
                         <TableCellHead rowSpan={2}>Energi Primer</TableCellHead>
                         <TableCellHead rowSpan={2}>Status</TableCellHead>
                         <TableCellHead rowSpan={2}>Dispatch</TableCellHead>
-                        <TableCellHead rowSpan={2}>Keterangan</TableCellHead>
+                        <TableCellHead minWidth="200px" rowSpan={2}>Keterangan</TableCellHead>
                         <TableCellHead align="center" rowSpan={2}>
                           Aksi
                         </TableCellHead>
@@ -227,7 +266,7 @@ const SwitchingPembangkit = () => {
                                   {list.status}
                                 </TableCell>
                                 <TableCell size="small">
-                                  <Chip label={list.dispatch} color="success" />
+                                  {renderDispatch(list)}
                                 </TableCell>
                                 <TableCell size="small">
                                   {list.keterangan}
