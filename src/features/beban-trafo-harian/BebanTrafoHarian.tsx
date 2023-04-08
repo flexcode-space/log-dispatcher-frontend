@@ -285,7 +285,7 @@ const BebanTrafoHarian = () => {
                                   {value.gardu_induk}
                                 </TableCell>
                                 <TableCell size="small">
-                                  {value.trafo}
+                                  {value.trafo?.nama}
                                 </TableCell>
                                 <TableCell size="small">{`${value.daya} MVA`}</TableCell>
                                 <TableCell size="small">
