@@ -49,14 +49,18 @@ const trafoApi = () => {
     }
   }, [])
 
-  const updateTrafo = useCallback(async (payload: any) => {
+  const updateTrafo = useCallback(async (payload: any, preventToast: boolean = false) => {
     setLoading(true)
 
     try {
       await Axios.put(endpoint, payload)
-      toast.success('Berhasil mengubah trafo')
+      if (!preventToast) {
+        toast.success('Berhasil mengubah trafo')
+      }
     } catch (error) {
-      toast.error('Gagal mengubah trafo')
+      if (!preventToast) {
+        toast.error('Gagal mengubah trafo')
+      }
     } finally {
       setLoading(false)
     }

@@ -52,14 +52,18 @@ const ibtApi = () => {
     }
   }, [])
 
-  const updateIbt = useCallback(async (payload: any) => {
+  const updateIbt = useCallback(async (payload: any, preventToast: boolean = false) => {
     setLoading(true)
 
     try {
       await Axios.put(endpoint, payload)
-      toast.success('Berhasil mengubah IBT')
+      if (!preventToast) {
+        toast.success('Berhasil mengubah IBT')
+      }
     } catch (error) {
-      toast.error('Gagal mengubah IBT')
+      if (!preventToast) {
+        toast.error('Gagal mengubah IBT')
+      }
     } finally {
       setLoading(false)
     }

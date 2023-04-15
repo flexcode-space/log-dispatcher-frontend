@@ -13,7 +13,14 @@ export interface IBTList {
   sub_sistem: string;
   color: string;
   gardu_induk: string;
-  trafo: string;
+  ibt: {
+    id: string
+    nama: string
+    scada_b_1: string
+    scada_b_2: string
+    scada_b_3: string
+    amr_point: string
+  };
   daya: number;
   rasio: string;
   arus_nominal: number;

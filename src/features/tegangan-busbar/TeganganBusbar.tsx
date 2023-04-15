@@ -33,6 +33,7 @@ import { useDebounce } from "src/hooks/useDebounce";
 import FallbackSpinner from "src/@core/components/spinner";
 import { StyledForm } from "src/components/form";
 import { InputField } from "src/components/input-field";
+import { busbarApi } from "src/api/busbar";
 
 const TeganganBusbar = () => {
   // ** States
@@ -44,6 +45,7 @@ const TeganganBusbar = () => {
 
   const { getTeganganBusbarList, teganganBusbarList, loading, countData } =
     bebanApi();
+  const { updateBusbar } = busbarApi();
 
   const debouncedSearch = useDebounce(search, 500);
 
@@ -59,8 +61,21 @@ const TeganganBusbar = () => {
     event?.preventDefault();
 
     formMethods.handleSubmit(async (values) => {
-      // TODO: integrate with BE
-      console.log(values);
+      Object.values(values).forEach(async (value, index) => {
+        if (typeof value?.arus_mampu === "string") {
+          const data = teganganBusbarList[index] as TeganganBusbar;
+          const { scada_b_1, scada_b_2, scada_b_3, amr_point, ...rest } =
+            data.busbar;
+
+          const payload = {
+            ...rest,
+            id_amr: amr_point,
+            scada: { b1: scada_b_1, b2: scada_b_2, b3: scada_b_3 },
+            arus_mampu: Number(value?.arus_mampu),
+          };
+          await updateBusbar(payload, true);
+        }
+      });
       setIsEdit(false);
     })();
   };
@@ -265,24 +280,12 @@ const TeganganBusbar = () => {
 
                               return (
                                 <TableRow hover>
-                                  <TableCell>
-                                    {index + 1}
-                                  </TableCell>
-                                  <TableCell>
-                                    {value.upt}
-                                  </TableCell>
-                                  <TableCell>
-                                    {value.sub_sistem}
-                                  </TableCell>
-                                  <TableCell>
-                                    {value.gardu_induk}
-                                  </TableCell>
-                                  <TableCell>
-                                    {value.tegangan}
-                                  </TableCell>
-                                  <TableCell>
-                                    {value.arus_nominal}
-                                  </TableCell>
+                                  <TableCell>{index + 1}</TableCell>
+                                  <TableCell>{value.upt}</TableCell>
+                                  <TableCell>{value.sub_sistem}</TableCell>
+                                  <TableCell>{value.gardu_induk}</TableCell>
+                                  <TableCell>{value.tegangan}</TableCell>
+                                  <TableCell>{value.arus_nominal}</TableCell>
                                   <TableCell sx={{ p: "0 !important" }}>
                                     <Box
                                       display={isEdit ? "" : "none"}
