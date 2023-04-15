@@ -42,7 +42,9 @@ const ModalFilter = () => {
     pembangkitOptions,
     statusOptions,
     energiPrimerOptions,
-    personOptions,
+    bopsOptions,
+    accOptions,
+    operatorOptions,
   } = useSwitchingPembengkit();
 
   const { updateSwitchingPembangkit, deleteSwitchingPembangkit } =
@@ -180,21 +182,21 @@ const ModalFilter = () => {
                 <SelectInput
                   label="BOPS"
                   name="operator_bops_id"
-                  options={personOptions}
+                  options={bopsOptions}
                 />
               </Grid>
               <Grid item xs={4}>
                 <SelectInput
                   label="ACC"
                   name="operator_acc_id"
-                  options={personOptions}
+                  options={accOptions}
                 />
               </Grid>
               <Grid item xs={4}>
                 <SelectInput
                   label="Operator Pembangkit"
                   name="operator_pembangkit_id"
-                  options={personOptions}
+                  options={operatorOptions}
                 />
               </Grid>
               {jenis !== "change-over" ? (

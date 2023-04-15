@@ -34,12 +34,16 @@ import { switchingPembangkitApi } from "src/api/switching-pembangkit";
 import { Filter, SwitchingPembangkitList } from "./types";
 import { useSnapshot } from "valtio";
 import { reloadPage } from "src/state/reloadPage";
-import { selectData } from "./state/switchingPembangkit";
 import FallbackSpinner from "src/@core/components/spinner";
 import { useDebounce } from "src/hooks/useDebounce";
+import ArrowDown from "src/assets/icons/arrow-down.svg";
+import ArrowUp from "src/assets/icons/arrow-up.svg";
+import { selectData } from "./state/switchingPembangkit";
 import ModalDownload from "./modal/ModalDownload";
 import { MenuPengaturan } from "./components/menu-pengaturan";
-import { ModalAddPerson } from "./modal/modal-add-person";
+import { ModalAddBOPS } from "./modal/modal-add-bops";
+import { ModalAddACC } from "./modal/modal-add-acc";
+import { ModalAddOperator } from "./modal/modal-add-operator";
 
 const SwitchingPembangkit = () => {
   const reloadPageSnap = useSnapshot(reloadPage);
@@ -94,13 +98,21 @@ const SwitchingPembangkit = () => {
 
   const renderDispatch = (list: SwitchingPembangkitList) => {
     const component: Record<SwitchingPembangkitList["jenis"], any> = {
-      "naik-turun": `${list?.dispatch} MW`,
-      "change-over": list?.dispatch || '-',
+      "change-over": list?.dispatch || "-",
       "start-stop": (
         <Chip
           label={list.dispatch}
           color={list?.dispatch === "start" ? "success" : "error"}
         />
+      ),
+      "naik-turun": (
+        <Box display="flex">
+          {`${list?.dispatch} MW`}
+          <Box marginLeft="5px">
+            {list.dispatch_naik_or_turun === "naik" && <ArrowUp />}
+            {list.dispatch_naik_or_turun === "turun" && <ArrowDown />}
+          </Box>
+        </Box>
       ),
     };
     return component[list?.jenis] as JSX.Element;
@@ -122,7 +134,9 @@ const SwitchingPembangkit = () => {
         filter={filter}
         onChange={(value: Filter) => setFilter(value)}
       />
-      <ModalAddPerson />
+      <ModalAddBOPS />
+      <ModalAddACC />
+      <ModalAddOperator />
       <ModalDownload />
       <ModalEdit />
       <Grid container spacing={6}>
@@ -210,7 +224,9 @@ const SwitchingPembangkit = () => {
                         <TableCellHead rowSpan={2}>Energi Primer</TableCellHead>
                         <TableCellHead rowSpan={2}>Status</TableCellHead>
                         <TableCellHead rowSpan={2}>Dispatch</TableCellHead>
-                        <TableCellHead minWidth="200px" rowSpan={2}>Keterangan</TableCellHead>
+                        <TableCellHead minWidth="200px" rowSpan={2}>
+                          Keterangan
+                        </TableCellHead>
                         <TableCellHead align="center" rowSpan={2}>
                           Aksi
                         </TableCellHead>
@@ -265,7 +281,10 @@ const SwitchingPembangkit = () => {
                                 <TableCell size="small">
                                   {list.status}
                                 </TableCell>
-                                <TableCell size="small">
+                                <TableCell
+                                  size="small"
+                                  style={{ minWidth: "120px" }}
+                                >
                                   {renderDispatch(list)}
                                 </TableCell>
                                 <TableCell size="small">

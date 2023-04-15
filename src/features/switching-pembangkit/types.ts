@@ -2,6 +2,7 @@ import { Dayjs } from "dayjs";
 
 export interface SwitchingPembangkitList {
   dispatch: string;
+  dispatch_naik_or_turun: string;
   energi_primer: string;
   id: string;
   jenis: string;

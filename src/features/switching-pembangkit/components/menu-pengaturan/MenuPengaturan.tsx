@@ -48,8 +48,32 @@ const MenuPengaturan = () => {
           },
         }}
       >
-        <MenuItem onClick={() => openModal("modal-add-person")} sx={{ m: 2 }}>
-          <Typography variant="inherit">Person</Typography>
+        <MenuItem
+          onClick={() => {
+            openModal("modal-add-bops");
+            handleClose();
+          }}
+          sx={{ m: 2 }}
+        >
+          <Typography variant="inherit">BOPS</Typography>
+        </MenuItem>
+        <MenuItem
+          onClick={() => {
+            openModal("modal-add-acc");
+            handleClose();
+          }}
+          sx={{ m: 2 }}
+        >
+          <Typography variant="inherit">ACC</Typography>
+        </MenuItem>
+        <MenuItem
+          onClick={() => {
+            openModal("modal-add-operator");
+            handleClose();
+          }}
+          sx={{ m: 2 }}
+        >
+          <Typography variant="inherit">Operator</Typography>
         </MenuItem>
       </Menu>
     </>
