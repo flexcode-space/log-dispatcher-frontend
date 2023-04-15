@@ -37,6 +37,7 @@ import FallbackSpinner from "src/@core/components/spinner";
 import { InputField } from "src/components/input-field";
 import { FormProvider, useForm } from "react-hook-form";
 import { StyledForm } from "src/components/form";
+import { trafoApi } from "src/api/trafo";
 
 const BebanTrafoHarian = () => {
   // ** States
@@ -55,6 +56,7 @@ const BebanTrafoHarian = () => {
   const [isEdit, setIsEdit] = useState<boolean>(false);
 
   const { getBebanTrafoList, bebanTrafoList, loading, countData } = bebanApi();
+  const { updateTrafo } = trafoApi();
 
   const debouncedSearch = useDebounce(search, 500);
 
@@ -70,9 +72,23 @@ const BebanTrafoHarian = () => {
     event?.preventDefault();
 
     formMethods.handleSubmit(async (values) => {
-      // TODO: integrate with BE
-      console.log(values);
+      Object.values(values).forEach(async(value, index) => {
+        if (typeof value?.arus_mampu === "string") {
+          const bebanTrafo = bebanTrafoList[index] as BebanTrafo;
+          const { scada_b_1, scada_b_2, scada_b_3, amr_point, ...rest } =
+            bebanTrafo.trafo;
+
+          const payload = {
+            ...rest,
+            id_amr: amr_point,
+            scada: { b1: scada_b_1, b2: scada_b_2, b3: scada_b_3 },
+            arus_mampu: Number(value?.arus_mampu),
+          };
+          await updateTrafo(payload, true);
+        }
+      })
       setIsEdit(false);
+      getBebanTrafo();
     })();
   };
 
@@ -275,7 +291,7 @@ const BebanTrafoHarian = () => {
                             });
 
                             return (
-                              <TableRow key={`row-${index}`} hover>
+                              <TableRow key={`row-${value?.trafo?.id}`} hover>
                                 <TableCell size="small">{index + 1}</TableCell>
                                 <TableCell size="small">{value.upt}</TableCell>
                                 <TableCell size="small">

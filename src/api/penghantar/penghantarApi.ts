@@ -49,14 +49,18 @@ const penghantarApi = () => {
     }
   }, [])
 
-  const updatePenghantar = useCallback(async (payload: any) => {
+  const updatePenghantar = useCallback(async (payload: any, preventToast: boolean = false) => {
     setLoading(true)
 
     try {
       await Axios.put(endpoint, payload)
-      toast.success('Berhasil mengubah penghantar')
+      if (!preventToast) {
+        toast.success('Berhasil mengubah penghantar')
+      }
     } catch (error) {
-      toast.error('Gagal mengubah penghantar')
+      if (!preventToast) {
+        toast.error('Gagal mengubah penghantar')
+      }
     } finally {
       setLoading(false)
     }

@@ -45,6 +45,7 @@ import FallbackSpinner from "src/@core/components/spinner";
 import { FormProvider, useForm } from "react-hook-form";
 import { StyledForm } from "src/components/form";
 import { InputField } from "src/components/input-field";
+import { ibtApi } from "src/api/ibt";
 
 const BebanIBTHarian = () => {
   // ** States
@@ -65,6 +66,7 @@ const BebanIBTHarian = () => {
   const debouncedSearch = useDebounce(search, 500);
 
   const { getBebanIBTList, bebanIBTList, loading, countData } = bebanApi();
+  const { updateIbt } = ibtApi();
 
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
@@ -78,9 +80,23 @@ const BebanIBTHarian = () => {
     event?.preventDefault();
 
     formMethods.handleSubmit(async (values) => {
-      // TODO: integrate with BE
-      console.log(values);
+      Object.values(values).forEach(async (value, index) => {
+        if (typeof value?.arus_mampu === "string") {
+          const data = bebanIBTList[index] as IBTList;
+          const { scada_b_1, scada_b_2, scada_b_3, amr_point, ...rest } =
+            data.ibt;
+
+          const payload = {
+            ...rest,
+            id_amr: amr_point,
+            scada: { b1: scada_b_1, b2: scada_b_2, b3: scada_b_3 },
+            arus_mampu: Number(value?.arus_mampu),
+          };
+          await updateIbt(payload, true);
+        }
+      });
       setIsEdit(false);
+      getBebanIBTList({ tanggal: convertDate(date) });
     })();
   };
 

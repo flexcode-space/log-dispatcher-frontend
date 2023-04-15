@@ -3,7 +3,14 @@ export interface TeganganBusbar {
   sub_sistem: string;
   color: string;
   gardu_induk: string;
-  trafo: string;
+  busbar: {
+    id: string
+    nama: string
+    scada_b_1: string
+    scada_b_2: string
+    scada_b_3: string
+    amr_point: string
+  };
   tegangan: number;
   arus_nominal: number;
   arus_mampu: number;

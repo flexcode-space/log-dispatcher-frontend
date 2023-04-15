@@ -49,14 +49,18 @@ const busbarApi = () => {
     }
   }, [])
 
-  const updateBusbar = useCallback(async (payload: any) => {
+  const updateBusbar = useCallback(async (payload: any, preventToast: boolean = false) => {
     setLoading(true)
 
     try {
       await Axios.put(endpoint, payload)
-      toast.success('Berhasil mengubah busbar')
+      if (!preventToast) {
+        toast.success('Berhasil mengubah busbar')
+      }
     } catch (error) {
-      toast.error('Gagal mengubah busbar')
+      if (!preventToast) {
+        toast.error('Gagal mengubah busbar')
+      }
     } finally {
       setLoading(false)
     }

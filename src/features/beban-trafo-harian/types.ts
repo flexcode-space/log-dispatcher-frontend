@@ -16,6 +16,10 @@ export interface BebanTrafo {
   trafo: {
     id: string
     nama: string
+    scada_b_1: string
+    scada_b_2: string
+    scada_b_3: string
+    amr_point: string
   };
   daya: number;
   rasio: string;

@@ -38,6 +38,7 @@ import FallbackSpinner from "src/@core/components/spinner";
 import { FormProvider, useForm } from "react-hook-form";
 import { StyledForm } from "src/components/form";
 import { InputField } from "src/components/input-field";
+import { penghantarApi } from "src/api/penghantar";
 
 const BebanPenghantarHarian = () => {
   // ** States
@@ -62,6 +63,8 @@ const BebanPenghantarHarian = () => {
     countData,
   } = bebanApi();
 
+  const { updatePenghantar } = penghantarApi();
+
   const debouncedSearch = useDebounce(search, 500);
 
   const formMethods = useForm({
@@ -72,9 +75,23 @@ const BebanPenghantarHarian = () => {
     event?.preventDefault();
 
     formMethods.handleSubmit(async (values) => {
-      // TODO: integrate with BE
-      console.log(values);
+      Object.values(values).forEach(async (value, index) => {
+        if (typeof value?.arus_mampu === "string") {
+          const data = bebanPenghantarList[index] as BebanPenghantarHarian;
+          const { scada_b_1, scada_b_2, scada_b_3, amr_point, ...rest } =
+            data.penghantar;
+
+          const payload = {
+            ...rest,
+            id_amr: amr_point,
+            scada: { b1: scada_b_1, b2: scada_b_2, b3: scada_b_3 },
+            arus_mampu: Number(value?.arus_mampu),
+          };
+          await updatePenghantar(payload, true);
+        }
+      });
       setIsEdit(false);
+      getBebanPenghantarHarian();
     })();
   };
 
