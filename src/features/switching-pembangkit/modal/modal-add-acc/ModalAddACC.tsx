@@ -18,12 +18,12 @@ import {
   columns,
   validationSchema,
   initialValues,
-} from "./ModalAddPerson.constant";
+} from "./ModalAddACC.constant";
 import { PlusCircleOutline } from "mdi-material-ui";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { switchingPembangkitApi } from "src/api/switching-pembangkit";
 
-const ModalAddPerson = () => {
+const ModalAddACC = () => {
   const modalSnapshot = useSnapshot(modal);
 
   const [isAdddData, setIsAddData] = useState<boolean>(false);
@@ -31,7 +31,7 @@ const ModalAddPerson = () => {
   const { getPersonList, personList, createPerson } = switchingPembangkitApi();
 
   const isOpen =
-    modalSnapshot.isOpen && modalSnapshot.target === "modal-add-person";
+    modalSnapshot.isOpen && modalSnapshot.target === "modal-add-acc";
 
   const formMethods = useForm({
     resolver: yupResolver(validationSchema),
@@ -43,9 +43,9 @@ const ModalAddPerson = () => {
     event?.preventDefault();
 
     formMethods.handleSubmit(async (values) => {
-      await createPerson(values);
+      await createPerson({ ...values, status: "acc" });
       setIsAddData(false);
-      getPersonList();
+      getPersonList({ status: "acc" });
       formMethods.reset({ ...initialValues });
     })();
   };
@@ -57,7 +57,7 @@ const ModalAddPerson = () => {
 
   useEffect(() => {
     if (modalSnapshot.isOpen) {
-      getPersonList();
+      getPersonList({ status: "acc" });
     }
   }, [modalSnapshot.isOpen]);
 
@@ -81,7 +81,7 @@ const ModalAddPerson = () => {
           >
             <Box sx={{ mb: 8, width: 1000 }}>
               <Typography variant="h5" sx={{ mb: 3, lineHeight: "2rem" }}>
-                person
+                ACC
               </Typography>
             </Box>
             <Grid container spacing={2} mt={1}>
@@ -138,4 +138,4 @@ const ModalAddPerson = () => {
   );
 };
 
-export default ModalAddPerson;
+export default ModalAddACC;

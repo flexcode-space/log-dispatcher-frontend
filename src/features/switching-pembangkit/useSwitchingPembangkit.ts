@@ -3,13 +3,21 @@ import { pembangkitApi } from 'src/api/pembangkit'
 import { STATUS } from './SwitchingPembangkit.constant'
 import { switchingPembangkitApi } from 'src/api/switching-pembangkit'
 
+type Person = {
+  id: string
+  name: string
+  status: string
+}
+
 export const useSwitchingPembengkit = () => {
   const { getPembangkitList, pembangkitList } = pembangkitApi()
   const { getPersonList, personList } = switchingPembangkitApi()
 
   const pembangkitOptions = pembangkitList.map(({ id, nama }) => ({ value: id, label: nama }))
   const statusOptions = STATUS.map((value) => ({ value: value, label: value }))
-  const personOptions = personList.map(({ id, name }) => ({ value: id, label: name }))
+  const bopsOptions = personList.filter((value: Person) => value?.status === 'bops').map(({ id, name }) => ({ value: id, label: name }))
+  const accOptions = personList.filter((value: Person) => value?.status === 'acc').map(({ id, name }) => ({ value: id, label: name }))
+  const operatorOptions = personList.filter((value: Person) => value?.status === 'operator').map(({ id, name }) => ({ value: id, label: name }))
   const jenisSwitchingOptions = [
     { value: 'naik-turun', label: 'Naik Turun' },
     { value: 'change-over', label: 'Change Over' },
@@ -21,7 +29,6 @@ export const useSwitchingPembengkit = () => {
     { value: 'Batubara', label: 'Batubara' },
   ]
 
-
   useEffect(() => {
     getPembangkitList()
     getPersonList()
@@ -32,6 +39,8 @@ export const useSwitchingPembengkit = () => {
     jenisSwitchingOptions,
     statusOptions,
     energiPrimerOptions,
-    personOptions
+    bopsOptions,
+    accOptions,
+    operatorOptions,
   }
 }

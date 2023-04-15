@@ -28,7 +28,9 @@ const AddLaporan = () => {
     pembangkitOptions,
     statusOptions,
     energiPrimerOptions,
-    personOptions,
+    bopsOptions,
+    accOptions,
+    operatorOptions,
   } = useSwitchingPembengkit();
 
   const { createSwitchingPembangkit } = switchingPembangkitApi();
@@ -116,21 +118,21 @@ const AddLaporan = () => {
                 <SelectInput
                   label="BOPS"
                   name="operator_bops_id"
-                  options={personOptions}
+                  options={bopsOptions}
                 />
               </Grid>
               <Grid item xs={12}>
                 <SelectInput
                   label="ACC"
                   name="operator_acc_id"
-                  options={personOptions}
+                  options={accOptions}
                 />
               </Grid>
               <Grid item xs={12}>
                 <SelectInput
                   label="Operator Pembangkit"
                   name="operator_pembangkit_id"
-                  options={personOptions}
+                  options={operatorOptions}
                 />
               </Grid>
               {jenis !== "change-over" ? (
