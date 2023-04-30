@@ -102,7 +102,9 @@ const SwitchingPembangkit = () => {
       "start-stop": (
         <Chip
           label={list.dispatch}
-          color={list?.dispatch === "start" ? "success" : "error"}
+          color={
+            list?.dispatch === "Start" ? "success" : "error"
+          }
         />
       ),
       "naik-turun": (
