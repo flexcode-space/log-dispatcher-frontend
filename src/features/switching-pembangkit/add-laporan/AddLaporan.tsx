@@ -91,7 +91,7 @@ const AddLaporan = () => {
                         label: "Start",
                       },
                       {
-                        value: "Start",
+                        value: "Stop",
                         label: "Stop",
                       },
                     ]}
