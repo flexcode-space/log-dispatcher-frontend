@@ -103,7 +103,7 @@ const SwitchingPembangkit = () => {
         <Chip
           label={list.dispatch}
           color={
-            list?.dispatch.toLocaleLowerCase() === "start" ? "success" : "error"
+            list?.dispatch === "Start" ? "success" : "error"
           }
         />
       ),
