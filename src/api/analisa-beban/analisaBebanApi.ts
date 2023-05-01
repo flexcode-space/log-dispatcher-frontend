@@ -15,10 +15,16 @@ const analisaBebanApi = () => {
   const [monitorIbtList, setMonitorIbtList] = useState<[]>([])
   const [monitorPengahantarList, setMonitorPenghantarList] = useState<[]>([])
   const [monitorTrafoList, setMonitorTrafoList] = useState<[]>([])
+  const [bebanSubsistemDetail, setBebanSubsistemDetail] = useState<[]>([])
 
   const getBebanSubsistemList = useCallback(async (params: ParamsAnalisaBeban = {}) => {
     const { data } = await Axios.get(`${endpoint}/subsistem`, { params })
     setBebanSubsistemList(data)
+  }, [])
+
+  const getBebanSubsistemDetailList = useCallback(async (id: string, params: ParamsAnalisaBeban = {}) => {
+    const { data } = await Axios.get(`${endpoint}/subsistem/${id}`, { params })
+    setBebanSubsistemDetail(data || [])
   }, [])
 
   const getMonitorBusbar = useCallback(async (params: ParamsAnalisaBeban = {}) => {
@@ -66,7 +72,9 @@ const analisaBebanApi = () => {
     getMonitorBusbar,
     getMonitorIbt,
     getMonitorPenghantar,
-    getMonitorTrafo
+    getMonitorTrafo,
+    getBebanSubsistemDetailList,
+    bebanSubsistemDetail
   }
 }
 
