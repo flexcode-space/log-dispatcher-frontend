@@ -40,7 +40,7 @@ const ModalFilter = () => {
   const {
     jenisSwitchingOptions,
     pembangkitOptions,
-    statusOptions,
+    // statusOptions,
     energiPrimerOptions,
     bopsOptions,
     accOptions,
@@ -208,7 +208,7 @@ const ModalFilter = () => {
                   />
                 </Grid>
               ) : null}
-              {jenis === "change-over" ? (
+              {/* {jenis === "change-over" ? (
                 <Grid item xs={4}>
                   <SelectInput
                     label="Status"
@@ -216,7 +216,7 @@ const ModalFilter = () => {
                     options={statusOptions}
                   />
                 </Grid>
-              ) : null}
+              ) : null} */}
 
               {jenis === "naik-turun" && (
                 <Grid item xs={4}>

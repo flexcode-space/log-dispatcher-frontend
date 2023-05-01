@@ -26,7 +26,7 @@ const AddLaporan = () => {
   const {
     jenisSwitchingOptions,
     pembangkitOptions,
-    statusOptions,
+    // statusOptions,
     energiPrimerOptions,
     bopsOptions,
     accOptions,
@@ -144,7 +144,7 @@ const AddLaporan = () => {
                   />
                 </Grid>
               ) : null}
-              {jenis === "change-over" ? (
+              {/* {jenis === "change-over" ? (
                 <Grid item xs={12}>
                   <SelectInput
                     label="Status"
@@ -152,7 +152,7 @@ const AddLaporan = () => {
                     options={statusOptions}
                   />
                 </Grid>
-              ) : null}
+              ) : null} */}
 
               {jenis === "naik-turun" && (
                 <Grid item xs={12}>
