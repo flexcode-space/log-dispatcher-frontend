@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { Card, CardContent } from "@mui/material";
 import { Typography, TextField } from "@mui/material";
+import Link from "next/link";
 import {
   Table,
   TableRow,
@@ -13,6 +14,7 @@ import {
 import { WrapperFilter } from "src/components/filter";
 import { analisaBebanApi } from "src/api/analisa-beban";
 import { formatDecimalNumber } from "src/utils/number";
+import { StyledLink } from "src/components/link";
 
 export const TableBebanSubsistem: React.FC<{ tanggal: string }> = ({
   tanggal,
@@ -133,7 +135,16 @@ export const TableBebanSubsistem: React.FC<{ tanggal: string }> = ({
 
                 return (
                   <TableRow>
-                    <TableCell>{value?.nama}</TableCell>
+                    <TableCell>
+                      <Link
+                        href={{
+                          pathname: `/beban/analisa-beban/${value?.id}`,
+                          query: { tanggal, nama: value?.nama },
+                        }}
+                      >
+                        <StyledLink>{value?.nama}</StyledLink>
+                      </Link>
+                    </TableCell>
                     <TableCell>
                       {formatDecimalNumber(value?.total.mw)}
                     </TableCell>
