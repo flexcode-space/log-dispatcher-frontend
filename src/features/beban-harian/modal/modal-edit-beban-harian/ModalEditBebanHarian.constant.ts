@@ -14,10 +14,8 @@ export const validationSchema = yup.object({
   nama_peralatan: yup.string().required('This field is required'),
   peralatan_id: yup.string().required('This field is required'),
   gardu_induk_id: yup.string().required('This field is required'),
-  subsistem_awal_id: yup.string().required('This field is required'),
-  subsistem_akhir_id: yup.string().required('This field is required'),
-  tanggal: yup.string().required('This field is required'),
-  waktu: yup.string().required('This field is required'),
+  // tanggal: yup.string().required('This field is required'),
+  // waktu: yup.string().required('This field is required'),
 })
 
 export const optionJenisPeralatan = [

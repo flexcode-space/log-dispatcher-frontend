@@ -51,7 +51,7 @@ const ModalEditBebanHarian = ({ date }: ModalEditBebanHarianProps) => {
   const jenisPeralatan = formMethods.watch("nama_peralatan");
   const garduIndukID = formMethods.watch("gardu_induk_id");
 
-  console.log('garduIndukID', garduIndukID)
+  // console.log("garduIndukID", garduIndukID);
 
   const {
     optionJenisPeralatan,
@@ -64,20 +64,21 @@ const ModalEditBebanHarian = ({ date }: ModalEditBebanHarianProps) => {
     event?.preventDefault();
 
     formMethods.handleSubmit(async (values) => {
-      const { tanggal, waktu, nama_peralatan, ...rest } = values;
+      console.log("values", values);
+      // const { tanggal, waktu, nama_peralatan, ...rest } = values;
 
-      const selectedPeralatan = peralatanOptions.filter(
-        ({ value }) => value === rest.peralatan_id
-      )[0];
+      // const selectedPeralatan = peralatanOptions.filter(
+      //   ({ value }) => value === rest.peralatan_id
+      // )[0];
 
-      const payload = {
-        ...rest,
-        nama_peralatan: `${nama_peralatan} - ${selectedPeralatan?.label}`,
-        tanggal: dayjs(tanggal).format("YYYY-MM-DD"),
-        waktu: dayjs(waktu).format("HH:mm"),
-      };
-      await createPindahBeban(payload);
-      onClickCloseModal();
+      // const payload = {
+      //   ...rest,
+      //   nama_peralatan: `${nama_peralatan} - ${selectedPeralatan?.label}`,
+      //   tanggal: dayjs(tanggal).format("YYYY-MM-DD"),
+      //   waktu: dayjs(waktu).format("HH:mm"),
+      // };
+      // await createPindahBeban(payload);
+      // onClickCloseModal();
     })();
   };
 
@@ -85,32 +86,6 @@ const ModalEditBebanHarian = ({ date }: ModalEditBebanHarianProps) => {
     closeModal();
     formMethods.reset({ ...initialValues });
   };
-
-  const renderMW = useMemo(
-    () => (
-      <Grid container spacing={3}>
-        {TIME.map((value) => (
-          <Grid item xs={1.5} key={value}>
-            <InputField name={value} label={value} />
-          </Grid>
-        ))}
-      </Grid>
-    ),
-    []
-  );
-
-  const renderMX = useMemo(
-    () => (
-      <Grid container spacing={3}>
-        {TIME.map((value) => (
-          <Grid item xs={1.5} key={value}>
-            <InputField name={value} label={value} />
-          </Grid>
-        ))}
-      </Grid>
-    ),
-    []
-  );
 
   // useEffect(() => {
   //   const selectedPeralatan = peralatanList.filter(
@@ -180,7 +155,7 @@ const ModalEditBebanHarian = ({ date }: ModalEditBebanHarianProps) => {
                       borderBottom: (theme) =>
                         `1px solid ${theme.palette.divider}`,
                     }}
-                    variant='fullWidth'
+                    variant="fullWidth"
                   >
                     {TAB_MENU.map(({ value, label }) => (
                       <Tab
@@ -191,10 +166,22 @@ const ModalEditBebanHarian = ({ date }: ModalEditBebanHarianProps) => {
                     ))}
                   </TabList>
                   <TabPanel sx={{ p: 0 }} value="mw">
-                    {renderMW}
+                    <Grid container spacing={3}>
+                      {TIME.map((value) => (
+                        <Grid item xs={1.5} key={value}>
+                          <InputField name={`mw_${value}`} label={value} />
+                        </Grid>
+                      ))}
+                    </Grid>
                   </TabPanel>
                   <TabPanel sx={{ p: 0 }} value="mx">
-                    {renderMX}
+                    <Grid container spacing={3}>
+                      {TIME.map((value) => (
+                        <Grid item xs={1.5} key={value}>
+                          <InputField name={`mx_${value}`} label={value} />
+                        </Grid>
+                      ))}
+                    </Grid>
                   </TabPanel>
                 </TabContext>
               </Grid>
