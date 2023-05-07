@@ -43,7 +43,6 @@ import FallbackSpinner from "src/@core/components/spinner";
 import dayjs, { Dayjs } from "dayjs";
 
 const BebanHarian = () => {
-  // ** States
   const [page, setPage] = useState<number>(0);
   const [rowsPerPage, setRowsPerPage] = useState<number>(10);
   const [date, setDate] = useState<Dayjs | null>(dayjs());
@@ -175,22 +174,30 @@ const BebanHarian = () => {
 
                               {value?.pembangkit?.tipe_jenis_pembangkit?.map(
                                 (
-                                  tipe_jenis_pembangkit: TipeJenisPembangkit, tipeIndex
+                                  tipe_jenis_pembangkit: TipeJenisPembangkit,
+                                  tipeIndex
                                 ) => (
                                   <Fragment key={tipeIndex}>
                                     {tipe_jenis_pembangkit?.kategori_pembangkit.map(
                                       (
-                                        kategori_pembangkit: KategoriPembangkit, kategoriIndex
+                                        kategori_pembangkit: KategoriPembangkit,
+                                        kategoriIndex
                                       ) => {
                                         const { total } = kategori_pembangkit;
                                         return (
-                                          <Fragment key={`kategori_pembangkit-${kategoriIndex}`}>
+                                          <Fragment
+                                            key={`kategori_pembangkit-${kategoriIndex}`}
+                                          >
                                             {kategori_pembangkit.data.map(
                                               (
-                                                data: DataKategoriPembangkit, indexData
+                                                data: DataKategoriPembangkit,
+                                                indexData
                                               ) => {
                                                 return (
-                                                  <TableRow key={`data-${indexData}`} hover>
+                                                  <TableRow
+                                                    key={`data-${indexData}`}
+                                                    hover
+                                                  >
                                                     <TableCell
                                                       size="small"
                                                       sx={{

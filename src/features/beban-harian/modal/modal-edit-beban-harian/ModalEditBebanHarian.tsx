@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useState } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import {
   Button,
@@ -14,7 +14,6 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useSnapshot } from "valtio";
 import { SelectInput } from "src/components/select-input";
 import { StyledForm } from "src/components/form";
-import { DatePicker, TimePicker } from "src/components/date-picker";
 import {
   initialValues,
   TAB_MENU,
@@ -38,7 +37,7 @@ const ModalEditBebanHarian = ({ date }: ModalEditBebanHarianProps) => {
 
   const [tab, setTab] = useState<"mw" | "mx">("mw");
 
-  const { createPindahBeban } = bebanApi();
+  const { updateBeban } = bebanApi();
 
   const isOpen = modalSnapshot.isOpen && modalSnapshot.target === "modal-edit";
 
@@ -48,37 +47,38 @@ const ModalEditBebanHarian = ({ date }: ModalEditBebanHarianProps) => {
     mode: "onSubmit",
   });
 
-  const jenisPeralatan = formMethods.watch("nama_peralatan");
-  const garduIndukID = formMethods.watch("gardu_induk_id");
+  const jenisPeralatan = formMethods.watch("jenis_peralatan");
+  const subsistemId = formMethods.watch("subsistem_id");
 
-  // console.log("garduIndukID", garduIndukID);
-
-  const {
-    optionJenisPeralatan,
-    peralatanOptions,
-    garduIndukOptions,
-    // peralatanList,
-  } = useModal(jenisPeralatan, garduIndukID);
+  const { optionJenisPeralatan, peralatanOptions, subsistemOptions } = useModal(
+    jenisPeralatan,
+    subsistemId
+  );
 
   const onSubmit = (event?: React.FormEvent<HTMLFormElement>) => {
     event?.preventDefault();
 
     formMethods.handleSubmit(async (values) => {
-      console.log("values", values);
-      // const { tanggal, waktu, nama_peralatan, ...rest } = values;
+      const { subsistem_id, jenis_peralatan, peralatan_id, ...rest } = values;
 
-      // const selectedPeralatan = peralatanOptions.filter(
-      //   ({ value }) => value === rest.peralatan_id
-      // )[0];
+      Object.keys(rest).forEach((key) => {
+        // @ts-ignore
+        if (rest[key] === undefined) {
+          // @ts-ignore
+          delete rest[key];
+        }
+      });
 
-      // const payload = {
-      //   ...rest,
-      //   nama_peralatan: `${nama_peralatan} - ${selectedPeralatan?.label}`,
-      //   tanggal: dayjs(tanggal).format("YYYY-MM-DD"),
-      //   waktu: dayjs(waktu).format("HH:mm"),
-      // };
-      // await createPindahBeban(payload);
-      // onClickCloseModal();
+      const payload = {
+        subsistem_id,
+        jenis_peralatan,
+        peralatan_id,
+        tanggal: dayjs(date).format("YYYY-MM-DD"),
+        data: rest,
+      };
+      updateBeban(payload).then(() => {
+        onClickCloseModal();
+      });
     })();
   };
 
@@ -86,17 +86,6 @@ const ModalEditBebanHarian = ({ date }: ModalEditBebanHarianProps) => {
     closeModal();
     formMethods.reset({ ...initialValues });
   };
-
-  // useEffect(() => {
-  //   const selectedPeralatan = peralatanList.filter(
-  //     ({ id }) => id === peralatanId
-  //   )[0];
-  //   // @ts-ignore
-  //   formMethods.setValue(
-  //     "subsistem_awal_id",
-  //     selectedPeralatan?.sub_sistem?.id
-  //   );
-  // }, [peralatanId]);
 
   return (
     <Dialog
@@ -124,15 +113,15 @@ const ModalEditBebanHarian = ({ date }: ModalEditBebanHarianProps) => {
             <Grid container spacing={3} mt={1}>
               <Grid item xs={12} sm={4}>
                 <SelectInput
-                  label="Gardu Induk"
-                  name="gardu_induk_id"
-                  options={garduIndukOptions}
+                  label="Subsistem"
+                  name="subsistem_id"
+                  options={subsistemOptions}
                 />
               </Grid>
               <Grid item xs={12} sm={4}>
                 <SelectInput
                   label="Jenis Peralatan"
-                  name="nama_peralatan"
+                  name="jenis_peralatan"
                   options={optionJenisPeralatan}
                 />
               </Grid>
@@ -169,7 +158,11 @@ const ModalEditBebanHarian = ({ date }: ModalEditBebanHarianProps) => {
                     <Grid container spacing={3}>
                       {TIME.map((value) => (
                         <Grid item xs={1.5} key={value}>
-                          <InputField name={`mw_${value}`} label={value} />
+                          <InputField
+                            name={`mw_${value.replace(".", "")}`}
+                            label={value}
+                            type="number"
+                          />
                         </Grid>
                       ))}
                     </Grid>
@@ -178,7 +171,11 @@ const ModalEditBebanHarian = ({ date }: ModalEditBebanHarianProps) => {
                     <Grid container spacing={3}>
                       {TIME.map((value) => (
                         <Grid item xs={1.5} key={value}>
-                          <InputField name={`mx_${value}`} label={value} />
+                          <InputField
+                            name={`mx_${value.replace(".", "")}`}
+                            label={value}
+                            type="number"
+                          />
                         </Grid>
                       ))}
                     </Grid>

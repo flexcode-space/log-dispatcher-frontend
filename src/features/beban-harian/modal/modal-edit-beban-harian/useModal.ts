@@ -1,22 +1,22 @@
 import { useEffect } from "react";
 import { optionJenisPeralatan } from './ModalEditBebanHarian.constant'
 import { peralatanApi } from "src/api/peralatan";
-import { garduIndukApi } from "src/api/gardu-induk";
+import { subsistemApi } from "src/api/subsistem";
 
-export const useModal = (jenisPeralatan: string, garduIndukID: string) => {
+export const useModal = (jenisPeralatan: string, subsistemID: string) => {
   const { getPeralatanByPath, peralatanList } = peralatanApi()
-  const { garduIndukList, getGarduIndukList } = garduIndukApi()
+  const { getSubsistemList, subsistemList } = subsistemApi()
 
   const peralatanOptions = peralatanList.map(({ id, nama }) => ({ value: id, label: nama }))
-  const garduIndukOptions = garduIndukList.map(({ id, nama }) => ({ value: id, label: nama }))
+  const subsistemOptions = subsistemList.map(({ id, nama }) => ({ value: id, label: nama }))
 
   useEffect(() => {
-    getGarduIndukList()
+    getSubsistemList()
   }, [])
 
   useEffect(() => {
     if (!!jenisPeralatan) {
-      getPeralatanByPath(`${jenisPeralatan}/gardu-induk/${garduIndukID}`)
+      getPeralatanByPath(`${jenisPeralatan}/sub-sistem/${subsistemID}`)
     }
   }, [jenisPeralatan])
 
@@ -24,6 +24,6 @@ export const useModal = (jenisPeralatan: string, garduIndukID: string) => {
     peralatanList,
     peralatanOptions,
     optionJenisPeralatan,
-    garduIndukOptions
+    subsistemOptions
   };
 };

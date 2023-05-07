@@ -40,6 +40,18 @@ const bebanApi = () => {
     }
   }, []);
 
+  const updateBeban = useCallback(async (payload: any) => {
+    setLoading(true)
+    try {
+      await Axios.put(endpoint, payload);
+      toast.success('Berhasil mengubah Beban Harian')
+    } catch (error) {
+      toast.error('Gagal mengubah Beban Harian')
+    } finally {
+      setLoading(false)
+    }
+  }, []);
+
   const getBebanIBTList = useCallback(async (params: ParamsBebanList = {}) => {
     setLoading(true);
 
@@ -138,6 +150,7 @@ const bebanApi = () => {
     createPindahBeban,
     getReportBeban,
     loadingDownload,
+    updateBeban
   };
 };
 
