@@ -62,7 +62,7 @@ const ModalAddUFR = () => {
       };
 
       if (modalSnapshot.id) {
-        await updateDefense("ufr", [{ ...payload, id: modalSnapshot.id }]);
+        await updateDefense("ufr", { ...payload, id: modalSnapshot.id });
       } else {
         await createDefense("ufr", [payload]);
       }
