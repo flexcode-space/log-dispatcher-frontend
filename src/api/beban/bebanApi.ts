@@ -8,6 +8,13 @@ interface ParamsBebanList extends Params {
   tanggal?: string;
 }
 
+interface ParamsBebanDetail {
+  tanggal: string;
+  jenis_peralatan: string;
+  peralatan_id: string;
+  subsistem_id: string;
+}
+
 interface ParamsReportBeban {
   tanggal_start: string
   tanggal_end: string
@@ -35,6 +42,19 @@ const bebanApi = () => {
       } = await Axios.get(endpoint, { params });
       setBebanList(data || []);
       setTotalData(other);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  const getBebanDetail = useCallback(async (params: ParamsBebanDetail) => {
+    setLoading(true);
+
+    try {
+      const {
+        data
+      } = await Axios.get(`${endpoint}/update`, { params });
+      return data
     } finally {
       setLoading(false);
     }
@@ -150,7 +170,8 @@ const bebanApi = () => {
     createPindahBeban,
     getReportBeban,
     loadingDownload,
-    updateBeban
+    updateBeban,
+    getBebanDetail,
   };
 };
 

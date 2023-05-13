@@ -12,6 +12,7 @@ type InputFieldProps = {
   placeholder?: string;
   type?: string;
   disabled?: boolean;
+  InputLabelProps?: object;
 };
 
 interface OutlinedInputFieldProps extends InputFieldProps {
@@ -25,6 +26,7 @@ export const InputField = ({
   placeholder,
   type = "text",
   disabled,
+  InputLabelProps,
 }: InputFieldProps) => {
   const {
     control,
@@ -45,6 +47,7 @@ export const InputField = ({
             label={label}
             placeholder={placeholder}
             disabled={disabled}
+            InputLabelProps={InputLabelProps}
           />
         )}
       />
