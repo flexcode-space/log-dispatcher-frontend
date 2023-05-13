@@ -8,6 +8,6 @@ export const copyClipboard = () => {
     selection.addRange(range);
     document.execCommand("copy");
   } else {
-    console.warn("Browser ini tidak support untuk salin laporan");
+    alert("Browser ini tidak support untuk salin laporan");
   }
 }
