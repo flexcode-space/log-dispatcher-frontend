@@ -24,12 +24,14 @@ const RekorBeban = () => {
               <Card title={value?.nama} value={value} />
             </Grid>
           ))}
-          <Grid item xs={3} key={bebanSubsistemList?.total?.id}>
-            <Card
-              title={bebanSubsistemList?.total?.nama}
-              value={bebanSubsistemList?.total}
-            />
-          </Grid>
+          {bebanSubsistemList?.total && (
+            <Grid item xs={3} key={bebanSubsistemList?.total?.id}>
+              <Card
+                title={bebanSubsistemList?.total?.nama}
+                value={bebanSubsistemList?.total}
+              />
+            </Grid>
+          )}
         </Grid>
       </Grid>
     </>

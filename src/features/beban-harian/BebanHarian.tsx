@@ -41,8 +41,12 @@ import {
 import { TIME } from "src/constants/time";
 import FallbackSpinner from "src/@core/components/spinner";
 import dayjs, { Dayjs } from "dayjs";
+import { useSnapshot } from "valtio";
+import { reloadPage } from "src/state/reloadPage";
 
 const BebanHarian = () => {
+  const reloadPageSnap = useSnapshot(reloadPage);
+
   const [page, setPage] = useState<number>(0);
   const [rowsPerPage, setRowsPerPage] = useState<number>(10);
   const [date, setDate] = useState<Dayjs | null>(dayjs());
@@ -61,6 +65,12 @@ const BebanHarian = () => {
   useEffect(() => {
     getBebanList({ tanggal: date ? dayjs(date).format("YYYY-MM-DD") : "" });
   }, [date]);
+
+  useEffect(() => {
+    if (reloadPageSnap.target === "beban-harian") {
+      getBebanList({ tanggal: date ? dayjs(date).format("YYYY-MM-DD") : "" });
+    }
+  }, [reloadPageSnap.id]);
 
   return (
     <>

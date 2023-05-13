@@ -57,8 +57,8 @@ const pembangkitApi = () => {
     try {
       await Axios.post(`${endpoint}/jenis`, payload)
       toast.success('Berhasil menambahkan jenis pembangkit')
-    } finally {
-      toast.success('Gagal menambahkan jenis pembangkit')
+    } catch (error) {
+      toast.error('Gagal menambahkan jenis pembangkit')
     }
   }, [])
 
@@ -79,8 +79,8 @@ const pembangkitApi = () => {
     try {
       await Axios.post(`${endpoint}/jenis/tipe`, payload)
       toast.success('Berhasil menambahkan jenis tipe pembangkit')
-    } finally {
-      toast.success('Gagal menambahkan jenis tipe pembangkit')
+    } catch (error) {
+      toast.error('Gagal menambahkan jenis tipe pembangkit')
     }
   }, [])
 
@@ -101,8 +101,8 @@ const pembangkitApi = () => {
     try {
       await Axios.post(`${endpoint}/bahan-bakar`, payload)
       toast.success('Berhasil menambahkan bahan bakar')
-    } finally {
-      toast.success('Gagal menambahkan bahan bakar')
+    } catch (error) {
+      toast.error('Gagal menambahkan bahan bakar')
     }
   }, [])
 
@@ -123,7 +123,7 @@ const pembangkitApi = () => {
     try {
       await Axios.post(`${endpoint}/kategori`, payload)
       toast.success('Berhasil menambahkan kategori pembangkit')
-    } finally {
+    } catch (error) {
       toast.error('Gagal menambahkan kategori pembangkit')
     }
   }, [])

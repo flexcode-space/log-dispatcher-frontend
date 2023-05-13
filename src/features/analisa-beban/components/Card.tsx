@@ -46,6 +46,9 @@ const CardStatsCharacter = ({ title, value }: CardProps) => {
                   >
                     {`${value?.siang?.mw} MW`}
                   </Typography>
+                  <Typography variant="subtitle1">
+                    {value?.siang?.tanggal}
+                  </Typography>
                 </Grid>
                 <Grid item xs={6}>
                   <Typography variant="subtitle1">
@@ -56,6 +59,9 @@ const CardStatsCharacter = ({ title, value }: CardProps) => {
                     sx={{ fontSize: "24px", fontWeight: 500 }}
                   >
                     {`${value?.malam?.mw} MW`}
+                  </Typography>
+                  <Typography variant="subtitle1">
+                    {value?.malam?.tanggal}
                   </Typography>
                 </Grid>
               </div>

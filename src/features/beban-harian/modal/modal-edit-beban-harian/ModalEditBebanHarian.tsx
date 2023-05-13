@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import {
   Button,
@@ -27,6 +27,7 @@ import { TIME } from "src/constants/time";
 import { InputField } from "src/components/input-field";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 import { TabName } from "src/components/tab";
+import { setReloadPage } from "src/state/reloadPage";
 
 type ModalEditBebanHarianProps = {
   date: Dayjs | null;
@@ -37,7 +38,7 @@ const ModalEditBebanHarian = ({ date }: ModalEditBebanHarianProps) => {
 
   const [tab, setTab] = useState<"mw" | "mx">("mw");
 
-  const { updateBeban } = bebanApi();
+  const { updateBeban, getBebanDetail } = bebanApi();
 
   const isOpen = modalSnapshot.isOpen && modalSnapshot.target === "modal-edit";
 
@@ -49,6 +50,7 @@ const ModalEditBebanHarian = ({ date }: ModalEditBebanHarianProps) => {
 
   const jenisPeralatan = formMethods.watch("jenis_peralatan");
   const subsistemId = formMethods.watch("subsistem_id");
+  const peralatanId = formMethods.watch("peralatan_id");
 
   const { optionJenisPeralatan, peralatanOptions, subsistemOptions } = useModal(
     jenisPeralatan,
@@ -78,6 +80,7 @@ const ModalEditBebanHarian = ({ date }: ModalEditBebanHarianProps) => {
       };
       updateBeban(payload).then(() => {
         onClickCloseModal();
+        setReloadPage('beban-harian')
       });
     })();
   };
@@ -86,6 +89,34 @@ const ModalEditBebanHarian = ({ date }: ModalEditBebanHarianProps) => {
     closeModal();
     formMethods.reset({ ...initialValues });
   };
+
+  useEffect(() => {
+    formMethods.setValue("jenis_peralatan", "");
+    formMethods.setValue("peralatan_id", "");
+  }, [subsistemId]);
+
+  useEffect(() => {
+    if (peralatanId) {
+      const payload = {
+        jenis_peralatan: jenisPeralatan,
+        subsistem_id: subsistemId,
+        peralatan_id: peralatanId,
+        tanggal: dayjs(date).format("YYYY-MM-DD"),
+      };
+      getBebanDetail(payload).then((result: any) => {
+        if (result) {
+          Object.values(TIME).map((value) => {
+            const mw = "mw_" + value.replace(".", "");
+            const mx = "mx_" + value.replace(".", "");
+            // @ts-ignore
+            formMethods.setValue(mw, (result as any)[mw]!);
+            // @ts-ignore
+            formMethods.setValue(mx, (result as any)[mx]!);
+          });
+        }
+      });
+    }
+  }, [peralatanId]);
 
   return (
     <Dialog
@@ -162,6 +193,7 @@ const ModalEditBebanHarian = ({ date }: ModalEditBebanHarianProps) => {
                             name={`mw_${value.replace(".", "")}`}
                             label={value}
                             type="number"
+                            InputLabelProps={{ shrink: true }}
                           />
                         </Grid>
                       ))}
@@ -175,6 +207,7 @@ const ModalEditBebanHarian = ({ date }: ModalEditBebanHarianProps) => {
                             name={`mx_${value.replace(".", "")}`}
                             label={value}
                             type="number"
+                            InputLabelProps={{ shrink: true }}
                           />
                         </Grid>
                       ))}

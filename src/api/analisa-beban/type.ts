@@ -19,6 +19,7 @@ export interface PagiOrSiangOrMalam {
   jam: string;
   mw: number;
   mvar: number;
+  tanggal: string
 }
 
 export interface MonitorBusbar {
