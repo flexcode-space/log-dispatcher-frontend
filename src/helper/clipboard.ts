@@ -1,7 +1,13 @@
-export const copyClipboard = (value: string) => {
-  const regex = /(<([^>]+)>)/gi;
-
-  navigator.clipboard.writeText(value.replace(regex, "")).then(() => {
-    alert(`Berhasil salin`);
-  });
+export const copyClipboard = () => {
+  const node = document.getElementById('textLaporan') as HTMLElement;
+  if (window.getSelection) {
+    const selection = window.getSelection() as Selection;
+    const range = document.createRange();
+    range.selectNodeContents(node);
+    selection.removeAllRanges();
+    selection.addRange(range);
+    document.execCommand("copy");
+  } else {
+    alert("Browser ini tidak support untuk salin laporan");
+  }
 }
