@@ -63,7 +63,7 @@ const ModalGenerateLaporan = ({ value, title }: ModalAddProps) => {
           type="submit"
           id="btn-copy"
           disabled={!value}
-          onClick={() => copyClipboard(value)}
+          onClick={() => copyClipboard()}
         >
           Salin Laporan
         </Button>
