@@ -1,4 +1,4 @@
-import { useState, ChangeEvent, useEffect } from "react";
+import { useState, ChangeEvent, useEffect, useContext } from "react";
 import {
   Box,
   Card,
@@ -34,8 +34,11 @@ import FallbackSpinner from "src/@core/components/spinner";
 import { pencatatanDefenseApi } from "src/api/pencatatan-defense";
 import dayjs from "dayjs";
 import { ModalChangeStatus } from "../modal/modal-change-status";
+import { AbilityContext } from "src/layouts/components/acl/Can";
 
 const UfrComponent = () => {
+  const ability = useContext(AbilityContext);
+
   const reloadPageSnap = useSnapshot(reloadPage);
   const { data } = useSnapshot(ufr);
 
@@ -128,17 +131,19 @@ const UfrComponent = () => {
                     </IconButton>
                     Download Laporan
                   </Button>
-                  <Button
-                    sx={{ mb: 2 }}
-                    size="small"
-                    variant="contained"
-                    onClick={() => openModal("modal-add-ufr")}
-                  >
-                    <IconButton>
-                      <Plus />
-                    </IconButton>
-                    Tambah Laporan
-                  </Button>
+                  {ability?.can("create", "defense-schema-page") ? (
+                    <Button
+                      sx={{ mb: 2 }}
+                      size="small"
+                      variant="contained"
+                      onClick={() => openModal("modal-add-ufr")}
+                    >
+                      <IconButton>
+                        <Plus />
+                      </IconButton>
+                      Tambah Laporan
+                    </Button>
+                  ) : null}
                 </div>
               </WrapperFilter>
               <TableContainer>
@@ -256,20 +261,32 @@ const UfrComponent = () => {
                                 <Box
                                   sx={{ display: "flex", alignItems: "center" }}
                                 >
-                                  <IconButton
-                                    onClick={() => {
-                                      openModal("modal-add-ufr", list.id);
-                                      selectData(list);
-                                    }}
-                                  >
-                                    <PencilOutline />
-                                  </IconButton>
+                                  {ability?.can(
+                                    "update",
+                                    "defense-schema-page"
+                                  ) ? (
+                                    <IconButton
+                                      onClick={() => {
+                                        openModal("modal-add-ufr", list.id);
+                                        selectData(list);
+                                      }}
+                                    >
+                                      <PencilOutline />
+                                    </IconButton>
+                                  ) : null}
                                 </Box>
                               </TableCell>
                               <TableCell size="small">
                                 <Button
                                   variant="contained"
                                   onClick={() => {
+                                    if (
+                                      ability?.cannot(
+                                        "update",
+                                        "defense-schema-page"
+                                      )
+                                    )
+                                      return;
                                     selectData(list);
                                     openModal(
                                       "modal-change-status",

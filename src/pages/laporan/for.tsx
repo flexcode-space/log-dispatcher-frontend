@@ -12,4 +12,9 @@ const LaporanForPage = () => {
   );
 };
 
+LaporanForPage.acl = {
+  action: "read",
+  subject: "laporan-for-page",
+};
+
 export default LaporanForPage;

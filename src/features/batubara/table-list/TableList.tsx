@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import {
   Box,
   Card,
@@ -24,12 +24,15 @@ import { useSnapshot } from "valtio";
 import { reloadPage } from "src/state/reloadPage";
 import { batubaraApi } from "src/api/batubara";
 import { BatubaraList } from "../types";
+import { AbilityContext } from "src/layouts/components/acl/Can";
 
 type TableListProps = {
   type: string;
 };
 
 const TableList = ({ type }: TableListProps) => {
+  const ability = useContext(AbilityContext);
+
   const reloadPageSnap = useSnapshot(reloadPage);
 
   const [search, setSearch] = useState<string>("");
@@ -101,16 +104,18 @@ const TableList = ({ type }: TableListProps) => {
                   )}
                 />
               </LocalizationProvider>
-              <Button
-                sx={{ mb: 2 }}
-                onClick={() => {
-                  openModal("modal-add-batubara");
-                  selectType(type);
-                }}
-                variant="outlined"
-              >
-                Tambah Data
-              </Button>
+              {ability?.can("create", "batubara-page") ? (
+                <Button
+                  sx={{ mb: 2 }}
+                  onClick={() => {
+                    openModal("modal-add-batubara");
+                    selectType(type);
+                  }}
+                  variant="outlined"
+                >
+                  Tambah Data
+                </Button>
+              ) : null}
             </div>
           </WrapperFilter>
           <DataGrid

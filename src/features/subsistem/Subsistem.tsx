@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import {
   Box,
   Card,
@@ -26,8 +26,11 @@ import { subsistemApi } from "src/api/subsistem";
 import { useDebounce } from "src/hooks/useDebounce";
 import { openModal, modal, reloadPage, closeModal } from "src/state/modal";
 import { ModalDelete } from "src/components/modal";
+import { AbilityContext } from "src/layouts/components/acl/Can";
 
 const Subsistem = () => {
+  const ability = useContext(AbilityContext);
+
   const modalSnapshot = useSnapshot(modal);
   const [limit, setLimit] = useState<number>(10);
   const [page, setPage] = useState<number>(1);
@@ -61,16 +64,20 @@ const Subsistem = () => {
       headerName: "Aksi",
       renderCell: ({ row }: CellType) => (
         <Box sx={{ display: "flex", alignItems: "center" }}>
-          <IconButton onClick={() => openModal("modal-subsistem", row?.id)}>
-            <PencilOutline />
-          </IconButton>
-          <IconButton>
-            <DeleteOutline
-              onClick={() => {
-                openModal("modal-delete", row.id);
-              }}
-            />
-          </IconButton>
+          {ability?.can("update", "subsistem-page") ? (
+            <IconButton onClick={() => openModal("modal-subsistem", row?.id)}>
+              <PencilOutline />
+            </IconButton>
+          ) : null}
+          {ability?.can("delete", "subsistem-page") ? (
+            <IconButton>
+              <DeleteOutline
+                onClick={() => {
+                  openModal("modal-delete", row.id);
+                }}
+              />
+            </IconButton>
+          ) : null}
         </Box>
       ),
     },
@@ -114,13 +121,15 @@ const Subsistem = () => {
                   onChange={(e) => setSearch(e.target.value)}
                 />
 
-                <Button
-                  sx={{ mb: 2 }}
-                  onClick={() => openModal("modal-subsistem")}
-                  variant="contained"
-                >
-                  Tambah Subsistem
-                </Button>
+                {ability?.can("create", "subsistem-page") ? (
+                  <Button
+                    sx={{ mb: 2 }}
+                    onClick={() => openModal("modal-subsistem")}
+                    variant="contained"
+                  >
+                    Tambah Subsistem
+                  </Button>
+                ) : null}
               </WrapperFilter>
               <Box>
                 <DataGrid

@@ -12,4 +12,9 @@ const AirPage = () => {
   );
 };
 
+AirPage.acl = {
+  action: 'read',
+  subject: 'air-page'
+}
+
 export default AirPage;

@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 import {
   Box,
   Card,
@@ -37,8 +37,11 @@ import { useSnapshot } from "valtio";
 import { reloadPage } from "src/state/reloadPage";
 import FallbackSpinner from "src/@core/components/spinner";
 import ModalDownload from "./modal/ModalDownload";
+import { AbilityContext } from "src/layouts/components/acl/Can";
 
 const PengaturanTegangan = () => {
+  const ability = useContext(AbilityContext);
+
   const router = useRouter();
   const reloadPageSnap = useSnapshot(reloadPage);
 
@@ -73,10 +76,15 @@ const PengaturanTegangan = () => {
             }
           />
         </Grid>
-        <Grid item xs={3}>
-          <AddLaporan />
-        </Grid>
-        <Grid item xs={9}>
+        {ability?.can("create", "pengaturan-tegangan-page") ? (
+          <Grid item xs={3}>
+            <AddLaporan />
+          </Grid>
+        ) : null}
+        <Grid
+          item
+          xs={ability?.can("create", "pengaturan-tegangan-page") ? 9 : 12}
+        >
           <Card>
             <CardHeader
               title={
@@ -112,18 +120,20 @@ const PengaturanTegangan = () => {
                     </IconButton>
                     Download laporan
                   </Button>
-                  <Button
-                    sx={{ mb: 2 }}
-                    variant="outlined"
-                    onClick={() =>
-                      router.push("/pengaturan-tegangan/konfigurasi")
-                    }
-                  >
-                    <IconButton>
-                      <KonfigurasiIcon />
-                    </IconButton>
-                    Konfigurasi
-                  </Button>
+                  {ability?.can("create", "pengaturan-tegangan-page") ? (
+                    <Button
+                      sx={{ mb: 2 }}
+                      variant="outlined"
+                      onClick={() =>
+                        router.push("/pengaturan-tegangan/konfigurasi")
+                      }
+                    >
+                      <IconButton>
+                        <KonfigurasiIcon />
+                      </IconButton>
+                      Konfigurasi
+                    </Button>
+                  ) : null}
                 </div>
               }
             />
@@ -200,26 +210,31 @@ const PengaturanTegangan = () => {
                                   {value.keterangan}
                                 </TableCell>
                                 <TableCell size="small">
-                                  <Box
-                                    sx={{
-                                      display: "flex",
-                                      alignItems: "center",
-                                    }}
-                                  >
-                                    <IconButton
-                                      onClick={() => {
-                                        openModal(
-                                          "modal-edit-pengaturan-tegangan",
-                                          value.id
-                                        );
-                                        selectData(
-                                          value as PengaturanTeganganList
-                                        );
+                                  {ability?.can(
+                                    "update",
+                                    "pengaturan-tegangan-page"
+                                  ) ? (
+                                    <Box
+                                      sx={{
+                                        display: "flex",
+                                        alignItems: "center",
                                       }}
                                     >
-                                      <PencilOutline />
-                                    </IconButton>
-                                  </Box>
+                                      <IconButton
+                                        onClick={() => {
+                                          openModal(
+                                            "modal-edit-pengaturan-tegangan",
+                                            value.id
+                                          );
+                                          selectData(
+                                            value as PengaturanTeganganList
+                                          );
+                                        }}
+                                      >
+                                        <PencilOutline />
+                                      </IconButton>
+                                    </Box>
+                                  ) : null}
                                 </TableCell>
                               </TableRow>
                             )

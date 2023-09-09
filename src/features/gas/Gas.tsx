@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import {
   Card,
   CardContent,
@@ -36,8 +36,11 @@ import { useSnapshot } from "valtio";
 import DownloadIcon from "src/assets/icons/download-green-icon.svg";
 import { openModal } from "src/state/modal";
 import ModalDownload from "./modal/ModalDownload";
+import { AbilityContext } from "src/layouts/components/acl/Can";
 
 const Gas = () => {
+  const ability = useContext(AbilityContext);
+
   const reloadPageSnap = useSnapshot(reloadPage);
 
   const [date, setDate] = useState<Dayjs | null>(dayjs());
@@ -155,32 +158,36 @@ const Gas = () => {
                             )}
                           />
                         </LocalizationProvider>
-                        {!isEdit ? (
-                          <Button
-                            sx={{ mb: 2 }}
-                            onClick={() => setIsEdit(true)}
-                            variant="outlined"
-                          >
-                            Edit Data
-                          </Button>
-                        ) : (
+                        {ability?.can("update", "gas-page") ? (
                           <>
-                            <Button
-                              sx={{ mb: 2, backgroundColor: "#6D788D" }}
-                              onClick={() => setIsEdit(false)}
-                              variant="contained"
-                            >
-                              Batal
-                            </Button>
-                            <Button
-                              sx={{ mb: 2 }}
-                              type="submit"
-                              variant="contained"
-                            >
-                              Simpan
-                            </Button>
+                            {!isEdit ? (
+                              <Button
+                                sx={{ mb: 2 }}
+                                onClick={() => setIsEdit(true)}
+                                variant="outlined"
+                              >
+                                Edit Data
+                              </Button>
+                            ) : (
+                              <>
+                                <Button
+                                  sx={{ mb: 2, backgroundColor: "#6D788D" }}
+                                  onClick={() => setIsEdit(false)}
+                                  variant="contained"
+                                >
+                                  Batal
+                                </Button>
+                                <Button
+                                  sx={{ mb: 2 }}
+                                  type="submit"
+                                  variant="contained"
+                                >
+                                  Simpan
+                                </Button>
+                              </>
+                            )}
                           </>
-                        )}
+                        ) : null}
                       </div>
                     </WrapperFilter>
                   }

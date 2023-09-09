@@ -12,4 +12,9 @@ const AnalisaBebanPage = () => {
   );
 };
 
+AnalisaBebanPage.acl = {
+  action: 'read',
+  subject: 'analisa-beban-page',
+}
+
 export default AnalisaBebanPage;

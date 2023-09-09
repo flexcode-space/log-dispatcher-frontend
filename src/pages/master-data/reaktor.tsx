@@ -12,4 +12,9 @@ const ReaktorPage = () => {
   );
 };
 
+ReaktorPage.acl = {
+  action: 'read',
+  subject: 'reaktor-page',
+}
+
 export default ReaktorPage;

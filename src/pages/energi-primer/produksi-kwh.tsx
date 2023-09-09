@@ -12,4 +12,9 @@ const ProduksiKwhPage = () => {
   );
 };
 
+ProduksiKwhPage.acl = {
+  action: 'read',
+  subject: 'produksi-kwh-page'
+}
+
 export default ProduksiKwhPage;

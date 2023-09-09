@@ -12,4 +12,9 @@ const GarduIndukPage = () => {
   );
 };
 
+GarduIndukPage.acl = {
+  action: 'read',
+  subject: 'gardu-induk-page',
+}
+
 export default GarduIndukPage;

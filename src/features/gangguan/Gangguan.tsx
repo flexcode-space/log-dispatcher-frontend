@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import {
   Grid,
   Typography,
@@ -50,8 +50,11 @@ import { MenuPengaturanGangguan } from "./components/menu-pengaturan-gangguan";
 import { ModalReleAnnounciator } from "./modal/modal-rele-announciator";
 import { ModalJenisGangguan } from "./modal/modal-jenis-gangguan";
 import { ModalFilter } from "./modal/ModalFilter";
+import { AbilityContext } from "src/layouts/components/acl/Can";
 
 const Gangguan = () => {
+  const ability = useContext(AbilityContext);
+
   const reloadPageSnap = useSnapshot(reloadPage);
 
   const [date, setDate] = useState<Dayjs | null>(dayjs());
@@ -187,15 +190,19 @@ const Gangguan = () => {
                     </IconButton>
                     Filter
                   </Button>
-                  <MenuPengaturanGangguan />
-                  <Button
-                    variant="contained"
-                    size="small"
-                    sx={{ height: "40px" }}
-                    onClick={() => openModal("modal-add-gangguan")}
-                  >
-                    Tambah Pencatatan Gangguan
-                  </Button>
+                  {ability?.can("create", "gangguan-page") ? (
+                    <>
+                      <MenuPengaturanGangguan />
+                      <Button
+                        variant="contained"
+                        size="small"
+                        sx={{ height: "40px" }}
+                        onClick={() => openModal("modal-add-gangguan")}
+                      >
+                        Tambah Pencatatan Gangguan
+                      </Button>
+                    </>
+                  ) : null}
                 </div>
               }
             />
@@ -277,17 +284,22 @@ const Gangguan = () => {
                                 {list.penyebab}
                               </TableCell>
                               <TableCell size="small">
-                                <Box display="flex">
-                                  <IconButton
-                                    onClick={() => {
-                                      openModal("modal-add-gangguan", list.id);
-                                      selectData(list);
-                                    }}
-                                  >
-                                    <Pencil />
-                                  </IconButton>
-                                  <MenuMore data={list} />
-                                </Box>
+                                {ability?.can("update", "gangguan-page") ? (
+                                  <Box display="flex">
+                                    <IconButton
+                                      onClick={() => {
+                                        openModal(
+                                          "modal-add-gangguan",
+                                          list.id
+                                        );
+                                        selectData(list);
+                                      }}
+                                    >
+                                      <Pencil />
+                                    </IconButton>
+                                    <MenuMore data={list} />
+                                  </Box>
+                                ) : null}
                               </TableCell>
                             </TableRow>
                           )

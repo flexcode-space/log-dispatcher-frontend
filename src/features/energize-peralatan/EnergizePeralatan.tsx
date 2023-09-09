@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import {
   Card,
   CardContent,
@@ -31,8 +31,11 @@ import { selectData } from "src/state/energizePeralatan";
 import dayjs, { Dayjs } from "dayjs";
 import { reloadPage } from "src/state/reloadPage";
 import ModalDownload from "./modal/ModalDownload";
+import { AbilityContext } from "src/layouts/components/acl/Can";
 
 const EnergizePeralatan = () => {
+  const ability = useContext(AbilityContext);
+
   const reloadPageSnap = useSnapshot(reloadPage);
   const [date, setDate] = useState<Dayjs | null>(dayjs());
   const [search, setSearch] = useState<string>("");
@@ -60,14 +63,16 @@ const EnergizePeralatan = () => {
       renderCell: ({ row }: CellType) => {
         return (
           <Box sx={{ display: "flex", alignItems: "center" }}>
-            <IconButton
-              onClick={() => {
-                openModal("modal-energize-peralatan", row?.id);
-                selectData(row as EnergizeList);
-              }}
-            >
-              <PencilOutline />
-            </IconButton>
+            {ability?.can("update", "energize-peralatan-page") ? (
+              <IconButton
+                onClick={() => {
+                  openModal("modal-energize-peralatan", row?.id);
+                  selectData(row as EnergizeList);
+                }}
+              >
+                <PencilOutline />
+              </IconButton>
+            ) : null}
             <IconButton
               onClick={() => {
                 openModal("modal-energize-peralatan-detail");
@@ -171,13 +176,15 @@ const EnergizePeralatan = () => {
                     </IconButton>
                     Download laporan
                   </Button>
-                  <Button
-                    sx={{ mb: 2 }}
-                    variant="contained"
-                    onClick={() => openModal("modal-energize-peralatan")}
-                  >
-                    Tambah Data
-                  </Button>
+                  {ability?.can("create", "energize-peralatan-page") ? (
+                    <Button
+                      sx={{ mb: 2 }}
+                      variant="contained"
+                      onClick={() => openModal("modal-energize-peralatan")}
+                    >
+                      Tambah Data
+                    </Button>
+                  ) : null}
                 </div>
               }
             ></CardHeader>

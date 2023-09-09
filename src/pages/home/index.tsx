@@ -12,4 +12,9 @@ const HomePage = () => {
   );
 };
 
+HomePage.acl = {
+  action: "read",
+  subject: "home-page",
+};
+
 export default HomePage;

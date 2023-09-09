@@ -12,4 +12,9 @@ const GasDanHSDPage = () => {
   );
 };
 
+GasDanHSDPage.acl = {
+  action: 'read',
+  subject: 'gas-dan-hsd-page'
+}
+
 export default GasDanHSDPage;

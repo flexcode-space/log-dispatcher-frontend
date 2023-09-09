@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import {
   Box,
@@ -26,8 +26,11 @@ import { reaktorApi } from "src/api/reaktor";
 import { openModal, modal, reloadPage, closeModal } from "src/state/modal";
 import { useDebounce } from "src/hooks/useDebounce";
 import { ModalDelete } from "src/components/modal";
+import { AbilityContext } from "src/layouts/components/acl/Can";
 
 const Reaktor = () => {
+  const ability = useContext(AbilityContext);
+
   const modalSnapshot = useSnapshot(modal);
 
   const router = useRouter();
@@ -61,12 +64,18 @@ const Reaktor = () => {
       headerName: "Aksi",
       renderCell: ({ row }: CellType) => (
         <Box sx={{ display: "flex", alignItems: "center" }}>
-          <IconButton onClick={() => openModal("modal-reaktor", row.id)}>
-            <PencilOutline />
-          </IconButton>
-          <IconButton>
-            <DeleteOutline onClick={() => openModal("modal-delete", row.id)} />
-          </IconButton>
+          {ability?.can("update", "reaktor-page") ? (
+            <IconButton onClick={() => openModal("modal-reaktor", row.id)}>
+              <PencilOutline />
+            </IconButton>
+          ) : null}
+          {ability?.can("delete", "reaktor-page") ? (
+            <IconButton>
+              <DeleteOutline
+                onClick={() => openModal("modal-delete", row.id)}
+              />
+            </IconButton>
+          ) : null}
         </Box>
       ),
     },
@@ -112,13 +121,15 @@ const Reaktor = () => {
                   onChange={(e) => setSearch(e.target.value)}
                 />
 
-                <Button
-                  sx={{ mb: 2 }}
-                  onClick={() => openModal("modal-reaktor")}
-                  variant="contained"
-                >
-                  Tambah Reaktor
-                </Button>
+                {ability?.can("create", "reaktor-page") ? (
+                  <Button
+                    sx={{ mb: 2 }}
+                    onClick={() => openModal("modal-reaktor")}
+                    variant="contained"
+                  >
+                    Tambah Reaktor
+                  </Button>
+                ) : null}
               </WrapperFilter>
               <DataGrid
                 autoHeight

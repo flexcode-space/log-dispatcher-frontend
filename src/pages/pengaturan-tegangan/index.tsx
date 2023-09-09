@@ -12,4 +12,9 @@ const PengaturanTeganganPage = () => {
   );
 };
 
+PengaturanTeganganPage.acl = {
+  action: "read",
+  subject: "pengaturan-tegangan-page",
+};
+
 export default PengaturanTeganganPage;

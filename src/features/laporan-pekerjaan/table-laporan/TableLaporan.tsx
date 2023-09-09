@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 import { Card, CardContent, Grid, Box, IconButton } from "@mui/material";
 import { CardHeader } from "src/components/card";
 import { Pencil } from "mdi-material-ui";
@@ -17,6 +17,7 @@ import { reloadPage } from "src/state/reloadPage";
 import { LaporanPekerjaanList } from "../types";
 import { openModal } from "src/state/modal";
 import { selectData } from "../state/laporanPekerjaan";
+import { AbilityContext } from "src/layouts/components/acl/Can";
 
 type TableLaporanProps = {
   title: string;
@@ -33,6 +34,8 @@ type TableLainProps = {
 };
 
 export const TableLaporan = ({ title, type, filter }: TableLaporanProps) => {
+  const ability = useContext(AbilityContext);
+
   const reloadPageSnap = useSnapshot(reloadPage);
   const { getLaporanPekerjaanList, laporanPekerjaanList } =
     laporanPekerjaanApi();
@@ -86,16 +89,18 @@ export const TableLaporan = ({ title, type, filter }: TableLaporanProps) => {
                         {list.uraian_pekerjaan}
                       </TableCell>
                       <TableCell size="small">
-                        <Box sx={{ display: "flex", alignItems: "center" }}>
-                          <IconButton
-                            onClick={() => {
-                              openModal("modal-laporan-pekerjaan", list.id);
-                              selectData(list);
-                            }}
-                          >
-                            <Pencil />
-                          </IconButton>
-                        </Box>
+                        {ability?.can("create", "laporan-pekerjaan-page") ? (
+                          <Box sx={{ display: "flex", alignItems: "center" }}>
+                            <IconButton
+                              onClick={() => {
+                                openModal("modal-laporan-pekerjaan", list.id);
+                                selectData(list);
+                              }}
+                            >
+                              <Pencil />
+                            </IconButton>
+                          </Box>
+                        ) : null}
                       </TableCell>
                     </TableRow>
                   ))}
@@ -109,6 +114,8 @@ export const TableLaporan = ({ title, type, filter }: TableLaporanProps) => {
 };
 
 export const TableLain = ({ filter }: TableLainProps) => {
+  const ability = useContext(AbilityContext);
+
   const reloadPageSnap = useSnapshot(reloadPage);
   const { getLaporanPekerjaanList, laporanPekerjaanList } =
     laporanPekerjaanApi();
@@ -144,16 +151,18 @@ export const TableLain = ({ filter }: TableLainProps) => {
                       <TableCell>{list.tagar}</TableCell>
                       <TableCell>{list.keterangan}</TableCell>
                       <TableCell>
-                        <Box sx={{ display: "flex", alignItems: "center" }}>
-                          <IconButton
-                            onClick={() => {
-                              openModal("modal-laporan-pekerjaan", list.id);
-                              selectData(list);
-                            }}
-                          >
-                            <Pencil />
-                          </IconButton>
-                        </Box>
+                        {ability?.can("update", "laporan-pekerjaan-page") ? (
+                          <Box sx={{ display: "flex", alignItems: "center" }}>
+                            <IconButton
+                              onClick={() => {
+                                openModal("modal-laporan-pekerjaan", list.id);
+                                selectData(list);
+                              }}
+                            >
+                              <Pencil />
+                            </IconButton>
+                          </Box>
+                        ) : null}
                       </TableCell>
                     </TableRow>
                   ))}

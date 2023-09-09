@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { StyledForm } from "src/components/form";
 import { InputField } from "src/components/input-field";
@@ -22,6 +22,7 @@ import { pemakaianAir, time_garung } from "./TableGarung.constant";
 import { airApi } from "src/api/airApi";
 import { reloadPage, setReloadPage } from "src/state/reloadPage";
 import { useSnapshot } from "valtio";
+import { AbilityContext } from "src/layouts/components/acl/Can";
 
 type ListType = {
   id: string;
@@ -33,6 +34,8 @@ type ListType = {
 };
 
 const TableGarung = () => {
+  const ability = useContext(AbilityContext);
+
   const reloadPageSnap = useSnapshot(reloadPage);
 
   const [date, setDate] = useState<Dayjs | null>(dayjs());
@@ -112,28 +115,36 @@ const TableGarung = () => {
                     />
                   </LocalizationProvider>
 
-                  {!isEdit ? (
-                    <Button
-                      sx={{ mb: 2 }}
-                      onClick={() => setIsEdit(true)}
-                      variant="contained"
-                    >
-                      Edit Data
-                    </Button>
-                  ) : (
+                  {ability?.can("update", "air-page") ? (
                     <>
-                      <Button
-                        sx={{ mb: 2, backgroundColor: "#6D788D" }}
-                        onClick={() => setIsEdit(false)}
-                        variant="contained"
-                      >
-                        Batal
-                      </Button>
-                      <Button sx={{ mb: 2 }} type="submit" variant="contained">
-                        Simpan
-                      </Button>
+                      {!isEdit ? (
+                        <Button
+                          sx={{ mb: 2 }}
+                          onClick={() => setIsEdit(true)}
+                          variant="contained"
+                        >
+                          Edit Data
+                        </Button>
+                      ) : (
+                        <>
+                          <Button
+                            sx={{ mb: 2, backgroundColor: "#6D788D" }}
+                            onClick={() => setIsEdit(false)}
+                            variant="contained"
+                          >
+                            Batal
+                          </Button>
+                          <Button
+                            sx={{ mb: 2 }}
+                            type="submit"
+                            variant="contained"
+                          >
+                            Simpan
+                          </Button>
+                        </>
+                      )}
                     </>
-                  )}
+                  ) : null}
                 </div>
               </WrapperFilter>
             }

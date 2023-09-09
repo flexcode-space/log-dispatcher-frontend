@@ -12,4 +12,9 @@ const SwitchingPembangkitPage = () => {
   );
 };
 
+SwitchingPembangkitPage.acl = {
+  action: "read",
+  subject: "switching-pembangkit-page",
+};
+
 export default SwitchingPembangkitPage;

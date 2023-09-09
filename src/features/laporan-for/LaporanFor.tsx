@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useRouter } from "next/router";
 import { Grid, Typography, TextField, Button, IconButton } from "@mui/material";
 import DatePickerMui from "@mui/lab/DatePicker";
@@ -14,8 +14,11 @@ import { ModalGenerateLaporan } from "src/components/modal";
 import { laporanForGenerate } from "src/api/laporan-for-generate";
 import dayjs, { Dayjs } from "dayjs";
 import { useSnapshot } from "valtio";
+import { AbilityContext } from "src/layouts/components/acl/Can";
 
 const LaporanPekerjaan = () => {
+  const ability = useContext(AbilityContext);
+
   const modalSnapshot = useSnapshot(modal);
   const router = useRouter();
   const [date, setDate] = useState<Dayjs | null>(null);
@@ -24,19 +27,20 @@ const LaporanPekerjaan = () => {
   const { laporanForGenerateList, loading, getLaporanForGenerate } =
     laporanForGenerate();
 
-  const ButtonEdit = () => (
-    <Button
-      variant="outlined"
-      size="small"
-      sx={{ height: "40px" }}
-      onClick={() => router.push("/catatan-pembangkitan")}
-    >
-      Edit Data
-      <IconButton>
-        <ArrowRight color="primary" />
-      </IconButton>
-    </Button>
-  );
+  const ButtonEdit = () =>
+    ability?.can("create", "laporan-for-page") ? (
+      <Button
+        variant="outlined"
+        size="small"
+        sx={{ height: "40px" }}
+        onClick={() => router.push("/catatan-pembangkitan")}
+      >
+        Edit Data
+        <IconButton>
+          <ArrowRight color="primary" />
+        </IconButton>
+      </Button>
+    ) : null;
 
   useEffect(() => {
     if (modalSnapshot.target === "modal-generate-laporan") {

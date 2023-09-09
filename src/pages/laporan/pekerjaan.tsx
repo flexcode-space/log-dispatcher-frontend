@@ -12,4 +12,9 @@ const LaporanPekerjaanPage = () => {
   );
 };
 
+LaporanPekerjaanPage.acl = {
+  action: "read",
+  subject: "laporan-pekerjaan-page",
+};
+
 export default LaporanPekerjaanPage;

@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 import {
   Grid,
   Typography,
@@ -27,8 +27,11 @@ import { RekonfigurasiList } from "./types";
 import { selectData } from "./state/rekonfigurasi";
 import { useSnapshot } from "valtio";
 import { reloadPage } from "src/state/reloadPage";
+import { AbilityContext } from "src/layouts/components/acl/Can";
 
 const Rekonfigurasi = () => {
+  const ability = useContext(AbilityContext);
+
   const reloadPageSnap = useSnapshot(reloadPage);
 
   const { getRekonfigurasiList, rekonfigurasiList } = rekonfigurasiApi();
@@ -68,14 +71,16 @@ const Rekonfigurasi = () => {
                     </IconButton>
                     Filter
                   </Button> */}
-                  <Button
-                    variant="contained"
-                    size="small"
-                    sx={{ height: "40px" }}
-                    onClick={() => openModal("modal-rekonfigurasi")}
-                  >
-                    Tambah Data
-                  </Button>
+                  {ability?.can("create", "rekonfigurasi-page") ? (
+                    <Button
+                      variant="contained"
+                      size="small"
+                      sx={{ height: "40px" }}
+                      onClick={() => openModal("modal-rekonfigurasi")}
+                    >
+                      Tambah Data
+                    </Button>
+                  ) : null}
                 </div>
               }
             />
@@ -112,14 +117,16 @@ const Rekonfigurasi = () => {
                           </TableCell>
                           <TableCell size="small">{list.keterangan}</TableCell>
                           <TableCell size="small">
-                            <IconButton
-                              onClick={() => {
-                                openModal("modal-rekonfigurasi", list.id);
-                                selectData(list);
-                              }}
-                            >
-                              <Pencil />
-                            </IconButton>
+                            {ability?.can("update", "rekonfigurasi-page") ? (
+                              <IconButton
+                                onClick={() => {
+                                  openModal("modal-rekonfigurasi", list.id);
+                                  selectData(list);
+                                }}
+                              >
+                                <Pencil />
+                              </IconButton>
+                            ) : null}
                           </TableCell>
                         </TableRow>
                       ))}

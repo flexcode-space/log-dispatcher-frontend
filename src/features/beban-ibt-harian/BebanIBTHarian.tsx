@@ -1,4 +1,4 @@
-import { useState, ChangeEvent, useEffect, useMemo } from "react";
+import { useState, ChangeEvent, useEffect, useMemo, useContext } from "react";
 
 import DatePicketMui from "@mui/lab/DatePicker";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
@@ -46,8 +46,11 @@ import { FormProvider, useForm } from "react-hook-form";
 import { StyledForm } from "src/components/form";
 import { InputField } from "src/components/input-field";
 import { ibtApi } from "src/api/ibt";
+import { AbilityContext } from "src/layouts/components/acl/Can";
 
 const BebanIBTHarian = () => {
+  const ability = useContext(AbilityContext);
+
   // ** States
   const [search, setSearch] = useState<string>("");
   const [page, setPage] = useState<number>(0);
@@ -175,14 +178,16 @@ const BebanIBTHarian = () => {
                               )}
                             />
                           </LocalizationProvider>
-                          <Button
-                            sx={{ mb: 2 }}
-                            variant="outlined"
-                            onClick={() => setIsEdit(true)}
-                          >
-                            <EditIcon />
-                            Ubah Arus Mampu
-                          </Button>
+                          {ability?.can("update", "beban-ibt-harian-page") ? (
+                            <Button
+                              sx={{ mb: 2 }}
+                              variant="outlined"
+                              onClick={() => setIsEdit(true)}
+                            >
+                              <EditIcon />
+                              Ubah Arus Mampu
+                            </Button>
+                          ) : null}
                           <Button
                             sx={{ mb: 2 }}
                             variant="outlined"

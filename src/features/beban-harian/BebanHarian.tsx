@@ -1,5 +1,5 @@
 // ** React Imports
-import { useState, ChangeEvent, useEffect, Fragment } from "react";
+import { useState, ChangeEvent, useEffect, Fragment, useContext } from "react";
 
 // ** MUI Imports
 import DatePicketMui from "@mui/lab/DatePicker";
@@ -43,8 +43,11 @@ import FallbackSpinner from "src/@core/components/spinner";
 import dayjs, { Dayjs } from "dayjs";
 import { useSnapshot } from "valtio";
 import { reloadPage } from "src/state/reloadPage";
+import { AbilityContext } from "src/layouts/components/acl/Can";
 
 const BebanHarian = () => {
+  const ability = useContext(AbilityContext);
+
   const reloadPageSnap = useSnapshot(reloadPage);
 
   const [page, setPage] = useState<number>(0);
@@ -104,21 +107,25 @@ const BebanHarian = () => {
                 <Typography variant="h6">Daftar File Laporan</Typography>
 
                 <div style={{ display: "flex", gap: "10px" }}>
-                  <Button
-                    sx={{ mb: 2 }}
-                    variant="outlined"
-                    onClick={() => openModal("modal-edit")}
-                  >
-                    <EditIcon />
-                    Ubah Data
-                  </Button>
-                  <Button
-                    sx={{ mb: 2 }}
-                    variant="outlined"
-                    onClick={() => openModal("modal-beban-harian")}
-                  >
-                    Pindah SS
-                  </Button>
+                  {ability?.can("update", "beban-harian-page") ? (
+                    <>
+                      <Button
+                        sx={{ mb: 2 }}
+                        variant="outlined"
+                        onClick={() => openModal("modal-edit")}
+                      >
+                        <EditIcon />
+                        Ubah Data
+                      </Button>
+                      <Button
+                        sx={{ mb: 2 }}
+                        variant="outlined"
+                        onClick={() => openModal("modal-beban-harian")}
+                      >
+                        Pindah SS
+                      </Button>
+                    </>
+                  ) : null}
                   <Button
                     sx={{ mb: 2 }}
                     variant="contained"

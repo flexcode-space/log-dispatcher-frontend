@@ -12,4 +12,9 @@ const PiketShift = () => {
   );
 };
 
+PiketShift.acl = {
+  action: "read",
+  subject: "piket-dan-shift-page",
+};
+
 export default PiketShift;

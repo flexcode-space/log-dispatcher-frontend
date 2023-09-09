@@ -19,14 +19,19 @@ import {
 } from "./pengaturanUser.constant";
 import ModalAdduser from "./modal/ModalAddUser";
 import { pengaturanUserApi } from "src/api/pengaturan-user";
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 import { CellType } from "src/types";
 import { selectData } from "./state/pengaturanUser";
 import { useSnapshot } from "valtio";
 import { reloadPage } from "src/state/reloadPage";
 import { UserList } from "./types";
+import { AbilityContext } from "src/layouts/components/acl/Can";
 
 const PengaturanUser = () => {
+  const ability = useContext(AbilityContext);
+
+  // console.log('ability', ability.can('read', 'pengaturan-user-page'))
+
   const reloadPageSnap = useSnapshot(reloadPage);
 
   const { pengaturanUserList, loading, getPengaturanUser } =
@@ -52,16 +57,20 @@ const PengaturanUser = () => {
       field: "actions",
       headerName: "Aksi",
       renderCell: ({ row }: CellType) => (
-        <Box sx={{ display: "flex", alignItems: "center" }}>
-          <IconButton
-            onClick={() => {
-              openModal("modal-add-user", row.id);
-              selectData(row);
-            }}
-          >
-            <Pencil />
-          </IconButton>
-        </Box>
+        <>
+          {ability?.can("update", "pengaturan-user-page") ? (
+            <Box sx={{ display: "flex", alignItems: "center" }}>
+              <IconButton
+                onClick={() => {
+                  openModal("modal-add-user", row.id);
+                  selectData(row);
+                }}
+              >
+                <Pencil />
+              </IconButton>
+            </Box>
+          ) : null}
+        </>
       ),
     },
   ];
@@ -74,16 +83,20 @@ const PengaturanUser = () => {
       field: "actions",
       headerName: "Aksi",
       renderCell: ({ row }: CellType) => (
-        <Box sx={{ display: "flex", alignItems: "center" }}>
-          <IconButton
-            onClick={() => {
-              openModal("modal-add-user", row.id);
-              selectData(row);
-            }}
-          >
-            <Pencil />
-          </IconButton>
-        </Box>
+        <>
+          {ability?.can("update", "pengaturan-user-page") ? (
+            <Box sx={{ display: "flex", alignItems: "center" }}>
+              <IconButton
+                onClick={() => {
+                  openModal("modal-add-user", row.id);
+                  selectData(row);
+                }}
+              >
+                <Pencil />
+              </IconButton>
+            </Box>
+          ) : null}
+        </>
       ),
     },
   ];
@@ -103,15 +116,17 @@ const PengaturanUser = () => {
                 title={<Typography variant="h5">Pengaturan User</Typography>}
               />
             </Grid>
-            <div style={{ display: "flex", gap: "10px" }}>
-              <Button
-                sx={{ mb: 2 }}
-                onClick={() => openModal("modal-add-user")}
-                variant="contained"
-              >
-                Tambah
-              </Button>
-            </div>
+            {ability?.can("create", "pengaturan-user-page") ? (
+              <div style={{ display: "flex", gap: "10px" }}>
+                <Button
+                  sx={{ mb: 2 }}
+                  onClick={() => openModal("modal-add-user")}
+                  variant="contained"
+                >
+                  Tambah
+                </Button>
+              </div>
+            ) : null}
           </WrapperFilter>
         </Grid>
 

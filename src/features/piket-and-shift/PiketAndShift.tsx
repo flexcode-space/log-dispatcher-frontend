@@ -16,12 +16,15 @@ import { openModal } from "src/state/modal";
 import CardPiket from "src/features/piket-and-shift/card-piket/card-piket-img";
 import CardPiketFasop from "src/features/piket-and-shift/card-piket/card-piket-fasop";
 import { ModalAddPiketDanShift } from "./modal";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import dayjs, { Dayjs } from "dayjs";
 import { piketApi } from "src/api/piket";
 import { selectData } from "./state/piketAndShift";
+import { AbilityContext } from "src/layouts/components/acl/Can";
 
 const PiketAndShift = () => {
+  const ability = useContext(AbilityContext);
+
   const [date, setDate] = useState<Dayjs | null>(dayjs());
 
   const { getPiketList, piketList } = piketApi();
@@ -74,32 +77,36 @@ const PiketAndShift = () => {
                   )}
                 />
               </LocalizationProvider>
-              {piketList.length > 0 && (
-                <Button
-                  sx={{ mb: 2 }}
-                  onClick={() => {
-                    openModal("modal-piket", "1");
-                    selectData({
-                      tanggal: dayjs(date).format("YYYY-MM-DD"),
-                      pimpinan,
-                      shiftPagi,
-                      shiftSiang,
-                      shiftMalam,
-                      bidFasop,
-                    });
-                  }}
-                  variant="outlined"
-                >
-                  Ubah
-                </Button>
-              )}
-              <Button
-                sx={{ mb: 2 }}
-                onClick={() => openModal()}
-                variant="contained"
-              >
-                Tambah
-              </Button>
+              {ability?.can("create", "piket-and-shift-page") ? (
+                <>
+                  {piketList.length > 0 && (
+                    <Button
+                      sx={{ mb: 2 }}
+                      onClick={() => {
+                        openModal("modal-piket", "1");
+                        selectData({
+                          tanggal: dayjs(date).format("YYYY-MM-DD"),
+                          pimpinan,
+                          shiftPagi,
+                          shiftSiang,
+                          shiftMalam,
+                          bidFasop,
+                        });
+                      }}
+                      variant="outlined"
+                    >
+                      Ubah
+                    </Button>
+                  )}
+                  <Button
+                    sx={{ mb: 2 }}
+                    onClick={() => openModal()}
+                    variant="contained"
+                  >
+                    Tambah
+                  </Button>
+                </>
+              ) : null}
             </div>
           </WrapperFilter>
         </Grid>

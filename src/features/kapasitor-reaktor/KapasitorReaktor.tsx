@@ -1,4 +1,4 @@
-import { useState, ChangeEvent, useEffect } from "react";
+import { useState, ChangeEvent, useEffect, useContext } from "react";
 import {
   Box,
   Card,
@@ -34,8 +34,11 @@ import { reloadPage } from "src/state/reloadPage";
 import { useDebounce } from "src/hooks/useDebounce";
 import FallbackSpinner from "src/@core/components/spinner";
 import ModalDownload from "./modal/ModalDownload";
+import { AbilityContext } from "src/layouts/components/acl/Can";
 
 const KapasitorReaktor = () => {
+  const ability = useContext(AbilityContext);
+
   const reloadPageSnap = useSnapshot(reloadPage);
 
   const [search, setSearch] = useState<string>("");
@@ -84,9 +87,11 @@ const KapasitorReaktor = () => {
             title={<Typography variant="h5">Kapasitor Reaktor</Typography>}
           />
         </Grid>
-        <Grid item xs={12}>
-          <AddLaporan />
-        </Grid>
+        {ability?.can("create", "kapasitor-reaktor-page") ? (
+          <Grid item xs={12}>
+            <AddLaporan />
+          </Grid>
+        ) : null}
         <Grid item xs={12}>
           <Card>
             <CardContent>
@@ -172,21 +177,26 @@ const KapasitorReaktor = () => {
                               {list.keterangan}
                             </TableCell>
                             <TableCell size="small">
-                              <Box
-                                sx={{ display: "flex", alignItems: "center" }}
-                              >
-                                <IconButton
-                                  onClick={() => {
-                                    openModal(
-                                      "modal-edit-kapasitor-reaktor",
-                                      list.id
-                                    );
-                                    selectData(list as KapasitorReaktorList);
-                                  }}
+                              {ability?.can(
+                                "update",
+                                "kapasitor-reaktor-page"
+                              ) ? (
+                                <Box
+                                  sx={{ display: "flex", alignItems: "center" }}
                                 >
-                                  <PencilOutline />
-                                </IconButton>
-                              </Box>
+                                  <IconButton
+                                    onClick={() => {
+                                      openModal(
+                                        "modal-edit-kapasitor-reaktor",
+                                        list.id
+                                      );
+                                      selectData(list as KapasitorReaktorList);
+                                    }}
+                                  >
+                                    <PencilOutline />
+                                  </IconButton>
+                                </Box>
+                              ) : null}
                             </TableCell>
                           </TableRow>
                         )

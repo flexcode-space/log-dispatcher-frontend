@@ -12,4 +12,9 @@ const BusbarPage = () => {
   );
 };
 
+BusbarPage.acl = {
+  action: 'read',
+  subject: 'busbar-page',
+}
+
 export default BusbarPage;

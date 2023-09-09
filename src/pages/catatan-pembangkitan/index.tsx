@@ -12,4 +12,9 @@ const CatatanPembangkitanPage = () => {
   );
 };
 
+CatatanPembangkitanPage.acl = {
+  action: 'read',
+  subject: 'catatan-pembangkitan-page',
+}
+
 export default CatatanPembangkitanPage;

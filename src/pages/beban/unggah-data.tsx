@@ -12,4 +12,9 @@ const UnggahLaporanPage = () => {
   );
 };
 
+UnggahLaporanPage.acl = {
+  action: 'read',
+  subject: 'beban-page'
+}
+
 export default UnggahLaporanPage;

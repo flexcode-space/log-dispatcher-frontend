@@ -1,5 +1,5 @@
 // ** React Imports
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import {
   Card,
   CardContent,
@@ -20,10 +20,13 @@ import { rencanaHarianApi } from "src/api/rencana-harian";
 import { openModal, closeModal, modal } from "src/state/modal";
 import { useDebounce } from "src/hooks/useDebounce";
 import { ModalUpload } from "./modal";
+import { AbilityContext } from "src/layouts/components/acl/Can";
 
 const RencanaHarian = () => {
+  const ability = useContext(AbilityContext);
+
   const modalSnapshot = useSnapshot(modal);
-  
+
   const [limit, setLimit] = useState<number>(10);
   const [page, setPage] = useState<number>(1);
   const [search, setSearch] = useState<string>("");
@@ -89,14 +92,15 @@ const RencanaHarian = () => {
                     />
                   </LocalizationProvider> */}
                 </div>
-
-                <Button
-                  sx={{ mb: 2 }}
-                  onClick={() => openModal()}
-                  variant="contained"
-                >
-                  Unggah Rencana Harian
-                </Button>
+                {ability?.can("create", "rencana-harian-page") ? (
+                  <Button
+                    sx={{ mb: 2 }}
+                    onClick={() => openModal()}
+                    variant="contained"
+                  >
+                    Unggah Rencana Harian
+                  </Button>
+                ) : null}
               </WrapperFilter>
               <DataGrid
                 autoHeight

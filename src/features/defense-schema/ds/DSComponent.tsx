@@ -1,4 +1,4 @@
-import { useState, ChangeEvent, useEffect } from "react";
+import { useState, ChangeEvent, useEffect, useContext } from "react";
 import {
   Box,
   Card,
@@ -35,8 +35,11 @@ import FallbackSpinner from "src/@core/components/spinner";
 import { pencatatanDefenseApi } from "src/api/pencatatan-defense";
 import { ModalChangeStatus } from "../modal/modal-change-status";
 import { MenuRealisasi } from "../components/menu-realisasi";
+import { AbilityContext } from "src/layouts/components/acl/Can";
 
 const DSComponent = () => {
+  const ability = useContext(AbilityContext);
+
   const reloadPageSnap = useSnapshot(reloadPage);
   const { data } = useSnapshot(defenseSchema);
 
@@ -160,17 +163,19 @@ const DSComponent = () => {
                       )}
                     />
                   </LocalizationProvider>
-                  <Button
-                    sx={{ mb: 2 }}
-                    size="small"
-                    variant="contained"
-                    onClick={() => openModal("modal-add-ds")}
-                  >
-                    <IconButton>
-                      <Plus />
-                    </IconButton>
-                    Tambah DS
-                  </Button>
+                  {ability?.can("create", "defense-schema-page") ? (
+                    <Button
+                      sx={{ mb: 2 }}
+                      size="small"
+                      variant="contained"
+                      onClick={() => openModal("modal-add-ds")}
+                    >
+                      <IconButton>
+                        <Plus />
+                      </IconButton>
+                      Tambah DS
+                    </Button>
+                  ) : null}
                 </div>
               </WrapperFilter>
               <TableContainer>
@@ -349,6 +354,13 @@ const DSComponent = () => {
                                       <Button
                                         variant="contained"
                                         onClick={() => {
+                                          if (
+                                            ability?.cannot(
+                                              "update",
+                                              "defense-schema-page"
+                                            )
+                                          )
+                                            return;
                                           selectData(data);
                                           openModal(
                                             "modal-change-status",
@@ -368,21 +380,29 @@ const DSComponent = () => {
                                       </Button>
                                     </TableCell>
                                     <TableCell size="small">
-                                      <Box
-                                        sx={{
-                                          display: "flex",
-                                          alignItems: "center",
-                                        }}
-                                      >
-                                        <IconButton
-                                          onClick={() => {
-                                            openModal("modal-add-ds", data.id);
-                                            selectData(data);
+                                      {ability?.can(
+                                        "create",
+                                        "defense-schema-page"
+                                      ) ? (
+                                        <Box
+                                          sx={{
+                                            display: "flex",
+                                            alignItems: "center",
                                           }}
                                         >
-                                          <PencilOutline />
-                                        </IconButton>
-                                      </Box>
+                                          <IconButton
+                                            onClick={() => {
+                                              openModal(
+                                                "modal-add-ds",
+                                                data.id
+                                              );
+                                              selectData(data);
+                                            }}
+                                          >
+                                            <PencilOutline />
+                                          </IconButton>
+                                        </Box>
+                                      ) : null}
                                     </TableCell>
                                   </TableRow>
                                 </>

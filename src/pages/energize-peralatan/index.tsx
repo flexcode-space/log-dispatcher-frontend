@@ -12,4 +12,9 @@ const EnergizePeralatanPage = () => {
   );
 };
 
+EnergizePeralatanPage.acl = {
+  action: "read",
+  subject: "energize-peralatan-page",
+}
+
 export default EnergizePeralatanPage;

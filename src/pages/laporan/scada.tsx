@@ -12,4 +12,9 @@ const LaporanScadaPage = () => {
   );
 };
 
+LaporanScadaPage.acl = {
+  action: "read",
+  subject: "laporan-scada-page",
+};
+
 export default LaporanScadaPage;

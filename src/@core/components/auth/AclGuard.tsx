@@ -36,14 +36,15 @@ const AclGuard = (props: AclGuardProps) => {
   const auth = useAuth()
   const router = useRouter()
 
+
   // If guestGuard is true and user is not logged in or its an error page, render the page without checking access
   if (guestGuard || router.route === '/404' || router.route === '/500' || router.route === '/') {
     return <>{children}</>
   }
 
   // User is logged in, build ability for the user based on his role
-  if (auth.user && auth.user.role && !ability) {
-    setAbility(buildAbilityFor(auth.user.role, aclAbilities.subject))
+  if (auth.user && auth.user.hak && !ability) {
+    setAbility(buildAbilityFor(auth.user.hak, aclAbilities.subject))
   }
 
   // Check the access of current user and render pages

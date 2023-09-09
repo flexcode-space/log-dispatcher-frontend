@@ -1,4 +1,11 @@
-import { useState, ChangeEvent, useEffect, useMemo, Fragment } from "react";
+import {
+  useState,
+  ChangeEvent,
+  useEffect,
+  useMemo,
+  Fragment,
+  useContext,
+} from "react";
 import DatePicketMui from "@mui/lab/DatePicker";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
@@ -38,8 +45,11 @@ import { InputField } from "src/components/input-field";
 import { FormProvider, useForm } from "react-hook-form";
 import { StyledForm } from "src/components/form";
 import { trafoApi } from "src/api/trafo";
+import { AbilityContext } from "src/layouts/components/acl/Can";
 
 const BebanTrafoHarian = () => {
+  const ability = useContext(AbilityContext);
+
   // ** States
   const [search, setSearch] = useState<string>("");
   const [page, setPage] = useState<number>(0);
@@ -72,7 +82,7 @@ const BebanTrafoHarian = () => {
     event?.preventDefault();
 
     formMethods.handleSubmit(async (values) => {
-      Object.values(values).forEach(async(value, index) => {
+      Object.values(values).forEach(async (value, index) => {
         if (typeof value?.arus_mampu === "string") {
           const bebanTrafo = bebanTrafoList[index] as BebanTrafo;
           const { scada_b_1, scada_b_2, scada_b_3, amr_point, ...rest } =
@@ -86,7 +96,7 @@ const BebanTrafoHarian = () => {
           };
           await updateTrafo(payload, true);
         }
-      })
+      });
       setIsEdit(false);
       getBebanTrafo();
     })();
@@ -184,14 +194,16 @@ const BebanTrafoHarian = () => {
                               )}
                             />
                           </LocalizationProvider>
-                          <Button
-                            sx={{ mb: 2 }}
-                            variant="outlined"
-                            onClick={() => setIsEdit(true)}
-                          >
-                            <EditIcon />
-                            Ubah Arus Mampu
-                          </Button>
+                          {ability?.can("update", "beban-page") ? (
+                            <Button
+                              sx={{ mb: 2 }}
+                              variant="outlined"
+                              onClick={() => setIsEdit(true)}
+                            >
+                              <EditIcon />
+                              Ubah Arus Mampu
+                            </Button>
+                          ) : null}
                           <Button
                             sx={{ mb: 2 }}
                             variant="outlined"

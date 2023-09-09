@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 import {
   Grid,
   Typography,
@@ -29,8 +29,11 @@ import { selectData } from "./state/laporanPosko";
 import { ModalAdd } from "./modal";
 import { useSnapshot } from "valtio";
 import { reloadPage } from "src/state/reloadPage";
+import { AbilityContext } from "src/layouts/components/acl/Can";
 
 const LaporanPoskoApd = () => {
+  const ability = useContext(AbilityContext);
+
   const reloadPageSnap = useSnapshot(reloadPage);
   const { getLaporanPoskoList, laporanPoskoList } = laporanPoskoApdApi();
 
@@ -73,14 +76,16 @@ const LaporanPoskoApd = () => {
                     </IconButton>
                     Filter
                   </Button> */}
-                  <Button
-                    variant="contained"
-                    size="small"
-                    sx={{ height: "40px" }}
-                    onClick={() => openModal("modal-laporan-posko")}
-                  >
-                    Tambah Data
-                  </Button>
+                  {ability?.can("create", "laporan-posko-page") ? (
+                    <Button
+                      variant="contained"
+                      size="small"
+                      sx={{ height: "40px" }}
+                      onClick={() => openModal("modal-laporan-posko")}
+                    >
+                      Tambah Data
+                    </Button>
+                  ) : null}
                 </div>
               }
             />
@@ -119,14 +124,16 @@ const LaporanPoskoApd = () => {
                           <TableCell size="small">{list.status}</TableCell>
                           <TableCell size="small">{list.keterangan}</TableCell>
                           <TableCell size="small">
-                            <IconButton
-                              onClick={() => {
-                                openModal("modal-laporan-posko", list.id);
-                                selectData(list);
-                              }}
-                            >
-                              <Pencil />
-                            </IconButton>
+                            {ability?.can("update", "laporan-posko-page") ? (
+                              <IconButton
+                                onClick={() => {
+                                  openModal("modal-laporan-posko", list.id);
+                                  selectData(list);
+                                }}
+                              >
+                                <Pencil />
+                              </IconButton>
+                            ) : null}
                           </TableCell>
                         </TableRow>
                       ))}

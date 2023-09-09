@@ -1,5 +1,5 @@
 // ** React Imports
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import {
   Box,
@@ -33,8 +33,11 @@ import { ModalJenisPembangkit } from "./modal/modal-jenis-pembangkit";
 import { ModalKategoriPembangkit } from "./modal/modal-kategori-pembangkit";
 import { ModalBahanBakar } from "./modal/modal-bahan-bakar";
 import { ModalTipePembangkit } from "./modal/modal-tipe-pembangkit";
+import { AbilityContext } from "src/layouts/components/acl/Can";
 
 const Pembangkit = () => {
+  const ability = useContext(AbilityContext);
+
   const modalSnapshot = useSnapshot(modal);
 
   const router = useRouter();
@@ -75,17 +78,23 @@ const Pembangkit = () => {
         const { id } = row;
         return (
           <Box sx={{ display: "flex", alignItems: "center" }}>
-            <IconButton onClick={() => openModal("modal-pembangkit", id)}>
-              <PencilOutline />
-            </IconButton>
-            <IconButton>
-              <DeleteOutline
-                onClick={() => openModal("modal-delete", row.id)}
+            {ability?.can("update", "pembangkit-page") ? (
+              <IconButton onClick={() => openModal("modal-pembangkit", id)}>
+                <PencilOutline />
+              </IconButton>
+            ) : null}
+            {ability?.can("delete", "pembangkit-page") ? (
+              <IconButton>
+                <DeleteOutline
+                  onClick={() => openModal("modal-delete", row.id)}
+                />
+              </IconButton>
+            ) : null}
+            {ability?.can("update", "pembangkit-page") ? (
+              <MenuMore
+                onClickKoefisien={() => openModal("modal-koefisien", row.id)}
               />
-            </IconButton>
-            <MenuMore
-              onClickKoefisien={() => openModal("modal-koefisien", row.id)}
-            />
+            ) : null}
           </Box>
         );
       },
@@ -138,16 +147,18 @@ const Pembangkit = () => {
                   placeholder="Cari"
                   onChange={(e) => setSearch(e.target.value)}
                 />
-                <div style={{ display: "flex", gap: "10px" }}>
-                  <MenuPengaturanPembangkit />
-                  <Button
-                    sx={{ mb: 2, height: "45px" }}
-                    onClick={() => openModal("modal-pembangkit")}
-                    variant="contained"
-                  >
-                    Tambah Pembangkit
-                  </Button>
-                </div>
+                {ability?.can("create", "pembangkit-page") ? (
+                  <div style={{ display: "flex", gap: "10px" }}>
+                    <MenuPengaturanPembangkit />
+                    <Button
+                      sx={{ mb: 2, height: "45px" }}
+                      onClick={() => openModal("modal-pembangkit")}
+                      variant="contained"
+                    >
+                      Tambah Pembangkit
+                    </Button>
+                  </div>
+                ) : null}
               </WrapperFilter>
               <DataGrid
                 autoHeight

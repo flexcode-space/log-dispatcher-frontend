@@ -13,4 +13,9 @@ const PengaturanUserPage = () => {
   );
 };
 
+PengaturanUserPage.acl = {
+  action: 'read',
+  subject: 'pengaturan-user-page'
+}
+
 export default PengaturanUserPage;

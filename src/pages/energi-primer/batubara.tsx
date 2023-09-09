@@ -12,4 +12,9 @@ const BatubaraPage = () => {
   );
 };
 
+BatubaraPage.acl = {
+  action: 'read',
+  subject: 'batubara-page'
+}
+
 export default BatubaraPage;
