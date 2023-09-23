@@ -6,8 +6,12 @@ import { openModal } from "src/state/modal";
 import { listTable } from "./Document.constant";
 import ModalAddDocument from "./modal/ModalAddDocument";
 import { TableDocument } from "./table";
+import { AbilityContext } from "src/layouts/components/acl/Can";
+import { useContext } from "react";
 
 const Document = () => {
+  const ability = useContext(AbilityContext);
+
   return (
     <>
       <ModalAddDocument />
@@ -23,15 +27,17 @@ const Document = () => {
                 }
               />
             </Grid>
-            <div style={{ display: "flex", gap: "10px" }}>
-              <Button
-                sx={{ mb: 2 }}
-                onClick={() => openModal("modal-add-document")}
-                variant="contained"
-              >
-                Unggah Dokumen
-              </Button>
-            </div>
+            {ability?.can("create", "document-page") ? (
+              <div style={{ display: "flex", gap: "10px" }}>
+                <Button
+                  sx={{ mb: 2 }}
+                  onClick={() => openModal("modal-add-document")}
+                  variant="contained"
+                >
+                  Unggah Dokumen
+                </Button>
+              </div>
+            ) : null}
           </WrapperFilter>
         </Grid>
         {listTable.map((value) => (

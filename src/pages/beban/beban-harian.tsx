@@ -12,4 +12,9 @@ const BebanHarianPage = () => {
   );
 };
 
+BebanHarianPage.acl = {
+  action: 'read',
+  subject: 'beban-harian-page',
+}
+
 export default BebanHarianPage;

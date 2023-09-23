@@ -12,4 +12,9 @@ const GangguanPage = () => {
   );
 };
 
+GangguanPage.acl = {
+  action: "read",
+  subject: "gangguan-page",
+};
+
 export default GangguanPage;

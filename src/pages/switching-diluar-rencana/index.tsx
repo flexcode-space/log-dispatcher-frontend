@@ -12,4 +12,9 @@ const SwitchingDiluarRencanaPage = () => {
   );
 };
 
+SwitchingDiluarRencanaPage.acl = {
+  action: "read",
+  subject: "switching-diluar-rencana-page",
+};
+
 export default SwitchingDiluarRencanaPage;

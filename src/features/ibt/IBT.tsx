@@ -1,5 +1,5 @@
 // ** React Imports
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import {
   Box,
@@ -28,8 +28,11 @@ import { useDebounce } from "src/hooks/useDebounce";
 import { ModalDelete } from "src/components/modal";
 import { ModalKoefisien } from "./modal/modal-koenfisien";
 import { MenuMore } from "src/components/menu-more";
+import { AbilityContext } from "src/layouts/components/acl/Can";
 
 const IBT = () => {
+  const ability = useContext(AbilityContext);
+
   const modalSnapshot = useSnapshot(modal);
   const router = useRouter();
   const [limit, setLimit] = useState<number>(10);
@@ -63,17 +66,23 @@ const IBT = () => {
         const { id } = row;
         return (
           <Box sx={{ display: "flex", alignItems: "center" }}>
-            <IconButton onClick={() => openModal("modal-ibt", id)}>
-              <PencilOutline />
-            </IconButton>
-            <IconButton>
-              <DeleteOutline
-                onClick={() => openModal("modal-delete", row.id)}
+            {ability?.can("update", "ibt-page") ? (
+              <IconButton onClick={() => openModal("modal-ibt", id)}>
+                <PencilOutline />
+              </IconButton>
+            ) : null}
+            {ability?.can("delete", "ibt-page") ? (
+              <IconButton>
+                <DeleteOutline
+                  onClick={() => openModal("modal-delete", row.id)}
+                />
+              </IconButton>
+            ) : null}
+            {ability?.can("update", "ibt-page") ? (
+              <MenuMore
+                onClickKoefisien={() => openModal("modal-koefisien", row.id)}
               />
-            </IconButton>
-            <MenuMore
-              onClickKoefisien={() => openModal("modal-koefisien", row.id)}
-            />
+            ) : null}
           </Box>
         );
       },
@@ -121,13 +130,15 @@ const IBT = () => {
                   onChange={(e) => setSearch(e.target.value)}
                 />
 
-                <Button
-                  sx={{ mb: 2 }}
-                  onClick={() => openModal("modal-ibt")}
-                  variant="contained"
-                >
-                  Tambah IBT
-                </Button>
+                {ability?.can("create", "ibt-page") ? (
+                  <Button
+                    sx={{ mb: 2 }}
+                    onClick={() => openModal("modal-ibt")}
+                    variant="contained"
+                  >
+                    Tambah IBT
+                  </Button>
+                ) : null}
               </WrapperFilter>
               <DataGrid
                 autoHeight

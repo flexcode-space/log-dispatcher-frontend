@@ -1,5 +1,5 @@
 // ** React Imports
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import {
   Box,
@@ -30,8 +30,11 @@ import { useDebounce } from "src/hooks/useDebounce";
 import { ModalDelete } from "src/components/modal";
 import { ModalKoefisien } from "./modal/modal-koenfisien";
 import { MenuMore } from "src/components/menu-more";
+import { AbilityContext } from "src/layouts/components/acl/Can";
 
 const Trafo = () => {
+  const ability = useContext(AbilityContext);
+
   const modalSnapshot = useSnapshot(modal);
 
   const router = useRouter();
@@ -64,15 +67,23 @@ const Trafo = () => {
       headerName: "Aksi",
       renderCell: ({ row }: CellType) => (
         <Box sx={{ display: "flex", alignItems: "center" }}>
-          <IconButton onClick={() => openModal("modal-trafo", row.id)}>
-            <PencilOutline />
-          </IconButton>
-          <IconButton>
-            <DeleteOutline onClick={() => openModal("modal-delete", row.id)} />
-          </IconButton>
-          <MenuMore
-            onClickKoefisien={() => openModal("modal-koefisien", row.id)}
-          />
+          {ability?.can("update", "trafo-page") ? (
+            <IconButton onClick={() => openModal("modal-trafo", row.id)}>
+              <PencilOutline />
+            </IconButton>
+          ) : null}
+          {ability?.can("delete", "trafo-page") ? (
+            <IconButton>
+              <DeleteOutline
+                onClick={() => openModal("modal-delete", row.id)}
+              />
+            </IconButton>
+          ) : null}
+          {ability?.can("update", "trafo-page") ? (
+            <MenuMore
+              onClickKoefisien={() => openModal("modal-koefisien", row.id)}
+            />
+          ) : null}
         </Box>
       ),
     },
@@ -119,13 +130,15 @@ const Trafo = () => {
                   onChange={(e) => setSearch(e.target.value)}
                 />
 
-                <Button
-                  sx={{ mb: 2 }}
-                  onClick={() => openModal("modal-trafo")}
-                  variant="contained"
-                >
-                  Tambah Trafo
-                </Button>
+                {ability?.can("create", "trafo-page") ? (
+                  <Button
+                    sx={{ mb: 2 }}
+                    onClick={() => openModal("modal-trafo")}
+                    variant="contained"
+                  >
+                    Tambah Trafo
+                  </Button>
+                ) : null}
               </WrapperFilter>
               <DataGrid
                 autoHeight

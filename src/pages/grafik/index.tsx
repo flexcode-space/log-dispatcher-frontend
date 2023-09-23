@@ -12,4 +12,9 @@ const GrafikPage = () => {
   );
 };
 
+GrafikPage.acl = {
+  action: 'read',
+  subject: 'grafik-page',
+}
+
 export default GrafikPage;

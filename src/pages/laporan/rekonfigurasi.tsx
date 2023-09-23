@@ -12,4 +12,9 @@ const RekonfigurasiPage = () => {
   );
 };
 
+RekonfigurasiPage.acl = {
+  action: "read",
+  subject: "rekonfigurasi-page",
+};
+
 export default RekonfigurasiPage;

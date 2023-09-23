@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import {
   Card,
   CardContent,
@@ -30,8 +30,11 @@ import { CatatanPenyaluranList, FilterProps } from "./types";
 import { reloadPage } from "src/state/reloadPage";
 import dayjs, { Dayjs } from "dayjs";
 import { useDebounce } from "src/hooks/useDebounce";
+import { AbilityContext } from "src/layouts/components/acl/Can";
 
 const CatatanPembangkitan = () => {
+  const ability = useContext(AbilityContext);
+
   const reloadPageSnap = useSnapshot(reloadPage);
   const [search, setSearch] = useState<string>("");
   const [date, setDate] = useState<Dayjs | null>(dayjs());
@@ -57,14 +60,18 @@ const CatatanPembangkitan = () => {
       headerName: "Aksi",
       renderCell: ({ row }: CellType) => {
         return (
-          <IconButton
-            onClick={() => {
-              openModal("modal-catatan-penyaluran");
-              selectData(row as CatatanPenyaluranList);
-            }}
-          >
-            <PencilOutline />
-          </IconButton>
+          <>
+            {ability?.can("update", "catatan-penyaluran-page") ? (
+              <IconButton
+                onClick={() => {
+                  openModal("modal-catatan-penyaluran");
+                  selectData(row as CatatanPenyaluranList);
+                }}
+              >
+                <PencilOutline />
+              </IconButton>
+            ) : null}
+          </>
         );
       },
     },
@@ -116,9 +123,11 @@ const CatatanPembangkitan = () => {
             title={<Typography variant="h5">Catatan Penyaluran</Typography>}
           />
         </Grid>
-        <Grid item xs={12}>
-          <AddData />
-        </Grid>
+        {ability?.can("create", "catatan-penyaluran-page") ? (
+          <Grid item xs={12}>
+            <AddData />
+          </Grid>
+        ) : null}
         <Grid item xs={12}>
           <Card>
             <CardContent>

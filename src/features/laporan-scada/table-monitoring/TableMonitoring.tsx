@@ -1,7 +1,7 @@
 import { Card, CardContent, IconButton } from "@mui/material";
 import { Pencil, TrashCanOutline } from "mdi-material-ui";
 import { CardHeader } from "src/components/card";
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 import {
   Table,
   TableHead,
@@ -18,6 +18,7 @@ import { openModal } from "src/state/modal";
 import dayjs from "dayjs";
 import { useSnapshot } from "valtio";
 import { reloadPage } from "src/state/reloadPage";
+import { AbilityContext } from "src/layouts/components/acl/Can";
 
 type TableMonitoringProps = {
   title: string;
@@ -25,6 +26,8 @@ type TableMonitoringProps = {
 };
 
 const TableMonitoring = ({ title, type }: TableMonitoringProps) => {
+  const ability = useContext(AbilityContext);
+
   const reloadPageSnap = useSnapshot(reloadPage);
   const { getLaporanScadaList, laporanScadaList } = laporanScadaApi();
 
@@ -74,14 +77,16 @@ const TableMonitoring = ({ title, type }: TableMonitoringProps) => {
                     <TableCell size="small">{list.aset}</TableCell>
                     <TableCell size="small">{list.status}</TableCell>
                     <TableCell size="small">
-                      <IconButton
-                        onClick={() => {
-                          openModal("modal-laporan-scada", list.id);
-                          selectData(list as LaporanScadaList);
-                        }}
-                      >
-                        <Pencil />
-                      </IconButton>
+                      {ability?.can("update", "laporan-scada-page") ? (
+                        <IconButton
+                          onClick={() => {
+                            openModal("modal-laporan-scada", list.id);
+                            selectData(list as LaporanScadaList);
+                          }}
+                        >
+                          <Pencil />
+                        </IconButton>
+                      ) : null}
                     </TableCell>
                   </TableRow>
                 ))}

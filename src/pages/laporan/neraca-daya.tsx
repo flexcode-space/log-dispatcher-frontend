@@ -12,4 +12,9 @@ const LaporanNeracaDayaPage = () => {
   );
 };
 
+LaporanNeracaDayaPage.acl = {
+  action: "read",
+  subject: "laporan-neraca-daya-page",
+}
+
 export default LaporanNeracaDayaPage;

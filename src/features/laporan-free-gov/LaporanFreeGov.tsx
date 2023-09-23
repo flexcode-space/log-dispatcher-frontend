@@ -27,6 +27,7 @@ import { useSnapshot } from "valtio";
 import { reloadPage } from "src/state/reloadPage";
 
 const LaporanFreeGov = () => {
+  
   const reloadPageSnap = useSnapshot(reloadPage);
   const modalSnapshot = useSnapshot(modal);
 

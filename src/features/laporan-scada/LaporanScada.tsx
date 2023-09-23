@@ -3,8 +3,12 @@ import FilterGreenIcon from "src/assets/icons/filter-green-icon.svg";
 import { openModal } from "src/state/modal";
 import { ModalAdd } from "./modal";
 import { TableMonitoring } from "./table-monitoring";
+import { AbilityContext } from "src/layouts/components/acl/Can";
+import { useContext } from "react";
 
 const LaporanScada = () => {
+  const ability = useContext(AbilityContext);
+
   return (
     <>
       <ModalAdd />
@@ -18,14 +22,16 @@ const LaporanScada = () => {
               </IconButton>
               Filter
             </Button> */}
-            <Button
-              variant="contained"
-              size="small"
-              sx={{ height: "40px" }}
-              onClick={() => openModal("modal-laporan-scada")}
-            >
-              Tambah Data
-            </Button>
+            {ability?.can("create", "laporan-scada-page") ? (
+              <Button
+                variant="contained"
+                size="small"
+                sx={{ height: "40px" }}
+                onClick={() => openModal("modal-laporan-scada")}
+              >
+                Tambah Data
+              </Button>
+            ) : null}
           </div>
         </Grid>
         <Grid item xs={12}>

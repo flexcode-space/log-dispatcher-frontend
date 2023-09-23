@@ -12,4 +12,9 @@ const DefenseSchemaPage = () => {
   );
 };
 
+DefenseSchemaPage.acl = {
+  action: 'read',
+  subject: 'defense-schema-page'
+}
+
 export default DefenseSchemaPage;

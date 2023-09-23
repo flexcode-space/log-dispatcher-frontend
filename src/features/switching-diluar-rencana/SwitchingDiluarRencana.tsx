@@ -1,4 +1,4 @@
-import { useState, ChangeEvent, useEffect } from "react";
+import { useState, ChangeEvent, useEffect, useContext } from "react";
 import {
   Box,
   Card,
@@ -34,8 +34,11 @@ import { reloadPage } from "src/state/reloadPage";
 import FallbackSpinner from "src/@core/components/spinner";
 import { useDebounce } from "src/hooks/useDebounce";
 import ModalDownload from "./modal/ModalDownload";
+import { AbilityContext } from "src/layouts/components/acl/Can";
 
 const SwitchingDiluarRencana = () => {
+  const ability = useContext(AbilityContext);
+
   const reloadPageSnap = useSnapshot(reloadPage);
 
   const {
@@ -124,14 +127,16 @@ const SwitchingDiluarRencana = () => {
                     </IconButton>
                     Download laporan
                   </Button>
-                  <Button
-                    onClick={() => openModal("modal-switching-luar-rencana")}
-                    size="small"
-                    sx={{ mb: 2 }}
-                    variant="contained"
-                  >
-                    Tambah Switching
-                  </Button>
+                  {ability?.can("create", "switching-luar-rencana-page") ? (
+                    <Button
+                      onClick={() => openModal("modal-switching-luar-rencana")}
+                      size="small"
+                      sx={{ mb: 2 }}
+                      variant="contained"
+                    >
+                      Tambah Switching
+                    </Button>
+                  ) : null}
                 </div>
               </WrapperFilter>
               <TableContainer>
@@ -180,21 +185,26 @@ const SwitchingDiluarRencana = () => {
                               {list.keterangan}
                             </TableCell>
                             <TableCell size="small">
-                              <Box
-                                sx={{ display: "flex", alignItems: "center" }}
-                              >
-                                <IconButton
-                                  onClick={() => {
-                                    openModal(
-                                      "modal-switching-luar-rencana",
-                                      list.id
-                                    );
-                                    selectData(list);
-                                  }}
+                              {ability?.can(
+                                "update",
+                                "switching-luar-rencana-page"
+                              ) ? (
+                                <Box
+                                  sx={{ display: "flex", alignItems: "center" }}
                                 >
-                                  <PencilOutline />
-                                </IconButton>
-                              </Box>
+                                  <IconButton
+                                    onClick={() => {
+                                      openModal(
+                                        "modal-switching-luar-rencana",
+                                        list.id
+                                      );
+                                      selectData(list);
+                                    }}
+                                  >
+                                    <PencilOutline />
+                                  </IconButton>
+                                </Box>
+                              ) : null}
                             </TableCell>
                           </TableRow>
                         )

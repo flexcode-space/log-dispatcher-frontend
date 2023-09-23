@@ -12,4 +12,9 @@ const LaporanPoskoApdPage = () => {
   );
 };
 
+LaporanPoskoApdPage.acl = {
+  action: "read",
+  subject: "laporan-posko-apd-page",
+};
+
 export default LaporanPoskoApdPage;

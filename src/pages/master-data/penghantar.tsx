@@ -12,4 +12,9 @@ const PenghantarPage = () => {
   );
 };
 
+PenghantarPage.acl = {
+  action: 'read',
+  subject: 'penghantar-page',
+}
+
 export default PenghantarPage;

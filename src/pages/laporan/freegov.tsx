@@ -12,4 +12,9 @@ const LaporanFreeGovPage = () => {
   );
 };
 
+LaporanFreeGovPage.acl = {
+  action: "read",
+  subject: "laporan-freegov-page",
+};
+
 export default LaporanFreeGovPage;

@@ -12,4 +12,9 @@ const DocumentPage = () => {
   );
 };
 
+DocumentPage.acl = {
+  action: "read",
+  subject: "document-page",
+};
+
 export default DocumentPage;

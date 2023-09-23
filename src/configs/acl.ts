@@ -16,21 +16,35 @@ export type ACLObj = {
  * We have just shown Admin and Client rules for demo purpose where
  * admin can manage everything and client can just visit ACL page
  */
-const defineRulesFor = (role: string, subject: string) => {
-  const { can, rules } = new AbilityBuilder(AppAbility)
+const defineRulesFor = (role: number, subject: string) => {
+  const { can, cannot, rules } = new AbilityBuilder(AppAbility)
 
-  if (role === 'admin') {
+  if (role === 1) {
     can('manage', 'all')
-  } else if (role === 'client') {
-    can(['read'], 'acl-page')
-  } else {
-    can(['read', 'create', 'update', 'delete'], subject)
+  } else if (role === 2) {
+    if (subject === 'pengaturan-user-page') {
+    }
+    can('manage', 'all')
+    cannot('manage', 'pengaturan-user-page')
+    can('read', 'pengaturan-user-page')
+  }
+  else if (role === 3) {
+    can('read', 'all')
+  }
+  else if (role === 4) {
+    can('read', 'energize-peralatan-page')
+  }
+  else if (role === 5) {
+    can('read', ['home-page', 'beban-trafo-harian-page', 'beban-penghantar-harian-page', 'beban-ibt-harian-page', 'tegangan-busbar-page'])
+  }
+  else {
+    can('read', 'home-page')
   }
 
   return rules
 }
 
-export const buildAbilityFor = (role: string, subject: string): AppAbility => {
+export const buildAbilityFor = (role: number, subject: string): AppAbility => {
   return new AppAbility(defineRulesFor(role, subject), {
     // https://casl.js.org/v5/en/guide/subject-type-detection
     // @ts-ignore
@@ -39,7 +53,7 @@ export const buildAbilityFor = (role: string, subject: string): AppAbility => {
 }
 
 export const defaultACLObj: ACLObj = {
-  action: 'manage',
+  action: 'read',
   subject: 'all'
 }
 

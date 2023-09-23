@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Grid, Typography, TextField, Button } from "@mui/material";
 import DatePickerMui from "@mui/lab/DatePicker";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
@@ -14,8 +14,11 @@ import { ModalGenerateLaporan } from "src/components/modal";
 import dayjs, { Dayjs } from "dayjs";
 import { laporanPekerjaanApi } from "src/api/laporan-pekerjaan";
 import { useSnapshot } from "valtio";
+import { AbilityContext } from "src/layouts/components/acl/Can";
 
 const LaporanPekerjaan = () => {
+  const ability = useContext(AbilityContext);
+
   const modalSnapshot = useSnapshot(modal);
   const [search, setSearch] = useState<string>("");
   const [date, setDate] = useState<Dayjs | null>(null);
@@ -71,13 +74,15 @@ const LaporanPekerjaan = () => {
                   )}
                 />
               </LocalizationProvider>
-              <Button
-                sx={{ mb: 2 }}
-                onClick={() => openModal("modal-laporan-pekerjaan")}
-                variant="outlined"
-              >
-                Tambah Data
-              </Button>
+              {ability?.can("create", "laporan-pekerjaan") ? (
+                <Button
+                  sx={{ mb: 2 }}
+                  onClick={() => openModal("modal-laporan-pekerjaan")}
+                  variant="outlined"
+                >
+                  Tambah Data
+                </Button>
+              ) : null}
               <Button
                 sx={{ mb: 2 }}
                 onClick={() => openModal("modal-generate-laporan")}

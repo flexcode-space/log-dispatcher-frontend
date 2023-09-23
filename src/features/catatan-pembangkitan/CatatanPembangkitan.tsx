@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Grid, Typography, TextField, Button, IconButton } from "@mui/material";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
@@ -14,8 +14,11 @@ import { TableList } from "./table-list";
 import { openModal } from "src/state/modal";
 import { Filter } from "./types";
 import { values } from "./modal/ModalFilter/ModalFilter.constant";
+import { AbilityContext } from "src/layouts/components/acl/Can";
 
 const CatatanPembangkitan = () => {
+  const ability = useContext(AbilityContext);
+
   const [date, setDate] = useState<Dayjs | null>(dayjs());
   const [filter, setFilter] = useState<Filter>({
     derating: { ...values },
@@ -36,9 +39,12 @@ const CatatanPembangkitan = () => {
             title={<Typography variant="h5">Catatan Pembangkitan</Typography>}
           />
         </Grid>
-        <Grid item xs={12}>
-          <AddData />
-        </Grid>
+        {ability?.can("create", "catatan-pembangkitan-page") ? (
+          <Grid item xs={12}>
+            <AddData />
+          </Grid>
+        ) : null}
+
         <Grid item xs={12}>
           <WrapperFilter sx={{ alignItems: "baseline" }}>
             <TextField

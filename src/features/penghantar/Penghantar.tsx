@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import {
   Box,
@@ -27,8 +27,11 @@ import { useDebounce } from "src/hooks/useDebounce";
 import { ModalDelete } from "src/components/modal";
 import { MenuMore } from "src/components/menu-more";
 import { ModalKoefisien } from "./modal/modal-koenfisien";
+import { AbilityContext } from "src/layouts/components/acl/Can";
 
 const Penghantar = () => {
+  const ability = useContext(AbilityContext);
+
   const modalSnapshot = useSnapshot(modal);
   const router = useRouter();
   const [limit, setLimit] = useState<number>(10);
@@ -68,17 +71,23 @@ const Penghantar = () => {
         const { id } = row;
         return (
           <Box sx={{ display: "flex", alignItems: "center" }}>
-            <IconButton onClick={() => openModal("modal-penghantar", id)}>
-              <PencilOutline />
-            </IconButton>
-            <IconButton>
-              <DeleteOutline
-                onClick={() => openModal("modal-delete", row.id)}
+            {ability?.can("update", "penghantar-page") ? (
+              <IconButton onClick={() => openModal("modal-penghantar", id)}>
+                <PencilOutline />
+              </IconButton>
+            ) : null}
+            {ability?.can("delete", "penghantar-page") ? (
+              <IconButton>
+                <DeleteOutline
+                  onClick={() => openModal("modal-delete", row.id)}
+                />
+              </IconButton>
+            ) : null}
+            {ability?.can("update", "penghantar-page") ? (
+              <MenuMore
+                onClickKoefisien={() => openModal("modal-koefisien", row.id)}
               />
-            </IconButton>
-            <MenuMore
-              onClickKoefisien={() => openModal("modal-koefisien", row.id)}
-            />
+            ) : null}
           </Box>
         );
       },
@@ -128,13 +137,15 @@ const Penghantar = () => {
                   onChange={(e) => setSearch(e.target.value)}
                 />
 
-                <Button
-                  sx={{ mb: 2 }}
-                  onClick={() => openModal("modal-penghantar")}
-                  variant="contained"
-                >
-                  Tambah Penghantar
-                </Button>
+                {ability?.can("create", "penghantar-page") ? (
+                  <Button
+                    sx={{ mb: 2 }}
+                    onClick={() => openModal("modal-penghantar")}
+                    variant="contained"
+                  >
+                    Tambah Penghantar
+                  </Button>
+                ) : null}
               </WrapperFilter>
               <DataGrid
                 autoHeight

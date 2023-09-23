@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import {
   Card,
   CardContent,
@@ -30,8 +30,11 @@ import { TargetIslandList } from "./types";
 import { useDebounce } from "src/hooks/useDebounce";
 import { pencatatanDefenseApi } from "src/api/pencatatan-defense";
 import { ModalChangeStatus } from "../modal/modal-change-status";
+import { AbilityContext } from "src/layouts/components/acl/Can";
 
 const TargetIsland = () => {
+  const ability = useContext(AbilityContext);
+
   const reloadPageSnap = useSnapshot(reloadPage);
   const { data } = useSnapshot(targetIsland);
 
@@ -60,6 +63,7 @@ const TargetIsland = () => {
           <Button
             variant="contained"
             onClick={() => {
+              if (ability?.cannot("update", "defense-schema-page")) return;
               selectData(data);
               openModal(
                 "modal-change-status",
@@ -84,14 +88,16 @@ const TargetIsland = () => {
       headerName: "Aksi",
       renderCell: ({ row }: CellType) => (
         <Box sx={{ display: "flex", alignItems: "center" }}>
-          <IconButton
-            onClick={() => {
-              openModal("modal-add-target-island", row.id);
-              selectData(row as TargetIslandList);
-            }}
-          >
-            <Pencil />
-          </IconButton>
+          {ability?.can("update", "defense-schema-page") ? (
+            <IconButton
+              onClick={() => {
+                openModal("modal-add-target-island", row.id);
+                selectData(row as TargetIslandList);
+              }}
+            >
+              <Pencil />
+            </IconButton>
+          ) : null}
         </Box>
       ),
     },
@@ -181,17 +187,19 @@ const TargetIsland = () => {
                     </IconButton>
                     Download Laporan
                   </Button>
-                  <Button
-                    sx={{ mb: 2 }}
-                    size="small"
-                    variant="contained"
-                    onClick={() => openModal("modal-add-target-island")}
-                  >
-                    <IconButton>
-                      <Plus />
-                    </IconButton>
-                    Tambah Target Island
-                  </Button>
+                  {ability?.can("create", "defense-schema-page") ? (
+                    <Button
+                      sx={{ mb: 2 }}
+                      size="small"
+                      variant="contained"
+                      onClick={() => openModal("modal-add-target-island")}
+                    >
+                      <IconButton>
+                        <Plus />
+                      </IconButton>
+                      Tambah Target Island
+                    </Button>
+                  ) : null}
                 </div>
               </WrapperFilter>
               <DataGrid

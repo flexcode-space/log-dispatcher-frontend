@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import {
   Box,
   Card,
@@ -27,8 +27,11 @@ import { garduIndukApi } from "src/api/gardu-induk";
 import { useDebounce } from "src/hooks/useDebounce";
 import { openModal, closeModal, modal, reloadPage } from "src/state/modal";
 import { ModalDelete } from "src/components/modal";
+import { AbilityContext } from "src/layouts/components/acl/Can";
 
 const GarduInduk = () => {
+  const ability = useContext(AbilityContext);
+
   const modalSnapshot = useSnapshot(modal);
   const [limit, setLimit] = useState<number>(10);
   const [page, setPage] = useState<number>(1);
@@ -62,14 +65,20 @@ const GarduInduk = () => {
       headerName: "Aksi",
       renderCell: ({ row }: CellType) => (
         <Box sx={{ display: "flex", alignItems: "center" }}>
-          <IconButton
-            onClick={() => openModal("modal-add-gardu-induk", row.id)}
-          >
-            <PencilOutline />
-          </IconButton>
-          <IconButton>
-            <DeleteOutline onClick={() => openModal("modal-delete", row.id)} />
-          </IconButton>
+          {ability?.can("update", "subsistem-page") ? (
+            <IconButton
+              onClick={() => openModal("modal-add-gardu-induk", row.id)}
+            >
+              <PencilOutline />
+            </IconButton>
+          ) : null}
+          {ability?.can("delete", "subsistem-page") ? (
+            <IconButton>
+              <DeleteOutline
+                onClick={() => openModal("modal-delete", row.id)}
+              />
+            </IconButton>
+          ) : null}
         </Box>
       ),
     },
@@ -120,22 +129,24 @@ const GarduInduk = () => {
                   onChange={(e) => setSearch(e.target.value)}
                 />
 
-                <div style={{ display: "flex", gap: "10px" }}>
-                  <Button
-                    sx={{ mb: 2 }}
-                    onClick={() => openModal("modal-upt")}
-                    variant="outlined"
-                  >
-                    Tambah UPT
-                  </Button>
-                  <Button
-                    sx={{ mb: 2 }}
-                    onClick={() => openModal("modal-add-gardu-induk")}
-                    variant="contained"
-                  >
-                    Tambah Gardu Induk
-                  </Button>
-                </div>
+                {ability?.can("create", "subsistem-page") ? (
+                  <div style={{ display: "flex", gap: "10px" }}>
+                    <Button
+                      sx={{ mb: 2 }}
+                      onClick={() => openModal("modal-upt")}
+                      variant="outlined"
+                    >
+                      Tambah UPT
+                    </Button>
+                    <Button
+                      sx={{ mb: 2 }}
+                      onClick={() => openModal("modal-add-gardu-induk")}
+                      variant="contained"
+                    >
+                      Tambah Gardu Induk
+                    </Button>
+                  </div>
+                ) : null}
               </WrapperFilter>
               <Box>
                 <DataGrid

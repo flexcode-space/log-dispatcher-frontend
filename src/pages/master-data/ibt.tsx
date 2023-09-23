@@ -12,4 +12,9 @@ const IBTPage = () => {
   );
 };
 
+IBTPage.acl = {
+  action: 'read',
+  subject: 'ibt-page',
+}
+
 export default IBTPage;

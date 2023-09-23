@@ -12,4 +12,9 @@ const BebanTrafoHarianPage = () => {
   );
 };
 
+BebanTrafoHarianPage.acl = {
+  action: 'read',
+  subject: 'beban-trafo-harian-page',
+}
+
 export default BebanTrafoHarianPage;

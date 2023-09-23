@@ -1,5 +1,5 @@
 // ** React Imports
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import {
   Card,
@@ -16,13 +16,15 @@ import PageHeader from "src/@core/components/page-header";
 import { SelectInput } from "src/components/select-input";
 import { defaultColumns, tipeLaporanOptions } from "./UnggahLaporan.constant";
 import { WrapperFilter } from "src/components/filter";
-
+import { AbilityContext } from "src/layouts/components/acl/Can";
 import { unggahLaporanApi } from "src/api/unggah-laporan";
 import { openModal, closeModal, modal } from "src/state/modal";
 import { useDebounce } from "src/hooks/useDebounce";
 import { ModalUnggahLaporan } from "./modal";
 
 const UnggahLaporan = () => {
+  const ability = useContext(AbilityContext);
+
   const modalSnapshot = useSnapshot(modal);
   const formMethods = useForm({});
   const [limit, setLimit] = useState<number>(10);
@@ -92,13 +94,15 @@ const UnggahLaporan = () => {
                   </FormProvider>
                 </div>
 
-                <Button
-                  sx={{ mb: 2 }}
-                  onClick={() => openModal()}
-                  variant="contained"
-                >
-                  Unggah Laporan
-                </Button>
+                {ability?.can("create", "beban-page") ? (
+                  <Button
+                    sx={{ mb: 2 }}
+                    onClick={() => openModal()}
+                    variant="contained"
+                  >
+                    Unggah Laporan
+                  </Button>
+                ) : null}
               </WrapperFilter>
               <DataGrid
                 autoHeight

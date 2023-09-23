@@ -12,4 +12,9 @@ const ManuverPage = () => {
   );
 };
 
+ManuverPage.acl = {
+  action: "read",
+  subject: "gangguan-page",
+};
+
 export default ManuverPage;

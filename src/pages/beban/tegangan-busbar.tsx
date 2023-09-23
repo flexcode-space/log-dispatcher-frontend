@@ -12,4 +12,9 @@ const TeganganBusbarPage = () => {
   );
 };
 
+TeganganBusbarPage.acl = {
+  action: 'read',
+  subject: 'tegangan-busbar-page',
+}
+
 export default TeganganBusbarPage;

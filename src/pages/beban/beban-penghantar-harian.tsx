@@ -12,4 +12,9 @@ const BebanPenghantarHarianPage = () => {
   );
 };
 
+BebanPenghantarHarianPage.acl = {
+  action: 'read',
+  subject: 'beban-penghantar-harian-page',
+}
+
 export default BebanPenghantarHarianPage;

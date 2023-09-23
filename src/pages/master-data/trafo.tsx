@@ -12,4 +12,9 @@ const TrafoPage = () => {
   );
 };
 
+TrafoPage.acl = {
+  action: 'read',
+  subject: 'trafo-page',
+}
+
 export default TrafoPage;

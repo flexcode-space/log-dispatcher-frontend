@@ -1,4 +1,4 @@
-import { useState, ChangeEvent, useEffect } from "react";
+import { useState, ChangeEvent, useEffect, useContext } from "react";
 import DatePicketMui from "@mui/lab/DatePicker";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
@@ -34,8 +34,11 @@ import FallbackSpinner from "src/@core/components/spinner";
 import { StyledForm } from "src/components/form";
 import { InputField } from "src/components/input-field";
 import { busbarApi } from "src/api/busbar";
+import { AbilityContext } from "src/layouts/components/acl/Can";
 
 const TeganganBusbar = () => {
+  const ability = useContext(AbilityContext);
+
   // ** States
   const [search, setSearch] = useState<string>("");
   const [page, setPage] = useState<number>(0);
@@ -147,21 +150,25 @@ const TeganganBusbar = () => {
                               )}
                             />
                           </LocalizationProvider>
-                          <Button
-                            sx={{ mb: 2 }}
-                            variant="outlined"
-                            onClick={() => setIsEdit(true)}
-                          >
-                            <EditIcon />
-                            Ubah Arus Mampu
-                          </Button>
-                          <Button
-                            sx={{ mb: 2 }}
-                            variant="outlined"
-                            onClick={() => openModal("modal-beban-harian")}
-                          >
-                            Set
-                          </Button>
+                          {ability?.can("update", "tegangan-busbar-page") ? (
+                            <>
+                              <Button
+                                sx={{ mb: 2 }}
+                                variant="outlined"
+                                onClick={() => setIsEdit(true)}
+                              >
+                                <EditIcon />
+                                Ubah Arus Mampu
+                              </Button>
+                              <Button
+                                sx={{ mb: 2 }}
+                                variant="outlined"
+                                onClick={() => openModal("modal-beban-harian")}
+                              >
+                                Set
+                              </Button>
+                            </>
+                          ) : null}
                           <Button
                             sx={{ mb: 2 }}
                             variant="contained"

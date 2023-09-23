@@ -1,4 +1,4 @@
-import { useState, ChangeEvent, useEffect } from "react";
+import { useState, ChangeEvent, useEffect, useContext } from "react";
 import {
   Box,
   Card,
@@ -44,8 +44,11 @@ import { MenuPengaturan } from "./components/menu-pengaturan";
 import { ModalAddBOPS } from "./modal/modal-add-bops";
 import { ModalAddACC } from "./modal/modal-add-acc";
 import { ModalAddOperator } from "./modal/modal-add-operator";
+import { AbilityContext } from "src/layouts/components/acl/Can";
 
 const SwitchingPembangkit = () => {
+  const ability = useContext(AbilityContext);
+
   const reloadPageSnap = useSnapshot(reloadPage);
 
   const [search, setSearch] = useState<string>("");
@@ -102,9 +105,7 @@ const SwitchingPembangkit = () => {
       "start-stop": (
         <Chip
           label={list.dispatch}
-          color={
-            list?.dispatch === "Start" ? "success" : "error"
-          }
+          color={list?.dispatch === "Start" ? "success" : "error"}
         />
       ),
       "naik-turun": (
@@ -147,10 +148,15 @@ const SwitchingPembangkit = () => {
             title={<Typography variant="h5">Switching Pembangkit</Typography>}
           />
         </Grid>
-        <Grid item xs={3}>
-          <AddLaporan />
-        </Grid>
-        <Grid item xs={9}>
+        {ability?.can("create", "switching-pembangkit-page") ? (
+          <Grid item xs={3}>
+            <AddLaporan />
+          </Grid>
+        ) : null}
+        <Grid
+          item
+          xs={ability?.can("create", "switching-pembangkit-page") ? 9 : 12}
+        >
           <Card>
             <CardContent>
               <WrapperFilter sx={{ alignItems: "baseline" }}>
@@ -175,7 +181,9 @@ const SwitchingPembangkit = () => {
                     </IconButton>
                     Filter
                   </Button>
-                  <MenuPengaturan />
+                  {ability?.can("create", "switching-pembangkit-page") ? (
+                    <MenuPengaturan />
+                  ) : null}
                   <Button
                     size="small"
                     sx={{ height: "40px" }}
@@ -293,26 +301,31 @@ const SwitchingPembangkit = () => {
                                   {list.keterangan}
                                 </TableCell>
                                 <TableCell size="small">
-                                  <Box
-                                    sx={{
-                                      display: "flex",
-                                      alignItems: "center",
-                                    }}
-                                  >
-                                    <IconButton
-                                      onClick={() => {
-                                        openModal(
-                                          "modal-edit-switching-pembangkit",
-                                          list.id
-                                        );
-                                        selectData(
-                                          list as SwitchingPembangkitList
-                                        );
+                                  {ability?.can(
+                                    "update",
+                                    "switching-pembangkit-page"
+                                  ) ? (
+                                    <Box
+                                      sx={{
+                                        display: "flex",
+                                        alignItems: "center",
                                       }}
                                     >
-                                      <PencilOutline />
-                                    </IconButton>
-                                  </Box>
+                                      <IconButton
+                                        onClick={() => {
+                                          openModal(
+                                            "modal-edit-switching-pembangkit",
+                                            list.id
+                                          );
+                                          selectData(
+                                            list as SwitchingPembangkitList
+                                          );
+                                        }}
+                                      >
+                                        <PencilOutline />
+                                      </IconButton>
+                                    </Box>
+                                  ) : null}
                                 </TableCell>
                               </TableRow>
                             );

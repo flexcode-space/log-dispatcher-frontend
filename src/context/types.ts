@@ -17,6 +17,7 @@ export type UserDataType = {
   email: string
   name: string
   username: string
+  hak: number
   // password: string
   // avatar?: string | null
 }

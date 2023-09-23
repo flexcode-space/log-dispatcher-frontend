@@ -1,4 +1,4 @@
-import { useState, ChangeEvent, useEffect } from "react";
+import { useState, ChangeEvent, useEffect, useContext } from "react";
 import {
   Box,
   Card,
@@ -34,8 +34,11 @@ import { pencatatanDefenseApi } from "src/api/pencatatan-defense";
 import dayjs, { Dayjs } from "dayjs";
 import { ModalChangeStatus } from "../modal/modal-change-status";
 import { MenuRealisasi } from "../components/menu-realisasi";
+import { AbilityContext } from "src/layouts/components/acl/Can";
 
 const OLS = () => {
+  const ability = useContext(AbilityContext);
+
   const reloadPageSnap = useSnapshot(reloadPage);
   const { data } = useSnapshot(defenseSchema);
 
@@ -139,17 +142,19 @@ const OLS = () => {
                       )}
                     />
                   </LocalizationProvider>
-                  <Button
-                    sx={{ mb: 2 }}
-                    variant="contained"
-                    onClick={() => openModal("modal-add-ols")}
-                    size="small"
-                  >
-                    <IconButton>
-                      <DownloadIcon />
-                    </IconButton>
-                    Tambah OLS
-                  </Button>
+                  {ability?.can("create", "defense-schema-page") ? (
+                    <Button
+                      sx={{ mb: 2 }}
+                      variant="contained"
+                      onClick={() => openModal("modal-add-ols")}
+                      size="small"
+                    >
+                      <IconButton>
+                        <DownloadIcon />
+                      </IconButton>
+                      Tambah OLS
+                    </Button>
+                  ) : null}
                 </div>
               </WrapperFilter>
               <TableContainer>
@@ -349,6 +354,13 @@ const OLS = () => {
                                       <Button
                                         variant="contained"
                                         onClick={() => {
+                                          if (
+                                            ability?.cannot(
+                                              "update",
+                                              "defense-schema-page"
+                                            )
+                                          )
+                                            return;
                                           selectData(data);
                                           openModal(
                                             "modal-change-status",
@@ -368,21 +380,29 @@ const OLS = () => {
                                       </Button>
                                     </TableCell>
                                     <TableCell size="small">
-                                      <Box
-                                        sx={{
-                                          display: "flex",
-                                          alignItems: "center",
-                                        }}
-                                      >
-                                        <IconButton
-                                          onClick={() => {
-                                            openModal("modal-add-ols", data.id);
-                                            selectData(data);
+                                      {ability?.can(
+                                        "update",
+                                        "defense-schema-page"
+                                      ) ? (
+                                        <Box
+                                          sx={{
+                                            display: "flex",
+                                            alignItems: "center",
                                           }}
                                         >
-                                          <PencilOutline />
-                                        </IconButton>
-                                      </Box>
+                                          <IconButton
+                                            onClick={() => {
+                                              openModal(
+                                                "modal-add-ols",
+                                                data.id
+                                              );
+                                              selectData(data);
+                                            }}
+                                          >
+                                            <PencilOutline />
+                                          </IconButton>
+                                        </Box>
+                                      ) : null}
                                     </TableCell>
                                   </TableRow>
                                 </>

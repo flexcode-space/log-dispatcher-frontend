@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import {
   Grid,
@@ -34,8 +34,11 @@ import { manuverApi } from "src/api/manuver";
 import { ManuverList } from "./types";
 import { selectData } from "./state/manuver";
 import { reloadPage } from "src/state/reloadPage";
+import { AbilityContext } from "src/layouts/components/acl/Can";
 
 const Manuver = () => {
+  const ability = useContext(AbilityContext);
+
   const router = useRouter();
   const gangguanId = router.query.id as string;
 
@@ -108,14 +111,16 @@ const Manuver = () => {
                     </IconButton>
                     Download laporan
                   </Button>
-                  <Button
-                    variant="contained"
-                    size="small"
-                    sx={{ height: "40px" }}
-                    onClick={() => openModal("modal-add-manuver")}
-                  >
-                    Tambah Manuver
-                  </Button>
+                  {ability?.can("create", "gangguan-page") ? (
+                    <Button
+                      variant="contained"
+                      size="small"
+                      sx={{ height: "40px" }}
+                      onClick={() => openModal("modal-add-manuver")}
+                    >
+                      Tambah Manuver
+                    </Button>
+                  ) : null}
                 </div>
               }
             />
@@ -153,16 +158,18 @@ const Manuver = () => {
                           <TableCell size="small">{list.tutup}</TableCell>
                           <TableCell size="small">{list.keterangan}</TableCell>
                           <TableCell size="small">
-                            <Box display="flex">
-                              <IconButton
-                                onClick={() => {
-                                  openModal("modal-add-manuver", list.id);
-                                  selectData(list);
-                                }}
-                              >
-                                <Pencil />
-                              </IconButton>
-                            </Box>
+                            {ability?.can("update", "gangguan-page") ? (
+                              <Box display="flex">
+                                <IconButton
+                                  onClick={() => {
+                                    openModal("modal-add-manuver", list.id);
+                                    selectData(list);
+                                  }}
+                                >
+                                  <Pencil />
+                                </IconButton>
+                              </Box>
+                            ) : null}
                           </TableCell>
                         </TableRow>
                       ))}

@@ -1,6 +1,6 @@
 import { Grid, Card, CardContent, CardHeader, IconButton } from "@mui/material";
 import { PencilOutline } from "mdi-material-ui";
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 import catatanPembangkitanApi from "src/api/catatan-pembangkitan/catatanPembangkitanApi";
 import { DataGrid } from "@mui/x-data-grid";
 import { openModal } from "src/state/modal";
@@ -11,6 +11,7 @@ import { selectData } from "../state";
 import { CatatanPembangkitanList, FilterProps } from "../types";
 import { reloadPage } from "src/state/reloadPage";
 import dayjs from "dayjs";
+import { AbilityContext } from "src/layouts/components/acl/Can";
 
 type TableListProps = {
   type: string;
@@ -29,6 +30,8 @@ const TableList = ({
   date,
   filter,
 }: TableListProps) => {
+  const ability = useContext(AbilityContext);
+
   const reloadPageSnap = useSnapshot(reloadPage);
 
   const { getCatatanPembangkitanList, catatanPembangkitanList } =
@@ -46,14 +49,18 @@ const TableList = ({
             headerName: "Aksi",
             renderCell: ({ row }: CellType) => {
               return (
-                <IconButton
-                  onClick={() => {
-                    openModal("modal-catatan-pembangkit");
-                    selectData(row as CatatanPembangkitanList);
-                  }}
-                >
-                  <PencilOutline />
-                </IconButton>
+                <>
+                  {ability?.can("update", "catatan-pembangkitan-page") ? (
+                    <IconButton
+                      onClick={() => {
+                        openModal("modal-catatan-pembangkit");
+                        selectData(row as CatatanPembangkitanList);
+                      }}
+                    >
+                      <PencilOutline />
+                    </IconButton>
+                  ) : null}
+                </>
               );
             },
           },

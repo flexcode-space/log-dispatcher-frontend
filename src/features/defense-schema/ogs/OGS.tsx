@@ -1,4 +1,4 @@
-import { useState, ChangeEvent, useEffect } from "react";
+import { useState, ChangeEvent, useEffect, useContext } from "react";
 import {
   Box,
   Card,
@@ -35,8 +35,11 @@ import { pencatatanDefenseApi } from "src/api/pencatatan-defense";
 import dayjs, { Dayjs } from "dayjs";
 import { ModalChangeStatus } from "../modal/modal-change-status";
 import { MenuRealisasi } from "../components/menu-realisasi";
+import { AbilityContext } from "src/layouts/components/acl/Can";
 
 const OgsComponent = () => {
+  const ability = useContext(AbilityContext);
+
   const reloadPageSnap = useSnapshot(reloadPage);
   const { data } = useSnapshot(defenseSchema);
 
@@ -138,17 +141,19 @@ const OgsComponent = () => {
                       )}
                     />
                   </LocalizationProvider>
-                  <Button
-                    sx={{ mb: 2 }}
-                    size="small"
-                    variant="contained"
-                    onClick={() => openModal("modal-add-ogs")}
-                  >
-                    <IconButton>
-                      <Plus />
-                    </IconButton>
-                    Tambah OGS
-                  </Button>
+                  {ability?.can("create", "defense-schema-page") ? (
+                    <Button
+                      sx={{ mb: 2 }}
+                      size="small"
+                      variant="contained"
+                      onClick={() => openModal("modal-add-ogs")}
+                    >
+                      <IconButton>
+                        <Plus />
+                      </IconButton>
+                      Tambah OGS
+                    </Button>
+                  ) : null}
                 </div>
               </WrapperFilter>
               <TableContainer>
@@ -330,6 +335,14 @@ const OgsComponent = () => {
                                       <Button
                                         variant="contained"
                                         onClick={() => {
+                                          if (
+                                            ability?.cannot(
+                                              "update",
+                                              "defense-schema-page"
+                                            )
+                                          )
+                                            return;
+
                                           selectData(data);
                                           openModal(
                                             "modal-change-status",
@@ -355,14 +368,22 @@ const OgsComponent = () => {
                                           alignItems: "center",
                                         }}
                                       >
-                                        <IconButton
-                                          onClick={() => {
-                                            openModal("modal-add-ogs", data.id);
-                                            selectData(data);
-                                          }}
-                                        >
-                                          <PencilOutline />
-                                        </IconButton>
+                                        {ability?.can(
+                                          "update",
+                                          "defense-schema-page"
+                                        ) ? (
+                                          <IconButton
+                                            onClick={() => {
+                                              openModal(
+                                                "modal-add-ogs",
+                                                data.id
+                                              );
+                                              selectData(data);
+                                            }}
+                                          >
+                                            <PencilOutline />
+                                          </IconButton>
+                                        ) : null}
                                       </Box>
                                     </TableCell>
                                   </TableRow>

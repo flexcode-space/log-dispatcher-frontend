@@ -12,4 +12,9 @@ const PembangkitPage = () => {
   );
 };
 
+PembangkitPage.acl = {
+  action: 'read',
+  subject: 'pembangkit-page',
+}
+
 export default PembangkitPage;

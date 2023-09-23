@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import {
   Grid,
   Typography,
@@ -33,8 +33,11 @@ import { LaporanNeracaDayaList } from "./types";
 import { useSnapshot } from "valtio";
 import { reloadPage } from "src/state/reloadPage";
 import { selectData } from "./state/laporanNeracaDaya";
+import { AbilityContext } from "src/layouts/components/acl/Can";
 
 const LaporanNeracaDaya = () => {
+  const ability = useContext(AbilityContext);
+
   const modalSnapshot = useSnapshot(modal);
   const reloadPageSnap = useSnapshot(reloadPage);
 
@@ -146,14 +149,16 @@ const LaporanNeracaDaya = () => {
             <CardHeader
               title="Rencana Beban Subsistem"
               action={
-                <Button
-                  variant="outlined"
-                  size="small"
-                  sx={{ height: "40px" }}
-                  onClick={() => openModal("modal-neraca-daya")}
-                >
-                  Tambah Data
-                </Button>
+                ability?.can("create", "laporan-neraca-daya-page") ? (
+                  <Button
+                    variant="outlined"
+                    size="small"
+                    sx={{ height: "40px" }}
+                    onClick={() => openModal("modal-neraca-daya")}
+                  >
+                    Tambah Data
+                  </Button>
+                ) : null
               }
             />
             <CardContent>
@@ -194,14 +199,16 @@ const LaporanNeracaDaya = () => {
                               {list.keterangan}
                             </TableCell>
                             <TableCell size="small">
-                              <IconButton
-                                onClick={() => {
-                                  openModal("modal-neraca-daya", list.id);
-                                  selectData(list as LaporanNeracaDayaList);
-                                }}
-                              >
-                                <Pencil />
-                              </IconButton>
+                              {ability?.can("update", "laporan-neraca-daya") ? (
+                                <IconButton
+                                  onClick={() => {
+                                    openModal("modal-neraca-daya", list.id);
+                                    selectData(list as LaporanNeracaDayaList);
+                                  }}
+                                >
+                                  <Pencil />
+                                </IconButton>
+                              ) : null}
                             </TableCell>
                           </TableRow>
                         )

@@ -12,4 +12,9 @@ const KapasitorReaktorPage = () => {
   );
 };
 
+KapasitorReaktorPage.acl = {
+  action: "read",
+  subject: "kapasitor-reaktor-page",
+};
+
 export default KapasitorReaktorPage;

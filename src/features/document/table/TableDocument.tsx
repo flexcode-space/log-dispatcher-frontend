@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Box, Card, CardContent, IconButton, TextField } from "@mui/material";
 import { DeleteOutline, EyeOutline, Download } from "mdi-material-ui";
 import { useSnapshot } from "valtio";
@@ -9,6 +9,7 @@ import { modal } from "src/state/modal";
 import { defaultColumns } from "../Document.constant";
 import { TypeDocument } from "../types";
 import { useDebounce } from "src/hooks/useDebounce";
+import { AbilityContext } from "src/layouts/components/acl/Can";
 
 export interface CellType {
   row: any;
@@ -24,6 +25,8 @@ type TableDocumentProps = {
 };
 
 const TableDocument = ({ title, type, filter }: TableDocumentProps) => {
+  const ability = useContext(AbilityContext);
+
   const modalSnapshot = useSnapshot(modal);
   const [search, setSearch] = useState<string>("");
 
@@ -46,14 +49,18 @@ const TableDocument = ({ title, type, filter }: TableDocumentProps) => {
       renderCell: ({ row }: CellType) => {
         return (
           <Box sx={{ display: "flex", alignItems: "center" }}>
-            <IconButton
-              onClick={() => window.open(row.url, "_blank", "noreferrer")}
-            >
-              <Download />
-            </IconButton>
-            <IconButton>
-              <DeleteOutline onClick={() => onClickDelete(row.id)} />
-            </IconButton>
+            {ability?.can("read", "document") ? (
+              <IconButton
+                onClick={() => window.open(row.url, "_blank", "noreferrer")}
+              >
+                <Download />
+              </IconButton>
+            ) : null}
+            {ability?.can("delete", "document-page") ? (
+              <IconButton>
+                <DeleteOutline onClick={() => onClickDelete(row.id)} />
+              </IconButton>
+            ) : null}
           </Box>
         );
       },
