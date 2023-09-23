@@ -1,0 +1,1 @@
+export { default as penghantarApi } from './penghantarApi'

@@ -1,0 +1,1 @@
+export { default as ModalAddGarduInduk } from './ModalAddGarduInduk'
